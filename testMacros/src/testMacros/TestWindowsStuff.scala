@@ -3,8 +3,7 @@ package testMacros
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
 import kebra.ScalaBatshNew._
-import kebra.ScalaBatshNew2
-import kebra.ScalaBatshActor
+import kebra.ScalaBatshNew2._
 import kebra.WindowsStuff._
 import kebra.MyLog._
 import java.io.File
@@ -58,9 +57,8 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 	}
 	
 	test("ScalaBatshNew2") {
-	  //ScalaBatshNew2
-	  val scalaBatshActor = new ScalaBatshActor
-	  myPrintIt(scalaBatshActor ! "zob")
-	  myPrintIt(scalaBatshActor !?(1000, "zob"))
+	  (scalaBatshActor ! "dir").toString should equal("()")
+	  (scalaBatshActor !?(1000, "dir")).toString should not equal("()")
+	  (scalaBatshActor !?(1, "dir")) should equal(None)
 	}
 }

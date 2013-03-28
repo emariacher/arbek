@@ -31,14 +31,14 @@ object ScalaBatshNew {
 		i_rc = 808;
 
 
-		scala.concurrent.Future({
+		//scala.concurrent.Future({
 			val p = Runtime.getRuntime.exec(s_filename)
 					var input = new java.io.BufferedReader(new java.io.InputStreamReader(p.getInputStream))
 			Stream.continually(input.readLine).takeWhile(_ != null).filter(_.length>1).foreach((l: String) => ls = ls ::: List(l.replaceAll(s_pwd,"##hidden##")))
 			var error = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream))
 			Stream.continually(error.readLine).takeWhile(_ != null).filter(_.length>1).foreach((l: String) => lse = lse ::: List(l.replaceAll(s_pwd,"##hidden##")))
 			i_rc = p.exitValue
-		})
+		//})
 		myErrPrintln("  rc: {"+i_rc+"}")
 		(i_rc,ls,lse)
 	}
@@ -50,8 +50,9 @@ class ScalaBatshActor extends Actor {
 		loop {
 			react {
 			case msg: String => {
-				myPrintDln("["+msg+"]")
-				reply("Hello "+msg)
+				val rsp = ScalaBatshNew.exec(4,msg)
+				myPrintDln("["+msg+"] -> ["+rsp+"]")
+				reply(rsp)
 			}
 			case _ => myErrPrintDln("Not a String!")
 			}
