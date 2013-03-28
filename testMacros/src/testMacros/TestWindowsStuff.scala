@@ -58,7 +58,11 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 	
 	test("ScalaBatshNew2") {
 	  (scalaBatshActor ! "dir").toString should equal("()")
-	  (scalaBatshActor !?(1000, "dir")).toString should not equal("()")
-	  (scalaBatshActor !?(1, "dir")) should equal(None)
+	  (scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
+	  (scalaBatshActor !? (1, "dir")) should equal(None)
+	  (scalaBatshActor !? (1000, (10,"dir /D"))).toString should not equal("()")
+	  /*(1 until 50).map((i: Int) => {
+	    (scalaBatshActor !? (1000, (i,"dir /D"))).toString should not equal("()")
+	  })*/
 	}
 }

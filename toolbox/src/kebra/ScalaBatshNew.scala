@@ -32,12 +32,12 @@ object ScalaBatshNew {
 
 
 		//scala.concurrent.Future({
-			val p = Runtime.getRuntime.exec(s_filename)
-					var input = new java.io.BufferedReader(new java.io.InputStreamReader(p.getInputStream))
-			Stream.continually(input.readLine).takeWhile(_ != null).filter(_.length>1).foreach((l: String) => ls = ls ::: List(l.replaceAll(s_pwd,"##hidden##")))
-			var error = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream))
-			Stream.continually(error.readLine).takeWhile(_ != null).filter(_.length>1).foreach((l: String) => lse = lse ::: List(l.replaceAll(s_pwd,"##hidden##")))
-			i_rc = p.exitValue
+		val p = Runtime.getRuntime.exec(s_filename)
+				var input = new java.io.BufferedReader(new java.io.InputStreamReader(p.getInputStream))
+		Stream.continually(input.readLine).takeWhile(_ != null).filter(_.length>1).foreach((l: String) => ls = ls ::: List(l.replaceAll(s_pwd,"##hidden##")))
+		var error = new java.io.BufferedReader(new java.io.InputStreamReader(p.getErrorStream))
+		Stream.continually(error.readLine).takeWhile(_ != null).filter(_.length>1).foreach((l: String) => lse = lse ::: List(l.replaceAll(s_pwd,"##hidden##")))
+		i_rc = p.exitValue
 		//})
 		myErrPrintln("  rc: {"+i_rc+"}")
 		(i_rc,ls,lse)
@@ -51,8 +51,18 @@ class ScalaBatshActor extends Actor {
 			react {
 			case msg: String => {
 				val rsp = ScalaBatshNew.exec(4,msg)
-				myPrintDln("["+msg+"] -> ["+rsp+"]")
-				reply(rsp)
+						myPrintDln("["+msg+"] -> ["+rsp+"]")
+						reply(rsp)
+			}
+			case msg: (Int,String) => {
+				val rsp = ScalaBatshNew.exec(msg._1,msg._2)
+						myPrintDln("["+msg._2+"] -> ["+rsp+"]")
+						reply(rsp)
+			}
+			case msg: (Int,String,String) => {
+				val rsp = ScalaBatshNew.execRemovePwd(msg._1,msg._2,msg._3)
+						myPrintDln("["+msg._2+"] -> ["+rsp+"]")
+						reply(rsp)
 			}
 			case _ => myErrPrintDln("Not a String!")
 			}
