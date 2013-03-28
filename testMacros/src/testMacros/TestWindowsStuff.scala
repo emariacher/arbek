@@ -1,0 +1,57 @@
+package testMacros
+
+import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.FunSuite
+import kebra.ScalaBatshNew._
+import kebra.WindowsStuff._
+import kebra.MyLog._
+import java.io.File
+import scala.concurrent.Future._
+import scala.concurrent.ExecutionContext.Implicits.global
+
+// scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
+
+class TestWindowsStuff extends FunSuite with ShouldMatchers {
+	ignore("getEnvVar") {
+		//1 should equal(0)
+		myPrintIt(getAllEnvVars.mkString("\n"))
+		getEnvVar("OS") should equal("Windows_NT")
+		getEnvVar("windir") should equal("C:\\Windows")
+		getEnvVar("USERDOMAIN") should equal("EUROPE")
+		myPrintIt(getPathAsList)
+	}
+
+	ignore("listFiles") {
+		myPrintIt(recursiveListFiles(new File("C:\\Users\\emariacher\\workspace\\kebra2\\testMacros"),""".*\.scala""".r))
+		myPrintIt(findExecutableInPath("java.exe"))
+		myPrintIt(findExecutableInPath("unins000.dat"))
+		findExecutableInPath("cowabunga") should equal(None)
+	}
+
+	test("Paths") {
+		getDeltaPath("C:\\Users\\emariacher\\workspace\\kebra2\\testMacros", "C:\\Users\\rehcairam\\workspace\\testMacroz") should 
+		equal("..\\..\\..\\emariacher\\workspace\\kebra2\\testMacros")
+		getDeltaPath("C:\\Users\\rehcairam\\workspace\\testMacroz", "C:\\Users\\emariacher\\workspace\\kebra2\\testMacros") should 
+		equal("..\\..\\..\\..\\rehcairam\\workspace\\testMacroz")
+		getDeltaPath("C:\\Users\\emariacher\\workspace\\kebra2", "C:\\Users\\emariacher\\workspace\\kebra2\\testMacros") should 
+		equal("..")
+		getDeltaPath("C:\\Users\\emariacher\\workspace\\kebra2\\testMacros", "C:\\Users\\emariacher\\workspace\\kebra2") should 
+		equal("testMacros")
+		getDeltaPath("C:\\Users\\emariacher\\workspace\\kebra2", "C:\\Users\\emariacher\\workspace\\kebra2") should 
+		equal(".")
+		getDeltaPath("Z:\\Users\\emariacher\\workspace\\kebra2", "C:\\Users\\emariacher\\workspace\\kebra2") should 
+		equal("..\\..\\..\\..\\..\\Z:\\Users\\emariacher\\workspace\\kebra2")
+	}
+
+    test("TaskLists New") {
+        taskExist("notepad.exe") should be(false)
+        taskKill("notepad.exe") should equal(128)
+        scala.concurrent.Future(exec(3,"notepad.exe"))
+        taskKill("notepad.exe") should equal(0)
+        taskExist("notepad.exe")  should be(false)
+    }
+
+	ignore("windowsRegs") {
+		regQuery("HKLM\\Software /se #")
+	}
+}

@@ -38,6 +38,7 @@ object FittingMain extends App {
     newMyLL(this.getClass.getName,new File("out\\cowabunga"), "htm", true)
 
     var lRouge = (new Input).ll.head._2.map(_.toDouble)
+    //new FittingPoisson(lRouge)
 
     val fit = new FittingVariate(FittingVariate.lfunc, lRouge)
     fit.plotBest("rouge")
@@ -81,5 +82,6 @@ object FittingMain extends App {
         val bestFit100 = fp100.bestFit
         fp100.plotBest(func.toString)
     }
+
 }
 

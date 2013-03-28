@@ -1,0 +1,167 @@
+<div dojoType="dojo.data.ItemFileReadStore" data="storeData" jsId="testStore"></div>
+<div dojoType="dijit.tree.ForestStoreModel" jsId="testModel" store="testStore" query="{}" rootId="Tests" rootLabel="Tests"></div>
+<div dojoType="dijit.Tree" id="mytree" model="testModel" openOnClick="true">
+<script type="dojo/method" event="onLoad" args="item">
+    var menuItem = null
+    console.log("onLoad")
+    //console.dir(dojo.query("div"))
+    menuItem = gup1( 'menuItem' );
+    // Now it works!
+    var zeMsg = null
+    var itemFx = function(myItem, i){
+    	    zeMsg = myItem.msg
+    };
+    items = testStore.fetch({query: {tidtoc: menuItem}, onItem: itemFx}); 
+    console.log("menuItem: "+menuItem)
+    zeMsg = menuItem
+    console.log("zeMsg: "+zeMsg)
+    for (i=1;i<=60;i++) {
+    	dojo.query("div#dijit__TreeNode_"+i).forEach(function(node, index, arr){
+    			console.log("div#dijit__TreeNode_"+i+" node.textContent ["+node.textContent+"]")
+//    		console.dir(node)
+    		if((node.textContent.indexOf(zeMsg)>=0)&&(node.textContent.indexOf("*")==0)) {
+    			console.log("div#dijit__TreeNode_"+i+" found!")
+    			node.style.backgroundColor="yellow"
+    			node.style.color="black"
+    			node.style.fontWeight="bold"
+    			node.style.fontSize=18
+    		} else {
+    				node.style.backgroundColor="#d0d0f8"
+    				node.style.color="blue"
+    				node.style.fontWeight="bold"
+    		}
+    	});
+    }
+    if(menuItem.length>0) {
+    	    console.log("1 menuItem: "+menuItem)
+    	    divtest = document.getElementById(menuItem);
+//    	    console.log("1 divtest: "+divtest)
+    	    divs=document.getElementsByTagName("DIV");
+     	    if (divtest!=null) {
+   	    	    for (i=0;i<divs.length;i++) {
+    	    	    	    if(divs[i].id.length == 0) {
+    	    	    	    } else if(divs[i].id.indexOf("dijit") == 0) {
+    	    	    	    } else if(divs[i].id.indexOf("mytree") == 0) {
+    	    	    	    } else {
+    	    	    	    	    divs[i].style.display="none";
+    	    	    	    }
+    	    	    }
+    	    	    divtest.style.display="block";
+    	    	    menuItem="#"+menuItem
+    	    } else {
+    	    	    var s_all = menuItem.substr(0,menuItem.indexOf("_All"))
+    	    	    console.log("s_all: "+s_all)
+   	    	    for (i=0;i<divs.length;i++) {
+   	    	    	    console.log("divs["+i+"]: "+divs[i].id)
+   	    	    	    if(divs[i].id.length == 0) {
+   	    	    	    } else if(divs[i].id.indexOf("dijit") == 0) {
+   	    	    	    	    divs[i].style.display="block";
+    	    	    	    } else if(divs[i].id.indexOf("mytree") == 0) {
+   	    	    	    	    divs[i].style.display="block";
+    	    	    	    } else if(divs[i].id.indexOf(s_all) == 0) {
+   	    	    	    	    divs[i].style.display="block";
+   	    	    	    } else {
+   	    	    	    	    divs[i].style.display="none";
+   	    	    	    }
+    	    	    }
+    	    	    menuItem=""
+    	    }
+    }
+
+    function removeChildrenFromNode(node) {
+	if(node.hasChildNodes()) {
+		while(node.childNodes.length >= 1 ) {
+			node.removeChild(node.firstChild);
+		}
+	}
+    }
+
+    function gup1( name ) {
+    	    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    	    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    	    var regex = new RegExp( regexS );
+    	    var results = regex.exec( window.location.href );
+    	    if( results == null )
+    	    	    return "";
+    	    else
+    	    	    return results[1];
+    }			    
+</script>
+<script type="dojo/method" event="onClick" args="item">
+	console.log("hello world")
+	menuItem = testStore.getIdentity(item);
+	title = document.title
+	//console.log("0 "+window.location.href + " " +window.location.href.indexOf("?") + " " +window.location.href.indexOf("\?"))
+	if(window.location.href.indexOf("?")<0) {
+		s_nextPage = window.location.href+"?menuItem="+menuItem;
+	} else {
+		s_nextPage = window.location.href.substr(0,window.location.href.indexOf("?"))+"?menuItem="+menuItem;
+	}
+	//console.log("a1 "+s_nextPage)
+	dojo.query('input#').forEach(function(node, index, arr){
+			//console.log("a2 "+s_nextPage);
+			s_nextPage = s_nextPage + gup3(node.id);
+			//console.log("a3 "+s_nextPage);
+    	    });
+	//console.log("a4 "+s_nextPage)
+	window.location.href = s_nextPage
+	
+	function gup3( name ) {
+    	    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    	    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    	    var regex = new RegExp( regexS );
+    	    var results = regex.exec( window.location.href );
+    	    if( results == null )
+    	    	    return "";
+    	    else
+    	    	    return "&"+name+"="+results[1];
+    	}			    	
+</script>
+</div>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js" djConfig="parseOnLoad: true"></script>
+	<script>
+		dojo.require("dojo.data.ItemFileReadStore");
+		dojo.require("dijit.Tree");
+
+		function filterTraceRecord2(args){
+			//console.log('args '+args.id+' '+args.checked);
+			//console.log("3 "+window.location.href);
+			//dojo.query('div#lT').forEach(zzz);
+			s_parm = "&"+args.id+"=1"
+			if(args.checked == true) {
+				s_nextPage=window.location.href+s_parm;
+			} else {
+				i_id = window.location.href.indexOf(s_parm)
+				if(i_id>0) {
+					s_nextPage = window.location.href.substr(0,i_id);
+					s_nextPage = s_nextPage + window.location.href.substr(i_id+s_parm.length);
+				} else {
+					s_nextPage=window.location.href;
+				}
+			}
+			//console.log("4 "+s_nextPage);
+			window.location.href=s_nextPage;
+		}
+
+		function filterTraceRecordText(args){
+			s_parm = "&"+args.id+"="+args.value
+			i_start = window.location.href.indexOf("&"+args.id+"=")
+			i_end = window.location.href.indexOf("&",i_start+1)
+			if(args.value.length>0) {
+				if((i_start>0)&&(i_end>i_start)) {
+					s_nextPage = window.location.href.substr(0,i_start)+s_parm;
+					s_nextPage = s_nextPage + window.location.href.substr(i_end);
+				} else if(i_start>0) {
+					s_nextPage = window.location.href.substr(0,i_start)+s_parm;
+				} else {
+					s_nextPage = window.location.href+s_parm;
+				}
+			} else if(i_start>0) {
+				s_nextPage = window.location.href.substr(0,i_start)
+			} else {
+				s_nextPage = window.location.href
+			}
+			//console.log("5 "+s_nextPage);
+			window.location.href = s_nextPage
+		}
+
