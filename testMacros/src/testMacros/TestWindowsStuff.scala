@@ -3,6 +3,8 @@ package testMacros
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
 import kebra.ScalaBatshNew._
+import kebra.ScalaBatshNew2
+import kebra.ScalaBatshActor
 import kebra.WindowsStuff._
 import kebra.MyLog._
 import java.io.File
@@ -28,7 +30,7 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		findExecutableInPath("cowabunga") should equal(None)
 	}
 
-	test("Paths") {
+	ignore("Paths") {
 		getDeltaPath("C:\\Users\\emariacher\\workspace\\kebra2\\testMacros", "C:\\Users\\rehcairam\\workspace\\testMacroz") should 
 		equal("..\\..\\..\\emariacher\\workspace\\kebra2\\testMacros")
 		getDeltaPath("C:\\Users\\rehcairam\\workspace\\testMacroz", "C:\\Users\\emariacher\\workspace\\kebra2\\testMacros") should 
@@ -43,7 +45,7 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		equal("..\\..\\..\\..\\..\\Z:\\Users\\emariacher\\workspace\\kebra2")
 	}
 
-    test("TaskLists New") {
+    ignore("TaskLists New") {
         taskExist("notepad.exe") should be(false)
         taskKill("notepad.exe") should equal(128)
         scala.concurrent.Future(exec(3,"notepad.exe"))
@@ -53,5 +55,12 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 
 	ignore("windowsRegs") {
 		regQuery("HKLM\\Software /se #")
+	}
+	
+	test("ScalaBatshNew2") {
+	  //ScalaBatshNew2
+	  val scalaBatshActor = new ScalaBatshActor
+	  myPrintIt(scalaBatshActor ! "zob")
+	  myPrintIt(scalaBatshActor !?(1000, "zob"))
 	}
 }
