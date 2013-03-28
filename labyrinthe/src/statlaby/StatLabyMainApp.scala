@@ -25,7 +25,7 @@ object StatLabyMainApp extends App with Actor {
     println("Hello World!")
 
     newMyLL(this.getClass.getName,new File("out\\cowabunga"), "htm", false)
-    newTbx(null, new RowCol(60,60), null, null)
+    newTbx(null, new RowCol(20,20), null, null)
 
     val fig1 = figure()
     title("Hello World1!")
