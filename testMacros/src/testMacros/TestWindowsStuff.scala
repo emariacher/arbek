@@ -9,6 +9,9 @@ import kebra.MyLog._
 import java.io.File
 import scala.concurrent.Future._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
 
@@ -44,25 +47,46 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		equal("..\\..\\..\\..\\..\\Z:\\Users\\emariacher\\workspace\\kebra2")
 	}
 
-    ignore("TaskLists New") {
-        taskExist("notepad.exe") should be(false)
-        taskKill("notepad.exe") should equal(128)
-        scala.concurrent.Future(exec(3,"notepad.exe"))
-        taskKill("notepad.exe") should equal(0)
-        taskExist("notepad.exe")  should be(false)
-    }
+	ignore("TaskLists New") {
+		taskExist("notepad.exe") should be(false)
+		taskKill("notepad.exe") should equal(128)
+		scala.concurrent.Future(exec(3,"notepad.exe"))
+		taskKill("notepad.exe") should equal(0)
+		taskExist("notepad.exe")  should be(false)
+	}
 
 	ignore("windowsRegs") {
 		regQuery("HKLM\\Software /se #")
 	}
-	
+
 	test("ScalaBatshNew2") {
-	  (scalaBatshActor ! "dir").toString should equal("()")
-	  (scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
-	  (scalaBatshActor !? (1, "dir")) should equal(None)
-	  (scalaBatshActor !? (1000, (10,"dir /D"))).toString should not equal("()")
-	  /*(1 until 50).map((i: Int) => {
+		(scalaBatshActor ! "dir").toString should equal("()")
+		(scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
+		(scalaBatshActor !? (1, "dir")) should equal(None)
+		(scalaBatshActor !? (1000, (10,"dir /D"))).toString should not equal("()")
+		/*(1 until 50).map((i: Int) => {
 	    (scalaBatshActor !? (1000, (i,"dir /D"))).toString should not equal("()")
 	  })*/
+	}
+
+	test("ScalaBatshNew3") {
+		val doSomeStuff: PartialFunction[(Int,List[String],List[String]), _] = {
+		case x: (Int,List[String],List[String]) => myPrintDln(""+x)
+		case _ => myPrintDln("NOGOOD!")
+	}
+
+	val future = Future {
+		exec(3,"dir")
+	} onSuccess {
+		myPrintDln("Success!")
+		doSomeStuff
+		/*} onFailure {
+			myErrPrintDln("Failure!")
+			doSomeStuff
+		} onTimeOut {
+			myErrPrintDln("timeOut!")
+			doSomeStuff*/
+	}
+	waiting(1 second)
 	}
 }
