@@ -56,7 +56,7 @@ object ScalaBatshNew {
                 implicit val timeout = Timeout(5 seconds)
                 var future = a ? "zob" // enabled by the “ask” import
                         var result = Await.result(future, timeout.duration).asInstanceOf[String]
-                                myPrintIt(result)
+                                //myPrintIt(result)
                         (i_rc,ls,lse)
     }
 }
