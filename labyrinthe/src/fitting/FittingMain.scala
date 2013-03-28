@@ -81,6 +81,5 @@ object FittingMain extends App {
         val bestFit100 = fp100.bestFit
         fp100.plotBest(func.toString)
     }
-
 }
 
