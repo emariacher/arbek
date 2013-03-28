@@ -104,4 +104,6 @@ object ScalaBatsh {
 		}
 		i_rc;
 	}*/
+	
+	def printScalaBatshResult(t: (Int,List[String],List[String])) = "(rc: {"+t._1+"},\ni["+t._2.mkString("\n")+"],\ne["+t._2.mkString("\n")+"])"
 }

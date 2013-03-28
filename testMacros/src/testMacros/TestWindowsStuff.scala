@@ -4,6 +4,7 @@ import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
 import kebra.ScalaBatshNew._
 import kebra.ScalaBatshNew2._
+import kebra.ScalaBatshNew3
 import kebra.WindowsStuff._
 import kebra.MyLog._
 import java.io.File
@@ -12,6 +13,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
+import kebra.ScalaBatshNewRC._
+
+
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
 
@@ -64,29 +68,21 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		(scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
 		(scalaBatshActor !? (1, "dir")) should equal(None)
 		(scalaBatshActor !? (1000, (10,"dir /D"))).toString should not equal("()")
+		(scalaBatshActor !? (1000, (10,"notepad.exe"))) should equal(None)
+		taskKill("notepad.exe") should equal(0)
+		taskKill("notepad.exe") should equal(128)
 		/*(1 until 50).map((i: Int) => {
 	    (scalaBatshActor !? (1000, (i,"dir /D"))).toString should not equal("()")
 	  })*/
+		waiting(1 second)
 	}
 
 	test("ScalaBatshNew3") {
-		val doSomeStuff: PartialFunction[(Int,List[String],List[String]), _] = {
-		case x: (Int,List[String],List[String]) => myPrintDln(""+x)
-		case _ => myPrintDln("NOGOOD!")
-	}
-
-	val future = Future {
-		exec(3,"dir")
-	} onSuccess {
-		myPrintDln("Success!")
-		doSomeStuff
-		/*} onFailure {
-			myErrPrintDln("Failure!")
-			doSomeStuff
-		} onTimeOut {
-			myErrPrintDln("timeOut!")
-			doSomeStuff*/
-	}
-	waiting(1 second)
+		new ScalaBatshNew3(5,"dir").result._1 should equal (OK)	
+		new ScalaBatshNew3(6,"cowabunga!").result._1 should equal (1)	
+		new ScalaBatshNew3(7,"dir /D", 1 millisecond).result._1 should equal (TIMEOUT3)	
+		new ScalaBatshNew3(5,"notepad.exe").result._1 should equal (TIMEOUT3)	
+		taskKill("notepad.exe") should equal(0)
+		waiting(1 second)
 	}
 }
