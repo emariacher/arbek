@@ -101,7 +101,7 @@ case _ => myErrPrintDln("NOGOOD!")
 			case _: Throwable => (ScalaBatshNewRC.UNKNOWN3,List.empty[String],List.empty[String])
 			}
 
-	future onSuccess {
+	/*future onSuccess {
 		myPrintDln("Success!")
 		doSomeStuffOnSuccess
 	}
@@ -109,7 +109,7 @@ case _ => myErrPrintDln("NOGOOD!")
 	future onFailure {
 		myErrPrintDln("Failure!")
 		doSomeStuffOnFailure
-	}
+	}*/
 }
 
 object ScalaBatshNewRC extends Enumeration {
