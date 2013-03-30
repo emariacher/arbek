@@ -5,6 +5,7 @@ import org.scalatest.FunSuite
 import kebra.ScalaBatshNew._
 import kebra.ScalaBatshNew2._
 import kebra.ScalaBatshNew3
+import kebra.ScalaBatshNew4
 import kebra.WindowsStuff._
 import kebra.MyLog._
 import java.io.File
@@ -14,8 +15,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 import kebra.ScalaBatshNewRC._
-
-
+import scala.sys.process._
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
 
@@ -63,7 +63,12 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		regQuery("HKLM\\Software /se #")
 	}
 
-	test("ScalaBatshNew2") {
+	ignore("scala.sys.SystemProperties") {
+		myPrintIt((new scala.sys.SystemProperties).mkString("\n"))
+	}
+
+
+	ignore("ScalaBatshNew2") {
 		(scalaBatshActor ! "dir").toString should equal("()")
 		(scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
 		(scalaBatshActor !? (1, "dir")) should equal(None)
@@ -77,12 +82,25 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		waiting(1 second)
 	}
 
-	test("ScalaBatshNew3") {
+	ignore("ScalaBatshNew3") {
 		new ScalaBatshNew3(5,"dir").result._1 should equal (OK)	
 		new ScalaBatshNew3(6,"cowabunga!").result._1 should equal (1)	
 		new ScalaBatshNew3(7,"dir /D", 1 millisecond).result._1 should equal (TIMEOUT3)	
 		new ScalaBatshNew3(5,"notepad.exe").result._1 should equal (TIMEOUT3)	
 		taskKill("notepad.exe") should equal(0)
 		waiting(1 second)
+	}
+
+	test("scala.sys.process1") {
+		new ScalaBatshNew4(5,"notepad.exe")
+		"taskkill.exe /F /IM notepad.exe /T".! should equal(0)
+		"REG QUERY HKLM\\Software /se #".! should equal(0)
+		waiting(1 second)
+	}
+
+	test("scala.sys.process2") {
+		
+		myPrintIt("cmd.exe dir".!!)
+		myPrintIt("dir".!!)
 	}
 }

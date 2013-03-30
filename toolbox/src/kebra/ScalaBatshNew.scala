@@ -14,6 +14,7 @@ import scala.concurrent.Future
 import akka.pattern.ask
 import scala.concurrent.Await
 import java.io.File
+import scala.sys.process._
 
 object ScalaBatshNew {
 	var ls = List.empty[String];
@@ -94,6 +95,35 @@ case _ => myErrPrintDln("NOGOOD!")
 	}
 
 	val future = Future { ScalaBatshNew.exec(Tlvl,s_cmd) } 
+	var result = try {
+				Await.result(future, timeOut)
+			} catch {
+			case e: java.util.concurrent.TimeoutException => (ScalaBatshNewRC.TIMEOUT3,List.empty[String],List.empty[String])
+			case _: Throwable => (ScalaBatshNewRC.UNKNOWN3,List.empty[String],List.empty[String])
+			}
+
+	/*future onSuccess {
+		myPrintDln("Success!")
+		doSomeStuffOnSuccess
+	}
+
+	future onFailure {
+		myErrPrintDln("Failure!")
+		doSomeStuffOnFailure
+	}*/
+}
+
+class ScalaBatshNew4(Tlvl: Int, s_cmd: String, timeOut: Duration = 1 second) {
+	def doSomeStuffOnSuccess: PartialFunction[(Int,List[String],List[String]), _] = {
+	case x: (Int,List[String],List[String]) => myPrintDln(ScalaBatshNew.printScalaBatshResult(x))
+	case _ => myPrintDln("NOGOOD!")
+}
+def doSomeStuffOnFailure: PartialFunction[Throwable, _] = {
+case e: Throwable => myErrPrintDln("NOGOOD! ["+e+"]")
+case _ => myErrPrintDln("NOGOOD!")
+	}
+
+	val future = Future { s_cmd.!! } 
 	var result = try {
 				Await.result(future, timeOut)
 			} catch {
