@@ -16,6 +16,8 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 import kebra.ScalaBatshNewRC._
 import scala.sys.process._
+import java.io.OutputStream
+import java.io.InputStream
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
 
@@ -98,9 +100,12 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		waiting(1 second)
 	}
 
-	test("scala.sys.process2") {
-		
-		myPrintIt("cmd.exe dir".!!)
-		myPrintIt("dir".!!)
+	test("ScalaBatshNew4") {
+		new ScalaBatshNew4(5,"dir").result._1 should equal (UNKNOWN3)	
+		new ScalaBatshNew4(6,"cowabunga!").result._1 should equal (UNKNOWN3)	
+		new ScalaBatshNew4(7,"REG QUERY HKLM\\Software /se #", 1 millisecond).result._1 should equal (TIMEOUT3)	
+		new ScalaBatshNew4(5,"notepad.exe").result._1 should equal (TIMEOUT3)	
+		taskKill("notepad.exe") should equal(0)
+		waiting(1 second)
 	}
 }

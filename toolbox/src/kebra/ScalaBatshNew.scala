@@ -45,7 +45,7 @@ object ScalaBatshNew {
 		f.delete
 		(i_rc,ls,lse)
 	}
-	def printScalaBatshResult(t: (Int,List[String],List[String])) = "(rc: {"+t._1+"},\ni["+t._2.mkString("\n")+"],\ne["+t._2.mkString("\n")+"])"
+	def printScalaBatshResult(t: (Int,List[String],List[String])) = "(\n  rc: {"+t._1+"},\n  i["+t._2.mkString("\n")+"],\n  e["+t._3.mkString("\n")+"]\n)"
 }
 
 class ScalaBatshActor extends Actor {
@@ -96,11 +96,11 @@ case _ => myErrPrintDln("NOGOOD!")
 
 	val future = Future { ScalaBatshNew.exec(Tlvl,s_cmd) } 
 	var result = try {
-				Await.result(future, timeOut)
-			} catch {
-			case e: java.util.concurrent.TimeoutException => (ScalaBatshNewRC.TIMEOUT3,List.empty[String],List.empty[String])
-			case _: Throwable => (ScalaBatshNewRC.UNKNOWN3,List.empty[String],List.empty[String])
-			}
+		Await.result(future, timeOut)
+	} catch {
+	case e: java.util.concurrent.TimeoutException => (ScalaBatshNewRC.TIMEOUT3,List.empty[String],List.empty[String])
+	case _: Throwable => (ScalaBatshNewRC.UNKNOWN3,List.empty[String],List.empty[String])
+	}
 
 	/*future onSuccess {
 		myPrintDln("Success!")
@@ -114,36 +114,24 @@ case _ => myErrPrintDln("NOGOOD!")
 }
 
 class ScalaBatshNew4(Tlvl: Int, s_cmd: String, timeOut: Duration = 1 second) {
-	def doSomeStuffOnSuccess: PartialFunction[(Int,List[String],List[String]), _] = {
-	case x: (Int,List[String],List[String]) => myPrintDln(ScalaBatshNew.printScalaBatshResult(x))
-	case _ => myPrintDln("NOGOOD!")
-}
-def doSomeStuffOnFailure: PartialFunction[Throwable, _] = {
-case e: Throwable => myErrPrintDln("NOGOOD! ["+e+"]")
-case _ => myErrPrintDln("NOGOOD!")
-	}
-
-	val future = Future { s_cmd.!! } 
+	val future = Future { run(s_cmd) } 
 	var result = try {
-				Await.result(future, timeOut)
-			} catch {
-			case e: java.util.concurrent.TimeoutException => (ScalaBatshNewRC.TIMEOUT3,List.empty[String],List.empty[String])
-			case _: Throwable => (ScalaBatshNewRC.UNKNOWN3,List.empty[String],List.empty[String])
-			}
-
-	/*future onSuccess {
-		myPrintDln("Success!")
-		doSomeStuffOnSuccess
+		Await.result(future, timeOut)
+	} catch {
+	case e: java.util.concurrent.TimeoutException => (ScalaBatshNewRC.TIMEOUT3,List.empty[String],List.empty[String])
+	case _: Throwable => (ScalaBatshNewRC.UNKNOWN3,List.empty[String],List.empty[String])
 	}
-
-	future onFailure {
-		myErrPrintDln("Failure!")
-		doSomeStuffOnFailure
-	}*/
+	def run(in: String): (Int, List[String], List[String]) = {
+		val qb = Process(in)
+				var out = List[String]()
+				var err = List[String]()
+				val exit = qb ! ProcessLogger((s) => out ::= s, (s) => err ::= s)
+				(exit, out.reverse, err.reverse)
+	}
 }
 
 object ScalaBatshNewRC extends Enumeration {
-			val OK = 0 
+	val OK = 0 
 			val TIMEOUT = 888 
 			val TIMEOUT3 = 707
 			val UNKNOWN3 = 777
