@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat
 import kebra.DateDSL
 import kebra.DateDSL._
 import kebra.MyLog._
-import kebra.ScalaBatshNew._
 import java.io.File
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
@@ -16,6 +15,7 @@ import scalation.stat._
 import java.io.FileReader
 import language.postfixOps
 import kebra.WindowsStuff._
+import kebra.ScalaBatshNewRC._
 
 // scala org.scalatest.tools.Runner -o -s testMacros.ScalaBatschTest
 
@@ -271,13 +271,13 @@ class ScalaBatschTest extends FunSuite with ShouldMatchers {
     }   
 
     test("Check echo" ) {       
-        exec(2,"echo zubzabzub")._2(1) should equal ("zubzabzub")
-        execRemovePwd(2,"echo zubzabzub","zub")._2(1) should equal ("##hidden##zab##hidden##")
-        execRemovePwd(2,"echo zubzabzub","zub")._2(1) should equal ("##hidden##zab##hidden##")
+        exec(2,"echo zubzabzub")._2(1).split(" ").last should equal ("zubzabzub")
+        exec(2,"echo zubzabzub","zub")._2(1).split(" ").last should equal ("##hidden##zab##hidden##")
+        exec(2,"echo zubzabzub","zub")._2(1).split(" ").last should equal ("##hidden##zab##hidden##")
     }     
 
     test("time out") {
-            exec(3,"notepad.exe")._1 should equal(808)
-            taskKill("notepad.exe") should equal(0)
+            exec(3,"notepad.exe")._1 should equal(TIMEOUT3)
+            taskKill("notepad.exe") should equal(OK)
     }
 }

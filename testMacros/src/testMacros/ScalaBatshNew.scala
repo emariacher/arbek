@@ -1,4 +1,4 @@
-package kebra
+package testMacros
 
 import scala.actors.Actor
 import kebra.MyLog._
@@ -8,13 +8,12 @@ import scala.concurrent.Future._
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.ActorDSL._
 import scala.concurrent.duration._
-import akka.util.Timeout
-import language.postfixOps
 import scala.concurrent.Future
-import akka.pattern.ask
 import scala.concurrent.Await
 import java.io.File
 import scala.sys.process._
+import kebra.MyLog
+import kebra.ScalaBatshNewRC
 
 object ScalaBatshNew {
 	var ls = List.empty[String];
@@ -113,42 +112,3 @@ case _ => myErrPrintDln("NOGOOD!")
 	}
 }
 
-class ScalaBatshNew4(Tlvl: Int, s_cmd: String, s_pwd: String, timeOut: Duration) {
-	def this(Tlvl: Int, s_cmd: String, timeOut: Duration) = this(Tlvl, s_cmd, "cowabunga", timeOut)
-	def this(Tlvl: Int, s_cmd: String, s_pwd: String) = this(Tlvl, s_cmd, s_pwd, 1 second)
-	def this(Tlvl: Int, s_cmd: String) = this(Tlvl, s_cmd, "cowabunga", 1 second)
-	def this(s_cmd: String) = this(3, s_cmd, "cowabunga", 1 second)
-	
-			myErrPrintln(MyLog.tag(Tlvl)+getClass.getName+".exec(<i>"+
-			    s_cmd.replaceAll(s_pwd,"##hidden##")+"</i>)")
-			val s_filename = "zz"+new Random().nextInt(1000)+".bat";
-	val f = new File(s_filename)
-	val fw = new FileWriter(f, false) ; fw.write(s_cmd+"\n") ; fw.close
-
-	val future = Future { run(s_filename) } 
-	var result = try {
-		Await.result(future, timeOut)
-	} catch {
-	case e: java.util.concurrent.TimeoutException => (ScalaBatshNewRC.TIMEOUT3,List.empty[String],List.empty[String])
-	case _: Throwable => (ScalaBatshNewRC.UNKNOWN3,List.empty[String],List.empty[String])
-	}
-	fw.close
-	f.delete
-	myErrPrintln("  rc: {"+result._1+"}")
-
-	def run(in: String): (Int, List[String], List[String]) = {
-		val qb = Process(in)
-				var out = List[String]()
-				var err = List[String]()
-				val exit = qb ! ProcessLogger((s) => out ::= s.replaceAll(s_pwd,"##hidden##"), (s) => err ::= s.replaceAll(s_pwd,"##hidden##"))
-				(exit, out.reverse, err.reverse)
-	}
-}
-
-object ScalaBatshNewRC extends Enumeration {
-	val OK = 0 
-			val UNKNOWN1 = 1
-			val TIMEOUT = 888 
-			val TIMEOUT3 = 707
-			val UNKNOWN3 = 777
-}

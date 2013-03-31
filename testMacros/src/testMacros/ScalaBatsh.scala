@@ -1,4 +1,4 @@
-package kebra
+package testMacros
 
 ;
 import kebra.MyLog._
@@ -6,10 +6,8 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.FutureTask
 import scala.util.Random
 import java.io._
-import scala.collection.immutable.ListSet;
-import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
-import language.postfixOps
+import kebra.MyLog
 
 object ScalaBatsh {
 	def exec(Tlvl: Int, s_cmd: String): (Int,List[String],List[String]) = execRemovePwd(Tlvl, s_cmd, "Cowabunga!")

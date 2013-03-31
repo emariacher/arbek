@@ -2,10 +2,6 @@ package testMacros
 
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
-import kebra.ScalaBatshNew._
-import kebra.ScalaBatshNew2._
-import kebra.ScalaBatshNew3
-import kebra.ScalaBatshNew4
 import kebra.WindowsStuff._
 import kebra.MyLog._
 import java.io.File
@@ -62,11 +58,11 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 	}
 
 	test("ScalaBatshNew2") {
-		(scalaBatshActor ! "dir").toString should equal("()")
-		(scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
-		(scalaBatshActor !? (1, "dir")) should equal(None)
-		(scalaBatshActor !? (1000, (10,"dir /D"))).toString should not equal("()")
-		(scalaBatshActor !? (1000, (10,"notepad.exe"))) should equal(None)
+		(ScalaBatshNew2.scalaBatshActor ! "dir").toString should equal("()")
+		(ScalaBatshNew2.scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
+		(ScalaBatshNew2.scalaBatshActor !? (1, "dir")) should equal(None)
+		(ScalaBatshNew2.scalaBatshActor !? (1000, (10,"dir /D"))).toString should not equal("()")
+		(ScalaBatshNew2.scalaBatshActor !? (1000, (10,"notepad.exe"))) should equal(None)
 		taskKill("notepad.exe") should equal(0)
 		taskKill("notepad.exe") should equal(128)
 		/*(1 until 50).map((i: Int) => {
@@ -75,23 +71,14 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		waiting(1 second)
 	}
 
-	test("ScalaBatshNew3") {
-		new ScalaBatshNew3(5,"dir").result._1 should equal (OK)	
-		new ScalaBatshNew3(6,"cowabunga!").result._1 should equal (UNKNOWN1)	
-		new ScalaBatshNew3(7,"dir /D", 1 millisecond).result._1 should equal (TIMEOUT3)	
-		new ScalaBatshNew3(5,"notepad.exe").result._1 should equal (TIMEOUT3)	
-		taskKill("notepad.exe") should equal(OK)
-		waiting(1 second)
-	}
-
 	test("ScalaBatshNew4") {
-		new ScalaBatshNew4("dir").result._1 should equal (OK)
-		myPrintIt(new ScalaBatshNew4("dir").result._2.mkString("\n"))
-		new ScalaBatshNew4(6,"cowabunga!").result._1 should equal (UNKNOWN1)	
-		new ScalaBatshNew4(7,"REG QUERY HKLM\\Software /se #", 1 millisecond).result._1 should equal (TIMEOUT3)	
-		new ScalaBatshNew4(8,"notepad.exe").result._1 should equal (TIMEOUT3)	
+		exec("dir")._1 should equal (OK)
+		myPrintIt(exec("dir")._2.mkString("\n"))
+		exec(6,"cowabunga!")._1 should equal (UNKNOWN1)	
+		exec(7,"REG QUERY HKLM\\Software /se #", 1 millisecond)._1 should equal (TIMEOUT3)	
+		exec(8,"notepad.exe")._1 should equal (TIMEOUT3)	
 		taskKill("notepad.exe") should equal(OK)
-		new ScalaBatshNew4(2,"echo zubzabzub","zub").result._2(1).split(" ").last should equal ("##hidden##zab##hidden##")
+		exec(2,"echo zubzabzub","zub")._2(1).split(" ").last should equal ("##hidden##zab##hidden##")
 		waiting(1 second)
 	}
 }
