@@ -22,7 +22,7 @@ import java.io.InputStream
 // scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
 
 class TestWindowsStuff extends FunSuite with ShouldMatchers {
-	ignore("getEnvVar") {
+	test("getEnvVar") {
 		//1 should equal(0)
 		myPrintIt(getAllEnvVars.mkString("\n"))
 		getEnvVar("OS") should equal("Windows_NT")
@@ -31,14 +31,14 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		myPrintIt(getPathAsList)
 	}
 
-	ignore("listFiles") {
+	test("listFiles") {
 		myPrintIt(recursiveListFiles(new File("C:\\Users\\emariacher\\workspace\\kebra2\\testMacros"),""".*\.scala""".r))
 		myPrintIt(findExecutableInPath("java.exe"))
 		myPrintIt(findExecutableInPath("unins000.dat"))
 		findExecutableInPath("cowabunga") should equal(None)
 	}
 
-	ignore("Paths") {
+	test("Paths") {
 		getDeltaPath("C:\\Users\\emariacher\\workspace\\kebra2\\testMacros", "C:\\Users\\rehcairam\\workspace\\testMacroz") should 
 		equal("..\\..\\..\\emariacher\\workspace\\kebra2\\testMacros")
 		getDeltaPath("C:\\Users\\rehcairam\\workspace\\testMacroz", "C:\\Users\\emariacher\\workspace\\kebra2\\testMacros") should 
@@ -53,7 +53,7 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		equal("..\\..\\..\\..\\..\\Z:\\Users\\emariacher\\workspace\\kebra2")
 	}
 
-	ignore("TaskLists New") {
+	test("TaskLists New") {
 		taskExist("notepad.exe") should be(false)
 		taskKill("notepad.exe") should equal(128)
 		scala.concurrent.Future(exec(3,"notepad.exe"))
@@ -61,16 +61,7 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		taskExist("notepad.exe")  should be(false)
 	}
 
-	ignore("windowsRegs") {
-		regQuery("HKLM\\Software /se #")
-	}
-
-	ignore("scala.sys.SystemProperties") {
-		myPrintIt((new scala.sys.SystemProperties).mkString("\n"))
-	}
-
-
-	ignore("ScalaBatshNew2") {
+	test("ScalaBatshNew2") {
 		(scalaBatshActor ! "dir").toString should equal("()")
 		(scalaBatshActor !? (1000, "dir /W")).toString should not equal("()")
 		(scalaBatshActor !? (1, "dir")) should equal(None)
@@ -84,28 +75,23 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 		waiting(1 second)
 	}
 
-	ignore("ScalaBatshNew3") {
+	test("ScalaBatshNew3") {
 		new ScalaBatshNew3(5,"dir").result._1 should equal (OK)	
-		new ScalaBatshNew3(6,"cowabunga!").result._1 should equal (1)	
+		new ScalaBatshNew3(6,"cowabunga!").result._1 should equal (UNKNOWN1)	
 		new ScalaBatshNew3(7,"dir /D", 1 millisecond).result._1 should equal (TIMEOUT3)	
 		new ScalaBatshNew3(5,"notepad.exe").result._1 should equal (TIMEOUT3)	
-		taskKill("notepad.exe") should equal(0)
-		waiting(1 second)
-	}
-
-	test("scala.sys.process1") {
-		new ScalaBatshNew4(5,"notepad.exe")
-		"taskkill.exe /F /IM notepad.exe /T".! should equal(0)
-		"REG QUERY HKLM\\Software /se #".! should equal(0)
+		taskKill("notepad.exe") should equal(OK)
 		waiting(1 second)
 	}
 
 	test("ScalaBatshNew4") {
-		new ScalaBatshNew4(5,"dir").result._1 should equal (UNKNOWN3)	
-		new ScalaBatshNew4(6,"cowabunga!").result._1 should equal (UNKNOWN3)	
+		new ScalaBatshNew4("dir").result._1 should equal (OK)
+		myPrintIt(new ScalaBatshNew4("dir").result._2.mkString("\n"))
+		new ScalaBatshNew4(6,"cowabunga!").result._1 should equal (UNKNOWN1)	
 		new ScalaBatshNew4(7,"REG QUERY HKLM\\Software /se #", 1 millisecond).result._1 should equal (TIMEOUT3)	
-		new ScalaBatshNew4(5,"notepad.exe").result._1 should equal (TIMEOUT3)	
-		taskKill("notepad.exe") should equal(0)
+		new ScalaBatshNew4(8,"notepad.exe").result._1 should equal (TIMEOUT3)	
+		taskKill("notepad.exe") should equal(OK)
+		new ScalaBatshNew4(2,"echo zubzabzub","zub").result._2(1).split(" ").last should equal ("##hidden##zab##hidden##")
 		waiting(1 second)
 	}
 }

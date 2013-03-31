@@ -1,7 +1,7 @@
 package kebra
 
 import scala.util._
-import kebra.ScalaBatsh._
+//import kebra.ScalaBatshNew4
 import kebra.MyLog._
 import java.io.File
 import scala.util.matching.Regex
@@ -10,7 +10,7 @@ object WindowsStuff {
 
 	def getEnvVar(name: String): String = Properties.envOrElse(name, "Rien["+name+"]")
 
-			def getAllEnvVars: Map[String,String] = exec(2,"set")._2.tail.map((line: String) => {
+			def getAllEnvVars: Map[String,String] = new ScalaBatshNew4("set").result._2.tail.map((line: String) => {
 				val c = line.split("=").toList
 						//myAssert2(c.size,2)
 						(c.head,c.last)
@@ -39,9 +39,9 @@ object WindowsStuff {
 		}
 	}
 
-	def taskList: List[List[String]] = exec(4,"tasklist /V /FO CSV")._2.tail.map(_.split(",").toList.map(_.tail.reverse.tail.reverse))
+	def taskList: List[List[String]] = new ScalaBatshNew4("tasklist /V /FO CSV").result._2.tail.map(_.split(",").toList.map(_.tail.reverse.tail.reverse))
 			def taskExist(tName: String): Boolean = taskList.exists(_.head==tName)
-			def taskKill(tName: String): Int = exec(4,"taskkill /F /IM "+tName+" /T")._1
+			def taskKill(tName: String): Int = new ScalaBatshNew4("taskkill /F /IM "+tName+" /T").result._1
 			
-			def regQuery(cmd: String) = exec(4,"REG QUERY "+cmd)
+			def regQuery(cmd: String) = new ScalaBatshNew4("REG QUERY "+cmd)
 }
