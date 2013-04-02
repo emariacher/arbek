@@ -44,16 +44,16 @@ object WindowsStuff {
 		}
 	}
 
-	def taskList: List[List[String]] = exec("tasklist /V /FO CSV")._2.tail.map(_.split(",").toList.map(_.tail.reverse.tail.reverse))
-			def taskExist(tName: String): Boolean = taskList.exists(_.head==tName)
+	def taskList: List[List[String]] = exec(4,"tasklist /V /FO CSV", 2 seconds)._2.tail.map(_.split(",").toList.map(_.tail.reverse.tail.reverse))
+			def taskExist(tName: String): Boolean = taskList.filter(!_.isEmpty).exists(_.head==tName)
 			def taskKill(tName: String): Int = exec("taskkill /F /IM "+tName+" /T")._1
 
 			def regQuery(cmd: String) = exec("REG QUERY "+cmd)
 
-	def exec(Tlvl: Int, s_cmd: String, timeOut: Duration) = new ScalaBatshNew4(Tlvl, s_cmd, "cowabunga", timeOut).result
-	def exec(Tlvl: Int, s_cmd: String, s_pwd: String) = new ScalaBatshNew4(Tlvl, s_cmd, s_pwd, 1 second).result
-	def exec(Tlvl: Int, s_cmd: String) = new ScalaBatshNew4(Tlvl, s_cmd, "cowabunga", 1 second).result
-	def exec(s_cmd: String) = new ScalaBatshNew4(3, s_cmd, "cowabunga", 1 second).result
+			def exec(Tlvl: Int, s_cmd: String, timeOut: Duration) = new ScalaBatshNew4(Tlvl, s_cmd, "cowabunga", timeOut).result
+			def exec(Tlvl: Int, s_cmd: String, s_pwd: String) = new ScalaBatshNew4(Tlvl, s_cmd, s_pwd, 1 second).result
+			def exec(Tlvl: Int, s_cmd: String) = new ScalaBatshNew4(Tlvl, s_cmd, "cowabunga", 1 second).result
+			def exec(s_cmd: String) = new ScalaBatshNew4(3, s_cmd, "cowabunga", 1 second).result
 }
 
 class ScalaBatshNew4(Tlvl: Int, s_cmd: String, s_pwd: String, timeOut: Duration) {

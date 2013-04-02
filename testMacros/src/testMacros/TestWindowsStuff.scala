@@ -28,7 +28,7 @@ class TestWindowsStuff extends FunSuite with ShouldMatchers {
 	}
 
 	test("listFiles") {
-		myPrintIt(recursiveListFiles(new File("C:\\Users\\emariacher\\workspace\\kebra2\\testMacros"),""".*\.scala""".r))
+		myPrintIt(recursiveListFiles(new File("C:\\Users\\emariacher\\workspace"),""".*\.scala""".r))
 		myPrintIt(findExecutableInPath("java.exe"))
 		myPrintIt(findExecutableInPath("unins000.dat"))
 		findExecutableInPath("cowabunga") should equal(None)
