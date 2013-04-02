@@ -1,4 +1,5 @@
 package bugstats
+
 import java.io.File
 import java.util.Calendar
 import scala.swing.TextField
@@ -9,27 +10,30 @@ import kebra.MyLog
 import kebra.MyFileChooser
 import language.postfixOps
 
-
 object BugStatsMain {
 	def main(args: Array[String]): Unit = {
 			val f = (new MyFileChooser("GetBugsLog")).justChooseFile("xml");
 			val L = MyLog.newMyLog(this.getClass.getName,f,"htm")
 
 
-			val bugs = (new TTPro).ParseXml(f)
-			//println(bugs.mkString("\n"))
+					val bugs = (new TTPro).ParseXml(f)
+					//println(bugs.mkString("\n"))
 
-			val today = Calendar.getInstance
-			val latestActivityInInputFile = bugs.map(_.h.last.c).sorted.last
-			L.myPrintln("latestActivityInInputFile: "+printZisday(latestActivityInInputFile,"dMMMyyyy"))
-			var endDate = today 
-			if((now is latestActivityInInputFile).before(Today minus 3 days)) {
-				L.createGui(List(("endDate dd/MM/yy",printZisday(latestActivityInInputFile,"dd/MM/yy"),new TextField)))
-				val z = L.Gui.getAndClose.head._2
-				endDate = MyLog.ParseDate(z,"dd/MM/yy")
-			}
+					val today = Calendar.getInstance
+					val latestActivityInInputFile = bugs.map(_.h.last.c).sorted.last
+					L.myPrintln("latestActivityInInputFile: "+printZisday(latestActivityInInputFile,"dMMMyyyy"))
+					var endDate = today 
+					if((now is latestActivityInInputFile).before(Today minus 3 days)) {
+						//L.createGui(List(("endDate dd/MM/yy",printZisday(latestActivityInInputFile,"dd/MM/yy"),new TextField)))
+						L.createGui(new ZeParameters(List((
+								"endDate dd/MM/yy",new MyParameter(printZisday(latestActivityInInputFile,"dd/MM/yy"),
+								    printZisday(latestActivityInInputFile,"dd/MM/yy"), new TextField)
+										))))
+						val z = L.Gui.getAndClose.head._2.value
+						endDate = MyLog.ParseDate(z,"dd/MM/yy")
+					}
 			endDate.clear(Calendar.HOUR)
-			L.myPrintln("endDate: "+printZisday(endDate,"dMMMyyyy"))
+			L.myPrintln("\nendDate: "+printZisday(endDate,"dMMMyyyy"))
 
 			val projets = bugs.map(_.product).distinct.map(new Projet(_,bugs,endDate))	
 

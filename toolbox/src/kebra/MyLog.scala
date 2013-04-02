@@ -475,12 +475,12 @@ class MyFileChooser(s_title: String) extends Panel {
     }
 }
 
-class GrabFilter(s_extension: String) extends FileFilter {
+class GrabFilter(val s_extension: String) extends FileFilter {
     def accept(f: File) = f.getName.contains(s_extension) || f.isDirectory
             def getDescription(): String ="Just "+s_extension+" files"}
 
 
-class MyUI(s_title : String, parameters: ZeParameters) extends Frame {
+class MyUI(val s_title : String, val parameters: ZeParameters) extends Frame {
         val gpanel = new gridpanel(parameters.size+1,2,parameters)
         if(!parameters.isEmpty) {
                 title = s_title
@@ -490,7 +490,7 @@ class MyUI(s_title : String, parameters: ZeParameters) extends Frame {
         }
 
         def get(): ZeParameters = {
-                        while(gpanel.myText=="NotYet"){}
+                        while(gpanel.myText=="NotYet"){ MyLog.myPrint(".")}
                         gpanel.getFromPanel
         }
 
@@ -502,7 +502,7 @@ class MyUI(s_title : String, parameters: ZeParameters) extends Frame {
 }
 
 
-class gridpanel(rows0: Int, cols0: Int, parameters: ZeParameters) extends GridPanel(rows0, cols0){
+class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters) extends GridPanel(rows0, cols0){
         minimumSize = new java.awt.Dimension(500,500)
         var myText = "NotYet"
         parameters.foreach(add2Panel(_))
@@ -625,7 +625,7 @@ object MyParameter {
     val pair = """\((.+),(.*)\)""".r
 }
 
-class MyParameter(v: String, val defaultValue: String, val classtype: Component) {
+class MyParameter(val v: String, val defaultValue: String, val classtype: Component) {
     def this(v: String) = this(v,"",new TextField)
             def this(v: String, defval: String) = this(v,defval,new TextField)
             def this(v: String, classtype: Component) = this(v,"",classtype)
