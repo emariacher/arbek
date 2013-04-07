@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.Await
 import akka.actor.ActorSystem
-import akka.actor.{ ActorSystem, Actor, Props }
+import akka.actor.{ ActorSystem, Actor, ActorRef, Props }
 import akka.pattern.ask
 import akka.util.Timeout
 
@@ -18,42 +18,30 @@ class TestUI extends FunSuite with ShouldMatchers {
 	test("actor1") {
 		val system = ActorSystem()
 				val worldActor = system.actorOf(Props[WorldActor])
-				implicit val timeout = Timeout(5 seconds)
-				val future = worldActor ? "Zorg"
-						val result = Await.result(future, timeout.duration).asInstanceOf[String]
+				implicit val timeout = Timeout(1 second)
+				var future = worldActor ? "Zorg"
+						var result = Await.result(future, timeout.duration).asInstanceOf[String]
 								myPrintIt(result)
 						result should equal("ZORG world!")
-	}
-}
+		future = worldActor ? "loop"
+				result = Await.result(future, timeout.duration).asInstanceOf[String]
+						myPrintIt(result)
+				result should equal("looped!")
+		worldActor ! "register"
+				future = worldActor ? "getAnswer"
+				result = Await.result(future, timeout.duration).asInstanceOf[String]
+						myPrintIt(result)
+				result should equal("zeAnswer")
 
-case object Start
-
-object ExampleAkka20 extends App {
-	val system = ActorSystem()
-			system.actorOf(Props[HelloActor]) ! Start
-}
-
-object ExampleAkka20_2 extends App {
-	val system = ActorSystem()
-			val worldActor = system.actorOf(Props[WorldActor])
-			implicit val timeout = Timeout(5 seconds)
-			val future = worldActor ? "Zorg"
-					val result = Await.result(future, timeout.duration).asInstanceOf[String]
-							myPrintIt(result)
-}
-
-class HelloActor extends Actor {
-	val worldActor = context.actorOf(Props[WorldActor])
-			def receive = {
-			case Start ⇒ worldActor ! "Helloz"
-			case s: String ⇒
-			println("Received message: %s".format(s))
-			context.system.shutdown()
 	}
 }
 
 class WorldActor extends Actor {
+  var sender1: ActorRef = _
 	def receive = {
+	case "register" => sender1 = sender
+	case "loop" => sender ! "looped!"
+	case "getAnswer" => sender1 ! "zeAnswer"
 	case s: String ⇒ sender ! s.toUpperCase + " world!"
 	}
 }
