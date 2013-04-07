@@ -22,20 +22,26 @@ import javax.swing.filechooser.FileFilter
 import akka.actor.ActorDSL._
 import akka.actor.ActorSystem
 import akka.actor.ActorRef
-
+import kebra.MyLog._
 
 
 
 class MyActor4UI {
 	implicit val system = ActorSystem("MyActorSystem4UI")
-	var sender1: ActorRef = _
+	//var sender1: ActorRef = _
 
 			val a = actor(new Act {
 				become {
-				case "getParm" ⇒ sender1 = sender
-				case p: ZeParameters => sender1 ! p
+				//case "getParm" ⇒ sender1 = sender
+				case "loop" ⇒ {
+				  myPrintDln("loop!")
+				  sender ! "looped!"
+				}
+				//case p: ZeParameters => sender1 ! p
 				}
 			})
+			
+			myPrintDln("??? "+(a ! "loop"))
 }
 
 
