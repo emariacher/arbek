@@ -2,7 +2,6 @@ package testMacros
 
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
-import kebra.MyActor4UI
 import kebra.MyLog._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -10,31 +9,37 @@ import scala.concurrent.Future
 import scala.concurrent.Await
 import akka.actor.ActorSystem
 import akka.actor.{ ActorSystem, Actor, Props }
+import akka.pattern.ask
+import akka.util.Timeout
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestUI
 
 class TestUI extends FunSuite with ShouldMatchers {
-	implicit val system = ActorSystem("demo")
-			test("actor1") {
-		val a = new MyActor4UI
-
-				myPrintIt(a.a ! "loop")
-		val b = Future { a.a ! "loop" }
-		var result = Await.result(b,4 seconds)
-				myPrintIt(result)
-				val c = a.a ! "loop"
-				myPrintIt(c)
-				true should be (false)
+	test("actor1") {
+		val system = ActorSystem()
+				val worldActor = system.actorOf(Props[WorldActor])
+				implicit val timeout = Timeout(5 seconds)
+				val future = worldActor ? "Zorg"
+						val result = Await.result(future, timeout.duration).asInstanceOf[String]
+								myPrintIt(result)
+						result should equal("ZORG world!")
 	}
 }
 
 case object Start
 
-object ExampleAkka20 {
-	def main(args: Array[String]): Unit = {
-			val system = ActorSystem()
-					system.actorOf(Props[HelloActor]) ! Start
-	}
+object ExampleAkka20 extends App {
+	val system = ActorSystem()
+			system.actorOf(Props[HelloActor]) ! Start
+}
+
+object ExampleAkka20_2 extends App {
+	val system = ActorSystem()
+			val worldActor = system.actorOf(Props[WorldActor])
+			implicit val timeout = Timeout(5 seconds)
+			val future = worldActor ? "Zorg"
+					val result = Await.result(future, timeout.duration).asInstanceOf[String]
+							myPrintIt(result)
 }
 
 class HelloActor extends Actor {
