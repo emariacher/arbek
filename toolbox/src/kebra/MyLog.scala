@@ -177,7 +177,7 @@ object MyLog {
                 val msg = linecode.tree.toString
                 reify(L.myPrintDln(c.Expr[String](Literal(Constant(msg))).splice+" ---> "+linecode.splice))
             }
-            def myPrintIt(linecode: Any) = macro printx
+            def myPrintIt(linecode: Any) = macro mprintx
 
 
                     def raise(msg: Any) = throw new AssertionError(msg)
