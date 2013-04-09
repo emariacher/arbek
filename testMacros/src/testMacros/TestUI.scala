@@ -19,117 +19,142 @@ import akka.actor.ActorSystem
 class TestUI extends FunSuite with ShouldMatchers {
 	test("actor0") {
 		val system = ActorSystem()
-				system.actorOf(Props[HelloActor]) ! Start
+				system.actorOf(Props[HelloActor]) ! Start1
+				myPrintIt("YO!")
 	}
 
 	test("actor1") {
-		val system = ActorSystem()
-				val worldActor = system.actorOf(Props[WorldActor])
-				implicit val timeout = Timeout(1 second)
-				var future = worldActor ? "Zorg"
+		implicit val timeout = Timeout(1 second)
+				val system = ActorSystem()
+				val ha = system.actorOf(Props[HelloActor])
+				ha ! Start2
+				ha ! Start3
+				/*var future = ha ? Start3
 						var result = Await.result(future, timeout.duration).asInstanceOf[String]
-								myPrintIt(result)
-						result should equal("ZORG world!")
-		future = worldActor ? "loop"
-				result = Await.result(future, timeout.duration).asInstanceOf[String]
-						myPrintIt(result)
-				result should equal("looped!")
-		worldActor ! "register"
-		future = worldActor ? "getAnswer"
-				result = Await.result(future, timeout.duration).asInstanceOf[String]
-						myPrintIt(result)
-				result should equal("zeAnswer")
+								myPrintIt(result)*/
+				waiting(3 seconds)
 	}
 
 	test("actor2") {
-		val ovall = new Overall
-				implicit val timeout = Timeout(1 second)
-				myPrintIt(ovall.result)
+		val cadre = new Cadre
+				cadre.ha ! Start2
+				cadre.ha ! Start3
+				waiting(3 seconds)
 	}
 }
 
-class Overall {
-	var result = new SomeStuff("rien")
-
-	myPrintDln("Here!")
-	implicit val system = ActorSystem()
-	implicit val timeout = Timeout(1 second)
-	val zuiserver = system.actorOf(Props[ZuiServer])
-	val zuiclient = system.actorOf(Props[ZuiClient])
-	val a = actor(new Act { whenStarting { 
-		myPrintDln("sending zobi la mouche!")
-		zuiserver ! new SomeStuff("zobi la mouche!") 
-		myPrintDln("sent    zobi la mouche!")
-	} })
-	myPrintDln("There!")
-
-	class ZuiServer extends Actor {
-		myPrintDln("HereServer!")
-		def receive = {
-		case "getParms" => myPrintDln("received getParms!")
-		case stuff: SomeStuff => {
-			myPrintIt(stuff)
-			zuiclient ! stuff
-		}
-		}
-	}
-
-	class ZuiClient extends Actor {
-		myPrintDln("sending getParms!")
-		var future = zuiserver ? "getParms"
-				result = Await.result(future, timeout.duration).asInstanceOf[SomeStuff]
-						myPrintIt(result)
-
-				def receive = {
-				case s: String => zuiserver ! s
-		}
-	}
-}
-
-class SomeStuff(msg: String) {
-	override def toString = "msg["+msg+"]"
-}
-
-class WorldActor extends Actor {
-	var sender1: ActorRef = _
-			def receive = {
-			case "register" => sender1 = sender
-			case "loop" => sender ! "looped!"
-			case "getAnswer" => sender1 ! "zeAnswer"
-			case s: String => sender ! s.toUpperCase + " world!"
-}
-}
-
-
-
-case object Start
-
-object ExampleAkka20 extends App {
-	val system = ActorSystem()
-			system.actorOf(Props[HelloActor]) ! Start
-}
-
-object ExampleAkka20_2 extends App {
-	val system = ActorSystem()
-			val worldActor = system.actorOf(Props[WorldActor2])
-			implicit val timeout = Timeout(5 seconds)
-			val future = worldActor ? "Zorg"
-					val result = Await.result(future, timeout.duration).asInstanceOf[String]
-							myPrintIt(result)
-}
+case object Start1
+case object Start2
+case object Start3
+case object Start4
+case object Start5
 
 class HelloActor extends Actor {
-	val worldActor = context.actorOf(Props[WorldActor2])
+	implicit val timeout = Timeout(1 second)
+			val wa = context.actorOf(Props[WorldActor])
 			def receive = {
-			case Start ⇒ worldActor ! "Helloz"
-			case s: String ⇒
-			println("Received message: %s".format(s))
+			case Start1 => wa ! "Helloz"
+			case Start2 => {
+				myPrintIt("H Start2")
+				wa ! Start2
+			}
+			case Start3 => {
+				myPrintIt("H Start3")
+				var future = wa ? Start3
+						var result = Await.result(future, timeout.duration).asInstanceOf[String]
+								myPrintIt(result)
+			}
+			case Start4 => {
+				myPrintIt("H Start4")
+				self ! Start5
+			}
+			case Start5 => {
+				myPrintIt("H Start5")
+				wa ! "zob"
+			}
+			case s: String =>
+			myPrintIt(s)
+			/*println("Received message: %s".format(s))
+			myPrintIt("Received message: %s".format(s))*/
 			context.system.shutdown()
 	}
 }
 
-class WorldActor2 extends Actor {
-	def receive = {
-	case s: String ⇒ sender ! s.toUpperCase + " world!"
+class WorldActor extends Actor {
+	implicit val timeout = Timeout(2 seconds)
+			var sender1: ActorRef = _
+			def receive = {
+			case Start2 => {
+				myPrintIt("W Start2")
+				sender1 = sender
+				myPrintIt("W Start2:"+sender+"\n"+sender1)
+			}
+			case Start3 => {
+				myPrintIt("W Start3:"+sender+"\n"+sender1)
+				sender ! "yo!"
+				var future = sender ? Start4
+						var result = Await.result(future, timeout.duration).asInstanceOf[String]
+								myPrintIt(result)
+			}
+			case s: String => sender ! s.toUpperCase + " world!"
 	}
 }
+
+class Cadre {
+	implicit val timeout = Timeout(1 second)
+			val system = ActorSystem()
+			val ha = system.actorOf(Props(new HelloActor))
+			val wa = system.actorOf(Props(new WorldActor))
+
+			class HelloActor extends Actor {
+		implicit val timeout = Timeout(1 second)
+				def receive = {
+				case Start1 => wa ! "Helloz"
+				case Start2 => {
+					myPrintIt("H Start2")
+					wa ! Start2
+				}
+				case Start3 => {
+					myPrintIt("H Start3")
+					var future = wa ? Start3
+							var result = Await.result(future, timeout.duration).asInstanceOf[String]
+									myPrintIt(result)
+				}
+				case Start4 => {
+					myPrintIt("H Start4")
+					self ! Start5
+				}
+				case Start5 => {
+					myPrintIt("H Start5")
+					wa ! "zob"
+				}
+				case s: String =>
+				myPrintIt(s)
+				/*println("Received message: %s".format(s))
+			myPrintIt("Received message: %s".format(s))*/
+				context.system.shutdown()
+		}
+	}
+
+	class WorldActor extends Actor {
+		implicit val timeout = Timeout(2 seconds)
+				var sender1: ActorRef = _
+				def receive = {
+				case Start2 => {
+					myPrintIt("W Start2")
+					sender1 = sender
+					myPrintIt("W Start2:"+sender+"\n"+sender1)
+				}
+				case Start3 => {
+					myPrintIt("W Start3:"+sender+"\n"+sender1)
+					sender ! "yo!"
+					var future = sender ? Start4
+							var result = Await.result(future, timeout.duration).asInstanceOf[String]
+									myPrintIt(result)
+				}
+				case s: String => sender ! s.toUpperCase + " world!"
+		}
+	}
+
+}
+
