@@ -17,7 +17,12 @@ import akka.actor.ActorSystem
 // scala org.scalatest.tools.Runner -o -s testMacros.TestUI
 
 class TestUI extends FunSuite with ShouldMatchers {
-	ignore("actor1") {
+	test("actor0") {
+		val system = ActorSystem()
+				system.actorOf(Props[HelloActor]) ! Start
+	}
+
+	test("actor1") {
 		val system = ActorSystem()
 				val worldActor = system.actorOf(Props[WorldActor])
 				implicit val timeout = Timeout(1 second)
@@ -34,7 +39,6 @@ class TestUI extends FunSuite with ShouldMatchers {
 				result = Await.result(future, timeout.duration).asInstanceOf[String]
 						myPrintIt(result)
 				result should equal("zeAnswer")
-
 	}
 
 	test("actor2") {
@@ -45,7 +49,7 @@ class TestUI extends FunSuite with ShouldMatchers {
 }
 
 class Overall {
-  	var result = new SomeStuff("rien")
+	var result = new SomeStuff("rien")
 
 	myPrintDln("Here!")
 	implicit val system = ActorSystem()
@@ -60,7 +64,7 @@ class Overall {
 	myPrintDln("There!")
 
 	class ZuiServer extends Actor {
-  	  myPrintDln("HereServer!")
+		myPrintDln("HereServer!")
 		def receive = {
 		case "getParms" => myPrintDln("received getParms!")
 		case stuff: SomeStuff => {
@@ -98,4 +102,34 @@ class WorldActor extends Actor {
 
 
 
+case object Start
 
+object ExampleAkka20 extends App {
+	val system = ActorSystem()
+			system.actorOf(Props[HelloActor]) ! Start
+}
+
+object ExampleAkka20_2 extends App {
+	val system = ActorSystem()
+			val worldActor = system.actorOf(Props[WorldActor2])
+			implicit val timeout = Timeout(5 seconds)
+			val future = worldActor ? "Zorg"
+					val result = Await.result(future, timeout.duration).asInstanceOf[String]
+							myPrintIt(result)
+}
+
+class HelloActor extends Actor {
+	val worldActor = context.actorOf(Props[WorldActor2])
+			def receive = {
+			case Start ⇒ worldActor ! "Helloz"
+			case s: String ⇒
+			println("Received message: %s".format(s))
+			context.system.shutdown()
+	}
+}
+
+class WorldActor2 extends Actor {
+	def receive = {
+	case s: String ⇒ sender ! s.toUpperCase + " world!"
+	}
+}
