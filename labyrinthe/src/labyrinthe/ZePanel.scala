@@ -1,6 +1,7 @@
 package labyrinthe
 import scala.swing.Panel
-import scala.actors.Actor
+import akka.actor._
+import akka.actor.ActorDSL._
 import java.awt.Graphics2D
 import java.awt.Dimension
 import java.awt.Color
@@ -9,9 +10,39 @@ import java.io.File
 import scala.swing.Label
 import labyrinthe.Tableaux._
 import kebra.MyLog
+import scala.concurrent.duration._
 
 
-class ZePanel(val lbl: Label, val maxRC: RowCol) extends Panel with Actor {
+
+class ZeActor extends Actor {
+	context.setReceiveTimeout(1 second)
+	def receive = {
+	case ReceiveTimeout => if((!ZePanel.zp.pause)&&(!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout", true)
+	case slider: (String,Int) => ZePanel.zp.pause = slider._2 == 0
+	ZePanel.zp.run = false
+	if(slider._2==100) {
+		ZePanel.zp.timeout = 1
+				ZePanel.zp.run = true
+	} else {
+		ZePanel.zp.timeout = max(50,slider._2*4)
+	}
+	ZePanel.zp.step = false 
+	case "step" => ZePanel.zp.repaint; tbx.doZeJob("step", true); ZePanel.zp.step = true
+	}
+}
+
+object ZePanel {
+	var zp: ZePanel = _
+	var za: ActorRef = _
+	implicit val system = ActorSystem()
+			def newZePanel(lbl: Label, maxRC: RowCol) {
+	zp = new ZePanel(lbl, maxRC)
+	    za = ActorDSL.actor(new ZeActor)
+}
+}
+
+
+class ZePanel(val lbl: Label, val maxRC: RowCol) extends Panel {
 	var pause = false
 			var step = false
 			var run = false
@@ -21,25 +52,6 @@ class ZePanel(val lbl: Label, val maxRC: RowCol) extends Panel with Actor {
 			preferredSize = new Dimension(largeur, hauteur)
 	val origin  = new Dimension(0,0)
 	newTbx(this, maxRC, preferredSize, origin)
-	start
-
-	def act() {
-		loop {
-			reactWithin(timeout) {				
-			case slider: (String,Int) => pause = slider._2 == 0
-					run = false
-					if(slider._2==100) {
-						timeout = 1
-								run = true
-					} else {
-						timeout = max(50,slider._2*4)
-					}
-			step = false 
-			case "step" => repaint; tbx.doZeJob("step", true); step = true
-			case _ => if((!pause)&&(!step)) repaint; tbx.doZeJob("timeout", true)
-			}
-		}
-	}
 
 	override def paint(g: Graphics2D) {
 		g.setColor(Color.white)

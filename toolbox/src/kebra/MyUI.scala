@@ -22,26 +22,42 @@ import javax.swing.filechooser.FileFilter
 import akka.actor.ActorDSL._
 import akka.actor.ActorSystem
 import akka.actor.ActorRef
+import akka.agent.Agent
+import scala.concurrent.duration._
+import akka.util.Timeout
 import kebra.MyLog._
 
 
 
-class MyActor4UI {
-	implicit val system = ActorSystem("MyActorSystem4UI")
-	//var sender1: ActorRef = _
+class MyNewUI(val s_title : String, val parameters: ZeParameters) extends Frame {
+	implicit val system = ActorSystem("app")
 
-			val a = actor(new Act {
-				become {
-				//case "getParm" ⇒ sender1 = sender
-				case "loop" ⇒ {
-				  myPrintDln("loop!")
-				  sender ! "looped!"
-				}
-				//case p: ZeParameters => sender1 ! p
-				}
-			})
-			
-			myPrintDln("??? "+(a ! "loop"))
+			val swingAnswerAgent = Agent("NotYet")(system)
+
+			val gpanel = new gridpanel(parameters.size+1, 2, parameters, swingAnswerAgent)
+	if(!parameters.isEmpty) {
+		title = s_title
+				contents = gpanel
+				pack
+				visible=true
+	}
+
+	def get(): ZeParameters = {
+			while(gpanel.myText=="NotYet"){ MyLog.myPrint("")}
+			gpanel.getFromPanel
+	}
+
+	def get2(): ZeParameters = {
+			implicit val timeout = Timeout(1 minute)
+					val result = swingAnswerAgent.await
+					gpanel.getFromPanel
+	}
+
+	def getAndClose(): ZeParameters = {
+			val l_output = get
+					close
+					l_output
+	}
 }
 
 
@@ -139,7 +155,7 @@ class GrabFilter(val s_extension: String) extends FileFilter {
 
 
 class MyUI(val s_title : String, val parameters: ZeParameters) extends Frame {
-	val gpanel = new gridpanel(parameters.size+1,2,parameters)
+	val gpanel = new gridpanel(parameters.size+1,2,parameters, None)
 	if(!parameters.isEmpty) {
 		title = s_title
 				contents = gpanel
@@ -160,11 +176,17 @@ class MyUI(val s_title : String, val parameters: ZeParameters) extends Frame {
 }
 
 
-class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters) extends GridPanel(rows0, cols0){
+class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters, val swingAnswerAgent: Any) extends GridPanel(rows0, cols0){
 	minimumSize = new java.awt.Dimension(500,500)
 	var myText = "NotYet"
 	parameters.foreach(add2Panel(_))
-	contents += new Button {action = Action("Do the Stuff") {println("Someone clicked button \"" + action.title+"\""); myText = this.text}}
+	contents += new Button {action = Action("Do the Stuff") {
+		println("Someone clicked button \"" + action.title+"\"")
+		myText = this.text
+		if(swingAnswerAgent!=None) {
+			swingAnswerAgent.asInstanceOf[Agent[String]] send this.text
+		}
+	}}
 	val errLbl = new Label("")
 	errLbl.foreground = Color.red
 	contents += errLbl
