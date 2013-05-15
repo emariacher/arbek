@@ -12,6 +12,7 @@ import scala.language.experimental.macros
 import scala.reflect.macros.Context
 
 object MyLog {
+      var system: ActorSystem = _
 
     val MatchFileLine = """.+\((.+)\..+:(\d+)\)""".r
             val MatchFunc = """(.+)\(.+""".r
@@ -21,6 +22,7 @@ object MyLog {
             def getMylog: MyLog = L
             def newMyLog(s_title: String, fil: File,errExt: String): MyLog = {
             if(vierge) {
+              system = ActorSystem("MyLog")
                 L = new MyLog(s_title, fil,errExt)
                 L.launchActorAndGui
                 vierge = false
@@ -257,7 +259,7 @@ object MyLog {
 }
 
 class MyLog(s_title: String, fil: File,errExt: String) {
-    val system = ActorSystem("MyLog")
+
 
             var name_no_ext = new String
             var files = List[MyFile]()
@@ -279,7 +281,7 @@ class MyLog(s_title: String, fil: File,errExt: String) {
                     var b_GuiActive = false
 
                     def launchActorAndGui {
-        MLA = system.actorOf(Props[MyLogActor], name = "MLA")
+        MLA = MyLog.system.actorOf(Props[MyLogActor], name = "MLA")
                 Gui = new MyUI("",new ZeParameters())  
     }
 

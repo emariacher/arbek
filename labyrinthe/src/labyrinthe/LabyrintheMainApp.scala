@@ -13,6 +13,7 @@ import scala.swing.SimpleSwingApplication
 import labyrinthe.Tableaux._
 import labyrinthe.LL._
 import java.io.File
+import kebra.MyLog._
 
 object LabyrintheMainApp extends SimpleSwingApplication {
 	newMyLL(this.getClass.getName,new File("out\\cowabunga"), "htm", true)
@@ -29,9 +30,9 @@ object LabyrintheMainApp extends SimpleSwingApplication {
 		val label = new Label { text = "Idle Label" }	
 
 		//val tableau = new ZePanel(label, new RowCol(40,40))
-		
+
 		ZePanel.newZePanel(label, new RowCol(40,40))
-		
+
 		contents = new BoxPanel(Orientation.Vertical) {
 			contents += label
 					contents += new BoxPanel(Orientation.Horizontal) {

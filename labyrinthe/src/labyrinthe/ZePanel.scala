@@ -10,8 +10,9 @@ import java.io.File
 import scala.swing.Label
 import labyrinthe.Tableaux._
 import kebra.MyLog
+import kebra.MyLog._
 import scala.concurrent.duration._
-
+import labyrinthe.LL._
 
 
 class ZeActor extends Actor {
@@ -21,23 +22,27 @@ class ZeActor extends Actor {
 	case slider: (String,Int) => ZePanel.zp.pause = slider._2 == 0
 	ZePanel.zp.run = false
 	if(slider._2==100) {
-		ZePanel.zp.timeout = 1
-				ZePanel.zp.run = true
+		context.setReceiveTimeout(1 millisecond)
+		ZePanel.zp.run = true
 	} else {
-		ZePanel.zp.timeout = max(50,slider._2*4)
+		context.setReceiveTimeout(max(50,slider._2*4) millisecond)
 	}
 	ZePanel.zp.step = false 
-	case "step" => ZePanel.zp.repaint; tbx.doZeJob("step", true); ZePanel.zp.step = true
+	case "step" => 
+	l.myErrPrintDln("step")
+	ZePanel.zp.repaint
+	tbx.doZeJob("step", true)
+	ZePanel.zp.step = true
 	}
 }
 
 object ZePanel {
 	var zp: ZePanel = _
-	var za: ActorRef = _
-	implicit val system = ActorSystem()
+			var za: ActorRef = _
+			implicit val system = MyLog.system
 			def newZePanel(lbl: Label, maxRC: RowCol) {
 	zp = new ZePanel(lbl, maxRC)
-	    za = ActorDSL.actor(new ZeActor)
+	za = ActorDSL.actor(new ZeActor)
 }
 }
 
@@ -48,7 +53,6 @@ class ZePanel(val lbl: Label, val maxRC: RowCol) extends Panel {
 			var run = false
 			var largeur = 1000
 			val hauteur = 700
-			var timeout = 2000
 			preferredSize = new Dimension(largeur, hauteur)
 	val origin  = new Dimension(0,0)
 	newTbx(this, maxRC, preferredSize, origin)
