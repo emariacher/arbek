@@ -10,7 +10,7 @@ class Bleu(couleur: String, rayon: Int) extends Jeton(couleur, rayon) {
     val ordreChoix = new Circular(List(nord, est, sud, ouest), auHasard, auHasard)
 
     // n'essaye pas de continuer dans la meme direction que la derniere fois mais continue a parcourir les priorites
-    def firstStep: RowCol = new RowCol(888,888)
+    def firstStep: RowCol = new RowCol(888, 888)
 
     def auHasard(c: Circular): Frontiere = {
         c.elements(tbx.rnd.nextInt(c.elements.size))
