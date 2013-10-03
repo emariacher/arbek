@@ -1,0 +1,5 @@
+package enumParser
+
+class ParsedFunction {
+
+}
