@@ -10,9 +10,10 @@ object MainAnotherCParser extends App {
     val source = scala.io.Source.fromFile(f, "utf-8")
     val lines = source.getLines.toList
     source.close
-        
+
     val parsed = new BasicCParser(lines.mkString(";"))
 
     L.myPrintDln(parsed.getFunctionList.toString)
 
+    L.closeFiles()
 }

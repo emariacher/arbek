@@ -1,11 +1,8 @@
 package enumParser
 
-class ParsedEnum {
-    var name = ""
-    var fields = List[Field]()
-
-    def :+(f: Field) = fields = fields :+ f
-    def updateName(z: String) = name = z
+class ParsedEnum(val quarte: List[Any]) {
+    val name = quarte.last.asInstanceOf[String]
+    var fields = quarte.reverse.tail.head.asInstanceOf[Block].lines.map((a: Any) => new Field(a.asInstanceOf[String]))
 
     override def toString = name+" -> "+fields
 

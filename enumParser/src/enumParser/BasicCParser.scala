@@ -1,30 +1,22 @@
 package enumParser
 
 import scala.util.parsing.combinator.JavaTokenParsers
+import kebra.MyLog
 
 class BasicCParser(arg: String) extends JavaTokenParsers {
+    val L = MyLog.getMylog
     val parsed = parseAll(cvalue, arg).get
 
     def getEnums: List[ParsedEnum] = {
-        var parsedEnumList = List[ParsedEnum]()
-        var parsedEnum = new ParsedEnum()
 
         //get enums
-        var isEnum = false
-        val typedefEnum = """(typedef enum)""".r
-        var lf = parsed.foreach((a: Any) => a match {
-            case z: String => z match {
-                case typedefEnum(typdef) =>
-                    isEnum = true
-                    parsedEnum = new ParsedEnum()
-                    parsedEnumList = parsedEnumList :+ parsedEnum
-                case _ => if (isEnum) {
-                    parsedEnum.updateName(z)
-                    isEnum = false
-                }
-            }
-            case _ => a.asInstanceOf[List[Any]].foreach(e => parsedEnum :+ new Field(e.toString))
-        })
+        val parsedEnumList = parsed.sliding(4).filter(_.head match {
+            case t: Typedef => true
+            case _          => false
+        }).filter(_.tail.head match {
+            case t: Enum => true
+            case _       => false
+        }).map((quarte: List[Any]) => new ParsedEnum(quarte)).toList
 
         // process each enum
         parsedEnumList.filter(!_.fields.filter(_.value == Field.invalid).isEmpty).foreach((pe: ParsedEnum) => {
@@ -46,18 +38,24 @@ class BasicCParser(arg: String) extends JavaTokenParsers {
     }
 
     def getFunctionList: List[ParsedFunction] = {
-        var parsedFunctionList = List[ParsedFunction]()
-        var parsedFunction = new ParsedFunction()
 
         //get Functions
-        var isFunction = false
-        val typedefEnum = """(typedef enum)""".r
+        val parsedFunctionList = parsed.sliding(3).filter(_.head match {
+            case t: String => t.split(" ").toList.size == 2
+            case _         => false
+        }).filter(_.tail.head match {
+            case t: Parentheses => true
+            case _              => false
+        }).filter(_.tail.tail.head match {
+            case t: Block => true
+            case _        => false
+        }).map((trio: List[Any]) => new ParsedFunction(trio)).toList
 
         parsedFunctionList
     }
 
     /**** Ze entry parser */
-    def cvalue: Parser[List[Any]] = rep(cPointVirg | cComS | cPar | cVirg | cBlock | """[^{};,()]+""".r) ^^ { t =>
+    def cvalue: Parser[List[Any]] = rep(cTypedef | cEnum | cPointVirg | cComS | cPar | cVirg | cBlock | """[^{};,()]+""".r) ^^ { t =>
         // drop comments
         val pointVirg = """(;)""".r
         val commentStart = """(CommentS)""".r
@@ -82,9 +80,17 @@ class BasicCParser(arg: String) extends JavaTokenParsers {
     }
     def cPointVirg: Parser[String] = ";" ^^ { t => t.toString }
     def cVirg: Parser[String] = "," ^^ { t => t.toString }
-    def cBlock: Parser[Any] = "{" ~ cvalue ~ "}" ^^ { t => t._1._2 }
-    def cPar: Parser[Any] = "(" ~ cvalue ~ ")" ^^ { t => t }
+    def cBlock: Parser[Block] = "{" ~ cvalue ~ "}" ^^ { t => new Block(t._1._2) }
+    def cPar: Parser[Parentheses] = "(" ~ cvalue ~ ")" ^^ { t => new Parentheses(t._1._2) }
     def cComS: Parser[String] = """/[/\*]+""".r ^^ { t => "CommentS" }
     def cComE: Parser[String] = """\*/""".r ^^ { t => "CommentE" }
 
+    def cTypedef: Parser[Typedef] = "typedef" ^^ { t => new Typedef }
+    def cEnum: Parser[Enum] = "enum" ^^ { t => new Enum }
 }
+
+case class Typedef
+case class Enum
+case class Block(lines: List[Any]) { override def toString: String = "Block{\n  "+lines.mkString("\n  ")+"\n  }" }
+case class Parentheses(lines: List[Any]) { override def toString: String = "Parentheses( "+lines.mkString(" ")+" )" }
+
