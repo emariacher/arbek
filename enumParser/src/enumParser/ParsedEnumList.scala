@@ -8,7 +8,27 @@ import kebra.MyLog
 class ParsedEnumList(lines: List[String]) extends JavaTokenParsers {
     val L = MyLog.getMylog
 
-    val parsedEnumList = new BasicCParser(lines.mkString(";")).getEnums
+    val parsedEnumList = getEnums(new BasicCParser(lines.mkString(";")).parsedEnumList)
+
+    def getEnums(parsedEnumList: List[ParsedEnum]): List[ParsedEnum] = {
+        // process/clean each enum
+        parsedEnumList.filter(!_.fields.filter(_.value == Field.invalid).isEmpty).foreach((pe: ParsedEnum) => {
+            var current_value = pe.fields.head.value
+            if (current_value == Field.invalid) {
+                current_value = 0
+                pe.fields.head.value = 0
+            }
+            pe.fields.tail.foreach((f: Field) => {
+                if (f.value == Field.invalid) {
+                    current_value += 1
+                    f.value = current_value
+                } else {
+                    current_value = f.value
+                }
+            })
+        })
+        parsedEnumList
+    }
 
     def getE(name: String) = parsedEnumList.find(_.name == name)
 

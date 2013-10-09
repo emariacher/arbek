@@ -13,7 +13,8 @@ object MainAnotherCParser extends App {
 
     val parsed = new BasicCParser(lines.mkString(";"))
 
-    L.myPrintDln(parsed.getFunctionList.toString)
-
+    L.myPrintDln(parsed.parsed.mkString("\n"))
+    L.myErrPrintDln(parsed.parsedExecBlockList.filter(_.isFunction).mkString("\n"))
+    
     L.closeFiles()
 }

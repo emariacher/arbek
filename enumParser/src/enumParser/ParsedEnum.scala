@@ -1,8 +1,7 @@
 package enumParser
 
-class ParsedEnum(val quarte: List[Any]) {
-    val name = quarte.last.asInstanceOf[String]
-    var fields = quarte.reverse.tail.head.asInstanceOf[Block].lines.map((a: Any) => new Field(a.asInstanceOf[String]))
+class ParsedEnum(val name: String, val bloc: Block) {
+    var fields = bloc.lines.map((a: Any) => new Field(a.asInstanceOf[String]))
 
     override def toString = name+" -> "+fields
 

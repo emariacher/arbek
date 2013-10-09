@@ -12,6 +12,9 @@ object MainEnumParser extends App {
     val lines = source.getLines.toList
     source.close
 
+    val parsed = new BasicCParser(lines.mkString(";"))
+    L.myPrintDln(parsed.parsed.mkString("\n"))
+
     val pel = new ParsedEnumList(lines)
 
     // do some checkings
