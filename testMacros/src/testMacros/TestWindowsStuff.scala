@@ -14,10 +14,19 @@ import kebra.ScalaBatshNewRC._
 import scala.sys.process._
 import java.io.OutputStream
 import java.io.InputStream
+import kebra.MyFile
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
 
 class TestWindowsStuff extends FunSuite with ShouldMatchers {
+	test("myPrintDln") {
+		myPrintDln(""+new MyFile("zob"))
+		getEnvVar("OS") should equal("Windows_NT")
+		getEnvVar("windir") should equal("C:\\Windows")
+		getEnvVar("USERDOMAIN") should equal("EUROPE")
+		myPrintIt(getPathAsList)
+	}
+
 	test("getEnvVar") {
 		//1 should equal(0)
 		myPrintIt(getAllEnvVars.mkString("\n"))

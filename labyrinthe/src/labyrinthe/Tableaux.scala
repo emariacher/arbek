@@ -120,7 +120,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         rnd = new Random(seed)
         countGenere = 0
         countAvance = 0
-        l.myPrintln("" + seed)
+        l.myPrintln(seed)
         lc = (0 until maxRow).map((row: Int) => (0 until maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
         mj.foreach((cj: (Couleur, Jeton)) => {
             val cnt = cj._2.cnt
@@ -140,7 +140,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         rnd = new Random(seed)
         countGenere = 0
         countAvance = 0
-        l.myPrintln("" + seed)
+        l.myPrintln(seed)
         lc = (0 until maxRow).map((row: Int) => (0 until maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
         lj.foreach(_.resetLocal)
         QA

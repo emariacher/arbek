@@ -20,15 +20,15 @@ class LL(val traces: Boolean) {
             L.myPrint(s)
         }
     }
-    def myPrintln(s: String) = myPrint(s + "\n")
-    def myPrintD(s: String) = myPrint(tag(3) + " " + s)
-    def myPrintDln(s: String) = myPrintD(s + "\n")
-    def myErrPrint(s: String) = {
+    def myPrintln(a: Any) = myPrint(a + "\n")
+    def myPrintD(a: Any) = myPrint(tag(3) + " " + a)
+    def myPrintDln(a: Any) = myPrintD(a + "\n")
+    def myErrPrint(a: Any) = {
         if (traces) {
-            L.myErrPrint(s)
+            L.myErrPrint(a)
         }
     }
-    def myErrPrintln(s: String) = myErrPrint(s + "\n")
-    def myErrPrintD(s: String) = myErrPrint(tag(3) + " " + s)
-    def myErrPrintDln(s: String) = myErrPrintD(s + "\n")
+    def myErrPrintln(a: Any) = myErrPrint(a + "\n")
+    def myErrPrintD(a: Any) = myErrPrint(tag(3) + " " + a)
+    def myErrPrintDln(a: Any) = myErrPrintD(a + "\n")
 }

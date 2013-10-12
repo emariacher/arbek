@@ -30,16 +30,16 @@ object MyLog {
         L
     }
 
-    def myPrint(s: String) = if (vierge) print(s) else L.myPrint(s)
-    def myPrintln(s: String) = myPrint(s + "\n")
-    def myPrintD(s: String) = myPrint(MyLog.tag(3) + " " + s)
-    def myPrintDln(s: String) = myPrintD(s + "\n")
-    def myErrPrint(s: String) = if (vierge) System.err.print(s) else L.myErrPrint(s)
-    def myErrPrintln(s: String) = myErrPrint(s + "\n")
-    def myErrPrintD(s: String) = myErrPrint(MyLog.tag(3) + " " + s)
-    def myErrPrintDln(s: String) = myErrPrintD(s + "\n")
-    def myHErrPrint(s: String) = if (vierge) System.err.print(s) else L.myHErrPrint(s)
-    def myHErrPrintln(s: String) = myHErrPrint(s + "\n")
+    def myPrint(a: Any) = if (vierge) print(a) else L.myPrint(a)
+    def myPrintln(a: Any) = myPrint(a + "\n")
+    def myPrintD(a: Any) = myPrint(MyLog.tag(3) + " " + a)
+    def myPrintDln(a: Any) = myPrintD(a + "\n")
+    def myErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myErrPrint(a)
+    def myErrPrintln(a: Any) = myErrPrint(a + "\n")
+    def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3) + " " + a)
+    def myErrPrintDln(a: Any) = myErrPrintD(a + "\n")
+    def myHErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myHErrPrint(a)
+    def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
 
     def printToday(fmt: String): String = printZisday(Calendar.getInstance(), fmt)
 
@@ -280,16 +280,16 @@ class MyLog(s_title: String, fil: File, errExt: String) {
         b_GuiActive = true
     }
 
-    def myPrint(s: String) = MLA ! logMsg("L", s)
-    def myPrintln(s: String) = myPrint(s + "\n")
-    def myPrintD(s: String) = myPrint(MyLog.tag(3) + " " + s)
-    def myPrintDln(s: String) = myPrintD(s + "\n")
-    def myErrPrint(s: String) = MLA ! logMsg("E", s)
-    def myErrPrintln(s: String) = myErrPrint(s + "\n")
-    def myErrPrintD(s: String) = myErrPrint(MyLog.tag(3) + " " + s)
-    def myErrPrintDln(s: String) = myErrPrintD(s + "\n")
-    def myHErrPrint(s: String) = MLA ! logMsg("H", s)
-    def myHErrPrintln(s: String) = myHErrPrint(s + "\n")
+    def myPrint(a: Any) = MLA ! logMsg("L", a)
+    def myPrintln(a: Any) = myPrint(a + "\n")
+    def myPrintD(a: Any) = myPrint(MyLog.tag(3) + " " + a)
+    def myPrintDln(a: Any) = myPrintD(a + "\n")
+    def myErrPrint(a: Any) = MLA ! logMsg("E", a)
+    def myErrPrintln(a: Any) = myErrPrint(a + "\n")
+    def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3) + " " + a)
+    def myErrPrintDln(a: Any) = myErrPrintD(a + "\n")
+    def myHErrPrint(a: Any) = MLA ! logMsg("H", a)
+    def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
 
     def closeFiles() {
         val t_end = Calendar.getInstance()
@@ -316,7 +316,7 @@ class MyLog(s_title: String, fil: File, errExt: String) {
 sealed trait MyLogMsg
 case object closeMsg extends MyLogMsg
 case class hcloseMsg(javascriptHeader: String, postProcessFunc: (List[String], String) => String) extends MyLogMsg
-case class logMsg(errorType: String, msg: String) extends MyLogMsg
+case class logMsg(errorType: String, msg: Any) extends MyLogMsg
 
 class MyLogActor extends Actor {
     val L = MyLog.getMylog
@@ -339,19 +339,19 @@ class MyLogActor extends Actor {
         case logMsg(errorType, msg) => errorType match {
             case "H" =>
                 if (b_filesActive) {
-                    hlines = hlines ++ msg.split("\n").toList
-                    logfile.writeFile(msg)
+                    hlines = hlines ++ msg.toString.split("\n").toList
+                    logfile.writeFile(msg.toString)
                 }
                 System.err.print(msg)
             case "E" =>
                 if (b_filesActive) {
-                    errfile.writeFile(msg)
-                    logfile.writeFile(msg)
+                    errfile.writeFile(msg.toString)
+                    logfile.writeFile(msg.toString)
                 }
                 System.err.print(msg)
             case "L" =>
                 if (b_filesActive) {
-                    logfile.writeFile(msg)
+                    logfile.writeFile(msg.toString)
                 }
                 System.out.print(msg)
             case _ => throw new Exception("wrong trace type: " + errorType.toString)
