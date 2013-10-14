@@ -11,6 +11,7 @@ import scala.concurrent.Future._
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.sys.process._
+import language.postfixOps
 
 object WindowsStuff {
 

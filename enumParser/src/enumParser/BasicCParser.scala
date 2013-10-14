@@ -51,12 +51,12 @@ class BasicCParser(arg: String) extends JavaTokenParsers {
     }
 }
 
-case class Typedef
-case class Enum
-case class CommentStart
-case class CommentEnd
-case class PointVirg
-case class Virg
+case class Typedef()
+case class Enum()
+case class CommentStart()
+case class CommentEnd()
+case class PointVirg()
+case class Virg()
 case class Block(val lines: List[Any]) { override def toString: String = "Block{\n  "+lines.mkString("\n  ")+"\n  }" }
 case class Parentheses(val lines: List[Any]) { override def toString: String = "Parentheses( "+lines.mkString(" ")+" )" }
 

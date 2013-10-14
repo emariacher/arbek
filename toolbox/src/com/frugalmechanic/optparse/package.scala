@@ -17,6 +17,7 @@
 package com.frugalmechanic
 
 import scala.util.matching.Regex
+import language.implicitConversions
 
 package object optparse {
   /**

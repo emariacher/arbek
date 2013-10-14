@@ -26,6 +26,7 @@ import akka.agent.Agent
 import scala.concurrent.duration._
 import akka.util.Timeout
 import kebra.MyLog._
+import language.postfixOps
 
 class MyNewUI(val s_title: String, val parameters: ZeParameters) extends Frame {
     implicit val system = ActorSystem("app")

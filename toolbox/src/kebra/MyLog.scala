@@ -10,6 +10,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 import scala.language.experimental.macros
 import scala.reflect.macros.Context
+import language.reflectiveCalls
 
 object MyLog {
     var system: ActorSystem = _
