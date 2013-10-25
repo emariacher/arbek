@@ -2,6 +2,7 @@ package euler
 import scala.collection.immutable.ListSet
 import scala.collection.immutable.TreeSet
 import EulerPrime._
+import kebra.MyLog._
 
 object EulerPrime {
     //  val premiers1000000 = (new CheckEulerPrime(1000000,1000)).premiers
@@ -32,6 +33,12 @@ object EulerPrime {
             }
             divisor == 0
         }
+    }
+
+    def getPrimesBetween(low: BigInt, high: BigInt, premiers: TreeSet[BigInt]) = {
+        myRequire(high <= premiers.last)
+        myRequire(low < high)
+        premiers.dropWhile(_ < low).takeWhile(_ < high)
     }
 }
 

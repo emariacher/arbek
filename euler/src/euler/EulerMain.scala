@@ -1,7 +1,7 @@
 package euler
 
 import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest._
 import org.scalatest.BeforeAndAfter
 import scala.collection.immutable.ListSet
 import java.util.Calendar
@@ -57,7 +57,7 @@ object Euler {
     }
 }
 
-class Euler extends FunSuite with ShouldMatchers with BeforeAndAfter {
+class Euler extends FunSuite with Matchers with BeforeAndAfter {
 
     before {
         Euler

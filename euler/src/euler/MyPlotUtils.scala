@@ -199,7 +199,7 @@ class Function4Plot(val func: (Double) => Double, val revfunc: (Double) => Doubl
         val x = MyPlotUtils.inc(xlow, step, xhigh)
         linePlotsOn
         val y = x.map(func(_))
-        plot(x, y, MyPlotUtils.getColor(hue), legend)
+        //bad symbolic reference plot(x, y, MyPlotUtils.getColor(hue), legend)
         require(y.min >= ymin)
         require(y.max <= ymax)
     }
@@ -261,7 +261,7 @@ class BetaFunction(val beta1: Double, val beta0: Double) extends Function4Plot((
             val x = MyPlotUtils.inc(xlow, step, xhigh)
             linePlotsOn
             val y = x.map(func(_))
-            plot(x, y, MyPlotUtils.getColor(hue), legend)
+            //bad symbolic reference plot(x, y, MyPlotUtils.getColor(hue), legend)
         }
     }
 

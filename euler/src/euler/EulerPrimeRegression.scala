@@ -1,7 +1,7 @@
 package euler
 
 import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest._
 import org.scalatest.BeforeAndAfter
 import scala.collection.immutable.ListSet
 import java.util.Calendar
@@ -16,7 +16,7 @@ import language.postfixOps
 // parameters.getValue("45zob").toInt should equal (1)
 // projects.map(_.getDatabase.getName).contains("COCO") should be (false)
 
-class EulerPrimeRegression extends FunSuite with ShouldMatchers with BeforeAndAfter {
+class EulerPrimeRegression extends FunSuite with Matchers with BeforeAndAfter {
 
     before {
         Euler

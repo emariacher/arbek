@@ -3,6 +3,7 @@ package euler
 import kebra.MyLog._
 import scala.collection.immutable.TreeSet
 import java.util.Calendar
+import scala.language.postfixOps
 
 object EulerMainNoScalaTest extends App {
     myPrintDln("Hello World!")
@@ -26,7 +27,7 @@ class Euler187 {
         val t2 = timeStamp(t1, "doZeJob2")
         val j3 = doZeJob3(end, EulerPrime.premiers100000)
         val t3 = timeStamp(t2, "doZeJob2")
-        printIt("\n" + end + ": " + j1 + "/" + (t1.getTimeInMillis - t_start.getTimeInMillis) + " " + j2 + "/" + (t2.getTimeInMillis - t1.getTimeInMillis) + " " + j3 + "/" + (t3.getTimeInMillis - t2.getTimeInMillis))
+        myPrintDln("\n" + end + ": " + j1 + "/" + (t1.getTimeInMillis - t_start.getTimeInMillis) + " " + j2 + "/" + (t2.getTimeInMillis - t1.getTimeInMillis) + " " + j3 + "/" + (t3.getTimeInMillis - t2.getTimeInMillis))
         j1 == j2 & j2 == j3
     }
 
@@ -44,8 +45,18 @@ class Euler187 {
 
         val z = prems1.takeWhile((c: (BigInt, Int)) => c._1 * c._1 < end).map((p: (BigInt, Int)) => { (p._1, getNum(p)) })
         //printIt(z)
+        
+        var sum = 0
+        
+        if (end/2 > premiers.last+1) {
+            printIt("\n"+end+" "+premiers.last)
+            val y = EulerPrime.getPrimesBetween(premiers.last+1, end/2, premiers1million)
+            printIt("\n"+end+" "+premiers.last+" "+y.toList.length+" "+y)
+            sum = y.toList.length
+        }
 
-        z.map(_._2).sum
+        sum += z.map(_._2).sum
+        sum
     }
 
     def doZeJob2(end: BigInt, premiers: TreeSet[BigInt]): Int = {

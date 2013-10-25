@@ -156,6 +156,22 @@ object MyLog {
             }
         })
     }
+    def myRequire2(act: Any, exp: Any) = macro require2
+
+    def require2(c: Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
+        import c.universe._
+        val actm = act.tree.toString
+        val expm = exp.tree.toString
+        reify({
+            if (act.splice != exp.splice) {
+                try {
+                    throw new Exception("RequireError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
+                } catch {
+                    case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
+                }
+            }
+        })
+    }
     def myAssert2(act: Any, exp: Any) = macro assert2
 
     def requirex(c: Context)(cond: c.Expr[Boolean]): c.Expr[Unit] = {

@@ -4,6 +4,8 @@ import Math._
 import _root_.scalaSci.math.plot.plotTypes._
 import _root_.scalaSci.math.plot.plot._
 import _root_.scalaSci.math.plot.canvas._
+import scalaSci._ 
+
 import java.awt.Color
 import java.util.Locale
 
@@ -72,7 +74,7 @@ class Gauss(val sigma: Double, val mu: Double) {
         val incHue = 1.0.toFloat / fs.size
         fs.foreach((f: Function) => {
             val y = x.map((d: Double) => f.process(new Item(d)).d)
-            plot(x.toArray, y.toArray, MyPlotUtils.getColor(hue), f.toString)
+            //bad symbolic reference plot(x.toArray, y.toArray, MyPlotUtils.getColor(hue), f.toString)
             hue += incHue
         })
     }
