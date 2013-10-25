@@ -8,6 +8,7 @@ import scala.util.Random
 import java.io._
 import scala.concurrent.duration._
 import kebra.MyLog
+import scala.language.postfixOps
 
 object ScalaBatsh {
 	def exec(Tlvl: Int, s_cmd: String): (Int,List[String],List[String]) = execRemovePwd(Tlvl, s_cmd, "Cowabunga!")

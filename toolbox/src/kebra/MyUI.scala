@@ -27,11 +27,15 @@ import scala.concurrent.duration._
 import akka.util.Timeout
 import kebra.MyLog._
 import language.postfixOps
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
+import akka.agent.Agent
 
 class MyNewUI(val s_title: String, val parameters: ZeParameters) extends Frame {
-    implicit val system = ActorSystem("app")
+    //implicit val system = ActorSystem("app")
+    //implicit val system = someExecutionContext()
 
-    val swingAnswerAgent = Agent("NotYet")(system)
+    val swingAnswerAgent = Agent(100)
 
     val gpanel = new gridpanel(parameters.size + 1, 2, parameters, swingAnswerAgent)
     if (!parameters.isEmpty) {
@@ -48,7 +52,7 @@ class MyNewUI(val s_title: String, val parameters: ZeParameters) extends Frame {
 
     def get2(): ZeParameters = {
         implicit val timeout = Timeout(1 minute)
-        val result = swingAnswerAgent.await
+        val result = swingAnswerAgent.get
         gpanel.getFromPanel
     }
 

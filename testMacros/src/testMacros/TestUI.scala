@@ -1,7 +1,7 @@
 package testMacros
 
 import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest._
 import kebra.MyLog._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -13,10 +13,11 @@ import akka.pattern.ask
 import akka.util.Timeout
 import akka.actor.ActorDSL._
 import akka.actor.ActorSystem
+import scala.language.postfixOps
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestUI
 
-class TestUI extends FunSuite with ShouldMatchers {
+class TestUI extends FunSuite with Matchers {
 	test("actor0") {
 		val system = ActorSystem()
 				system.actorOf(Props[HelloActor]) ! Start1

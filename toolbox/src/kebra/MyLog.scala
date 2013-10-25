@@ -101,7 +101,7 @@ object MyLog {
 
     def km_func2(c: Context) = {
         import c.universe._
-        c.enclosingMethod match {
+        c.enclosingDef match {
             case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
                 c.universe.reify(println(
                     "\n  mods " + c.literal(mods.toString).splice
@@ -115,7 +115,7 @@ object MyLog {
     }
     def km_class3(c: Context) = {
         import c.universe._
-        c.enclosingClass match {
+        c.enclosingImpl match {
             case ClassDef(mods, name, tparams, impl) =>
                 c.universe.reify(println(
                     "\n  mods " + c.literal(mods.toString).splice

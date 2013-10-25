@@ -6,7 +6,7 @@ import kebra.DateDSL
 import kebra.DateDSL._
 import kebra.MyLog._
 import java.io.File
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest._
 import org.scalatest.FunSuite
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
@@ -259,7 +259,7 @@ object CopyFromClipBoardest extends App {
   source.source.close
 }
 
-class ScalaBatschTest extends FunSuite with ShouldMatchers {
+class ScalaBatschTest extends FunSuite with Matchers {
   val s_directoryDoesntExist = "cowabunga"
 
   test("Check cd directory") {

@@ -1,6 +1,6 @@
 package testMacros
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest._
 import org.scalatest.FunSuite
 import kebra.WindowsStuff._
 import kebra.MyLog._
@@ -15,10 +15,11 @@ import scala.sys.process._
 import java.io.OutputStream
 import java.io.InputStream
 import kebra.MyFile
+import scala.language.postfixOps
 
 // scala org.scalatest.tools.Runner -o -s testMacros.TestWindowsStuff
 
-class TestWindowsStuff extends FunSuite with ShouldMatchers {
+class TestWindowsStuff extends FunSuite with Matchers {
 	test("myPrintDln") {
 		myPrintDln(""+new MyFile("zob"))
 		getEnvVar("OS") should equal("Windows_NT")
