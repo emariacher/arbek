@@ -13,6 +13,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import scala.io.Source
 import java.io.BufferedInputStream
+import scala.collection.JavaConversions._
 
 object EulerMainNoScalaTest extends App {
     myPrintDln("Hello World!")
@@ -84,10 +85,12 @@ class Euler187 {
         val mfc = new MyFileChooser("TestOutput.txt")
         val f = mfc.justChooseFile("zip")
         val rootzip = new java.util.zip.ZipFile(f)
-        import scala.collection.JavaConversions._
-        rootzip.entries.
-            filter(_.getName.endsWith(".txt")).
-            foreach { e => println(Source.fromInputStream(rootzip.getInputStream(e)).getLines.mkString("\n")) }
+        rootzip.entries.filter(_.getName.endsWith(".txt")).foreach(e => {
+            val lines = Source.fromInputStream(rootzip.getInputStream(e)).getLines
+            myPrintln(lines.map((l: String) => {
+                l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
+            }).flatten.toList.take(20))
+        })
 
         myPrintDln("There")
         //L.closeFiles()
