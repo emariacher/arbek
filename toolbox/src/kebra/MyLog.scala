@@ -208,7 +208,7 @@ object MyLog {
 
     def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
         val t_end = Calendar.getInstance();
-        myPrintDln("t_now: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
+        myPrintln("    t_now: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
             "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()));
         t_end;
     }
