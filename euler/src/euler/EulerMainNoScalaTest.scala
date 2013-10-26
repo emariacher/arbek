@@ -1,9 +1,18 @@
 package euler
 
 import kebra.MyLog._
+import kebra.MyFileChooser
 import scala.collection.immutable.TreeSet
 import java.util.Calendar
 import scala.language.postfixOps
+import java.io.File
+import java.io.FileInputStream
+import java.util.zip.ZipFile
+import java.util.zip.ZipInputStream
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import scala.io.Source
+import java.io.BufferedInputStream
 
 object EulerMainNoScalaTest extends App {
     myPrintDln("Hello World!")
@@ -11,6 +20,8 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler187 {
+    getNumPrimesBelow(1000)
+    assert(0 == 1)
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
 
@@ -32,7 +43,6 @@ class Euler187 {
     }
 
     def doZeJob3(end: BigInt, premiers: TreeSet[BigInt]): Int = {
-        //val z = List((2,0,6),(3,1,4),(5,2,3))
         val limit = end / 2
         val prems1 = premiers.takeWhile(_ < limit).zipWithIndex.toList
 
@@ -68,6 +78,19 @@ class Euler187 {
         } else {
             0
         }
+    }
+
+    def getNumPrimesBelow(end: BigInt) {
+        val mfc = new MyFileChooser("TestOutput.txt")
+        val f = mfc.justChooseFile("zip")
+        val rootzip = new java.util.zip.ZipFile(f)
+        import scala.collection.JavaConversions._
+        rootzip.entries.
+            filter(_.getName.endsWith(".txt")).
+            foreach { e => println(Source.fromInputStream(rootzip.getInputStream(e)).getLines.mkString("\n")) }
+
+        myPrintDln("There")
+        //L.closeFiles()
     }
 
     def doZeJob2(end: BigInt, premiers: TreeSet[BigInt]): Int = {
