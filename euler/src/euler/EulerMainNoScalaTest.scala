@@ -24,15 +24,15 @@ class Euler187 {
     val centMillions = 100000000
     val unMillion = 1000000
 
-    val yo = getNumPrimes2Below(List(4, 100, 15486060, 15486210, 15486433, 15486703, 15486704, 32452920, 32453192))
+    val yo = getNumPrimes2Below(List((0,4), (1,100), (2,15486060), (3,15486210), (4, 15486433), (5,15486703), (6,15486704), (7,32452920), (8,32453192)))
     myErrPrintDln("\n" + yo.mkString("\n     "))
-    myAssert2(yo.getOrElse(100, null)._2, 25)
-    myAssert2(yo.getOrElse(15486210, null)._2, 1000020)
-    myAssert2(yo.getOrElse(15486703, null)._2, 1000048)
-    myAssert2(yo.getOrElse(15486704, null)._2, 1000048)
-    myAssert2(yo.getOrElse(32453192, null)._2, 2000020)
+    myAssert2(yo.getOrElse(1, null)._3, 25)
+    myAssert2(yo.getOrElse(3, null)._3, 1000020)
+    myAssert2(yo.getOrElse(5, null)._3, 1000048)
+    myAssert2(yo.getOrElse(6, null)._3, 1000048)
+    myAssert2(yo.getOrElse(8, null)._3, 2000020)
     myAssert(EulerPrime.isPrime(15486433))
-    myAssert2(yo.getOrElse(15486433, null)._1, 15486433)
+    myAssert2(yo.getOrElse(4, null)._2, 15486433)
     myPrintDln("****************************************************************************************************")
     val StuffIreallyNeed = getNumPrimes2Below(stuffIneed)
     myPrintIt(stuffIneed)
@@ -44,7 +44,7 @@ class Euler187 {
     while (checkJobs(end)) {
         end += 10000
     }
-    val result = doZeJob4(centMillions, premiers1million)
+    val result = doZeJob4(centMillions)
     myPrintIt(result)
     myAssert(result!=19389708)
 
@@ -63,10 +63,11 @@ class Euler187 {
     def stuffIneed = {
         val primesIneed = EulerPrime.premiers1000.toList.takeWhile(centMillions / _ > unMillion)
         printIt(primesIneed)
-        primesIneed.map(centMillions / _)
+        primesIneed.map((bi: BigInt) => (bi, centMillions / bi))
     }
 
-    def doZeJob4(end: BigInt, premiers: TreeSet[BigInt]): Int = {
+    def doZeJob4(end: BigInt): Int = {
+        val premiers = premiers1million
         val limit = end / 2
         val prems1 = premiers.takeWhile(_ < limit).zipWithIndex.toList
 
@@ -80,13 +81,23 @@ class Euler187 {
         val z = prems1.takeWhile((c: (BigInt, Int)) => c._1 * c._1 < end).map((p: (BigInt, Int)) => { (p._1, getNum(p)) })
         //printIt(z)
 
-        var sum = StuffIreallyNeed.toList.map(_._2._2).sum
+        val dernierPremierAvant1Million = (premiers1million.last, premiers1million.toList.length)
+        myPrintIt(dernierPremierAvant1Million)
+        var sum = StuffIreallyNeed.toList.map(_._2._2).foldLeft(0)(_ + getNumbers2(end, _, dernierPremierAvant1Million))
 
         /*val de1a10 = List(2, 3, 5, 7)
 
         sum = de1a10.foldLeft(0)(_ + getNumbers(end, _, premiers))*/
         sum += z.map(_._2).sum
         sum
+    }
+
+    def getNumbers2(end: BigInt, prime: BigInt, premierslast: (BigInt, Int)): Int = {
+            /*val between = EulerPrime.getPrimesBetween(premierslast + 1, upper, premiers1million)
+            val between = 
+            myPrintDln("\n" + end + " " + prime + " " + premierslast + " " + upper + " " + EulerPrime.isPrime(upper) + " " + between.toList.length)
+            between.toList.length*/
+        0
     }
 
     def doZeJob3(end: BigInt, premiers: TreeSet[BigInt]): Int = {
@@ -107,29 +118,29 @@ class Euler187 {
 
         val de1a10 = List(2, 3, 5, 7)
 
-        sum = de1a10.foldLeft(0)(_ + getNumbers(end, _, premiers))
+        sum = de1a10.foldLeft(0)(_ + getNumbers(end, _, premiers.last))
         sum += z.map(_._2).sum
         sum
     }
 
-    def getNumbers(end: BigInt, prime: BigInt, premiers: TreeSet[BigInt]): Int = {
-        if (end.toDouble / prime.toDouble > premiers.last.toDouble + 1.0) {
+    def getNumbers(end: BigInt, prime: BigInt, premierslast: BigInt): Int = {
+        if (end.toDouble / prime.toDouble > premierslast.toDouble + 1.0) {
             var upper = (end.toDouble / prime.toDouble).toInt
             if (EulerPrime.isPrime(upper)) {
                 myErrPrintDln(upper + " isPrime!")
                 upper += 1
             }
-            val between = EulerPrime.getPrimesBetween(premiers.last + 1, upper, premiers1million)
-            myPrintDln("\n" + end + " " + prime + " " + premiers.last + " " + upper + " " + EulerPrime.isPrime(upper) + " " + between.toList.length)
+            val between = EulerPrime.getPrimesBetween(premierslast + 1, upper, premiers1million)
+            myPrintDln("\n" + end + " " + prime + " " + premierslast + " " + upper + " " + EulerPrime.isPrime(upper) + " " + between.toList.length)
             between.toList.length
         } else {
             0
         }
     }
 
-    def getNumPrimes2Below(lendin: List[BigInt]): Map[BigInt, (Int, Int)] = {
+    def getNumPrimes2Below(lendin: List[(BigInt, BigInt)]): Map[BigInt, (BigInt, Int, Int)] = {
         var lend = lendin.sorted
-        var lendout = Map[BigInt, (Int, Int)]()
+        var lendout = Map[BigInt, (BigInt, Int, Int)]()
         myErrPrintDln(lend)
         var answer = 0
         var prevanswer = 0
@@ -147,21 +158,21 @@ class Euler187 {
             lines.find((l: String) => {
                 val y = l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
                 if (y.length == 8) {
-                    val z = y.filter(_ <= lend.head)
-                    if (y.last == lend.head) {
+                    val z = y.filter(_ <= lend.head._2)
+                    if (y.last == lend.head._2) {
                         answer = y.last
-                        lendout = lendout + (lend.head -> (answer, counter + z.length))
+                        lendout = lendout + (lend.head._1 -> (lend.head._2, answer, counter + z.length))
                         lend = lend.tail
                         myPrintDln(lend + " " + lendout + " " + counter)
                     } else if (z.length == y.length) {
                         answer = y.last
                     } else if (!z.isEmpty) {
                         answer = z.last
-                        lendout = lendout + (lend.head -> (answer, counter + z.length))
+                        lendout = lendout + (lend.head._1 -> (lend.head._2, answer, counter + z.length))
                         lend = lend.tail
                         myPrintDln(lend + " " + lendout + " " + counter)
                     } else {
-                        lendout = lendout + (lend.head -> (answer, counter))
+                        lendout = lendout + (lend.head._1 -> (lend.head._2, answer, counter))
                         lend = lend.tail
                         myPrintDln(lend + " " + lendout + " " + counter)
                     }
