@@ -33,10 +33,6 @@ class Euler187 {
     myAssert2(yo.getOrElse(8, null)._3, 2000020)
     myAssert(EulerPrime.isPrime(15486433))
     myAssert2(yo.getOrElse(4, null)._2, 15486433)
-    myPrintDln("****************************************************************************************************")
-    val StuffIreallyNeed = getNumPrimes2Below(stuffIneed)
-    myPrintIt(stuffIneed)
-    myErrPrintDln(StuffIreallyNeed.toList.sortBy(_._1).mkString("\n         ", "\n         ", "\n"))
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
 
@@ -44,9 +40,14 @@ class Euler187 {
     while (checkJobs(end)) {
         end += 10000
     }
-    val result = doZeJob4(centMillions)
-    myPrintIt(result)
-    myAssert(result != 19389708)
+
+    myErrPrintDln("****************************************************************************************************")
+    val StuffIreallyNeed = getNumPrimes2Below(stuffIneed)
+    myPrintIt(stuffIneed)
+    myErrPrintDln(StuffIreallyNeed.toList.sortBy(_._1).mkString("\n         ", "\n         ", "\n"))
+    val result187 = doZeJob4(centMillions)
+    myPrintIt(result187)
+    myAssert2(result187, 17427258)
 
     def checkJobs(end: BigInt) = {
         var t_start = Calendar.getInstance()
@@ -83,7 +84,7 @@ class Euler187 {
 
         val dernierPremierAvant1Million = (premiers1million.last, premiers1million.toList.length)
         myPrintIt(dernierPremierAvant1Million)
-        var sum = StuffIreallyNeed.toList.map(_._2._2).foldLeft(0)(_ + getNumbers2(end, _, dernierPremierAvant1Million))
+        var sum = StuffIreallyNeed.toList.foldLeft(0)(_ + getNumbers2(_, dernierPremierAvant1Million))
 
         /*val de1a10 = List(2, 3, 5, 7)
 
@@ -92,12 +93,23 @@ class Euler187 {
         sum
     }
 
-    def getNumbers2(end: BigInt, prime: BigInt, premierslast: (BigInt, Int)): Int = {
-        /*val between = EulerPrime.getPrimesBetween(premierslast + 1, upper, premiers1million)
-            val between = 
+    def getNumbers2(prime: (BigInt, (BigInt, Int, Int)), premierslast: (BigInt, Int)): Int = {
+        prime._2._3 - premierslast._2
+    }
+
+    def getNumbers(end: BigInt, prime: BigInt, premierslast: BigInt): Int = {
+        if (end.toDouble / prime.toDouble > premierslast.toDouble + 1.0) {
+            var upper = (end.toDouble / prime.toDouble).toInt
+            if (EulerPrime.isPrime(upper)) {
+                myErrPrintDln(upper + " isPrime!")
+                upper += 1
+            }
+            val between = EulerPrime.getPrimesBetween(premierslast + 1, upper, premiers1million)
             myPrintDln("\n" + end + " " + prime + " " + premierslast + " " + upper + " " + EulerPrime.isPrime(upper) + " " + between.toList.length)
-            between.toList.length*/
-        0
+            between.toList.length
+        } else {
+            0
+        }
     }
 
     def doZeJob3(end: BigInt, premiers: TreeSet[BigInt]): Int = {
@@ -121,21 +133,6 @@ class Euler187 {
         sum = de1a10.foldLeft(0)(_ + getNumbers(end, _, premiers.last))
         sum += z.map(_._2).sum
         sum
-    }
-
-    def getNumbers(end: BigInt, prime: BigInt, premierslast: BigInt): Int = {
-        if (end.toDouble / prime.toDouble > premierslast.toDouble + 1.0) {
-            var upper = (end.toDouble / prime.toDouble).toInt
-            if (EulerPrime.isPrime(upper)) {
-                myErrPrintDln(upper + " isPrime!")
-                upper += 1
-            }
-            val between = EulerPrime.getPrimesBetween(premierslast + 1, upper, premiers1million)
-            myPrintDln("\n" + end + " " + prime + " " + premierslast + " " + upper + " " + EulerPrime.isPrime(upper) + " " + between.toList.length)
-            between.toList.length
-        } else {
-            0
-        }
     }
 
     def getNumPrimes2Below(lendin: List[(BigInt, BigInt)]): Map[BigInt, (BigInt, Int, Int)] = {
