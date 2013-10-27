@@ -21,7 +21,7 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler187 {
-    getNumPrimesBelow(1000)
+    myPrintIt(getNumPrimesBelow(50))
     assert(0 == 1)
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
@@ -81,19 +81,38 @@ class Euler187 {
         }
     }
 
-    def getNumPrimesBelow(end: BigInt) {
+    def getNumPrimesBelow(end: BigInt) = {
+        var answer = 0
+        var counter = 0
+        var found = false
         val mfc = new MyFileChooser("TestOutput.txt")
         val f = mfc.justChooseFile("zip")
+        myErrPrintDln(f.getName)
         val rootzip = new java.util.zip.ZipFile(f)
+
         rootzip.entries.filter(_.getName.endsWith(".txt")).foreach(e => {
             val lines = Source.fromInputStream(rootzip.getInputStream(e)).getLines
-            myPrintln(lines.map((l: String) => {
-                l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
-            }).flatten.toList.take(20))
+            lines.find((l: String) => {
+                myPrintDln("  [" + l + "]")
+                val y = l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
+                if (y.length == 8) {
+                    myPrintDln("  [" + y + "]")
+                    val z = y.filter(_ < end)
+                    if (z.isEmpty) {
+                        found = true
+                    } else {
+                        answer = z.last
+                        counter += z.length
+                        found = false
+                    }
+                } else {
+                    found = false
+                }
+                found
+            })            
         })
 
-        myPrintDln("There")
-        //L.closeFiles()
+        (answer, counter)
     }
 
     def doZeJob2(end: BigInt, premiers: TreeSet[BigInt]): Int = {
