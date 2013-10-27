@@ -22,9 +22,12 @@ object EulerMainNoScalaTest extends App {
 
 class Euler187 {
     myPrintIt(stuffIneed)
-    val yo = getNumPrimes2Below(List(4, 100, 15486060, 15486210, 15486433, 32452920, 32453192))
-    myErrPrintDln("\n" + yo)
+    val yo = getNumPrimes2Below(List(4, 100, 15486060, 15486210, 15486433, 15486703, 15486704, 32452920, 32453192))
+    myErrPrintDln("\n" + yo.mkString("\n     "))
+    myAssert2(yo.getOrElse(100, null)._2, 25)
     myAssert2(yo.getOrElse(15486210, null)._2, 1000020)
+    myAssert2(yo.getOrElse(15486703, null)._2, 1000048)
+    myAssert2(yo.getOrElse(15486704, null)._2, 1000048)
     myAssert2(yo.getOrElse(32453192, null)._2, 2000020)
     myAssert(EulerPrime.isPrime(15486433))
     myAssert2(yo.getOrElse(15486433, null)._1, 15486433)
@@ -109,28 +112,30 @@ class Euler187 {
 
         rootzip.entries.filter(_.getName.endsWith(".txt")).find(e => {
             val lines = Source.fromInputStream(rootzip.getInputStream(e)).getLines
-            myErrPrintDln(e.getName)
+            myPrintDln(e.getName)
             lines.find((l: String) => {
                 val y = l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
                 if (y.length == 8) {
-                    //myPrintDln("  [" + y + "]")
                     val z = y.filter(_ <= lend.head)
-                    if (z.isEmpty) {
-                        if (!lendout.isEmpty) {
-                            myAssert(prevanswer != answer) // primes too close to one another
-                        }
-                        lendout = lendout + (lend.head -> (answer, counter))
-                        counter2 += y.length
-                        counter = counter2
+                    if (y.last == lend.head) {
+                        answer = y.last
+                        lendout = lendout + (lend.head -> (answer, counter + z.length))
                         lend = lend.tail
-                        myPrintln("\n" + lend + " " + lendout + " " + counter + " " + counter2)
-                        found = lend.isEmpty
-                    } else {
-                        prevanswer = answer
+                        myPrintDln(lend + " " + lendout + " " + counter)
+                    } else if (z.length == y.length) {
+                        answer = y.last
+                    } else if (!z.isEmpty) {
                         answer = z.last
-                        counter += z.length
-                        counter2 += y.length
+                        lendout = lendout + (lend.head -> (answer, counter + z.length))
+                        lend = lend.tail
+                        myPrintDln(lend + " " + lendout + " " + counter)
+                    } else {
+                        lendout = lendout + (lend.head -> (answer, counter))
+                        lend = lend.tail
+                        myPrintDln(lend + " " + lendout + " " + counter)
                     }
+                    counter += y.length
+                    found = lend.isEmpty
                 }
                 found
             })
