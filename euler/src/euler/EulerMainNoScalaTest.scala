@@ -21,7 +21,8 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler187 {
-    myPrintIt(getNumPrimesBelow(50))
+    myPrintIt(getNumPrimesBelow(4))
+    myPrintIt(getNumPrimesBelow(15486060))
     assert(0 == 1)
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
@@ -90,13 +91,13 @@ class Euler187 {
         myErrPrintDln(f.getName)
         val rootzip = new java.util.zip.ZipFile(f)
 
-        rootzip.entries.filter(_.getName.endsWith(".txt")).foreach(e => {
+        rootzip.entries.filter(_.getName.endsWith(".txt")).find(e => {
             val lines = Source.fromInputStream(rootzip.getInputStream(e)).getLines
-            lines.find((l: String) => {
-                myPrintDln("  [" + l + "]")
+            myPrintDln(e.getName)
+            lines.find((l: String) => {               
                 val y = l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
                 if (y.length == 8) {
-                    myPrintDln("  [" + y + "]")
+                    //myPrintDln("  [" + y + "]")
                     val z = y.filter(_ < end)
                     if (z.isEmpty) {
                         found = true
@@ -109,7 +110,8 @@ class Euler187 {
                     found = false
                 }
                 found
-            })            
+            }) 
+            found
         })
 
         (answer, counter)
