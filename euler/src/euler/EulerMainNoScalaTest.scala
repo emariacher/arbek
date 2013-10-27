@@ -21,7 +21,6 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler187 {
-    myPrintIt(stuffIneed)
     val yo = getNumPrimes2Below(List(4, 100, 15486060, 15486210, 15486433, 15486703, 15486704, 32452920, 32453192))
     myErrPrintDln("\n" + yo.mkString("\n     "))
     myAssert2(yo.getOrElse(100, null)._2, 25)
@@ -31,6 +30,9 @@ class Euler187 {
     myAssert2(yo.getOrElse(32453192, null)._2, 2000020)
     myAssert(EulerPrime.isPrime(15486433))
     myAssert2(yo.getOrElse(15486433, null)._1, 15486433)
+    val StuffIreallyNeed = getNumPrimes2Below(stuffIneed)
+    myPrintIt(stuffIneed)
+    myErrPrintDln(StuffIreallyNeed.toList.sortBy(_._1).mkString("\n         ","\n         ","\n"))
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
 
