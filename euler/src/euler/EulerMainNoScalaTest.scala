@@ -21,9 +21,9 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler187 {
-    myPrintIt(getNumPrimesBelow(4))
-    myPrintIt(getNumPrimesBelow(15486060))
-    assert(0 == 1)
+    val yo = getNumPrimes2Below(List(4, 100, 15486060, 32452920, 32453192))
+    myErrPrintDln("\n"+yo)
+    myAssert(yo.last._3==2000020)
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
 
@@ -82,9 +82,13 @@ class Euler187 {
         }
     }
 
-    def getNumPrimesBelow(end: BigInt) = {
+    def getNumPrimes2Below(lendin: List[BigInt]): List[(BigInt, Int, Int)] = {
+        var lend = lendin.sorted
+        var lendout = List[(BigInt, Int, Int)]()
+        myErrPrintDln(lend)
         var answer = 0
         var counter = 0
+        var counter2 = 0
         var found = false
         val mfc = new MyFileChooser("TestOutput.txt")
         val f = mfc.justChooseFile("zip")
@@ -93,28 +97,33 @@ class Euler187 {
 
         rootzip.entries.filter(_.getName.endsWith(".txt")).find(e => {
             val lines = Source.fromInputStream(rootzip.getInputStream(e)).getLines
-            myPrintDln(e.getName)
-            lines.find((l: String) => {               
+            myErrPrintDln(e.getName)
+            lines.find((l: String) => {
                 val y = l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
                 if (y.length == 8) {
                     //myPrintDln("  [" + y + "]")
-                    val z = y.filter(_ < end)
+                    val z = y.filter(_ < lend.head)
                     if (z.isEmpty) {
-                        found = true
+                        if (!lendout.isEmpty) {
+                            myAssert(lendout.last._2 != answer) // primes too close to one another
+                        }
+                        lendout = lendout :+ (lend.head, answer, counter)
+                        counter2 += y.length
+                        counter = counter2
+                        lend = lend.tail
+                        myPrintln("\n" + lend + " " + lendout + " "+counter + " " + counter2)
+                        found = lend.isEmpty
                     } else {
                         answer = z.last
                         counter += z.length
-                        found = false
+                        counter2 += y.length
                     }
-                } else {
-                    found = false
                 }
                 found
-            }) 
+            })
             found
         })
-
-        (answer, counter)
+        lendout
     }
 
     def doZeJob2(end: BigInt, premiers: TreeSet[BigInt]): Int = {
