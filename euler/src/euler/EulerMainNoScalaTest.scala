@@ -21,6 +21,9 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler187 {
+    val centMillions = 100000000
+    val unMillion = 1000000
+
     val yo = getNumPrimes2Below(List(4, 100, 15486060, 15486210, 15486433, 15486703, 15486704, 32452920, 32453192))
     myErrPrintDln("\n" + yo.mkString("\n     "))
     myAssert2(yo.getOrElse(100, null)._2, 25)
@@ -30,9 +33,10 @@ class Euler187 {
     myAssert2(yo.getOrElse(32453192, null)._2, 2000020)
     myAssert(EulerPrime.isPrime(15486433))
     myAssert2(yo.getOrElse(15486433, null)._1, 15486433)
+    myPrintDln("****************************************************************************************************")
     val StuffIreallyNeed = getNumPrimes2Below(stuffIneed)
     myPrintIt(stuffIneed)
-    myErrPrintDln(StuffIreallyNeed.toList.sortBy(_._1).mkString("\n         ","\n         ","\n"))
+    myErrPrintDln(StuffIreallyNeed.toList.sortBy(_._1).mkString("\n         ", "\n         ", "\n"))
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
 
@@ -40,6 +44,9 @@ class Euler187 {
     while (checkJobs(end)) {
         end += 10000
     }
+    val result = doZeJob4(centMillions, premiers1million)
+    myPrintIt(result)
+    myAssert(result!=19389708)
 
     def checkJobs(end: BigInt) = {
         var t_start = Calendar.getInstance()
@@ -54,10 +61,32 @@ class Euler187 {
     }
 
     def stuffIneed = {
-        val centMillions = 100000000
-        val unMillion = 1000000
         val primesIneed = EulerPrime.premiers1000.toList.takeWhile(centMillions / _ > unMillion)
+        printIt(primesIneed)
         primesIneed.map(centMillions / _)
+    }
+
+    def doZeJob4(end: BigInt, premiers: TreeSet[BigInt]): Int = {
+        val limit = end / 2
+        val prems1 = premiers.takeWhile(_ < limit).zipWithIndex.toList
+
+            def getNum(p: (BigInt, Int)): Int = {
+                prems1.reverse.find((c: (BigInt, Int)) => c._1 * p._1 < end) match {
+                    case Some(r) => r._2 - p._2 + 1
+                    case _       => 0
+                }
+            }
+
+        val z = prems1.takeWhile((c: (BigInt, Int)) => c._1 * c._1 < end).map((p: (BigInt, Int)) => { (p._1, getNum(p)) })
+        //printIt(z)
+
+        var sum = StuffIreallyNeed.toList.map(_._2._2).sum
+
+        /*val de1a10 = List(2, 3, 5, 7)
+
+        sum = de1a10.foldLeft(0)(_ + getNumbers(end, _, premiers))*/
+        sum += z.map(_._2).sum
+        sum
     }
 
     def doZeJob3(end: BigInt, premiers: TreeSet[BigInt]): Int = {
