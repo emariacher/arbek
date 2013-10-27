@@ -21,9 +21,13 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler187 {
-    val yo = getNumPrimes2Below(List(4, 100, 15486060, 32452920, 32453192))
-    myErrPrintDln("\n"+yo)
-    myAssert(yo.last._3==2000020)
+    myPrintIt(stuffIneed)
+    val yo = getNumPrimes2Below(List(4, 100, 15486060, 15486210, 15486433, 32452920, 32453192))
+    myErrPrintDln("\n" + yo)
+    myAssert2(yo.getOrElse(15486210, null)._2, 1000020)
+    myAssert2(yo.getOrElse(32453192, null)._2, 2000020)
+    myAssert(EulerPrime.isPrime(15486433))
+    myAssert2(yo.getOrElse(15486433, null)._1, 15486433)
     val premiers1million = (new CheckEulerPrime(1000000, 1000)).premiers
     val premiersCent = EulerPrime.premiers1000.takeWhile(_ < 100)
 
@@ -42,6 +46,13 @@ class Euler187 {
         val t3 = timeStamp(t2, "doZeJob2")
         myErrPrintDln("\n" + end + ": " + j1 + "/" + (t1.getTimeInMillis - t_start.getTimeInMillis) + " " + j2 + "/" + (t2.getTimeInMillis - t1.getTimeInMillis) + " " + j3 + "/" + (t3.getTimeInMillis - t2.getTimeInMillis))
         j1 == j2 & j2 == j3
+    }
+
+    def stuffIneed = {
+        val centMillions = 100000000
+        val unMillion = 1000000
+        val primesIneed = EulerPrime.premiers1000.toList.takeWhile(centMillions / _ > unMillion)
+        primesIneed.map(centMillions / _)
     }
 
     def doZeJob3(end: BigInt, premiers: TreeSet[BigInt]): Int = {
@@ -82,11 +93,12 @@ class Euler187 {
         }
     }
 
-    def getNumPrimes2Below(lendin: List[BigInt]): List[(BigInt, Int, Int)] = {
+    def getNumPrimes2Below(lendin: List[BigInt]): Map[BigInt, (Int, Int)] = {
         var lend = lendin.sorted
-        var lendout = List[(BigInt, Int, Int)]()
+        var lendout = Map[BigInt, (Int, Int)]()
         myErrPrintDln(lend)
         var answer = 0
+        var prevanswer = 0
         var counter = 0
         var counter2 = 0
         var found = false
@@ -102,18 +114,19 @@ class Euler187 {
                 val y = l.split("\\s+").toList.filter(_ matches """\d+""").map(_.toInt)
                 if (y.length == 8) {
                     //myPrintDln("  [" + y + "]")
-                    val z = y.filter(_ < lend.head)
+                    val z = y.filter(_ <= lend.head)
                     if (z.isEmpty) {
                         if (!lendout.isEmpty) {
-                            myAssert(lendout.last._2 != answer) // primes too close to one another
+                            myAssert(prevanswer != answer) // primes too close to one another
                         }
-                        lendout = lendout :+ (lend.head, answer, counter)
+                        lendout = lendout + (lend.head -> (answer, counter))
                         counter2 += y.length
                         counter = counter2
                         lend = lend.tail
-                        myPrintln("\n" + lend + " " + lendout + " "+counter + " " + counter2)
+                        myPrintln("\n" + lend + " " + lendout + " " + counter + " " + counter2)
                         found = lend.isEmpty
                     } else {
+                        prevanswer = answer
                         answer = z.last
                         counter += z.length
                         counter2 += y.length

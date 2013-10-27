@@ -156,6 +156,7 @@ object MyLog {
             }
         })
     }
+    def myAssert2(act: Any, exp: Any) = macro assert2
     def myRequire2(act: Any, exp: Any) = macro require2
 
     def require2(c: Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
@@ -172,7 +173,6 @@ object MyLog {
             }
         })
     }
-    def myAssert2(act: Any, exp: Any) = macro assert2
 
     def requirex(c: Context)(cond: c.Expr[Boolean]): c.Expr[Unit] = {
         import c.universe._
