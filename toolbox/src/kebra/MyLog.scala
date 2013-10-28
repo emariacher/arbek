@@ -191,7 +191,7 @@ object MyLog {
     def mprintx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
         val msg = linecode.tree.toString
-        reify(myPrintDln(c.Expr[String](Literal(Constant(msg))).splice + " ---> " + linecode.splice))
+        reify(myPrintDln(c.Expr[String](Literal(Constant(msg))).splice + "\n    ---> " + linecode.splice))
     }
     def myPrintIt(linecode: Any) = macro mprintx
 
