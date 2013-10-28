@@ -22,14 +22,37 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler191 {
-    val root1 = "AAAAOOOOLLLL"
-    printIt(root1)
-    val root2 = root1.combinations(4).toList
-    printIt(root2)
-    val root3 = ListSet[String]() ++ root2.map(_.permutations).flatten
-    printIt((root3.toList.length, root3))
-    val root4 = ListSet[String]() ++ root2.filter((s: String) => s.count(_ == 'L') < 2).map(_.permutations).flatten
-    printIt((root4.toList.length, root4))
-    val root5 = ListSet[String]() ++ root4.filter((s: String) => s.indexOf("AAA") < 0)
-    printIt((root5.toList.length, root5))
+    doZeJob(3)
+    doZeJob(4)
+    doZeJob(5)
+    doZeJob(6)
+    doZeJob(7)
+    doZeJob(8)
+    doZeJob(9)
+    doZeJob(10)
+    //root2(x)=root2(x-1)+(x+2)
+
+    def doZeJob(l: Int) {
+        val root1 = (0 to l).toList.map((i: Int) => "AOL").mkString("")
+        myPrintDln((l, root1))
+        val root2 = root1.combinations(l).toList
+        if (l < 6) {
+            printIt((l, root2.toList.length, root2))
+        } else {
+            printIt((l, root2.toList.length))
+        }
+        val root4 = ListSet[String]() ++ root2.filter((s: String) => s.count(_ == 'L') < 2).map(_.permutations).flatten
+        if (l < 6) {
+            printIt((l, root4.toList.length, root4))
+        } else {
+            printIt((l, root4.toList.length))
+        }
+        val root5 = ListSet[String]() ++ root4.filter((s: String) => s.indexOf("AAA") < 0)
+        if (l < 6) {
+            printIt((l, root5.toList.length, root5))
+        } else {
+            printIt((l, root5.toList.length))
+        }
+        myErrPrintDln((l, root5.toList.length))
+    }
 }
