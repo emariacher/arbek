@@ -4,34 +4,16 @@ import kebra.MyLog._
 import EulerFactorielle._
 
 object Permutations extends App {
-    List("AAAAA", "AOOOO", "AAOOO", "AAOOL", "AAAOL", "AAOL", "AAOOLL", "AAAOLL", "AAAALL", "AAAAOL","AAABBCCCDEE").foreach(s => myAssert2(perm3length(s), s.permutations.toList.length))
+    List("AAAAA", "AOOOO", "AAOOO", "AAOOL", "AAAOL", "AAOL", "AAOOLL", "AAAOLL", "AAAALL", "AAAAOL","AAABBCCCDEE").foreach(s => myAssert2(permLength(s), s.permutations.toList.length))
+    myPrintDln("Alles klar!")
 
-    def perm3length(s: String) = {
-        var lelem = List[(Char, Int, String)]()
-        val grouped1 = s.groupBy((c: Char) => c == s.head)
-        val grouped1b = grouped1.getOrElse(true, "")
-        lelem = lelem :+ (s.head, grouped1b.length, grouped1b)
-        val grouped2 = grouped1.getOrElse(false, "")
-        if (!grouped2.isEmpty) {
-            val grouped3 = grouped2.groupBy((c: Char) => c == grouped2.head)
-            val grouped3b = grouped3.getOrElse(true, "")
-            lelem = lelem :+ (grouped2.head, grouped3b.length, grouped3b)
-            val grouped4 = grouped3.getOrElse(false, "")
-            if (!grouped4.isEmpty) {
-                lelem = lelem :+ (grouped2.last, grouped4.length, grouped4)
-            }
-        }
-        lelem = lelem.sortBy { _._2 }.reverse
-        /*val result = lelem.length match {
-            case 1 => 1
-            case 2 => combinations(s.length, lelem.head._2)
-            case 3 => fact(s.length) / (fact(lelem.head._2) * fact(lelem.tail.head._2) * fact(lelem.last._2))
-            case _ => 0
-        }*/
-        val result = fact(s.length) / lelem.map((t: (Char, Int, String)) => fact(t._2)).product
+    def permLength(s: String) = {
+        var melem = Map[Char,Int]()
+        var lastChar = s.head
+        s.foreach((c: Char) =>melem = melem + (c -> (melem.getOrElse(c,0)+1)))
+        val result = fact(s.length) / melem.toList.map((t: (Char, Int)) => fact(t._2)).product
 
-        myPrintIt((s, result, lelem, s.permutations.toList.length))
-        //myAssert2(result, s.permutations.toList.length)
-        result
+        //myPrintIt((s, result, melem, s.permutations.toList.length))
+       result
     }
 }
