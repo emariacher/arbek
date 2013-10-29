@@ -23,23 +23,12 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler191 {
-    val l191_1 = 3 until 10 map (i => myAssert2(new doZeJob191_1(i).result, new doZeJob191_2(i).result))
+    val l191_1 = 3 until 14 map (i => myAssert2(new doZeJob191_1(i).result, new doZeJob191_2(i).result))
     //myErrPrintDln(l191_1.mkString("\n  ", "\n  ", "\n  "))
-    /*3 until 10 map (checkJob)
 
-    def checkJob(l: Int) = myAssert2(doZeJob1(l), doZeJob2(l))*/
-    
-    var t_start = Calendar.getInstance()
-    new doZeJob191_1(14)
-    val t1 = timeStamp(t_start, "doZeJob1")
-    new doZeJob191_2(14)
-    val t2 = timeStamp(t1, "doZeJob2")
-    myErrPrintDln("1: "+(t1.getTimeInMillis - t_start.getTimeInMillis) + ", 2: "+(t2.getTimeInMillis - t1.getTimeInMillis))
-    
-    
-    
     class doZeJob191_2(l: Int) {
-        myPrintDln("*2* "+l+ " ***********************************************************")
+        var t_start = Calendar.getInstance
+        myPrintDln("*2* " + l + " ***********************************************************")
         var result = BigInt(0)
         val root1 = (0 to l).toList.map((i: Int) => "AOL").mkString("")
         val comb = root1.combinations(l).toList
@@ -65,11 +54,12 @@ class Euler191 {
         }
 
         result += noAAA.toList.length
-        myPrintDln((2, l, result))
+        myPrintDln((2, l, result, timeStamp(t_start, this.getClass.getName).getTimeInMillis - t_start.getTimeInMillis()))
     }
 
     class doZeJob191_1(l: Int) {
-        myPrintDln("*1* "+l+ " ***********************************************************")
+        var t_start = Calendar.getInstance
+        myPrintDln("*1* " + l + " ***********************************************************")
         val root1 = (0 to l).toList.map((i: Int) => "AOL").mkString("")
         val comb = root1.combinations(l).toList
         if (l < 6) {
@@ -103,7 +93,7 @@ class Euler191 {
         }
 
         var result = noAAA.toList.length + no3A.toList.length
-        myPrintDln((1, l, result))
+        myPrintDln((1, l, result, timeStamp(t_start, this.getClass.getName).getTimeInMillis - t_start.getTimeInMillis()))
 
         override def toString = "| %02d | %06d || %06d | %06d || %06d | %06d | ".format(l, comb.toList.length,
             no2L.toList.length, no2L.toList.length * 2,
