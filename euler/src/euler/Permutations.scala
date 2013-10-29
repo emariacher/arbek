@@ -4,8 +4,8 @@ import kebra.MyLog._
 import EulerFactorielle._
 
 object Permutations extends App {
-    List("AAAAA", "AOOOO", "AAOOO", "AAOOL", "AAAOL", "AAOL", "AAOOLL", "AAAOLL", "AAAALL", "AAAAOL").foreach(perm3length)
-    
+    List("AAAAA", "AOOOO", "AAOOO", "AAOOL", "AAAOL", "AAOL", "AAOOLL", "AAAOLL", "AAAALL", "AAAAOL","AAABBCCCDEE").foreach(s => myAssert2(perm3length(s), s.permutations.toList.length))
+
     def perm3length(s: String) = {
         var lelem = List[(Char, Int, String)]()
         val grouped1 = s.groupBy((c: Char) => c == s.head)
@@ -22,14 +22,16 @@ object Permutations extends App {
             }
         }
         lelem = lelem.sortBy { _._2 }.reverse
-        val result = lelem.length match {
+        /*val result = lelem.length match {
             case 1 => 1
             case 2 => combinations(s.length, lelem.head._2)
             case 3 => fact(s.length) / (fact(lelem.head._2) * fact(lelem.tail.head._2) * fact(lelem.last._2))
             case _ => 0
-        }
-        myPrintIt((s, result, lelem, s.permutations.toList.length, s.permutations.toList))
-        myAssert2(result, s.permutations.toList.length)
+        }*/
+        val result = fact(s.length) / lelem.map((t: (Char, Int, String)) => fact(t._2)).product
+
+        myPrintIt((s, result, lelem, s.permutations.toList.length))
+        //myAssert2(result, s.permutations.toList.length)
         result
     }
 }
