@@ -19,6 +19,7 @@ object EulerFactorielle {
     }
 
     def combinations(n: BigInt, k: BigInt): BigInt = fact(n) / (fact(n - k) * fact(k))
+    def permutations(n: BigInt, k: BigInt): BigInt = fact(n) / fact(n - k)
 
     def fnext(i: Int, prev: BigInt): BigInt = i * prev
 }
