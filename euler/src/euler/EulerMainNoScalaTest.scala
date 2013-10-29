@@ -57,7 +57,7 @@ class Euler191 {
 
             signOf(tda._1.length - ((tda._2.length + 1) * 2)) match {
                 case 0 =>
-                    myPrintln(s, 1); lresult = 1
+                    myPrintln(s, 1); lresult = tda._2.permutations.length
                 case -1 =>
                     val t = s.replaceAll("AAA", "B")
                     if (t.indexOf("A") < 0) {
@@ -79,7 +79,7 @@ class Euler191 {
 
             signOf(tda._1.length - ((tda._2.length + 1) * 2)) match {
                 case 0 =>
-                    myPrintln(s, 1); lresult = 1
+                    myPrintln(s, 1); lresult = tda._2.permutations.length
                 case -1 =>
                     val t = s.replaceAll("AAA", "B")
                     if (t.count(_ == 'B') > 1) {
@@ -96,7 +96,7 @@ class Euler191 {
                     }
                 case 1 => myPrintln(s, 0); lresult = 0
             }
-            (s, result)
+            (s, lresult)
         })
         myPrintIt((l, pasTropDeA3.toList.length, pasTropDeA3))
 
@@ -104,11 +104,7 @@ class Euler191 {
             val tda = s.partition(_ == 'A')
             tda._1.length <= ((tda._2.length + 1) * 2)
         })
-        if (l < 7) {
-            myPrintIt((l, pasTropDeA.toList.length, pasTropDeA))
-        } else {
-            myPrintIt((l, pasTropDeA.toList.length))
-        }
+        myPrintIt((l, pasTropDeA.toList.length, pasTropDeA))
 
         val noAAA = ListSet[String]() ++ pasTropDeA.map(_.permutations).flatten.filter((s: String) => s.indexOf("AAA") < 0)
         if (l < 7) {
@@ -116,6 +112,12 @@ class Euler191 {
         } else {
             myPrintIt((l, noAAA.toList.length))
         }
+
+        val noAAA2 = ListSet[String]() ++ pasTropDeA.map(z => {
+            val y = z.permutations.filter((s: String) => s.indexOf("AAA") < 0).toList
+            (y.length, y)
+        })
+        myPrintDln((l, noAAA2.toList.length, noAAA2.toList.mkString("\n")))
 
         result += noAAA.toList.length
         myAssert2(noAAA.toList.length, pasTropDeA2.sum)
