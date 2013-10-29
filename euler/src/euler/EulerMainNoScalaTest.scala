@@ -26,6 +26,8 @@ class Euler191 {
     3 until 14 map (i => myAssert2(new doZeJob191_1(i).result, new doZeJob191_2(i).result))
     //3 until 7 map (i => new doZeJob191_2(i))
     //myErrPrintDln(l191_1.mkString("\n  ", "\n  ", "\n  "))
+    myErrPrintln("AAAOOL".permutations.toList.length, "AAAOOL".permutations.toList)
+    myErrPrintln("AOL".permutations.toList.length, "AOL".permutations.toList)
     myErrPrintDln("Fini!")
 
     class doZeJob191_2(l: Int) {
@@ -47,6 +49,56 @@ class Euler191 {
         }
 
         result += ou3A._1.toList.map(permLength).sum
+        printIt(result)
+
+        val pasTropDeA2 = ou3A._2.toList.map(s => {
+            var lresult = 0
+            val tda = s.partition(_ == 'A')
+
+            signOf(tda._1.length - ((tda._2.length + 1) * 2)) match {
+                case 0 =>
+                    myPrintln(s, 1); lresult = 1
+                case -1 =>
+                    val t = s.replaceAll("AAA", "B")
+                    if (t.indexOf("A") < 0) {
+                        myPrintDln((s, t, permLength(s), permLength(t), permLength(s) - permLength(t)))
+                        lresult = (permLength(s) - permLength(t)).toInt
+                    } else {
+                        val p = s.permutations.toList
+                        val q = p.filter(_.indexOf("AAA") < 0)
+                        myErrPrintDln(s, t, p.length, q.length, q, p)
+                        lresult = q.length
+                    }
+                case 1 => myPrintln(s, 0); lresult = 0
+            }
+            lresult
+        })
+        val pasTropDeA3 = ou3A._2.toList.map(s => {
+            var lresult = 0
+            val tda = s.partition(_ == 'A')
+
+            signOf(tda._1.length - ((tda._2.length + 1) * 2)) match {
+                case 0 =>
+                    myPrintln(s, 1); lresult = 1
+                case -1 =>
+                    val t = s.replaceAll("AAA", "B")
+                    if (t.count(_ == 'B') > 1) {
+                        myErrPrintDln(s, t, "NOGOOD")
+                        lresult = 0
+                    } else if (t.indexOf("A") < 0) {
+                        myPrintDln((s, t, permLength(s), permLength(t), permLength(s) - permLength(t)))
+                        lresult = (permLength(s) - permLength(t)).toInt
+                    } else {
+                        val p = s.permutations.toList
+                        val q = p.filter(_.indexOf("AAA") < 0)
+                        myErrPrintDln(s, t, p.length, q.length, q, p)
+                        lresult = q.length
+                    }
+                case 1 => myPrintln(s, 0); lresult = 0
+            }
+            (s, result)
+        })
+        myPrintIt((l, pasTropDeA3.toList.length, pasTropDeA3))
 
         val pasTropDeA = ou3A._2.filter(s => {
             val tda = s.partition(_ == 'A')
@@ -66,6 +118,7 @@ class Euler191 {
         }
 
         result += noAAA.toList.length
+        myAssert2(noAAA.toList.length, pasTropDeA2.sum)
         myPrintDln((2, l, result, timeStamp(t_start, this.getClass.getName).getTimeInMillis - t_start.getTimeInMillis()))
     }
 
@@ -110,6 +163,15 @@ class Euler191 {
         override def toString = "| %02d | %06d || %06d | %06d || %06d | %06d | ".format(l, comb.toList.length,
             no2L.toList.length, no2L.toList.length * 2,
             noAAA.toList.length, noAAA.toList.length * 2)
+    }
 
+    def signOf(i: Int): Int = {
+        if (i > 0) {
+            1
+        } else if (i < 0) {
+            (-1)
+        } else {
+            0
+        }
     }
 }
