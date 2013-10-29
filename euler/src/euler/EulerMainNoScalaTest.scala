@@ -23,8 +23,10 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler191 {
-    val l191_1 = 3 until 14 map (i => myAssert2(new doZeJob191_1(i).result, new doZeJob191_2(i).result))
+    3 until 14 map (i => myAssert2(new doZeJob191_1(i).result, new doZeJob191_2(i).result))
+    //3 until 7 map (i => new doZeJob191_2(i))
     //myErrPrintDln(l191_1.mkString("\n  ", "\n  ", "\n  "))
+    myErrPrintDln("Fini!")
 
     class doZeJob191_2(l: Int) {
         var t_start = Calendar.getInstance
@@ -32,7 +34,7 @@ class Euler191 {
         var result = BigInt(0)
         val root1 = (0 to l).toList.map((i: Int) => "AOL").mkString("")
         val comb = root1.combinations(l).toList
-        if (l < 6) {
+        if (l < 7) {
             myPrintDln((l, comb.toList.length, comb))
         } else {
             myPrintIt((l, comb.toList.length))
@@ -40,14 +42,24 @@ class Euler191 {
         val no2L = ListSet[String]() ++ comb.filter((s: String) => s.count(_ == 'L') < 2)
 
         val ou3A = no2L.partition((s: String) => s.count(_ == 'A') < 3)
-        if (l < 6) {
+        if (l < 7) {
             myPrintIt((l, ou3A))
         }
 
         result += ou3A._1.toList.map(permLength).sum
 
-        val noAAA = ListSet[String]() ++ ou3A._2.map(_.permutations).flatten.filter((s: String) => s.indexOf("AAA") < 0)
-        if (l < 6) {
+        val pasTropDeA = ou3A._2.filter(s => {
+            val tda = s.partition(_ == 'A')
+            tda._1.length <= ((tda._2.length + 1) * 2)
+        })
+        if (l < 7) {
+            myPrintIt((l, pasTropDeA.toList.length, pasTropDeA))
+        } else {
+            myPrintIt((l, pasTropDeA.toList.length))
+        }
+
+        val noAAA = ListSet[String]() ++ pasTropDeA.map(_.permutations).flatten.filter((s: String) => s.indexOf("AAA") < 0)
+        if (l < 7) {
             myPrintDln((l, noAAA.toList.length, noAAA))
         } else {
             myPrintIt((l, noAAA.toList.length))
