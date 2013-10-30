@@ -19,7 +19,56 @@ import Permutations._
 
 object EulerMainNoScalaTest extends App {
     myPrintDln("Hello World!")
-    new Euler191
+    new Euler26
+}
+
+class Euler26 {
+    myPrintln(EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)))
+
+    class Calculate(val down: Int) {
+        val precision = 30
+        val check = 1.0 / down.toDouble
+        val resultP = divSpecial(down)
+        myPrintIt(down, check, resultP)
+        myAssert(resultP.indexOf(check.toString) == 0)
+
+        def divSpecial(down: Int) = {
+            var y = 0
+            var x = 0
+            if (down < 10) {
+                y = 10
+            } else if (down < 100) {
+                y = 100
+            } else if (down < 1000) {
+                y = 1000
+            }
+            var countPrecision = precision
+            var z = 0
+            var rest = 1
+            var result = "0."
+            while (countPrecision > 0) {
+                z = rest * 10 / down
+                //myPrintIt("_1_",down,z, rest, result)
+                if (z == 0) {
+                    result = result + "0"
+                    rest = (rest * 10)
+                    //myPrintIt("_2_",down,z, rest, result)
+                    //countPrecision -= 1
+                } else {
+                    rest = (rest * 10) - (z * down)
+                    //myPrintIt("_3_",down,z, rest, result)
+                    result = result + z.toString
+                }
+                
+                //myPrintIt(down, y, z, y, result)
+                countPrecision -= 1
+                if (rest == 0) {
+                    countPrecision = 0
+                }
+            }
+            result
+        }
+    }
 }
 
 class Euler191 {
@@ -60,7 +109,7 @@ class Euler191 {
                     myPrintln(s, 1); lresult = tda._2.permutations.length
                 case -1 =>
                     val t = s.replaceAll("AAA", "B")
-                    if ((t.indexOf("A") < 0)&&(t.count(_ == 'B') == 1)) {
+                    if ((t.indexOf("A") < 0) && (t.count(_ == 'B') == 1)) {
                         myPrintDln((s, t, permLength(s), permLength(t), permLength(s) - permLength(t)))
                         lresult = (permLength(s) - permLength(t)).toInt
                     } else {
