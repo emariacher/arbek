@@ -23,25 +23,18 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler26 {
-    myPrintln(EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)))
+    myPrintln(EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)).mkString("\n"))
 
     class Calculate(val down: Int) {
         val precision = 30
-        val check = 1.0 / down.toDouble
+        val check = 1.0 / down.toDouble      
+        var lrest = List[Int]()
         val resultP = divSpecial(down)
-        myPrintIt(down, check, resultP)
-        myAssert(resultP.indexOf(check.toString) == 0)
+        /*myPrintIt(check, Math.min(precision - 2, check.toString.length-1))
+        myPrintIt(down, check.toString.substring(0, Math.min(9, check.toString.length)), resultP, resultP.indexOf(check.toString.substring(0, Math.min(precision - 4, check.toString.length-1))))*/
+        myAssert(resultP.indexOf(check.toString.substring(0, Math.min(precision - 4, check.toString.length - 1))) == 0)
 
         def divSpecial(down: Int) = {
-            var y = 0
-            var x = 0
-            if (down < 10) {
-                y = 10
-            } else if (down < 100) {
-                y = 100
-            } else if (down < 1000) {
-                y = 1000
-            }
             var countPrecision = precision
             var z = 0
             var rest = 1
@@ -59,7 +52,9 @@ class Euler26 {
                     //myPrintIt("_3_",down,z, rest, result)
                     result = result + z.toString
                 }
-                
+                //println(lrest)
+                lrest = lrest :+ rest
+
                 //myPrintIt(down, y, z, y, result)
                 countPrecision -= 1
                 if (rest == 0) {
@@ -68,6 +63,7 @@ class Euler26 {
             }
             result
         }
+        override def toString = "[[" + down + "] " + resultP + "," + lrest + "]"
     }
 }
 
