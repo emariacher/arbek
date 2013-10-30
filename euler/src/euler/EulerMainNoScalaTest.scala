@@ -24,46 +24,48 @@ object EulerMainNoScalaTest extends App {
 
 class Euler26 {
     myPrintln(EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)).mkString("\n"))
+    val result26 = EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)).maxBy(_.countPrecision)
+    myPrintIt(result26)
+    myAssert2(983, result26.countPrecision)
 
     class Calculate(val down: Int) {
-        val precision = 30
-        val check = 1.0 / down.toDouble      
+        var countPrecision = 0
+        val check = 1.0 / down.toDouble
         var lrest = List[Int]()
         val resultP = divSpecial(down)
-        /*myPrintIt(check, Math.min(precision - 2, check.toString.length-1))
-        myPrintIt(down, check.toString.substring(0, Math.min(9, check.toString.length)), resultP, resultP.indexOf(check.toString.substring(0, Math.min(precision - 4, check.toString.length-1))))*/
+        /*
+        myPrintIt(check, Math.min(precision - 2, check.toString.length-1))
+        myPrintIt(down, check.toString.substring(0, Math.min(9, check.toString.length)), resultP, resultP.indexOf(check.toString.substring(0, Math.min(precision - 4, check.toString.length-1))))
         myAssert(resultP.indexOf(check.toString.substring(0, Math.min(precision - 4, check.toString.length - 1))) == 0)
+        */
 
         def divSpecial(down: Int) = {
-            var countPrecision = precision
             var z = 0
             var rest = 1
             var result = "0."
-            while (countPrecision > 0) {
+            var go_on = true
+            while (go_on) {
                 z = rest * 10 / down
-                //myPrintIt("_1_",down,z, rest, result)
                 if (z == 0) {
                     result = result + "0"
                     rest = (rest * 10)
-                    //myPrintIt("_2_",down,z, rest, result)
-                    //countPrecision -= 1
                 } else {
                     rest = (rest * 10) - (z * down)
-                    //myPrintIt("_3_",down,z, rest, result)
                     result = result + z.toString
                 }
-                //println(lrest)
-                lrest = lrest :+ rest
-
-                //myPrintIt(down, y, z, y, result)
-                countPrecision -= 1
+                countPrecision += 1
                 if (rest == 0) {
-                    countPrecision = 0
+                    go_on = false
+                }
+                lrest.find(_ == rest) match {
+                    case Some(i) => go_on = false
+                    case _       => lrest = lrest :+ rest
                 }
             }
             result
         }
-        override def toString = "[[" + down + "] " + resultP + "," + lrest + "]"
+        override def toString = "[[" + down + "] " + countPrecision + ", " + resultP + ", " + lrest + "]"
+
     }
 }
 
