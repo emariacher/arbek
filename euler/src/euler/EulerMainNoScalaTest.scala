@@ -121,7 +121,7 @@ class Euler191 {
 
         result += noAAA.toList.length
         myAssert2(noAAA.toList.length, pasTropDeA2.sum)
-        myPrintDln((2, l, result, timeStamp(t_start, this.getClass.getName).getTimeInMillis - t_start.getTimeInMillis()))
+        myPrintln(getClass.getName, l, result, timeStamp(t_start, this.getClass.getName).getTimeInMillis - t_start.getTimeInMillis())
     }
 
     class doZeJob191_1(l: Int) {
@@ -160,7 +160,7 @@ class Euler191 {
         }
 
         var result = noAAA.toList.length + no3A.toList.length
-        myPrintDln((1, l, result, timeStamp(t_start, this.getClass.getName).getTimeInMillis - t_start.getTimeInMillis()))
+        myPrintln(getClass.getName, l, result, timeStamp(t_start, this.getClass.getName).getTimeInMillis - t_start.getTimeInMillis())
 
         override def toString = "| %02d | %06d || %06d | %06d || %06d | %06d | ".format(l, comb.toList.length,
             no2L.toList.length, no2L.toList.length * 2,
