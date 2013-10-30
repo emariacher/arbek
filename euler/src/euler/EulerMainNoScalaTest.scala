@@ -60,7 +60,7 @@ class Euler191 {
                     myPrintln(s, 1); lresult = tda._2.permutations.length
                 case -1 =>
                     val t = s.replaceAll("AAA", "B")
-                    if (t.indexOf("A") < 0) {
+                    if ((t.indexOf("A") < 0)&&(t.count(_ == 'B') == 1)) {
                         myPrintDln((s, t, permLength(s), permLength(t), permLength(s) - permLength(t)))
                         lresult = (permLength(s) - permLength(t)).toInt
                     } else {
