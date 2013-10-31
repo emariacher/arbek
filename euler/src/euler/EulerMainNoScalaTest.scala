@@ -19,7 +19,15 @@ import Permutations._
 
 object EulerMainNoScalaTest extends App {
     myPrintDln("Hello World!")
-    val tp = new TrianglePascal(7)
-    myPrintln(tp.triangle.mkString("\n"))
+    new Euler203
+    myPrintDln("Au revoir Monde!")
 }
 
+class Euler203 {
+    myAssert2(105,distinctSquarefreeNumbersSum1(8))
+    def distinctSquarefreeNumbersSum1(rowNumber: BigInt) = {
+        (ListSet[BigInt]() ++ new TrianglePascal(rowNumber.toInt).triangle.flatten).
+            map(bi => (bi, new EulerDiv(bi).primes)).filter(c => (ListSet[BigInt]() ++ c._2).toList.
+                length == c._2.length).map(_._1).sum
+    }
+}
