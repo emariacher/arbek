@@ -19,5 +19,7 @@ import Permutations._
 
 object EulerMainNoScalaTest extends App {
     myPrintDln("Hello World!")
+    val tp = new TrianglePascal(7)
+    myPrintln(tp.triangle.mkString("\n"))
 }
 
