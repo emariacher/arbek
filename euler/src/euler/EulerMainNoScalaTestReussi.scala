@@ -17,8 +17,58 @@ import scala.collection.JavaConversions._
 
 object EulerMainNoScalaTestReussi extends App {
     myPrintDln("Hello World!")
+    new Euler26
     new Euler187
 }
+
+class Euler26 {
+    myPrintln(EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)).mkString("\n"))
+    val result26 = EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)).maxBy(_.countPrecision)
+    myPrintIt(result26)
+    myAssert2(983, result26.countPrecision)
+
+    class Calculate(val down: Int) {
+        var countPrecision = 0
+        val check = 1.0 / down.toDouble
+        var lrest = List[Int]()
+        val resultP = divSpecial(down)
+        /*
+        myPrintIt(check, Math.min(precision - 2, check.toString.length-1))
+        myPrintIt(down, check.toString.substring(0, Math.min(9, check.toString.length)), resultP, resultP.indexOf(check.toString.substring(0, Math.min(precision - 4, check.toString.length-1))))
+        myAssert(resultP.indexOf(check.toString.substring(0, Math.min(precision - 4, check.toString.length - 1))) == 0)
+        */
+
+        def divSpecial(down: Int) = {
+            var z = 0
+            var rest = 1
+            var result = "0."
+            var go_on = true
+            while (go_on) {
+                z = rest * 10 / down
+                if (z == 0) {
+                    result = result + "0"
+                    rest = (rest * 10)
+                } else {
+                    rest = (rest * 10) - (z * down)
+                    result = result + z.toString
+                }
+                countPrecision += 1
+                if (rest == 0) {
+                    go_on = false
+                }
+                lrest.find(_ == rest) match {
+                    case Some(i) => go_on = false
+                    case _       => lrest = lrest :+ rest
+                }
+            }
+            result
+        }
+        override def toString = "[[" + down + "] " + countPrecision + ", " + resultP + ", " + lrest + "]"
+
+    }
+}
+
+
 
 class Euler187 {
     val centMillions = 100000000
