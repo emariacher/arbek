@@ -14,11 +14,25 @@ import java.io.InputStreamReader
 import scala.io.Source
 import java.io.BufferedInputStream
 import scala.collection.JavaConversions._
+import scala.collection.immutable.ListSet
 
 object EulerMainNoScalaTestReussi extends App {
     myPrintDln("Hello World!")
     new Euler26
     new Euler187
+}
+
+class Euler203 {
+    myAssert2(105, distinctSquarefreeNumbersSum1(8))
+    val result203 = distinctSquarefreeNumbersSum1(51)
+    printIt(51, result203)
+    myAssert2("34029210557338", result203.toString)
+
+    def distinctSquarefreeNumbersSum1(rowNumber: BigInt) = {
+        (ListSet[BigInt]() ++ new TrianglePascal(rowNumber.toInt).triangle.flatten).
+            map(bi => (bi, new EulerDiv(bi).primes)).filter(c => (ListSet[BigInt]() ++ c._2).toList.
+                length == c._2.length).map(_._1).sum
+    }
 }
 
 class Euler26 {

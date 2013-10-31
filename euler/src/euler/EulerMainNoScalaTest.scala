@@ -18,16 +18,32 @@ import scala.collection.immutable.ListSet
 import Permutations._
 
 object EulerMainNoScalaTest extends App {
+    var t_start = Calendar.getInstance
     myPrintDln("Hello World!")
-    new Euler203
-    myPrintDln("Au revoir Monde!")
+
+    new Euler241
+
+    timeStamp(t_start, "Au revoir Monde!")
 }
 
-class Euler203 {
-    myAssert2(105,distinctSquarefreeNumbersSum1(8))
-    def distinctSquarefreeNumbersSum1(rowNumber: BigInt) = {
-        (ListSet[BigInt]() ++ new TrianglePascal(rowNumber.toInt).triangle.flatten).
-            map(bi => (bi, new EulerDiv(bi).primes)).filter(c => (ListSet[BigInt]() ++ c._2).toList.
-                length == c._2.length).map(_._1).sum
+class Euler241 {
+    myErrPrintDln((1 until 100000).map(new DoZeJob(_)).filter(_.kp5).mkString("\n"))
+
+    class DoZeJob(bi: BigInt) {
+        val div = new EulerDiv(bi)
+        val sbi = sigma(bi, div)
+        val pfbi = perfquot(bi, sbi)
+        val spfbi = pfbi.toString
+        val kp5 = spfbi.substring(spfbi.length - 2) == ".5"
+        myPrintln(bi, sbi, pfbi, kp5)
+
+        def toString2 = "[" + bi + "," + div.primes + "," + (new EulerDivisors(div).divisors ++ List[BigInt](1, bi)).sorted + "," + pfbi + "]"
+        override def toString = "[" + bi + "," + div.primes + "," + pfbi + "]"
     }
+
+    def sigma(bi: BigInt) = (new EulerDivisors(new EulerDiv(bi)).divisors ++ List[BigInt](1, bi)).sum
+    def sigma(bi: BigInt, ed: EulerDiv) = (new EulerDivisors(ed).divisors ++ List[BigInt](1, bi)).sum
+    def perfquot(bi: BigInt) = sigma(bi).toDouble / bi.toDouble
+    def perfquot(bi: BigInt, sbi: BigInt) = sbi.toDouble / bi.toDouble
 }
+
