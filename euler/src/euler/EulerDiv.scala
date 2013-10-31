@@ -86,6 +86,7 @@ class EulerDivisors(val l: List[BigInt]) {
     def this(ed: EulerDiv) = this(ed.primes)
     val divisors = range.foldLeft(List[List[BigInt]]())(_ ++ l.combinations(_)).map(_.product).distinct.sorted
     val primesUnique = TreeSet[BigInt]() ++ l
+    def getFullDivisors = divisors ++ List[BigInt](1,l.product)
 }
 
 class EulerDivisors3(l: List[BigInt]) {

@@ -37,12 +37,12 @@ class Euler241 {
         val kp5 = spfbi.substring(spfbi.length - 2) == ".5"
         myPrintln(bi, sbi, pfbi, kp5)
 
-        def toString2 = "[" + bi + "," + div.primes + "," + (new EulerDivisors(div).divisors ++ List[BigInt](1, bi)).sorted + "," + pfbi + "]"
+        def toString2 = "[" + bi + "," + div.primes + "," + (new EulerDivisors(div).getFullDivisors).sorted + "," + pfbi + "]"
         override def toString = "[" + bi + "," + div.primes + "," + pfbi + "]"
     }
 
-    def sigma(bi: BigInt) = (new EulerDivisors(new EulerDiv(bi)).divisors ++ List[BigInt](1, bi)).sum
-    def sigma(bi: BigInt, ed: EulerDiv) = (new EulerDivisors(ed).divisors ++ List[BigInt](1, bi)).sum
+    def sigma(bi: BigInt) = (new EulerDivisors(new EulerDiv(bi)).getFullDivisors).sum
+    def sigma(bi: BigInt, ed: EulerDiv) = (new EulerDivisors(ed).getFullDivisors).sum
     def perfquot(bi: BigInt) = sigma(bi).toDouble / bi.toDouble
     def perfquot(bi: BigInt, sbi: BigInt) = sbi.toDouble / bi.toDouble
 }
