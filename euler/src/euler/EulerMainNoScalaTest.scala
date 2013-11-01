@@ -48,13 +48,15 @@ class Euler241 {
         (List(BigInt(2)), List(BigInt(100000)), List[BigInt](2)),
         (List(BigInt(4320)), List(BigInt(10000000)), List[BigInt](8, 9)),
         (List(BigInt(26208)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 13)),
-        (List(BigInt(8910720)), List(BigInt(1000000), BigInt(10000)), List[BigInt](32, 9, 13, 35)),
-        (List(BigInt(0)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 11)),
-        (List(BigInt(8910720)), List(BigInt(10000000), BigInt(10000)), List[BigInt](128, 9, 13, 35)),
-        (List[BigInt](0), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 13, 35)),
-        (List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 11, 35)),
-        (List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 17, 35)),
-        (List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61), List(BigInt(100000000), BigInt(10000)), List[BigInt](2048, 9, 13, 35)))
+        (List(BigInt(8910720)), List(BigInt(1000000), BigInt(10000)), List[BigInt](32, 9, 13, 35))
+        //(List(BigInt(0)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 11)),
+        //(List(BigInt(8910720)), List(BigInt(10000000), BigInt(10000)), List[BigInt](128, 9, 13, 35)),
+        //(List[BigInt](0), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 13, 35)),
+        //(List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 11, 35)),
+        //(List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 17, 35)),
+        //(List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61), List(BigInt(100000000), BigInt(10000)), List[BigInt](2048, 9, 13, 35))
+        //(List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61), List(BigInt(100000000), BigInt(100000)), List[BigInt](2048, 9, 169, 35))
+        )
 
     /* 
      * [206166804480,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61),4.5,158]
@@ -81,8 +83,8 @@ class Euler241 {
         val kp5 = spfbi.substring(spfbi.length - 2) == ".5"
         //myPrintln(bi, sbi, pfbi, kp5)
 
-        def toString2 = "[" + bi + "," + div.primes + "," + (new EulerDivisors(div.primes).getFullDivisors).sorted + "," + pfbi + "]"
-        override def toString = "[" + bi + "," + div.primes + "," + pfbi + "," + div.primes.sum + "]"
+        override def toString = "[" + bi + "," + div.primes + ",\n" + (new EulerDivisors(div.primes).getFullDivisors).sorted + ",\n" + pfbi + "]"
+        def toString2 = "[" + bi + "," + div.primes + "," + pfbi + "," + div.primes.sum + "]"
         override def equals(a: Any) = bi == a.asInstanceOf[DoZeJob].bi
         override def hashCode = bi.toInt
     }
