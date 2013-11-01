@@ -39,6 +39,42 @@ class EulerDiv(bi: BigInt) {
     //println("*e* "+bi+" "+bic+" "+primes)
 }
 
+class EulerDiv241(bi: BigInt) {
+    var primes = List[BigInt]()
+    val premiers = premiers1000
+    var bic = bi
+    var index = 0
+
+    premiers.takeWhile((premier: BigInt) => {
+        //println("*i1* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
+        while (bic % premier == 0 & bic >= premier) {
+            primes = primes :+ premier
+            bic = bic / premier
+        }
+        //println("*i2* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
+        if (bic == 1) {
+            false
+        } else if ((premier * premier) > bic) {
+            //println("*i3* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
+            if (bic != bi) {
+                primes = primes :+ bic
+                require(primes.product == bi)
+            } else if (primes.isEmpty) {
+                primes = primes :+ bic
+            }
+            false
+        } else {
+            true
+        }
+    })
+    if (primes.isEmpty) {
+        require(bi < (premiers.last * premiers.last), bi + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
+    } else {
+        require(bic < (premiers.last * premiers.last), bic + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
+    }
+    //println("*e* "+bi+" "+bic+" "+primes)
+}
+
 class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt]) {
     var primes = List[BigInt]()
     var bic = bi
