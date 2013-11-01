@@ -34,7 +34,7 @@ object EulerMainNoScalaTest extends App {
     } catch {
         case ex: Exception => {
             println("\n" + ex)
-            println("\n" + ex.getStackTrace.mkString("\n  ","\n  ","\n  ") + "\n")
+            println("\n" + ex.getStackTrace.mkString("\n  ", "\n  ", "\n  ") + "\n")
         }
     } finally {
         println("\nHere!")
@@ -68,11 +68,12 @@ class Euler241 {
         (List(BigInt(8910720)), List(BigInt(1000000), BigInt(10000)), List[BigInt](32, 9, 13, 35)),
         (List(BigInt(0)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 11)),
         (List(BigInt(8910720)), List(BigInt(10000000), BigInt(10000)), List[BigInt](128, 9, 13, 35)),
-        (List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 23), List(BigInt(1000000000), BigInt(10000)), List[BigInt](1024, 9, 13, 35)),
-        (List(BigInt(0)), List(BigInt(1000000000), BigInt(10000)), List[BigInt](1024, 9, 11, 35)))
+        (List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 23), List(BigInt(1000000000), BigInt(10000)), List[BigInt](1024, 9, 13, 35)) //(List(BigInt(0)), List(BigInt(1000000000), BigInt(10000)), List[BigInt](1024, 9, 11, 35))
+        )
+    lj.foreach(t => loop2(t._1, t._2, t._3))
 
-    var nrOfWorkers = 4
-    GoLoops(nrOfWorkers, lj)
+    /*var nrOfWorkers = 4
+    GoLoops(nrOfWorkers, lj)*/
 
     class DoZeJob(val bi: BigInt) {
         val div = new EulerDiv(bi)
@@ -102,7 +103,7 @@ class Euler241 {
                 myPrintln("\n    " + dzj)
                 result = result + dzj
             }
-            if (count2 % 10000 == 99) {
+            if (count2 % 1000 == 99) {
                 print(".")
             }
 
@@ -114,12 +115,31 @@ class Euler241 {
         result
     }
 
+    def loop2(start: List[BigInt], end: List[BigInt], inc: List[BigInt]) = {
+        var t_start1 = Calendar.getInstance
+        val size = (((end.product - start.product) / inc.product) + 1).toInt
+
+        val inc1 = inc.product
+        printIt(start, end.mkString("*"), inc.mkString("*"), size)
+
+        val result = (0 to size).toList.par.map(BigInt(_)).map(bi => {
+            if (bi % 10000 == 99) {
+                print(".")
+            }
+            new DoZeJob(bi * inc1)
+        }).filter(_.kp5)
+
+        myErrPrintDln(((start.mkString("*"), end.mkString("*"), inc.mkString("*")).toString, size, result.toList.sortBy(_.bi).mkString("\n", "\n", "\n")))
+        timeStamp(t_start1, (start.mkString("*"), end.mkString("*"), inc.mkString("*"), size).toString)
+        result
+    }
+
     def sigma(bi: BigInt) = (new EulerDivisors(new EulerDiv(bi)).getFullDivisors).sum
     def sigma(bi: BigInt, ed: EulerDiv) = (new EulerDivisors(ed).getFullDivisors).sum
     def perfquot(bi: BigInt) = sigma(bi).toDouble / bi.toDouble
     def perfquot(bi: BigInt, sbi: BigInt) = sbi.toDouble / bi.toDouble
 
-    sealed trait akkaDoZeJob
+    /*sealed trait akkaDoZeJob
     case object Demarre extends akkaDoZeJob
     case class GoLoop(start: List[BigInt], end: List[BigInt], inc: List[BigInt]) extends akkaDoZeJob
     case class Resultat(result: ListSet[DoZeJob]) extends akkaDoZeJob
@@ -127,24 +147,19 @@ class Euler241 {
 
     class Worker extends Actor {
 
-        /*def echappeJeton(j: Jeton): Int = {
-            while (j.avance != StateMachine.termine) {
-                //myPrintDln("    ("+j+", "+j.cnt+")")
-            }
-            //myPrintDln("   -("+j+", "+j.cnt+")")
-            j.cnt
-        }*/
-
         def receive = {
             case GoLoop(start, end, inc) =>
                 sender ! Resultat(loop(start, end, inc))
         }
     }
 
-    class Master(nrOfWorkers: Int, lj: List[(List[BigInt], List[BigInt], List[BigInt])], listener: ActorRef) extends Actor {
+    class Master(nrOfWorkers: Int, lj: List[(List[BigInt], List[BigInt], List[BigInt])]) extends Actor {
 
         var nrOfResults: Int = _
         var results = ListSet.empty[DoZeJob]
+
+        //myErrPrintDln("create the result listener, which will print the result and shutdown the system")
+        val listener = context.actorOf(Props[Listener])
 
         val workerRouter = context.actorOf(
             Props[Worker].withRouter(RoundRobinRouter(nrOfWorkers)), name = "workerRouter")
@@ -179,19 +194,16 @@ class Euler241 {
         // Create an Akka system
         val system = ActorSystem("goLoops")
 
-        //myErrPrintDln("create the result listener, which will print the result and shutdown the system")
-        //val listener = system.actorOf(Props[Listener], name = "listener")
-        val listener = system.actorOf(Props(new Listener))
 
         //myErrPrintDln("create the master")
         val master = system.actorOf(Props(new Master(
-            nrOfWorkers, lj, listener)),
+            nrOfWorkers, lj)),
             name = "master")
 
         //myErrPrintDln("start the calculation")
         master ! Demarre
 
-    }
+    }*/
 
 }
 
