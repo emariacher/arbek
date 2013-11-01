@@ -23,7 +23,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 
 object EulerMainNoScalaTest extends App {
-    MyLog.newMyLog("EulerMainNoScalaTest", new File("log"), "log")
+    //MyLog.newMyLog("EulerMainNoScalaTest", new File("log"), "log")
     try {
         var t_start = Calendar.getInstance
         myPrintDln("Hello World!")
@@ -38,7 +38,7 @@ object EulerMainNoScalaTest extends App {
         }
     } finally {
         println("\nHere!")
-        MyLog.getMylog.closeFiles
+        //MyLog.getMylog.closeFiles
         println("\nThere!")
     }
 }
@@ -49,14 +49,28 @@ class Euler241 {
         (List(BigInt(4320)), List(BigInt(10000000)), List[BigInt](8, 9)),
         (List(BigInt(26208)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 13)),
         (List(BigInt(8910720)), List(BigInt(1000000), BigInt(10000)), List[BigInt](32, 9, 13, 35)),
-        (List(BigInt(0)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 11))
-        //(List(BigInt(8910720)), List(BigInt(10000000), BigInt(10000)), List[BigInt](128, 9, 13, 35)) 
-        //(List[BigInt](0), List(BigInt(1000000000), BigInt(10000)), List[BigInt](1024, 9, 13, 35),(List(BigInt(0)), List(BigInt(1000000000), BigInt(10000)), List[BigInt](1024, 9, 11, 35))
-        )
+        (List(BigInt(0)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 11)),
+        (List(BigInt(8910720)), List(BigInt(10000000), BigInt(10000)), List[BigInt](128, 9, 13, 35)),
+        (List[BigInt](0), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 13, 35)),
+        (List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 11, 35)),
+        (List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 17, 35)),
+        (List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61), List(BigInt(100000000), BigInt(10000)), List[BigInt](2048, 9, 13, 35)))
 
-    //[8910720,List(2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 17),4.5]
-    //[8583644160,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 23, 89),4.5]
-    val result = ListSet[DoZeJob]() ++ lj.map(t => loop2(t._1, t._2, t._3))
+    /* 
+     * [206166804480,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61),4.5,158]
+[8583644160,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 23, 89),4.5,163]
+[20427264,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 11, 13, 31),3.5,79]
+[17428320,List(2, 2, 2, 2, 2, 3, 3, 5, 7, 7, 13, 19),4.5,67]
+[8910720,List(2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 17),4.5,62]
+[26208,List(2, 2, 2, 2, 2, 3, 3, 7, 13),3.5,36]
+[4680,List(2, 2, 2, 3, 3, 5, 13),3.5,30]
+[4320,List(2, 2, 2, 2, 2, 3, 3, 3, 5),3.5,24]
+[24,List(2, 2, 2, 3),2.5,9]
+[2,List(2),1.5,2]
+
+     * 
+     * */
+    val result = ListSet[DoZeJob]() ++ lj.map(t => loop2(t._1, t._2, t._3)).toList.flatten
     myErrPrintln(result.mkString("\n"))
 
     class DoZeJob(val bi: BigInt) {
@@ -68,7 +82,7 @@ class Euler241 {
         //myPrintln(bi, sbi, pfbi, kp5)
 
         def toString2 = "[" + bi + "," + div.primes + "," + (new EulerDivisors(div.primes).getFullDivisors).sorted + "," + pfbi + "]"
-        override def toString = "[" + bi + "," + div.primes + "," + pfbi + "]"
+        override def toString = "[" + bi + "," + div.primes + "," + pfbi + "," + div.primes.sum + "]"
         override def equals(a: Any) = bi == a.asInstanceOf[DoZeJob].bi
         override def hashCode = bi.toInt
     }
@@ -110,7 +124,11 @@ class Euler241 {
             if (bi % 10000 == 99) {
                 print(".")
             }
-            new DoZeJob(bi * inc1)
+            val dzj = new DoZeJob(bi * inc1)
+            if (dzj.kp5) {
+                print("+")
+            }
+            dzj
         }).filter(_.kp5)
 
         myErrPrintDln(((start.mkString("*"), end.mkString("*"), inc.mkString("*")).toString, size, result.toList.sortBy(_.bi).mkString("\n", "\n", "\n")))
