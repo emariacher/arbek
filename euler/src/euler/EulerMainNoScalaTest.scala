@@ -33,19 +33,25 @@ class Euler241 {
     myErrPrintDln((BigInt(26208) until BigInt(1000000)* BigInt(1000) by BigInt(32*9*13)).map(new DoZeJob(_)).filter(_.kp5).mkString("\n"))
     myErrPrintDln((BigInt(8910720) until BigInt(1000000)* BigInt(10000) by BigInt(32*9*13*35)).map(new DoZeJob(_)).filter(_.kp5).mkString("\n"))
     myErrPrintDln((BigInt(0) until BigInt(1000000)* BigInt(10000) by BigInt(32*9*11*35)).map(new DoZeJob(_)).filter(_.kp5).mkString("\n"))*/
-    
-    var result = ListSet[DoZeJob]() ++ loop(2,100000,2)
+
+    var result = ListSet[DoZeJob]() ++ loop(List(BigInt(2)), List(BigInt(100000)), List(2))
     myErrPrintln(result)
-    result = result ++ loop(4320,10000000,8*9)
+    result = result ++ loop(List(BigInt(4320)), List(BigInt(10000000)), List(8, 9))
     myErrPrintln(result)
-    result = result ++ loop(26208,BigInt(1000000)* BigInt(1000),32*9*13)
+    result = result ++ loop(List(BigInt(26208)), List(BigInt(1000000), BigInt(1000)), List(32, 9, 13))
     myErrPrintln(result)
-    result = result ++ loop(8910720,BigInt(1000000)* BigInt(10000),32*9*13*35)
+    result = result ++ loop(List(BigInt(8910720)), List(BigInt(1000000), BigInt(10000)), List(32, 9, 13, 35))
     myErrPrintln(result)
-    result = result ++ loop(0,BigInt(1000000)* BigInt(1000),32*9*11)
+    result = result ++ loop(List(BigInt(0)), List(BigInt(1000000), BigInt(1000)), List(32, 9, 11))
     myErrPrintln(result)
-    
-    class DoZeJob(bi: BigInt) {
+    result = result ++ loop(List(BigInt(8910720)), List(BigInt(10000000), BigInt(10000)), List(128, 9, 13, 35))
+    myErrPrintln(result)
+    result = result ++ loop(List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 23), List(BigInt(1000000000), BigInt(10000)), List(1024, 9, 13, 35))
+    myErrPrintln(result)
+    result = result ++ loop(List(BigInt(0)), List(BigInt(1000000000), BigInt(10000)), List(1024, 9, 11, 35))
+    myErrPrintln(result.toList.sortBy(_.bi).mkString("\n"))
+
+    class DoZeJob(val bi: BigInt) {
         val div = new EulerDiv(bi)
         val sbi = sigma(bi, div)
         val pfbi = perfquot(bi, sbi)
@@ -55,23 +61,33 @@ class Euler241 {
 
         def toString2 = "[" + bi + "," + div.primes + "," + (new EulerDivisors(div).getFullDivisors).sorted + "," + pfbi + "]"
         override def toString = "[" + bi + "," + div.primes + "," + pfbi + "]"
+        override def equals(a: Any) = bi == a.asInstanceOf[DoZeJob].bi
+        override def hashCode = bi.toInt
     }
-    
-    def loop(start: BigInt, end: BigInt, inc: BigInt) = {
+
+    def loop(start: List[BigInt], end: List[BigInt], inc: List[BigInt]) = {
         var result = ListSet[DoZeJob]()
         var t_start1 = Calendar.getInstance
-        printIt(start,end,inc)
-        var count = start
-        while(count<end) {
+        printIt(start, end.mkString("*"), inc.mkString("*"))
+        var count = start.product
+        var count2 = 0
+        val end1 = end.product
+        val inc1 = inc.product
+        while (count < end1) {
             val dzj = new DoZeJob(count)
-            if(dzj.kp5) {
-                myPrintln("  "+dzj)
+            if (dzj.kp5) {
+                myPrintln("\n    " + dzj)
                 result = result + dzj
             }
-            
-            count+=inc
+            if (count2 % 100 == 99) {
+                print(".")
+            }
+
+            count += inc1
+            count2 += 1
         }
-        timeStamp(t_start1, (start,end,inc).toString)
+        timeStamp(t_start1, (start.mkString("*"), end.mkString("*"), inc.mkString("*")).toString)
+        myErrPrintln(result.toList.sortBy(_.bi).mkString("\n"))
         result
     }
 
