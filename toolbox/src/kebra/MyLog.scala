@@ -31,6 +31,14 @@ object MyLog {
         L
     }
 
+    def closeFiles {
+        if (!vierge) {
+            L.closeFiles
+        } else {
+            myPrintDln("MyLog not activated")
+        }
+    }
+
     def myPrint(a: Any) = if (vierge) print(a) else L.myPrint(a)
     def myPrintln(a: Any) = myPrint(a + "\n")
     def myPrintD(a: Any) = myPrint(MyLog.tag(3) + " " + a)

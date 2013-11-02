@@ -28,7 +28,7 @@ object EulerMainNoScalaTest extends App {
         var t_start = Calendar.getInstance
         myPrintDln("Hello World!")
 
-        new Euler241
+        
 
         timeStamp(t_start, "Au revoir Monde!")
     } catch {
@@ -38,109 +38,8 @@ object EulerMainNoScalaTest extends App {
         }
     } finally {
         println("\nHere!")
-        //MyLog.getMylog.closeFiles
+        MyLog.closeFiles
         println("\nThere!")
     }
-}
-
-class Euler241 {
-    val lj = List(
-        (List(BigInt(2)), List(BigInt(100000)), List[BigInt](2)),
-        (List(BigInt(4320)), List(BigInt(10000000)), List[BigInt](8, 9)),
-        (List(BigInt(26208)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 13)),
-        (List(BigInt(8910720)), List(BigInt(1000000), BigInt(10000)), List[BigInt](32, 9, 13, 35))
-        //(List(BigInt(0)), List(BigInt(1000000), BigInt(1000)), List[BigInt](32, 9, 11)),
-        //(List(BigInt(8910720)), List(BigInt(10000000), BigInt(10000)), List[BigInt](128, 9, 13, 35)),
-        //(List[BigInt](0), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 13, 35)),
-        //(List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 11, 35)),
-        //(List(BigInt(0)), List(BigInt(100000000), BigInt(10000)), List[BigInt](1024, 9, 17, 35)),
-        //(List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61), List(BigInt(100000000), BigInt(10000)), List[BigInt](2048, 9, 13, 35))
-        //(List[BigInt](2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61), List(BigInt(100000000), BigInt(100000)), List[BigInt](2048, 9, 169, 35))
-        )
-
-    /* 
-     * [206166804480,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 13, 31, 61),4.5,158]
-[8583644160,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 23, 89),4.5,163]
-[20427264,List(2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 11, 13, 31),3.5,79]
-[17428320,List(2, 2, 2, 2, 2, 3, 3, 5, 7, 7, 13, 19),4.5,67]
-[8910720,List(2, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 13, 17),4.5,62]
-[26208,List(2, 2, 2, 2, 2, 3, 3, 7, 13),3.5,36]
-[4680,List(2, 2, 2, 3, 3, 5, 13),3.5,30]
-[4320,List(2, 2, 2, 2, 2, 3, 3, 3, 5),3.5,24]
-[24,List(2, 2, 2, 3),2.5,9]
-[2,List(2),1.5,2]
-
-     * 
-     * */
-    val result = ListSet[DoZeJob]() ++ lj.map(t => loop2(t._1, t._2, t._3)).toList.flatten
-    myErrPrintln(result.mkString("\n"))
-
-    class DoZeJob(val bi: BigInt) {
-        val div = new EulerDiv241(bi)
-        val sbi = sigma(bi, div)
-        val pfbi = perfquot(bi, sbi)
-        val spfbi = pfbi.toString
-        val kp5 = spfbi.substring(spfbi.length - 2) == ".5"
-        //myPrintln(bi, sbi, pfbi, kp5)
-
-        override def toString = "[" + bi + "," + div.primes + ",\n" + (new EulerDivisors(div.primes).getFullDivisors).sorted + ",\n" + pfbi + "]"
-        def toString2 = "[" + bi + "," + div.primes + "," + pfbi + "," + div.primes.sum + "]"
-        override def equals(a: Any) = bi == a.asInstanceOf[DoZeJob].bi
-        override def hashCode = bi.toInt
-    }
-
-    def loop(start: List[BigInt], end: List[BigInt], inc: List[BigInt]) = {
-        var result = ListSet[DoZeJob]()
-        var t_start1 = Calendar.getInstance
-        printIt(start, end.mkString("*"), inc.mkString("*"))
-        var count = start.product
-        var count2 = 0
-        val end1 = end.product
-        val inc1 = inc.product
-        while (count < end1) {
-            val dzj = new DoZeJob(count)
-            if (dzj.kp5) {
-                myPrintln("\n    " + dzj)
-                result = result + dzj
-            }
-            if (count2 % 1000 == 99) {
-                print(".")
-            }
-
-            count += inc1
-            count2 += 1
-        }
-        timeStamp(t_start1, (start.mkString("*"), end.mkString("*"), inc.mkString("*")).toString)
-        myErrPrintDln((start.mkString("*"), end.mkString("*"), inc.mkString("*")).toString, result.toList.sortBy(_.bi).mkString("\n", "\n", "\n"))
-        result
-    }
-
-    def loop2(start: List[BigInt], end: List[BigInt], inc: List[BigInt]) = {
-        var t_start1 = Calendar.getInstance
-        val size = (((end.product - start.product) / inc.product) + 1).toInt
-
-        val inc1 = inc.product
-        printIt(start, end.mkString("*"), inc.mkString("*"), size)
-
-        val result = (0 to size).toList.par.map(BigInt(_)).map(bi => {
-            if (bi % 10000 == 99) {
-                print(".")
-            }
-            val dzj = new DoZeJob(bi * inc1)
-            if (dzj.kp5) {
-                print("+")
-            }
-            dzj
-        }).filter(_.kp5)
-
-        myErrPrintDln(((start.mkString("*"), end.mkString("*"), inc.mkString("*")).toString, size, result.toList.sortBy(_.bi).mkString("\n", "\n", "\n")))
-        timeStamp(t_start1, (start.mkString("*"), end.mkString("*"), inc.mkString("*"), size).toString)
-        result
-    }
-
-    def sigma(bi: BigInt) = (new EulerDivisors(new EulerDiv241(bi).primes).getFullDivisors).sum
-    def sigma(bi: BigInt, ed: EulerDiv241) = (new EulerDivisors(ed.primes).getFullDivisors).sum
-    def perfquot(bi: BigInt) = sigma(bi).toDouble / bi.toDouble
-    def perfquot(bi: BigInt, sbi: BigInt) = sbi.toDouble / bi.toDouble
 }
 
