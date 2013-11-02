@@ -92,6 +92,60 @@ class EulerPrime(val top: BigInt, val inc: Int) {
         println("\n")
     }
 
+    def computePrime2(callback: (Int, TreeSet[BigInt]) => Int) = {
+        init1er4compute
+        assume((premiersForCompute.last * premiersForCompute.last) > inc)
+        callback(0, premiersForCompute)
+        val main1000 = new Range(0, (sqtop / inc).toInt+1, 1)
+        main1000.foreach((index: Int) => {
+            var start = (inc * index) + 1
+            var end = inc + start
+
+            //				val sqend = Math.sqrt(end).toInt+1
+            var range = TreeSet[BigInt]() ++ (new Range(start, end, 2)).toList.map(BigInt(_))
+            //println("range: "+range)
+            premiersForCompute.foreach((premier: BigInt) => {
+                range = range.filter(_ % premier != 0)
+                //println("  premier: "+premier+" range: "+range)
+            })
+            if (index == 0) {
+                require(range.head == 1)
+                range = range.tail
+            }
+
+            assume(!range.isEmpty, "increment[" + inc + "] start: " + start + " end: " + end + " " + premiersForCompute)
+            if (range.head < sqtop) {
+                premiersForCompute = (TreeSet[BigInt]() ++ premiersForCompute ++ range)
+            }
+            callback(index, range)
+            print("." + range.head + "-" + range.last)
+            if (index % 100 == 0) {
+                println("\n" + index)
+            }
+        })
+        println("\n")
+        
+        val mainAfter = new Range((sqtop / inc).toInt, (top / inc).toInt, 1)
+        mainAfter.foreach((index: Int) => {
+            var start = (inc * index) + 1
+            var end = inc + start
+
+            //				val sqend = Math.sqrt(end).toInt+1
+            var range = TreeSet[BigInt]() ++ (new Range(start, end, 2)).toList.map(BigInt(_))
+            //println("range: "+range)
+            premiersForCompute.foreach((premier: BigInt) => {
+                range = range.filter(_ % premier != 0)
+                //println("  premier: "+premier+" range: "+range)
+            })
+            assume(!range.isEmpty, "increment[" + inc + "] start: " + start + " end: " + end + " " + premiersForCompute)
+            callback(index, range)
+            print("." + range.head + "-" + range.last)
+            if (index % 100 == 0) {
+                println("\n" + index)
+            }
+        })
+        println("\n")
+    }
 }
 
 class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends EulerPrime(top, inc) {
