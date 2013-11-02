@@ -28,7 +28,9 @@ object EulerMainNoScalaTest extends App {
         var t_start = Calendar.getInstance
         myPrintDln("Hello World!")
 
-        
+        val z = new CheckEulerPrime(1000000, 1000)
+        timeStamp(t_start, "Intermediaire")
+        z.check
 
         timeStamp(t_start, "Au revoir Monde!")
     } catch {

@@ -89,6 +89,7 @@ class EulerPrime(val top: BigInt, val inc: Int) {
                 println("\n" + index)
             }
         })
+        println("\n")
     }
 
 }
@@ -109,10 +110,11 @@ class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends E
         val ref10000PrimeNumbers = getref10000PrimeNumbersFromWeb
         println("\n  exp 10000eme premier=" + ref10000PrimeNumbers.apply(9999))
         val diff = prems.filterNot(ref10000PrimeNumbers.contains(_)).grouped(10).toList
-        println("\n  diff:\n " + diff.mkString("\n  "))
-        require(prems.apply(9999) == ref10000PrimeNumbers.apply(9999))
-        require(prems.apply(9999) == 104729)
-        prems.apply(9999) == 104729 & prems.apply(9999) == ref10000PrimeNumbers.apply(9999)
+        //println("\n  diff:\n " + diff.mkString("\n  "))
+        myAssert2(prems.apply(9999),104729)
+        myAssert2(prems.apply(9999), ref10000PrimeNumbers.apply(9999))
+        myErrPrintDln("Check is OK!")
+        true
     }
 
     def getref10000PrimeNumbersFromWeb: List[Int] = {
