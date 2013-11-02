@@ -92,59 +92,22 @@ class EulerPrime(val top: BigInt, val inc: Int) {
         println("\n")
     }
 
-    def computePrime2(callback: (Int, TreeSet[BigInt]) => Int) = {
+    def computePrime2(top: BigInt, inc: Int) = {
+        printIt(top, inc)
         init1er4compute
         assume((premiersForCompute.last * premiersForCompute.last) > inc)
-        callback(0, premiersForCompute)
-        val main1000 = new Range(0, (sqtop / inc).toInt+1, 1)
-        main1000.foreach((index: Int) => {
-            var start = (inc * index) + 1
-            var end = inc + start
-
-            //				val sqend = Math.sqrt(end).toInt+1
-            var range = TreeSet[BigInt]() ++ (new Range(start, end, 2)).toList.map(BigInt(_))
-            //println("range: "+range)
-            premiersForCompute.foreach((premier: BigInt) => {
-                range = range.filter(_ % premier != 0)
-                //println("  premier: "+premier+" range: "+range)
-            })
-            if (index == 0) {
-                require(range.head == 1)
-                range = range.tail
-            }
-
-            assume(!range.isEmpty, "increment[" + inc + "] start: " + start + " end: " + end + " " + premiersForCompute)
-            if (range.head < sqtop) {
-                premiersForCompute = (TreeSet[BigInt]() ++ premiersForCompute ++ range)
-            }
-            callback(index, range)
-            print("." + range.head + "-" + range.last)
-            if (index % 100 == 0) {
-                println("\n" + index)
-            }
+        printIt(premiersForCompute)
+        var premiers = premiersForCompute ++ (premiersForCompute.last.toInt to inc by 2).map(BigInt(_)).filter(i => {
+            premiersForCompute.filter(p => i / p > 0 & i % p == 0).isEmpty
         })
-        println("\n")
-        
-        val mainAfter = new Range((sqtop / inc).toInt, (top / inc).toInt, 1)
-        mainAfter.foreach((index: Int) => {
-            var start = (inc * index) + 1
-            var end = inc + start
-
-            //				val sqend = Math.sqrt(end).toInt+1
-            var range = TreeSet[BigInt]() ++ (new Range(start, end, 2)).toList.map(BigInt(_))
-            //println("range: "+range)
-            premiersForCompute.foreach((premier: BigInt) => {
-                range = range.filter(_ % premier != 0)
-                //println("  premier: "+premier+" range: "+range)
-            })
-            assume(!range.isEmpty, "increment[" + inc + "] start: " + start + " end: " + end + " " + premiersForCompute)
-            callback(index, range)
-            print("." + range.head + "-" + range.last)
-            if (index % 100 == 0) {
-                println("\n" + index)
-            }
+        premiersForCompute = premiers
+        printIt(premiersForCompute)
+        premiers = premiersForCompute ++ (inc to top.toInt by 2).map(BigInt(_)).filter(i => {
+            premiersForCompute.filter(p => i / p > 0 & i % p == 0).isEmpty
         })
+        printIt(premiers)
         println("\n")
+        premiers
     }
 }
 
@@ -155,9 +118,14 @@ class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends E
         premiers = premiers ++ range
         0
     }
-    computePrime(callback)
+    premiers = computePrime2(top, inc)
 
     def check: Boolean = {
+        val l = List(1, 5, 9, 3, 6)
+        val l2 = l :+ 3
+        val ts = TreeSet.empty[Int] ++ l2
+        myPrintIt(ts, l, l2)
+        myAssert2(ts.toList, l.sorted)
         val prems = premiers.toList
         //println("\n  act 1000premiers="+premiers.filter(_<1000))
         println("\n  act 10000eme premier=" + prems.apply(9999))
@@ -165,7 +133,7 @@ class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends E
         println("\n  exp 10000eme premier=" + ref10000PrimeNumbers.apply(9999))
         val diff = prems.filterNot(ref10000PrimeNumbers.contains(_)).grouped(10).toList
         //println("\n  diff:\n " + diff.mkString("\n  "))
-        myAssert2(prems.apply(9999),104729)
+        myAssert2(prems.apply(9999), 104729)
         myAssert2(prems.apply(9999), ref10000PrimeNumbers.apply(9999))
         myErrPrintDln("Check is OK!")
         true
@@ -174,6 +142,7 @@ class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends E
     def getref10000PrimeNumbersFromWeb: List[Int] = {
         val r_int = """(\d+)""".r;
         val url = "http://primes.utm.edu/lists/small/10000.txt"
+        myPrintDln("Accessing " + url)
         val data = io.Source.fromURL(url).mkString
         var premiersRef = List[Int]()
         data.split(" ").map(_ match {
