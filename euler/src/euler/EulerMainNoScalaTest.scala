@@ -44,15 +44,15 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    new DoZeJob1(11)
+    new DoZeJob1(12)
 
     class DoZeJob1(len: Int) {
-        val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 43, 10 -> 67)
+        val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 43, 10 -> 67, 11 -> 102)
         val s1 = (1 to len).map(i => "0").toList.mkString
         val root: ListSet[String] = getRoot2
         myPrintDln(len, root)
 
-        val byCountNot0 = root.filter(s => (s.count(_ != '0')*2) <= (s.length+1)).groupBy(s => s.count(_ != '0'))
+        val byCountNot0 = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(s => s.count(_ != '0'))
         myPrintDln(byCountNot0.mkString("\n"))
         val zfinal = getFinal1
         val result = getFinal1.sum
@@ -79,18 +79,27 @@ class Euler114 {
                     case 0 => 1
                     case 1 => {
                         val y = z._2.toList.map(_.length)
-                        myPrintln("count0["+z._1+"] ", y)
+                        myPrintln("count0[" + z._1 + "] ", y.length, y)
                         y.sum.toInt
                     }
                     case _ => {
                         val y = z._2.map(_.permutations.toList).flatten
                         val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted
-                        myPrintDln("y count0["+z._1+"] ", y.toList.sorted)
-                        myPrintDln("x count0["+z._1+"] ", x.toList)
+                        myPrintDln("y count0[" + z._1 + "] ", y.toList.length, y.toList.sorted)
+                        myPrintDln("x count0[" + z._1 + "] ", x.length, x.toList)
+                        z._1 match {
+                            case 2 => myAssert2(x.length, xCount0_2)
+                            case _ =>
+                        }
+
                         x.length
                     }
                 }
             })
+        }
+        def xCount0_2 = {
+            myPrintDln(__FUNC__)
+            (7 to len).map(i => (i - 6) * (i - 6)).sum
         }
 
         def ubersetz(i: Int) = vubersetz.substring(i, i + 1)

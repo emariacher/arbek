@@ -121,6 +121,14 @@ object MyLog {
             case _ => c.abort(c.enclosingPosition, "NoEnclosingMethod")
         }
     }
+    def km_func(c: Context) = {
+        import c.universe._
+        c.enclosingDef match {
+            case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
+                c.universe.reify(c.literal("#"+name.toString).splice+"# ")
+            case _ => c.abort(c.enclosingPosition, "NoEnclosingMethod")
+        }
+    }
     def km_class3(c: Context) = {
         import c.universe._
         c.enclosingImpl match {
@@ -133,7 +141,7 @@ object MyLog {
             case _ => c.abort(c.enclosingPosition, "NoEnclosingClass")
         }
     }
-    def __FUNC__ = macro km_func2
+    def __FUNC__ = macro km_func
     def __CLASS__ = macro km_class3
 
     def assertx(c: Context)(cond: c.Expr[Boolean]): c.Expr[Unit] = {
