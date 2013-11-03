@@ -52,7 +52,7 @@ class Euler114 {
         val root: ListSet[String] = getRoot2
         myPrintDln(len, root)
 
-        val byCountNot0 = root.groupBy(z => z.count(_ != '0'))
+        val byCountNot0 = root.filter(s => (s.count(_ != '0')*2) <= (s.length+1)).groupBy(s => s.count(_ != '0'))
         myPrintDln(byCountNot0.mkString("\n"))
         val zfinal = getFinal1
         val result = getFinal1.sum
@@ -74,19 +74,19 @@ class Euler114 {
         }
 
         def getFinal1 = {
-            byCountNot0.toList.map((z: (Int, ListSet[String])) => {
+            byCountNot0.map((z: (Int, ListSet[String])) => {
                 z._1 match {
                     case 0 => 1
                     case 1 => {
-                        val y = z._2.toList.map(permLength)
+                        val y = z._2.toList.map(_.length)
                         myPrintln("count0["+z._1+"] ", y)
                         y.sum.toInt
                     }
                     case _ => {
                         val y = z._2.map(_.permutations.toList).flatten
                         val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted
-                        //myPrintIt("count0["+z._1+"] ", y.toList.sorted)
-                        myPrintIt("count0["+z._1+"] ", x.toList)
+                        myPrintDln("y count0["+z._1+"] ", y.toList.sorted)
+                        myPrintDln("x count0["+z._1+"] ", x.toList)
                         x.length
                     }
                 }
