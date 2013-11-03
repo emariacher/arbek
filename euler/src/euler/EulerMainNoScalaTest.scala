@@ -44,20 +44,12 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    myAssert2(new DoZeJob1(1).result, 1)
-    myAssert2(new DoZeJob1(2).result, 1)
-    myAssert2(new DoZeJob1(3).result, 2)
-    myAssert2(new DoZeJob1(4).result, 4)
-    myAssert2(new DoZeJob1(5).result, 7)
-    myAssert2(new DoZeJob1(6).result, 11)
-    myAssert2(new DoZeJob1(7).result, 17)
-    myAssert2(new DoZeJob1(8).result, 27) // 4A3 & 3A4
-    myAssert2(new DoZeJob1(9).result, 25)
+    new DoZeJob1(9)
 
     class DoZeJob1(len: Int) {
-        myPrintDln("* " + len + " *****************************************************")
+        val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 0)
         val s1 = (1 to len).map(i => "A").toList.mkString
-        val root = getRoot1
+        val root: ListSet[String] = getRoot2
         myPrintDln(len, root)
 
         val byCountNotA = root.groupBy(z => z.count(_ != 'A'))
@@ -65,15 +57,20 @@ class Euler114 {
         val zfinal = getFinal1
         val result = getFinal1.sum
         myErrPrintDln(len, result)
+        myAssert2(result, lcheck.getOrElse(len, 0))
 
-        def getRoot1 = {
-            ListSet.empty[String] ++ (3 to len).map(z => {
-                val s2 = (1 to z).map(i => "A").toList.mkString
-                s1.replaceAll(s2, z.toString)
-            }) ++ (3 to (len - 3)).map(z => {
-                val s2 = (1 to z).map(i => "A").toList.mkString
-                s1.replaceFirst(s2, z.toString)
-            }) + s1
+        def getRoot2 = {
+            var root = ListSet.empty[String]
+            if (len == 1) {
+                root = ListSet("A")
+            } else {
+                val fromPrevRoot = new DoZeJob1(len - 1).root.map(s => s + "A")
+                root = fromPrevRoot ++ fromPrevRoot.map(_.replaceFirst("AAA", "3"))
+            }
+            if (len > 2) {
+                root = root + len.toString
+            }
+            root
         }
 
         def getFinal1 = {
