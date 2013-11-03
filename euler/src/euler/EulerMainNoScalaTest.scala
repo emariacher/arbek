@@ -44,20 +44,22 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    new DoZeJob1(12)
+    new DoZeJob1(15)
 
     class DoZeJob1(len: Int) {
         val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 43, 10 -> 67, 11 -> 102)
         val s1 = (1 to len).map(i => "0").toList.mkString
         val root: ListSet[String] = getRoot2
-        myPrintDln(len, root)
+        //myPrintDln(len, root)
 
         val byCountNot0 = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(s => s.count(_ != '0'))
         myPrintDln(byCountNot0.mkString("\n"))
         val zfinal = getFinal1
         val result = getFinal1.sum
         myErrPrintDln(len, result)
-        myAssert2(result, lcheck.getOrElse(len, 0))
+        if (lcheck.getOrElse(len, 0) != 0) {
+            myAssert2(result, lcheck.getOrElse(len, 0))
+        }
 
         def getRoot2 = {
             var root = ListSet.empty[String]
@@ -85,11 +87,15 @@ class Euler114 {
                     case _ => {
                         val y = z._2.map(_.permutations.toList).flatten
                         val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted
-                        myPrintDln("y count0[" + z._1 + "] ", y.toList.length, y.toList.sorted)
-                        myPrintDln("x count0[" + z._1 + "] ", x.length, x.toList)
                         z._1 match {
                             case 2 => myAssert2(x.length, xCount0_2)
-                            case _ =>
+                            case _ => {
+                                //myPrintDln("y count0[" + z._1 + "] ", y.toList.length, y.toList.sorted)
+                                //val w = x.groupBy(_.toList.map(_.toInt).sum).map(c => (c._1, c._2.head, c._2.length)).toList.sortBy(_._3)
+                                val w = x.groupBy(_.length).map(c => (c._2.length, c._2)).toList.sortBy(_._1)
+                                myPrintDln("x count0[" + z._1 + "] ", x.length, w.mkString("\n  ", "\n  ", "\n  "))
+                                //myPrintDln("x count0[" + z._1 + "] ", x.length)
+                            }
                         }
 
                         x.length
@@ -97,7 +103,12 @@ class Euler114 {
                 }
             })
         }
+
         def xCount0_2 = {
+            myPrintDln(__FUNC__)
+            (7 to len).map(i => (i - 6) * (i - 6)).sum
+        }
+        def xCount0_3 = {
             myPrintDln(__FUNC__)
             (7 to len).map(i => (i - 6) * (i - 6)).sum
         }
