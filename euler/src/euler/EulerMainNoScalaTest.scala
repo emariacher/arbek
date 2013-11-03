@@ -51,41 +51,50 @@ class Euler114 {
     myAssert2(new DoZeJob1(5).result, 7)
     myAssert2(new DoZeJob1(6).result, 11)
     myAssert2(new DoZeJob1(7).result, 17)
-    myAssert2(new DoZeJob1(8).result, 25)
+    myAssert2(new DoZeJob1(8).result, 27) // 4A3 & 3A4
     myAssert2(new DoZeJob1(9).result, 25)
 
     class DoZeJob1(len: Int) {
         myPrintDln("* " + len + " *****************************************************")
         val s1 = (1 to len).map(i => "A").toList.mkString
-        val l = ListSet.empty[String] ++ (3 to len).map(z => {
-            val s2 = (1 to z).map(i => "A").toList.mkString
-            s1.replaceAll(s2, z.toString)
-        }) ++ (3 to (len - 3)).map(z => {
-            val s2 = (1 to z).map(i => "A").toList.mkString
-            s1.replaceFirst(s2, z.toString)
-        }) + s1
-        myPrintDln(len, l)
+        val root = getRoot1
+        myPrintDln(len, root)
 
-        val byCountNotA = l.groupBy(z => z.count(_ != 'A'))
+        val byCountNotA = root.groupBy(z => z.count(_ != 'A'))
         myPrintDln(byCountNotA)
-        val result = byCountNotA.toList.map((z: (Int, ListSet[String])) => {
-            z._1 match {
-                case 0 => 1
-                case 1 => {
-                    val y = z._2.toList.map(permLength)
-                    myPrintDln(z._1, y)
-                    y.sum.toInt
-                }
-                case 2 => {
-                    val y = z._2.map(_.permutations.toList).flatten
-                    val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != 'A') > 1).isEmpty).toList
-                    myPrintDln(z._1, y, x)
-                    x.length
-                }
-                case _ => 0
-            }
-        }).sum
+        val zfinal = getFinal1
+        val result = getFinal1.sum
         myErrPrintDln(len, result)
+
+        def getRoot1 = {
+            ListSet.empty[String] ++ (3 to len).map(z => {
+                val s2 = (1 to z).map(i => "A").toList.mkString
+                s1.replaceAll(s2, z.toString)
+            }) ++ (3 to (len - 3)).map(z => {
+                val s2 = (1 to z).map(i => "A").toList.mkString
+                s1.replaceFirst(s2, z.toString)
+            }) + s1
+        }
+
+        def getFinal1 = {
+            byCountNotA.toList.map((z: (Int, ListSet[String])) => {
+                z._1 match {
+                    case 0 => 1
+                    case 1 => {
+                        val y = z._2.toList.map(permLength)
+                        myPrintDln(z._1, y)
+                        y.sum.toInt
+                    }
+                    case 2 => {
+                        val y = z._2.map(_.permutations.toList).flatten
+                        val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != 'A') > 1).isEmpty).toList
+                        myPrintDln(z._1, y, x)
+                        x.length
+                    }
+                    case _ => 0
+                }
+            })
+        }
     }
 }
 
