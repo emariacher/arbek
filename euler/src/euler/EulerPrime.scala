@@ -97,17 +97,30 @@ class EulerPrime(val top: BigInt, val inc: Int) {
         init1er4compute
         assume((premiersForCompute.last * premiersForCompute.last) > inc)
         //printIt(premiersForCompute)
-        var premiers = premiersForCompute ++ (premiersForCompute.last.toInt to inc by 2).map(BigInt(_)).filter(i => {
-            premiersForCompute.filter(p => i / p > 0 & i % p == 0).isEmpty
+        var premiers = premiersForCompute ++ (premiersForCompute.last.toInt to inc by 2).map(BigInt(_)).filter(bi => {
+            premiersForCompute.filter(p => bi / p > 0 & bi % p == 0).isEmpty
         })
         premiersForCompute = premiers
         //printIt(premiersForCompute)
-        premiers = premiersForCompute ++ (inc + 1 to top.toInt by 2).par.map(BigInt(_)).filter(i => {
+        myAssert2(top % inc, 0)
+        premiers = premiersForCompute ++ (0 to (top / inc).toInt).map(mi => {
+            val base = mi * inc
+            val sqtop = Math.sqrt(base + inc.toDouble) + 1
+            print("." + base)
+            if (mi % 100 == 0) {
+                println("\n" + mi)
+            }
+            (base + 1 to base + inc + 1 by 2).map(BigInt(_)).filter(bi => {
+                premiersForCompute.takeWhile(_.toDouble < sqtop).filter(p => bi / p > 0 & bi % p == 0).isEmpty
+            })
+        }).flatten.tail
+
+        /*premiers = premiersForCompute ++ (inc + 1 to top.toInt by 2).par.map(BigInt(_)).filter(i => {
             val sqtop = Math.sqrt(i.toDouble) + 1
             premiersForCompute.takeWhile(_.toDouble < sqtop).filter(p => i / p > 0 & i % p == 0).isEmpty
             //premiersForCompute.filter(p => i / p > 0 & i % p == 0).isEmpty
         })
-        //printIt(premiers)
+        //printIt(premiers)*/
         premiers
     }
 }
@@ -119,7 +132,8 @@ class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends E
         premiers = premiers ++ range
         0
     }
-    computePrime(callback)
+    //computePrime(callback)
+    premiers = computePrime2(top, inc)
 
     def check: Boolean = {
         val prems = premiers.toList
