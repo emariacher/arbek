@@ -82,14 +82,13 @@ class Euler114 {
                         myPrintln("count0["+z._1+"] ", y)
                         y.sum.toInt
                     }
-                    case 2 => {
+                    case _ => {
                         val y = z._2.map(_.permutations.toList).flatten
                         val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted
                         //myPrintIt("count0["+z._1+"] ", y.toList.sorted)
                         myPrintIt("count0["+z._1+"] ", x.toList)
                         x.length
                     }
-                    case _ =>  0
                 }
             })
         }
