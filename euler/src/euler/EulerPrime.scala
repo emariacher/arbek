@@ -98,20 +98,20 @@ class EulerPrime(val top: BigInt, val inc: Int) {
         assume((premiersForCompute.last * premiersForCompute.last) > inc)
         //printIt(premiersForCompute)
         var premiers = premiersForCompute ++ (premiersForCompute.last.toInt to inc by 2).map(BigInt(_)).filter(bi => {
-            premiersForCompute.filter(p => bi / p > 0 & bi % p == 0).isEmpty
+            premiersForCompute.filter(p => bi % p == 0).isEmpty
         })
         premiersForCompute = premiers
         //printIt(premiersForCompute)
         myAssert2(top % inc, 0)
-        premiers = premiersForCompute ++ (0 to (top / inc).toInt).map(mi => {
+        premiers = premiersForCompute ++ (0 to (top / inc).toInt).par.map(mi => {
             val base = mi * inc
-            val sqtop = Math.sqrt(base + inc.toDouble) + 1
+            val premiersForCompute2 = premiersForCompute.toList.takeWhile(_.toDouble < Math.sqrt(base + inc.toDouble) + 1)
             print("." + base)
             if (mi % 100 == 0) {
                 println("\n" + mi)
             }
-            (base + 1 to base + inc + 1 by 2).map(BigInt(_)).filter(bi => {
-                premiersForCompute.takeWhile(_.toDouble < sqtop).filter(p => bi / p > 0 & bi % p == 0).isEmpty
+            (base + 1 to base + inc + 1 by 2).toList.map(BigInt(_)).filter(bi => {
+                premiersForCompute2.filter(p => bi % p == 0).isEmpty
             })
         }).flatten.tail
 
@@ -121,6 +121,7 @@ class EulerPrime(val top: BigInt, val inc: Int) {
             //premiersForCompute.filter(p => i / p > 0 & i % p == 0).isEmpty
         })
         //printIt(premiers)*/
+        println("\n")
         premiers
     }
 }
