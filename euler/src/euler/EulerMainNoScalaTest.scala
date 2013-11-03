@@ -16,7 +16,6 @@ import scala.io.Source
 import java.io.BufferedInputStream
 import scala.collection.JavaConversions._
 import scala.collection.immutable.ListSet
-import Permutations._
 import akka.actor._
 import akka.routing.RoundRobinRouter
 import scala.concurrent.duration.Duration
@@ -28,9 +27,7 @@ object EulerMainNoScalaTest extends App {
         var t_start = Calendar.getInstance
         myPrintDln("Hello World!")
 
-        val z = new CheckEulerPrime(1000000, 1000)
-        timeStamp(t_start, "Intermediaire")
-        z.check
+        new Euler6
 
         timeStamp(t_start, "Au revoir Monde!")
     } catch {
