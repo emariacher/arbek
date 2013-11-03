@@ -96,31 +96,26 @@ class EulerPrime(val top: BigInt, val inc: Int) {
         printIt(top, inc)
         init1er4compute
         assume((premiersForCompute.last * premiersForCompute.last) > inc)
-        //printIt(premiersForCompute)
+        val premiersForCompute2 = premiersForCompute.toList
+        val plength = premiersForCompute2.length
         var premiers = premiersForCompute ++ (premiersForCompute.last.toInt to inc by 2).map(BigInt(_)).filter(bi => {
-            premiersForCompute.filter(p => bi % p == 0).isEmpty
+            premiersForCompute2.takeWhile(p => bi % p != 0).length == plength
         })
         premiersForCompute = premiers
-        //printIt(premiersForCompute)
         myAssert2(top % inc, 0)
-        premiers = premiersForCompute ++ (0 to (top / inc).toInt).par.map(mi => {
+        premiers = premiersForCompute ++ (1 to (top / inc).toInt-1).par.map(mi => {
             val base = mi * inc
             val premiersForCompute2 = premiersForCompute.toList.takeWhile(_.toDouble < Math.sqrt(base + inc.toDouble) + 1)
-            print("." + base)
+            val plength = premiersForCompute2.length
             if (mi % 100 == 0) {
                 println("\n" + mi)
             }
-            (base + 1 to base + inc + 1 by 2).toList.map(BigInt(_)).filter(bi => {
-                premiersForCompute2.filter(p => bi % p == 0).isEmpty
+            val newPrimes = (base + 1 to base + inc + 1 by 2).map(BigInt(_)).filter(bi => {
+                premiersForCompute2.takeWhile(p => bi % p != 0).length == plength
             })
-        }).flatten.tail
-
-        /*premiers = premiersForCompute ++ (inc + 1 to top.toInt by 2).par.map(BigInt(_)).filter(i => {
-            val sqtop = Math.sqrt(i.toDouble) + 1
-            premiersForCompute.takeWhile(_.toDouble < sqtop).filter(p => i / p > 0 & i % p == 0).isEmpty
-            //premiersForCompute.filter(p => i / p > 0 & i % p == 0).isEmpty
-        })
-        //printIt(premiers)*/
+            print("." + newPrimes.last)
+            newPrimes
+        }).flatten
         println("\n")
         premiers
     }
@@ -140,11 +135,12 @@ class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends E
         val prems = premiers.toList
         //println("\n  act 1000premiers="+premiers.filter(_<1000))
         println("\n  act 10000eme premier=" + prems.apply(9999))
+        myAssert2(prems.apply(9999), 104729)
+        myAssert2(premiers.last, 999983)
         val ref10000PrimeNumbers = getref10000PrimeNumbersFromWeb
         println("\n  exp 10000eme premier=" + ref10000PrimeNumbers.apply(9999))
         val diff = prems.filterNot(ref10000PrimeNumbers.contains(_)).grouped(10).toList
-        //println("\n  diff:\n " + diff.mkString("\n  "))
-        myAssert2(prems.apply(9999), 104729)
+        //println("\n  diff:\n " + diff.mkString("\n  "))        
         myAssert2(prems.apply(9999), ref10000PrimeNumbers.apply(9999))
         myErrPrintDln("Check is OK!")
         true
