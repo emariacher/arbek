@@ -34,7 +34,7 @@ class Euler6 {
     val sumSquare100 = sum100*sum100
     val squareSum100 = z100.map(i => i*i).sum
     printIt(z100,sumSquare100-squareSum100)
-    myAssert2(sumSquare100-squareSum100,2640)
+    myAssert2(sumSquare100-squareSum100,25164150)
 }
 
 class Euler203 {
