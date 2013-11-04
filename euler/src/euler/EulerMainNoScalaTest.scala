@@ -54,8 +54,9 @@ class Euler114 {
 
         val byCountNot0 = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(_.length)
         myPrintDln(byCountNot0.mkString("\n  ", "\n  ", "\n  "))
-        val zfinal = getFinal1
-        val result = getFinal1.sum
+        //val zfinal = getFinal1
+        //val result = getFinal1.sum
+        val result = 0
         myErrPrintDln(len, result)
         if (lcheck.getOrElse(len, 0) != 0) {
             // myAssert2(result, lcheck.getOrElse(len, 0))
