@@ -50,10 +50,10 @@ class Euler114 {
         val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 43, 10 -> 67, 11 -> 102)
         val s1 = (1 to len).map(i => "0").toList.mkString
         val root: ListSet[String] = getRoot2
-        //myPrintDln(len, root)
+        myErrPrintDln(len, root)
 
-        val byCountNot0 = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(s => s.count(_ != '0'))
-        myPrintDln(byCountNot0.mkString("\n"))
+        val byCountNot0 = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(_.length)
+        myPrintDln(byCountNot0.mkString("\n  ", "\n  ", "\n  "))
         val zfinal = getFinal1
         val result = getFinal1.sum
         myErrPrintDln(len, result)
@@ -69,12 +69,14 @@ class Euler114 {
                 val fromPrevRoot = new DoZeJob1(len - 1).root.map(s => s + "0")
                 printIt(len, fromPrevRoot)
                 root = fromPrevRoot
-                (3 to len).map(i => {
-                    printIt(i, ubersetz(i))
-                    val s = (1 to i).map(c => "0").mkString
-                    root = root ++ fromPrevRoot.map(_.replaceFirst(s, ubersetz(i)))
-                    myPrintDln("  " + s + " " + root)
-                })
+                if (len > 4) {
+                    (3 to len - 1).map(i => {
+                        printIt(i, ubersetz(i))
+                        val s = (1 to i).map(c => "0").mkString
+                        root = root ++ fromPrevRoot.map(_.replaceFirst(s, ubersetz(i)))
+                        myPrintDln("  " + s + " " + root)
+                    })
+                }
             }
             if (len > 2) {
                 root = root + ubersetz(len)
