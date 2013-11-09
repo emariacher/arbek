@@ -91,15 +91,11 @@ class Euler114 {
                     case 2 =>  if(len>2) (2,2) else (2,1)
                     case _ => {
                         var byCountNot0 = z._2.groupBy(_.count(_ != '0'))
-                        myPrintDln(len, z._1, byCountNot0.mkString("\n    ", "\n    ", "\n    "))
-                        
-                        val y = byCountNot0.map(_._2.map(_.permutations.toList.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted))
-                        val x = y.map(v => (v.flatten.toList.length,v))
+                        val y = byCountNot0.map(u => (u._1,u._2,u._2.map(_.permutations.toList.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted)))
+                        val x = y.map(v => (v._1,v._2.toList.length,v._3.flatten.toList.length,v._2,v._3))
                         myPrintDln(len, z._1, x.mkString("\n    ", "\n    ", "\n    "))
-                        val w = y.flatten.flatten.toList
-                        /*val y = z._2.map(_.permutations.toList).flatten
-                        val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted*/
-                        (z._1,w.length)
+                        val w = y.map(_._3).flatten.flatten.toList
+                       (z._1,w.length)
                     }
                 }
             })
