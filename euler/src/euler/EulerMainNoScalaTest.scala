@@ -52,14 +52,13 @@ class Euler114 {
         val root: ListSet[String] = getRoot2
         myErrPrintDln(len, root)
 
-        val byCountNot0 = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(_.length)
-        myPrintDln(byCountNot0.mkString("\n  ", "\n  ", "\n  "))
-        //val zfinal = getFinal1
-        //val result = getFinal1.sum
-        val result = 0
+        val byLength = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(_.length)
+        myPrintDln(byLength.mkString("\n  ", "\n  ", "\n  "))
+        val zfinal = getFinal2
+        val result = zfinal.sum
         myErrPrintDln(len, result)
         if (lcheck.getOrElse(len, 0) != 0) {
-            // myAssert2(result, lcheck.getOrElse(len, 0))
+            myAssert2(result, lcheck.getOrElse(len, 0))
         }
 
         def getRoot2 = {
@@ -85,8 +84,26 @@ class Euler114 {
             root
         }
 
+        def getFinal2 = {
+            val result = byLength.map((z: (Int, ListSet[String])) => {
+                z._1 match {
+                    case 1 => (1,1)
+                    case 2 =>  if(len>2) (2,2) else (2,1)
+                    case _ => {
+                        var byCountNot0 = z._2.groupBy(_.count(_ != '0'))
+                        myPrintDln(len, z._1, byCountNot0.mkString("\n    ", "\n    ", "\n    "))
+                        val y = z._2.map(_.permutations.toList).flatten
+                        val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted
+                        (z._1,x.length)
+                    }
+                }
+            })
+            myPrintDln(result.mkString("\n  ", "\n  ", "\n  "))
+            result.map(_._2)
+        }
+
         def getFinal1 = {
-            byCountNot0.map((z: (Int, ListSet[String])) => {
+            byLength.map((z: (Int, ListSet[String])) => {
                 z._1 match {
                     case 0 => 1
                     case 1 => {
