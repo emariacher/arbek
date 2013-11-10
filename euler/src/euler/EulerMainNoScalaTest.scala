@@ -44,15 +44,15 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    new DoZeJob1(10)
+    new DoZeJob1(13)
 
     class DoZeJob1(len: Int) {
-        val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 43, 10 -> 67, 11 -> 102)
+        val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 44, 10 -> 72, 11 -> 117)
         val s1 = (1 to len).map(i => "0").toList.mkString
         val root: ListSet[String] = getRoot2
         myErrPrintDln(len, root)
 
-        val byLength = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(_.length)
+        val byLength = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(_.length).toList.sortBy(_._1)
         myPrintDln(byLength.mkString("\n  ", "\n  ", "\n  "))
         val zfinal = getFinal2
         val result = zfinal.sum
@@ -81,21 +81,23 @@ class Euler114 {
             if (len > 2) {
                 root = root + ubersetz(len)
             }
+            root = ListSet.empty[String] ++ root.map(_.toList.sorted.mkString).toList.sorted.reverse
             root
         }
 
         def getFinal2 = {
             val result = byLength.map((z: (Int, ListSet[String])) => {
                 z._1 match {
-                    case 1 => (1,1)
-                    case 2 =>  if(len>2) (2,2) else (2,1)
+                    case 1 => (1, 1)
+                    case 2 => if (len > 2) (2, 2) else (2, 1)
                     case _ => {
                         var byCountNot0 = z._2.groupBy(_.count(_ != '0'))
-                        val y = byCountNot0.map(u => (u._1,u._2,u._2.map(_.permutations.toList.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted)))
-                        val x = y.map(v => (v._1,v._2.toList.length,v._3.flatten.toList.length,v._2,v._3))
+                        val y = byCountNot0.map(u => (u._1, u._2, u._2.map(_.permutations.toList.filter(_.toList.sliding(2).
+                                toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted)))
+                        val x = y.map(v => (len, z._1, v._1, v._2.toList.length, v._3.flatten.toList.length, v._2, v._3)).toList.sortBy(_._3)
                         myPrintDln(len, z._1, x.mkString("\n    ", "\n    ", "\n    "))
                         val w = y.map(_._3).flatten.flatten.toList
-                       (z._1,w.length)
+                        (z._1, w.length)
                     }
                 }
             })
