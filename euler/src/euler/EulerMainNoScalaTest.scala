@@ -20,7 +20,7 @@ import akka.actor._
 import akka.routing.RoundRobinRouter
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
-import Permutations._
+//import Factorielles._
 
 object EulerMainNoScalaTest extends App {
     //MyLog.newMyLog("EulerMainNoScalaTest", new File("log"), "log")
@@ -34,7 +34,8 @@ object EulerMainNoScalaTest extends App {
     } catch {
         case ex: Exception => {
             println("\n" + ex)
-            println("\n" + ex.getStackTrace.mkString("\n  ", "\n  ", "\n  ") + "\n")
+            println("\n" + ex.getStackTrace.mkString("\n  ", "\n  ", "\n  ") +
+                "\n")
         }
     } finally {
         println("\nHere!")
@@ -44,15 +45,17 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    new DoZeJob1(13)
+    new DoZeJob1(20)
 
     class DoZeJob1(len: Int) {
-        val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 -> 17, 8 -> 27, 9 -> 44, 10 -> 72, 11 -> 117)
+        val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 ->
+            17, 8 -> 27, 9 -> 44, 10 -> 72, 11 -> 117)
         val s1 = (1 to len).map(i => "0").toList.mkString
         val root: ListSet[String] = getRoot2
         myErrPrintDln(len, root)
 
-        val byLength = root.filter(s => (s.count(_ != '0') * 2) <= (s.length + 1)).groupBy(_.length).toList.sortBy(_._1)
+        val byLength = root.filter(s => (s.count(_ != '0') * 2) <= (s.length +
+            1)).groupBy(_.length).toList.sortBy(_._1)
         myPrintDln(byLength.mkString("\n  ", "\n  ", "\n  "))
         val zfinal = getFinal2
         val result = zfinal.sum
@@ -71,17 +74,18 @@ class Euler114 {
                 root = fromPrevRoot
                 if (len > 4) {
                     (3 to len - 1).map(i => {
-                        printIt(i, ubersetz(i))
+                        //printIt(i, ubersetz(i))
                         val s = (1 to i).map(c => "0").mkString
                         root = root ++ fromPrevRoot.map(_.replaceFirst(s, ubersetz(i)))
-                        myPrintDln("  " + s + " " + root)
+                        //myPrintDln("  " + s + " " + root)
                     })
                 }
             }
             if (len > 2) {
                 root = root + ubersetz(len)
             }
-            root = ListSet.empty[String] ++ root.map(_.toList.sorted.mkString).toList.sorted.reverse
+            root = ListSet.empty[String] ++
+                root.map(_.toList.sorted.mkString).toList.sorted.reverse
             root
         }
 
@@ -93,9 +97,24 @@ class Euler114 {
                     case _ => {
                         var byCountNot0 = z._2.groupBy(_.count(_ != '0'))
                         val y = byCountNot0.map(u => (u._1, u._2, u._2.map(_.permutations.toList.filter(_.toList.sliding(2).
-                                toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted)))
-                        val x = y.map(v => (len, z._1, v._1, v._2.toList.length, v._3.flatten.toList.length, v._2, v._3)).toList.sortBy(_._3)
+                            toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted)))
+                        //val x = y.map(v => (len, z._1, v._1, v._2.toList.length,v._3.flatten.toList.length, guess(len, z._1, v._1), v._2,v._3)).toList.sortBy(_._3)
+                        //val x = y.map(v => (len, z._1, v._1, v._2.toList.length,v._3.flatten.toList.length, guess(len, z._1, v._1),v._2)).toList.sortBy(_._3)
+                        val x = y.map(v => (len, z._1, v._1, v._2.toList.length, v._3.flatten.toList.length, guess(len, z._1, v._1), v._2)).toList.sortBy(_._3)
                         myPrintDln(len, z._1, x.mkString("\n    ", "\n    ", "\n    "))
+                        val u = x.dropWhile(t => {
+                            val exp = t._5
+                            val guessed = t._6
+                            if (guessed != 0) {
+                                exp == guessed
+                            } else {
+                                true
+                            }
+                        })
+                        if (!u.isEmpty) {
+                            throw new Exception("" + (u.head._2, u.head._3) + " exp " +
+                                u.head._5 + " vs act " + u.head._6)
+                        }
                         val w = y.map(_._3).flatten.flatten.toList
                         (z._1, w.length)
                     }
@@ -105,89 +124,46 @@ class Euler114 {
             result.map(_._2)
         }
 
-        def getFinal1 = {
-            byLength.map((z: (Int, ListSet[String])) => {
-                z._1 match {
-                    case 0 => 1
-                    case 1 => {
-                        val y = z._2.toList.map(_.length)
-                        myPrintln("count0[" + z._1 + "] ", y.length, y)
-                        y.sum.toInt
+        def guess(len: Int, lenString: Int, numChar: Int): Int = {
+            numChar match {
+                case 0 => 1
+                case 1 => lenString
+                case 2 => (len - (lenString + 3)) * sum1p2p3pN(lenString - 2)
+                case 3 => lenString match {
+                    case 5 => if (len == 11) {
+                        1
+                    } else {
+                        guess(len - 1, lenString, numChar) + len - 10
                     }
-                    case _ => {
-                        val y = z._2.map(_.permutations.toList).flatten
-                        val x = y.filter(_.toList.sliding(2).toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted
-                        z._1 match {
-                            case 2 => {
-                                //myPrintDln("y count0[" + z._1 + "] ", y.toList.length, y.toList.sorted)
-                                //val w = x.groupBy(_.toList.map(_.toInt).sum).map(c => (c._1, c._2.head, c._2.length)).toList.sortBy(_._3)
-                                val w = x.groupBy(_.length).map(c => (c._2.length, c._2.head.length, c._2)).toList.sortBy(_._1)
-                                myPrintDln("x count0[" + z._1 + "] ", x.length, w.mkString("\n  ", "\n  ", "\n  "))
-                                //myPrintDln("x count0[" + z._1 + "] ", x.length)
-                            }
-                            case 3 => {
-                                val w = x.groupBy(_.length).map(c => (c._2.head.length, c._2.length)).toList.sortBy(_._2)
-                                myPrintDln("x count0[" + z._1 + "] ", x.length, w.mkString("\n  ", "\n  ", "\n  "))
-                                val rcount3 = w.map(c => {
-                                    val v = xCount0_3(c._1)
-                                    //myAssert2(v, c._2)
-                                    v
-                                }).sum
-
-                            }
-                            case _ => {
-                                //myPrintDln("y count0[" + z._1 + "] ", y.toList.length, y.toList.sorted)
-                                //val w = x.groupBy(_.toList.map(_.toInt).sum).map(c => (c._1, c._2.head, c._2.length)).toList.sortBy(_._3)
-                                val w = x.groupBy(_.length).map(c => (c._2.length, c._2.head.length, c._2)).toList.sortBy(_._1)
-                                myPrintDln("x count0[" + z._1 + "] ", x.length, w.mkString("\n  ", "\n  ", "\n  "))
-                                //myPrintDln("x count0[" + z._1 + "] ", x.length)
-                            }
-                        }
-
-                        x.length
+                    case 6 => if (len == 12) {
+                        4
+                    } else {
+                        guess(len - 1, lenString, numChar) + 8 + ((len - 13) * 4)
+                    }
+                    case _ => if (len == (lenString + 5)) {
+                        0
+                    } else {
+                        guess(len - 1, lenString, numChar) + ((len - (lenString + 5)) *
+                            (func3(lenString)))
                     }
                 }
-            })
+                case _ => 0
+            }
         }
 
-        def xCount0_2 = {
-            myPrintDln(__FUNC__)
-            (7 to len).map(i => (i - 6) * (i - 6)).sum
+        def func3(lenString: Int): Int = {
+            if (lenString == 7) {
+                10
+            } else {
+                func3(lenString - 1) + sum1p2p3pN(lenString - 4)
+            }
         }
-        def xCount0_3(slen: Int) = {
-            var lres = 0
-            if ((len > 10) & (slen == 5)) {
-                lres += 3
-            } else {
-                lres += 1
-            }
-            if ((len > 12) & (slen == 7)) {
-                lres += 30
-            } else {
-                lres += 10
-            }
-            if ((len > 13) & (slen == 8)) {
-                lres += 60
-            } else {
-                lres += 20
-            }
-            if ((len > 14) & (slen == 9)) {
-                lres += 105
-            } else {
-                lres += 35
-            }
-            if ((len > 15) & (slen == 10)) {
-                lres += 168
-            } else {
-                lres += 56
-            }
-            myPrintDln(__FUNC__, len, slen, lres)
-            lres
-        }
+
+        def sum1p2p3pN(n: Int) = (n * (n + 1)) / 2
 
         def ubersetz(i: Int) = vubersetz.substring(i, i + 1)
         def findValue(s: String) = vubersetz.indexOf(s.head)
-        final val vubersetz = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        final val vubersetz =
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     }
 }
-
