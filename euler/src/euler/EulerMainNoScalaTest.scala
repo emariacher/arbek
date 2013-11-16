@@ -144,7 +144,7 @@ class Euler114 {
                     case 8 => if (len == 15) {
                         0
                     } else {
-                        0
+                        guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - 15)*5)
                     }
                     case _ => 0
                 }
