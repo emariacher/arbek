@@ -66,8 +66,7 @@ class Euler114 {
         if (lcheck.getOrElse(len, 0) != 0) {
             myAssert2(result, lcheck.getOrElse(len, 0))
         }
-        myPrintln((1 until 7).map(sumSum1p2p3pN(_)))
-        myPrintln((1 until 7).map(sum2Sum1p2p3pN(_)))
+        printSum1p2p3pNHelper(10)
 
         def getRoot2 = {
             var root = ListSet.empty[String]
@@ -117,8 +116,7 @@ class Euler114 {
                             }
                         })
                         if (!u.isEmpty) {
-                            myPrintln((1 until 7).map(sumSum1p2p3pN(_)))
-                            myPrintln((1 until 7).map(sum2Sum1p2p3pN(_)))
+                            printSum1p2p3pNHelper(20)
                             throw new Exception("" + (u.head._2, u.head._3) + " exp " +
                                 u.head._5 + " vs act " + u.head._6)
                         }
@@ -147,7 +145,7 @@ class Euler114 {
                 } else {
                     guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - (lenString + 7)) * (sum2Sum1p2p3pN(lenString - 4)))
                 }
-                case 5 => lenString match {
+                case 5 => /*lenString match {
                     case 9 => if (len == (2 * lenString)) { // 18
                         0
                     } else {
@@ -168,8 +166,17 @@ class Euler114 {
                     } else {
                         sum2Sum1p2p3pN(len - 19) * 56
                     }
-                    case _ =>0
-                }
+                    case 13 => if (len == (lenString + 9)) {
+                        0
+                    } else {
+                        sum2Sum1p2p3pN(len - 20) * 126
+                    }
+                    case _ => */if (len == (lenString + 9)) {
+                        0
+                    } else {
+                        sum2Sum1p2p3pN(len - (lenString+7)) * sum3Sum1p2p3pN(lenString-5)
+                    }
+                //}
                 case _ => 0
             }
         }
@@ -185,6 +192,14 @@ class Euler114 {
         def sum1p2p3pN(n: Int): Int = (n * (n + 1)) / 2
         def sumSum1p2p3pN(n: Int): Int = (1 until n).map(sum1p2p3pN(_)).sum
         def sum2Sum1p2p3pN(n: Int): Int = (1 until n).map(sumSum1p2p3pN(_)).sum
+        def sum3Sum1p2p3pN(n: Int): Int = (1 until n).map(sum2Sum1p2p3pN(_)).sum
+
+        def printSum1p2p3pNHelper(n: Int) {
+            myPrintIt((1 until n).map(sum1p2p3pN(_)))
+            myPrintIt((1 until n).map(sumSum1p2p3pN(_)))
+            myPrintIt((1 until n).map(sum2Sum1p2p3pN(_)))
+            myPrintIt((1 until n).map(sum3Sum1p2p3pN(_)))
+        }
 
         def ubersetz(i: Int) = vubersetz.substring(i, i + 1)
         def findValue(s: String) = vubersetz.indexOf(s.head)
