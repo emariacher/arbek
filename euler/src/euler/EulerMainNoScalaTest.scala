@@ -66,6 +66,8 @@ class Euler114 {
         if (lcheck.getOrElse(len, 0) != 0) {
             myAssert2(result, lcheck.getOrElse(len, 0))
         }
+        myPrintln((1 until 7).map(sumSum1p2p3pN(_)))
+        myPrintln((1 until 7).map(sum2Sum1p2p3pN(_)))
 
         def getRoot2 = {
             var root = ListSet.empty[String]
@@ -115,6 +117,8 @@ class Euler114 {
                             }
                         })
                         if (!u.isEmpty) {
+                            myPrintln((1 until 7).map(sumSum1p2p3pN(_)))
+                            myPrintln((1 until 7).map(sum2Sum1p2p3pN(_)))
                             throw new Exception("" + (u.head._2, u.head._3) + " exp " +
                                 u.head._5 + " vs act " + u.head._6)
                         }
@@ -142,6 +146,29 @@ class Euler114 {
                     0
                 } else {
                     guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - (lenString + 7)) * (sum2Sum1p2p3pN(lenString - 4)))
+                }
+                case 5 => lenString match {
+                    case 9 => if (len == (2 * lenString)) { // 18
+                        0
+                    } else {
+                        sum2Sum1p2p3pN(len - 16)
+                    }
+                    case 10 => if (len == (2 * lenString)) {
+                        0
+                    } else {
+                        sum2Sum1p2p3pN(len - 17) * 6
+                    }
+                    case 11 => if (len == (lenString + 9)) {
+                        0
+                    } else {
+                        sum2Sum1p2p3pN(len - 18) * 21
+                    }
+                    case 12 => if (len == (lenString + 9)) {
+                        0
+                    } else {
+                        sum2Sum1p2p3pN(len - 19) * 56
+                    }
+                    case _ =>0
                 }
                 case _ => 0
             }
