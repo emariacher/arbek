@@ -145,38 +145,22 @@ class Euler114 {
                 } else {
                     guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - (lenString + 7)) * (sum2Sum1p2p3pN(lenString - 4)))
                 }
-                case 5 => /*lenString match {
-                    case 9 => if (len == (2 * lenString)) { // 18
-                        0
-                    } else {
-                        sum2Sum1p2p3pN(len - 16)
-                    }
-                    case 10 => if (len == (2 * lenString)) {
-                        0
-                    } else {
-                        sum2Sum1p2p3pN(len - 17) * 6
-                    }
-                    case 11 => if (len == (lenString + 9)) {
-                        0
-                    } else {
-                        sum2Sum1p2p3pN(len - 18) * 21
-                    }
-                    case 12 => if (len == (lenString + 9)) {
-                        0
-                    } else {
-                        sum2Sum1p2p3pN(len - 19) * 56
-                    }
-                    case 13 => if (len == (lenString + 9)) {
-                        0
-                    } else {
-                        sum2Sum1p2p3pN(len - 20) * 126
-                    }
-                    case _ => */if (len == (lenString + 9)) {
+                case 5 => if (len == (lenString + 9)) {
                         0
                     } else {
                         sum2Sum1p2p3pN(len - (lenString+7)) * sum3Sum1p2p3pN(lenString-5)
                     }
-                //}
+                case 6 => lenString match {
+                    case 11 => if (len == (lenString+12)) { // 23
+                        0
+                    } else {
+                        
+                        
+                        
+                        sum3Sum1p2p3pN(len - 22)
+                    }
+                    case _ => 0
+                }
                 case _ => 0
             }
         }
