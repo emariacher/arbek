@@ -129,31 +129,19 @@ class Euler114 {
                 case 0 => 1
                 case 1 => lenString
                 case 2 => (len - (lenString + 3)) * sum1p2p3pN(lenString - 2)
-                case 3 => lenString match {
-                    case 5 => if (len == 11) {
-                        1
-                    } else {
-                        guess(len - 1, lenString, numChar) + len - 10
-                    }
-                    case 6 => if (len == 12) {
-                        4
-                    } else {
-                        guess(len - 1, lenString, numChar) + 8 + ((len - 13) * 4)
-                    }
-                    case _ => if (len == (lenString + 5)) {
-                        0
-                    } else {
-                        guess(len - 1, lenString, numChar) + ((len - (lenString + 5)) *
-                            (func3(lenString)))
-                    }
+                case 3 => if (len == (lenString + 5)) {
+                    0
+                } else {
+                    guess(len - 1, lenString, numChar) + ((len - (lenString + 5)) *
+                        (func3(lenString)))
                 }
                 case _ => 0
             }
         }
 
         def func3(lenString: Int): Int = {
-            if (lenString == 7) {
-                10
+            if (lenString == 5) {
+                1
             } else {
                 func3(lenString - 1) + sum1p2p3pN(lenString - 4)
             }
