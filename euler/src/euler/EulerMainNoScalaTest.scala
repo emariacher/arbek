@@ -44,12 +44,13 @@ object EulerMainNoScalaTest extends App {
     }
 }
 
-class Euler114 {    
+class Euler114 {
     new DoZeJob1(25)
 
     class DoZeJob1(len: Int) {
-        myAssert2(sum1p2p3pN(9),45)
-        myAssert2(sumSum1p2p3pN(7),56)
+        myAssert2(sum1p2p3pN(9), 45)
+        myAssert2(sumSum1p2p3pN(7), 56)
+        myAssert2(sum2Sum1p2p3pN(7), 70)
         val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 ->
             17, 8 -> 27, 9 -> 44, 10 -> 72, 11 -> 117)
         val s1 = (1 to len).map(i => "0").toList.mkString
@@ -137,27 +138,10 @@ class Euler114 {
                     guess(len - 1, lenString, numChar) + ((len - (lenString + 5)) *
                         (func3(lenString)))
                 }
-                case 4 => lenString match {
-                    case 7 => if (len == 14) {
-                        0
-                    } else {
-                        guess(len - 1, lenString, numChar) + sum1p2p3pN(len - 14)
-                    }
-                    case 8 => if (len == 15) {
-                        0
-                    } else {
-                        guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - 15)*5)
-                    }
-                    case 9 => if (len == 16) {
-                        0
-                    } else {
-                        guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - 16)*15)
-                    }
-                    case _ => if (len == (lenString+7)) {
-                        0
-                    } else {
-                        guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - (lenString+7))*((lenString-9)*35))
-                    }
+                case 4 => if (len == (lenString + 7)) {
+                    0
+                } else {
+                    guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - (lenString + 7)) * (sum2Sum1p2p3pN(lenString - 4)))
                 }
                 case _ => 0
             }
@@ -173,6 +157,7 @@ class Euler114 {
 
         def sum1p2p3pN(n: Int): Int = (n * (n + 1)) / 2
         def sumSum1p2p3pN(n: Int): Int = (1 until n).map(sum1p2p3pN(_)).sum
+        def sum2Sum1p2p3pN(n: Int): Int = (1 until n).map(sumSum1p2p3pN(_)).sum
 
         def ubersetz(i: Int) = vubersetz.substring(i, i + 1)
         def findValue(s: String) = vubersetz.indexOf(s.head)
