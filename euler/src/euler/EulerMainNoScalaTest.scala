@@ -45,21 +45,21 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    new DoZeJob1(20)
+    new DoZeJob1(25)
 
     class DoZeJob1(len: Int) {
         val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 ->
             17, 8 -> 27, 9 -> 44, 10 -> 72, 11 -> 117)
         val s1 = (1 to len).map(i => "0").toList.mkString
         val root: ListSet[String] = getRoot2
-        myErrPrintDln(len, root)
+        //myErrPrintDln(len, root)
 
         val byLength = root.filter(s => (s.count(_ != '0') * 2) <= (s.length +
             1)).groupBy(_.length).toList.sortBy(_._1)
         myPrintDln(byLength.mkString("\n  ", "\n  ", "\n  "))
         val zfinal = getFinal2
         val result = zfinal.sum
-        myErrPrintDln(len, result)
+        //myErrPrintDln(len, result)
         if (lcheck.getOrElse(len, 0) != 0) {
             myAssert2(result, lcheck.getOrElse(len, 0))
         }
@@ -70,7 +70,7 @@ class Euler114 {
                 root = ListSet("0")
             } else {
                 val fromPrevRoot = new DoZeJob1(len - 1).root.map(s => s + "0")
-                printIt(len, fromPrevRoot)
+                //printIt(len, fromPrevRoot)
                 root = fromPrevRoot
                 if (len > 4) {
                     (3 to len - 1).map(i => {
@@ -120,7 +120,7 @@ class Euler114 {
                     }
                 }
             })
-            myPrintDln(result.mkString("\n  ", "\n  ", "\n  "))
+            myPrintDln(result)
             result.map(_._2)
         }
 
@@ -134,6 +134,19 @@ class Euler114 {
                 } else {
                     guess(len - 1, lenString, numChar) + ((len - (lenString + 5)) *
                         (func3(lenString)))
+                }
+                case 4 => lenString match {
+                    case 7 => if (len == 14) {
+                        0
+                    } else {
+                        guess(len - 1, lenString, numChar) + sum1p2p3pN(len - 14)
+                    }
+                    case 8 => if (len == 15) {
+                        0
+                    } else {
+                        0
+                    }
+                    case _ => 0
                 }
                 case _ => 0
             }
