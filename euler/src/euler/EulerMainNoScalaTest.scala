@@ -45,7 +45,8 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    new DoZeJob1(27)
+    new DoZeJob1(50)
+    //(50,16475640049)
 
     class DoZeJob1(len: Int) {
         myAssert2(sum1p2p3pN(9), 45)
@@ -57,7 +58,7 @@ class Euler114 {
 
         val byLength = root.filter(s => (s.count(_ != '0') * 2) <= (s.length +
             1)).groupBy(_.length).toList.sortBy(_._1)
-        myPrintDln(byLength.mkString("\n  ", "\n  ", "\n  "))
+        //myPrintDln(byLength.mkString("\n  ", "\n  ", "\n  "))
         val zfinal = getFinal2
         val result = zfinal.sum
         myErrPrintDln(len, result)
@@ -91,11 +92,11 @@ class Euler114 {
             root
         }
 
-        def getFinal2 = {
+        def getFinal2:List[BigInt] = {
             val result = byLength.map((z: (Int, ListSet[String])) => {
                 z._1 match {
-                    case 1 => (1, 1)
-                    case 2 => if (len > 2) (2, 2) else (2, 1)
+                    case 1 => (1, BigInt(1))
+                    case 2 => if (len > 2) (2, BigInt(2)) else (2, BigInt(1))
                     case _ => {
                         var byCountNot0 = z._2.groupBy(_.count(_ != '0'))
                         /*val y = byCountNot0.map(u => (u._1, u._2, u._2.map(_.permutations.toList.filter(_.toList.sliding(2).
@@ -120,7 +121,7 @@ class Euler114 {
                         }
                         val w = y.map(_._3).flatten.flatten.toList
                         (z._1, w.length)*/
-                        val w = byCountNot0.map(y => guess(len, z._1, y._1))
+                        val w = byCountNot0.map(y => BigInt(guess(len, z._1, y._1)))
                         (z._1, w.sum)
                     }
                 }
