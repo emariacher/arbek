@@ -49,8 +49,6 @@ class Euler114 {
 
     class DoZeJob1(len: Int) {
         myAssert2(sum1p2p3pN(9), 45)
-        myAssert2(sumSum1p2p3pN(7), 56)
-        myAssert2(sum2Sum1p2p3pN(7), 70)
         val lcheck = Map(1 -> 1, 2 -> 1, 3 -> 2, 4 -> 4, 5 -> 7, 6 -> 11, 7 ->
             17, 8 -> 27, 9 -> 44, 10 -> 72, 11 -> 117)
         val s1 = (1 to len).map(i => "0").toList.mkString
@@ -140,10 +138,7 @@ class Euler114 {
                     guess(len - 1, lenString, numChar) + ((len - (lenString + 5)) *
                         (func3(lenString)))
                 }
-                case 4 => sumSum1p2p3pN(len - (lenString + 6)) * sum2Sum1p2p3pN(lenString - 4)
-                case 5 => sum2Sum1p2p3pN(len - (lenString + 7)) * sum3Sum1p2p3pN(lenString - 5)
-                case 6 => sum3Sum1p2p3pN(len - (lenString + 8)) * sum4Sum1p2p3pN(lenString - 6)
-                case _ => 0
+                case _ => sumXSum1p2p3pN(numChar - 2, len - (lenString + numChar + 2)) * sumXSum1p2p3pN(numChar - 1, lenString - numChar)
             }
         }
 
@@ -156,11 +151,6 @@ class Euler114 {
         }
 
         def sum1p2p3pN(n: Int): Int = (n * (n + 1)) / 2
-        //def sumSum1p2p3pN(n: Int): Int = (1 until n).map(sum1p2p3pN(_)).sum
-        def sumSum1p2p3pN(n: Int): Int = sumXSum1p2p3pN(2, n)
-        def sum2Sum1p2p3pN(n: Int): Int = sumXSum1p2p3pN(3, n)
-        def sum3Sum1p2p3pN(n: Int): Int = sumXSum1p2p3pN(4, n)
-        def sum4Sum1p2p3pN(n: Int): Int = sumXSum1p2p3pN(5, n)
         def sumXSum1p2p3pN(x: Int, n: Int): Int = {
             if (x == 1) {
                 (n * (n + 1)) / 2
@@ -171,10 +161,6 @@ class Euler114 {
 
         def printSum1p2p3pNHelper(n: Int) {
             myPrintIt((1 until n).map(sum1p2p3pN(_)))
-            myPrintIt((1 until n).map(sumSum1p2p3pN(_)))
-            myPrintIt((1 until n).map(sum2Sum1p2p3pN(_)))
-            myPrintIt((1 until n).map(sum3Sum1p2p3pN(_)))
-            myPrintIt((1 until n).map(sum4Sum1p2p3pN(_)))
         }
 
         def ubersetz(i: Int) = vubersetz.substring(i, i + 1)
