@@ -45,7 +45,7 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler114 {
-    new DoZeJob1(25)
+    new DoZeJob1(27)
 
     class DoZeJob1(len: Int) {
         myAssert2(sum1p2p3pN(9), 45)
@@ -145,21 +145,11 @@ class Euler114 {
                 } else {
                     guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - (lenString + 7)) * (sum2Sum1p2p3pN(lenString - 4)))
                 }
-                case 5 => if (len == (lenString + 9)) {
-                        0
-                    } else {
-                        sum2Sum1p2p3pN(len - (lenString+7)) * sum3Sum1p2p3pN(lenString-5)
-                    }
+                case 5 => sum2Sum1p2p3pN(len - (lenString + 7)) * sum3Sum1p2p3pN(lenString - 5)
                 case 6 => lenString match {
-                    case 11 => if (len == (lenString+12)) { // 23
-                        0
-                    } else {
-                        
-                        
-                        
-                        sum3Sum1p2p3pN(len - 22)
-                    }
-                    case _ => 0
+                    case 11 => sum3Sum1p2p3pN(len - 19)
+                    case 12 => sum3Sum1p2p3pN(len - 20) * 7
+                    case _  => 0
                 }
                 case _ => 0
             }
@@ -179,9 +169,13 @@ class Euler114 {
         def sum3Sum1p2p3pN(n: Int): Int = (1 until n).map(sum2Sum1p2p3pN(_)).sum
 
         def printSum1p2p3pNHelper(n: Int) {
+            myPrintIt(sum1p2p3pN(1))
             myPrintIt((1 until n).map(sum1p2p3pN(_)))
+            myPrintIt(sumSum1p2p3pN(1))
             myPrintIt((1 until n).map(sumSum1p2p3pN(_)))
+            myPrintIt(sum2Sum1p2p3pN(1))
             myPrintIt((1 until n).map(sum2Sum1p2p3pN(_)))
+            myPrintIt(sum3Sum1p2p3pN(1))
             myPrintIt((1 until n).map(sum3Sum1p2p3pN(_)))
         }
 
