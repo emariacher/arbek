@@ -60,7 +60,7 @@ class Euler114 {
         myPrintDln(byLength.mkString("\n  ", "\n  ", "\n  "))
         val zfinal = getFinal2
         val result = zfinal.sum
-        //myErrPrintDln(len, result)
+        myErrPrintDln(len, result)
         if (lcheck.getOrElse(len, 0) != 0) {
             myAssert2(result, lcheck.getOrElse(len, 0))
         }
@@ -98,11 +98,11 @@ class Euler114 {
                     case 2 => if (len > 2) (2, 2) else (2, 1)
                     case _ => {
                         var byCountNot0 = z._2.groupBy(_.count(_ != '0'))
-                        val y = byCountNot0.map(u => (u._1, u._2, u._2.map(_.permutations.toList.filter(_.toList.sliding(2).
-                            toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted)))
+                        /*val y = byCountNot0.map(u => (u._1, u._2, u._2.map(_.permutations.toList.filter(_.toList.sliding(2).
+                            toList.filter(_.count(_ != '0') > 1).isEmpty).toList.sorted)))*/
                         //val x = y.map(v => (len, z._1, v._1, v._2.toList.length,v._3.flatten.toList.length, guess(len, z._1, v._1), v._2,v._3)).toList.sortBy(_._3)
                         //val x = y.map(v => (len, z._1, v._1, v._2.toList.length,v._3.flatten.toList.length, guess(len, z._1, v._1),v._2)).toList.sortBy(_._3)
-                        val x = y.map(v => (len, z._1, v._1, v._2.toList.length, v._3.flatten.toList.length, guess(len, z._1, v._1), v._2)).toList.sortBy(_._3)
+                        /*val x = y.map(v => (len, z._1, v._1, v._2.toList.length, v._3.flatten.toList.length, guess(len, z._1, v._1), v._2)).toList.sortBy(_._3)
                         myPrintDln(len, z._1, x.mkString("\n    ", "\n    ", "\n    "))
                         val u = x.dropWhile(t => {
                             val exp = t._5
@@ -119,7 +119,9 @@ class Euler114 {
                                 u.head._5 + " vs act " + u.head._6)
                         }
                         val w = y.map(_._3).flatten.flatten.toList
-                        (z._1, w.length)
+                        (z._1, w.length)*/
+                        val w = byCountNot0.map(y => guess(len, z._1, y._1))
+                        (z._1, w.sum)
                     }
                 }
             })
