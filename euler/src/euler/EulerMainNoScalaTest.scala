@@ -146,11 +146,7 @@ class Euler114 {
                     guess(len - 1, lenString, numChar) + (sum1p2p3pN(len - (lenString + 7)) * (sum2Sum1p2p3pN(lenString - 4)))
                 }
                 case 5 => sum2Sum1p2p3pN(len - (lenString + 7)) * sum3Sum1p2p3pN(lenString - 5)
-                case 6 => lenString match {
-                    case 11 => sum3Sum1p2p3pN(len - 19)
-                    case 12 => sum3Sum1p2p3pN(len - 20) * 7
-                    case _  => 0
-                }
+                case 6 => sum3Sum1p2p3pN(len - (lenString + 8)) * sum4Sum1p2p3pN(lenString - 6)
                 case _ => 0
             }
         }
@@ -167,16 +163,14 @@ class Euler114 {
         def sumSum1p2p3pN(n: Int): Int = (1 until n).map(sum1p2p3pN(_)).sum
         def sum2Sum1p2p3pN(n: Int): Int = (1 until n).map(sumSum1p2p3pN(_)).sum
         def sum3Sum1p2p3pN(n: Int): Int = (1 until n).map(sum2Sum1p2p3pN(_)).sum
+        def sum4Sum1p2p3pN(n: Int): Int = (1 until n).map(sum3Sum1p2p3pN(_)).sum
 
         def printSum1p2p3pNHelper(n: Int) {
-            myPrintIt(sum1p2p3pN(1))
             myPrintIt((1 until n).map(sum1p2p3pN(_)))
-            myPrintIt(sumSum1p2p3pN(1))
             myPrintIt((1 until n).map(sumSum1p2p3pN(_)))
-            myPrintIt(sum2Sum1p2p3pN(1))
             myPrintIt((1 until n).map(sum2Sum1p2p3pN(_)))
-            myPrintIt(sum3Sum1p2p3pN(1))
             myPrintIt((1 until n).map(sum3Sum1p2p3pN(_)))
+            myPrintIt((1 until n).map(sum4Sum1p2p3pN(_)))
         }
 
         def ubersetz(i: Int) = vubersetz.substring(i, i + 1)
