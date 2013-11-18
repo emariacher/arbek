@@ -47,7 +47,7 @@ object EulerMainNoScalaTest extends App {
 
 class Euler132 {
     val premiers = (new CheckEulerPrime(1000000, 1000)).premiers
-    myPrintIt(1000000000, new EulerDiv132(1000000000, premiers, 5).primes)
+    //myPrintIt(1000000000, new EulerDiv132(1000000000, premiers, 5).primes)
 
     // 5169354 (10000) dernier 1378001
     // List(11, 17, 41, 73, 101, 137, 251, 257, 271, 353, 401, 449, 641, 751, 1201, 1409, 1601, 3541, 4001, 5051, 9091, 10753, 15361, 16001, 19841, 21001, 21401, 24001, 25601, 27961, 60101, 69857, 76001, 160001, 162251, 453377, 670001, 952001, 976193, 1378001)
@@ -55,8 +55,10 @@ class Euler132 {
     // 1822662 (100000) dernier 544001
     // 4003610  (1000000) dernier 976193
     // List(11, 17, 41, 73, 101, 137, 251, 271, 353, 401, 449, 641, 751, 1201, 1409, 1601, 3541, 4001, 4801, 5051, 9091, 16001, 19841, 21001, 21401, 24001, 25601, 27961, 37501, 43201, 60101, 62501, 69857, 76001, 160001, 162251, 544001, 670001, 952001, 976193)
-
-    doZeJob1(10)
+    // List(11, 17, 41, 73, 101, 137, 251, 271, 353, 401, 449, 641, 751, 1201, 1409, 1601, 3541, 4001, 4801, 5051, 9091, 16001, 19841, 21001, 21401, 24001, 25601, 27961, 37501, 43201, 60101, 62501, 69857, 76001, 160001, 162251, 544001, 670001, 952001, 976193, 980801),41)
+    // 2millions
+    // List(11, 17, 41, 73, 101, 137, 251, 271, 353, 401, 449, 641, 751, 1201, 1409, 1601, 3541, 4001, 4801, 5051, 9091, 16001, 19841, 21001, 21401, 24001, 25601, 27961, 37501, 43201, 60101, 62501, 69857, 76001, 76801, 160001, 162251, 524801, 544001, 670001, 952001),41)
+    //doZeJob1(10)
     /*doZeJob2(2, 11)
     doZeJob2(5, 6)
     doZeJob2(10, 5)*/
@@ -65,7 +67,7 @@ class Euler132 {
     MyLog.waiting(1 second)
     z = z ++ doZeJob3(5, 5)
     MyLog.waiting(1 second)*/
-    doZeJob2(10, 9)
+    doZeJob5(10, 9)
     /*val y = z.toList.sorted
     myErrPrintln(z)
     myErrPrintln(y, y.length)
@@ -74,7 +76,7 @@ class Euler132 {
 
     def doZeJob1(n: Int) = {
         val bi = BigInt((1 until n + 1).map(z => "1").mkString)
-        val primes = new EulerDiv132(bi, premiers, 40).primes
+        val primes = new EulerDiv132(bi, premiers, 1, 40).primes
         val justChecking = primes.product
         myPrintln("\n\n\n", n, primes.length, primes.sum, justChecking.toString.toList.length, "\n\n\n")
         myPrintln("\n  ", primes, primes.length)
@@ -83,8 +85,27 @@ class Euler132 {
         MyLog.waiting(1 second)
         primes
     }
+    def doZeJob4(n: Int, primesI: List[BigInt]): List[BigInt] = {
+        val bi = BigInt((1 until n + 1).map(z => "1").mkString)
+        val bi2 = bi / primesI.product
+        //val start = primesI.last
+        val start = 1
+        //myPrintIt("\n", n, start, bi2)
+        val primes = new EulerDiv132(bi, premiers, start, 40).primes
+        val justChecking = primes.product
+        myPrintln("\n", n, primes.length, primes.sum, justChecking.toString.toList.length, "\n")
+        myPrintln("\n  primes: ", primes, primes.length)
+        MyLog.waiting(1 second)
+        myErrPrintln(n, primes.take(40).sum)
+        MyLog.waiting(1 second)
+        primes.sorted
+    }
     def doZeJob2(n: Int, limit: Int) = {
         (2 until limit).toList.map(i => doZeJob1(Math.pow(n, i).toInt))
+    }
+    def doZeJob5(n: Int, limit: Int) = {
+        var primes = List[BigInt](1)
+        (2 until limit).toList.map(i => primes = doZeJob4(2*Math.pow(n, i).toInt, primes))
     }
     def doZeJob3(n: Int, limit: Int) = {
         doZeJob1(Math.pow(n, limit).toInt)

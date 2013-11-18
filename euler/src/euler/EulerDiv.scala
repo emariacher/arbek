@@ -117,12 +117,12 @@ class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt]) {
     //println(primes)
 }
 
-class EulerDiv132(bi: BigInt, premiers: TreeSet[BigInt], limit: BigInt) {
+class EulerDiv132(bi: BigInt, premiers: TreeSet[BigInt], start: BigInt, limit: BigInt) {
     var primes = List[BigInt]()
     var bic = bi
     var index = 0
 
-    premiers.takeWhile((premier: BigInt) => {
+    premiers.dropWhile(_ < start).takeWhile((premier: BigInt) => {
         index += 1
         //println("*i1* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
         while (bic % premier == 0 & bic >= premier) {
