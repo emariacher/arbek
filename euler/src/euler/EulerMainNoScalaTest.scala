@@ -29,7 +29,7 @@ object EulerMainNoScalaTest extends App {
         var t_start = Calendar.getInstance
         myPrintDln("Hello World!")
 
-        new Euler429()
+        new Euler429
 
         timeStamp(t_start, "Au revoir Monde!")
     } catch {
@@ -45,20 +45,19 @@ object EulerMainNoScalaTest extends App {
     }
 }
 
-class Euler429(val n: Int) {
-    val modulo = BigInt(100000000)
-    def this() = this(100000000)
+class Euler429 {
+    val modulo = BigInt(1000000009)
 
     myPrintIt(modulo, new EulerDiv(modulo).primes)
-    (2 until 50).map(doZeJob1(_))
+    (2 until 100).map(doZeJob1(_))
 
     def doZeJob1(i: Int) = {
         val fbi = EulerFactorielle.fact2(i)
         val primes = new EulerDiv(fbi).primes
         val byPrime = primes.groupBy(_ + 0).map(_._2.product).toList.sorted
         val prod = products(byPrime)
-        val res = result(prod)
-        myPrintln(i, res)
+        val res = result(i, prod)
+        //myPrintln(i, res)
         res
     }
 
@@ -67,9 +66,10 @@ class Euler429(val n: Int) {
         ((1 to len).map(byPrime.combinations(_).toList.map(_.product)).flatten
             ++ List[BigInt](1, byPrime.product)).sorted.toList
     }
-    def result(products: List[BigInt]) = {
+    def result(i: Int, products: List[BigInt]) = {
         val sumod = products.map(bi => bi * bi).sum % modulo
-        myPrintln("  "+sumod+" "+new EulerDiv(sumod).primes)
+        myPrintln("  " + i + " " + sumod + " " +
+            new EulerDiv(sumod).primes.groupBy(_ + 0).map(c => (c._1, c._2.length)).toList.sortBy(_._1))
         sumod
     }
 }
