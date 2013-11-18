@@ -46,9 +46,11 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler429(val n: Int) {
+    val modulo = BigInt(100000000)
     def this() = this(100000000)
 
-    (4 until 10).map(doZeJob1(_))
+    myPrintIt(modulo, new EulerDiv(modulo).primes)
+    (2 until 50).map(doZeJob1(_))
 
     def doZeJob1(i: Int) = {
         val fbi = EulerFactorielle.fact2(i)
@@ -56,16 +58,18 @@ class Euler429(val n: Int) {
         val byPrime = primes.groupBy(_ + 0).map(_._2.product).toList.sorted
         val prod = products(byPrime)
         val res = result(prod)
-        myPrintIt(i, fbi, res, byPrime, Math.sqrt(fbi.toDouble), prod)
+        myPrintln(i, res)
         res
     }
-    
+
     def products(byPrime: List[BigInt]) = {
         val len = byPrime.length - 1
-        ((1 to len).map(byPrime.combinations(_).toList.map(_.product)).flatten 
-                ++ List[BigInt](1, byPrime.product)).sorted.toList
+        ((1 to len).map(byPrime.combinations(_).toList.map(_.product)).flatten
+            ++ List[BigInt](1, byPrime.product)).sorted.toList
     }
     def result(products: List[BigInt]) = {
-        products.map(bi => bi*bi).sum
+        val sumod = products.map(bi => bi * bi).sum % modulo
+        myPrintln("  "+sumod+" "+new EulerDiv(sumod).primes)
+        sumod
     }
 }
