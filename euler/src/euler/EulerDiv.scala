@@ -117,6 +117,53 @@ class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt]) {
     //println(primes)
 }
 
+class EulerDiv132(bi: BigInt, premiers: TreeSet[BigInt], limit: BigInt) {
+    var primes = List[BigInt]()
+    var bic = bi
+    var index = 0
+
+    premiers.takeWhile((premier: BigInt) => {
+        index += 1
+        //println("*i1* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
+        while (bic % premier == 0 & bic >= premier) {
+            print("+ ["+index+"]"+premier)
+            primes = primes :+ premier
+            bic = bic / premier
+        }
+        //println("*i2* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
+        if (bic == 1) {
+            false
+        } else if ((premier * premier) > bic) {
+            //println("*i3* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
+            if (bic != bi) {
+                primes = primes :+ bic
+                require(primes.product == bi)
+            } else if (primes.isEmpty) {
+                primes = primes :+ bic
+            }
+            false
+        } else if (primes.length>limit) {
+            //println("*i3* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
+            false
+        } else {
+            true
+        }
+    })
+    if (primes.isEmpty) {
+        //require(bi<(premiers.last*premiers.last),bi+"<"+premiers.last+"*"+premiers.last+"("+(premiers.last*premiers.last)+")")
+        if (bi > (premiers.last * premiers.last)) {
+            //println(bi+">"+premiers.last+"*"+premiers.last+"("+(premiers.last*premiers.last)+")")
+        }
+
+    } else {
+        //require(bic<(premiers.last*premiers.last),bic+"<"+premiers.last+"*"+premiers.last+"("+(premiers.last*premiers.last)+")")
+        if (bic > (premiers.last * premiers.last)) {
+            //println(bic+">"+premiers.last+"*"+premiers.last+"("+(premiers.last*premiers.last)+")")
+        }
+    }
+    //println(primes)
+}
+
 class EulerDivisors(val l: List[BigInt]) {
     val range = new Range(1, l.size, 1).toList
     def this(ed: EulerDiv) = this(ed.primes)
