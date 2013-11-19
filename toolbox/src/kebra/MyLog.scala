@@ -19,6 +19,8 @@ object MyLog {
     val MatchFunc = """(.+)\(.+""".r
     var L: MyLog = _
     var vierge = true
+    
+    var g_t_start = Calendar.getInstance();
 
     def getMylog: MyLog = L
     def newMyLog(s_title: String, fil: File, errExt: String): MyLog = {
@@ -222,6 +224,14 @@ object MyLog {
         } while (t1 - t0 < d.toMillis)
     }
 
+    def mtimeStampx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
+        import c.universe._
+        val msg = linecode.tree.toString
+        reify({g_t_start = timeStamp(g_t_start, c.Expr[String](Literal(Constant(msg))).splice); linecode.splice;})
+    }
+    
+        def timeStampIt(linecode: Any) = macro mtimeStampx
+    
     def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
         val t_end = Calendar.getInstance();
         myPrintln("    t_now: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +

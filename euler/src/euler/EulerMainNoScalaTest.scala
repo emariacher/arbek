@@ -24,12 +24,11 @@ import scala.concurrent.duration._
 object EulerMainNoScalaTest extends App {
     //MyLog.newMyLog("EulerMainNoScalaTest", new File("log"), "log")
     try {
-        var t_start = Calendar.getInstance
         myPrintDln("Hello World!")
 
-        //new Euler133
+        new testTimeStampMacro
+        timeStampIt(new Euler347)
 
-        timeStamp(t_start, "Au revoir Monde!")
     } catch {
         case ex: Exception => {
             println("\n" + ex)
@@ -43,3 +42,20 @@ object EulerMainNoScalaTest extends App {
     }
 }
 
+class Euler347
+
+class testTimeStampMacro {
+    timeStampIt(doZeJob1(200))
+    timeStampIt(doZeJob2(100))
+    timeStampIt(myPrintln(doZeJob1(150)))
+    timeStampIt(doZeJob1(200))
+
+    def doZeJob1(n: Int) {
+        (1 until n).map(i => i * i)
+    }
+
+    def doZeJob2(n: Int) {
+        (1 until 2 * n).map(i => myPrint("." + (i * i * i)))
+        myPrintln("")
+    }
+}
