@@ -48,13 +48,56 @@ class Euler346 {
 
     myAssert2(doZejob(1000), 15864)
     myAssert2(doZejob2(1000), 15864)
+    myAssert2(doZejob3(1000), 15864)
     myAssert2(doZejob(100000), 12755696)
     myAssert2(doZejob2(100000), 12755696)
-    doZejob2(1000000)
+    myAssert2(doZejob3(100000), 12755696)
+
+    myPrintIt(getRepUnits(1020, 2))
+    myPrintIt(getRepUnits(1020, 3))
+    myPrintIt(getRepUnits(1020, 4))
+    myPrintIt(getRepUnits(1020, 5))
+
+    def doZejob3(limit: Int) = {
+        val z = getRepUnits(limit)
+        val y = (ListSet.empty[Int] ++ z.map(_._2).flatten).toList.sorted
+        y.sum + 1
+    }
+
+    def getRepUnits(limit: Double): List[(BigInt, List[Int], Int)] = {
+        (2 until Math.sqrt(limit).toInt + 1).toList.map(n => getRepUnits(limit, n))
+    }
+
+    def getRepUnits(limit: Double, n: BigInt): (BigInt, List[Int], Int) = {
+        var powers = List.empty[Int]
+        var p = 1
+        var r = 1.0
+        while (r < limit) {
+            powers = powers :+ r.toInt
+            r = Math.pow(n.toDouble, p)
+            p += 1
+        }
+        powers.sorted
+
+        var repUnits = List.empty[Int]
+        var lrepu = powers.sorted.reverse
+        while (lrepu.length > 1) {
+            repUnits = repUnits :+ lrepu.sum
+            //myPrintIt(lrepu, repUnits)
+            lrepu = lrepu.tail
+        }
+        repUnits = repUnits.sorted.reverse
+        if (repUnits.head > limit) {
+            repUnits = repUnits.tail
+        }
+        repUnits = repUnits.reverse.tail
+        //myPrintln(n, repUnits.sorted, repUnits.sum)
+        (n, repUnits.sorted, repUnits.sum)
+    }
 
     def doZejob2(limit: Int) = {
         val result = (6 until limit).map(n => (n, isRepUnit2(n))).filter(_._2).map(_._1)
-        myPrintDln("\n" + result.sum + " " + result)
+        myPrintDln("\n" + result.sum + " " + result.toList)
         result.sum + 1
     }
     def isRepUnit2(n: Int) = {
@@ -63,7 +106,7 @@ class Euler346 {
 
     def doZejob(limit: Int) = {
         val result = (1 until limit).map(n => (n, isRepUnit(n))).filter(_._2.length > 0)
-        myPrintDln("\n" + result.map(_._1).sum + " " + result)
+        myPrintDln("\n" + result.map(_._1).sum + " " + result.map(_._1).toList)
         result.map(_._1).sum + 1
     }
     def isRepUnit(n: Int) = {
