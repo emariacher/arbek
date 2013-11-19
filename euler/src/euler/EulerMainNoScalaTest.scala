@@ -47,18 +47,30 @@ object EulerMainNoScalaTest extends App {
 class Euler346 {
 
     myAssert2(doZejob(1000), 15864)
-    doZejob(100000)
-    
+    myAssert2(doZejob2(1000), 15864)
+    myAssert2(doZejob(100000), 12755696)
+    myAssert2(doZejob2(100000), 12755696)
+    doZejob2(1000000)
+
+    def doZejob2(limit: Int) = {
+        val result = (6 until limit).map(n => (n, isRepUnit2(n))).filter(_._2).map(_._1)
+        myPrintDln("\n" + result.sum + " " + result)
+        result.sum + 1
+    }
+    def isRepUnit2(n: Int) = {
+        getRacines(n).exists(b => shiftrec(n, b)._1)
+    }
+
     def doZejob(limit: Int) = {
         val result = (1 until limit).map(n => (n, isRepUnit(n))).filter(_._2.length > 0)
-        myPrintln("\n" + result.map(_._1).sum + " " + result)
+        myPrintDln("\n" + result.map(_._1).sum + " " + result)
         result.map(_._1).sum + 1
     }
     def isRepUnit(n: Int) = {
-        myPrint(".")
-        val z = (2 until (Math.sqrt(n)+1).toInt).filter(b => shiftrec(n, b)._1).toList
-        if (z.length > 1) {
-            myPrint("\n." + n + " " + z)
+        //myPrint(".")
+        val z = (2 until (Math.sqrt(n) + 1).toInt).filter(b => shiftrec(n, b)._1).toList
+        if (z.length == 1) {
+            myPrintln("  " + n + " " + z + " " + getRacines(n))
         }
         z
     }
@@ -80,6 +92,18 @@ class Euler346 {
         } else {
             0
         }
+    }
+
+    def getRacines(n: Int) = {
+        var racines = ListSet.empty[Int]
+        var p = 2
+        var r = 0
+        do {
+            r = Math.pow(n, 1.0 / p).toInt
+            racines = racines + r
+            p += 1
+        } while (r > 2)
+        racines.toList.sorted.reverse
     }
 }
 
