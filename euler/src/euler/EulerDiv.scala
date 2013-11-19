@@ -126,7 +126,7 @@ class EulerDiv132(bi: BigInt, premiers: TreeSet[BigInt], start: BigInt, limit: B
         index += 1
         //println("*i1* bi: "+bi+" bic: "+bic+" premier: "+premier+" "+(bic%premier==0&bic>=premier)+" "+primes)
         while (bic % premier == 0 & bic >= premier) {
-            print("+ ["+index+"]"+premier)
+            print("+ ["+index+"/"+primes.length+"]"+premier)
             primes = primes :+ premier
             bic = bic / premier
         }
