@@ -47,15 +47,16 @@ object EulerMainNoScalaTest extends App {
 class Euler346 {
 
     myAssert2(doZejob(1000), 15864)
+    doZejob(100000)
     
     def doZejob(limit: Int) = {
-        val result = (1 until limit).map(n => (n, isRepUnit(n))).filter(_._2.length > 1)
+        val result = (1 until limit).map(n => (n, isRepUnit(n))).filter(_._2.length > 0)
         myPrintln("\n" + result.map(_._1).sum + " " + result)
         result.map(_._1).sum + 1
     }
     def isRepUnit(n: Int) = {
         myPrint(".")
-        val z = (2 until n).filter(b => shiftrec(n, b)._1).toList
+        val z = (2 until (Math.sqrt(n)+1).toInt).filter(b => shiftrec(n, b)._1).toList
         if (z.length > 1) {
             myPrint("\n." + n + " " + z)
         }
