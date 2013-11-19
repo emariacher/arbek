@@ -45,45 +45,36 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler346 {
-    //myPrintln((1 until 10).map(n => (n, isRepUnit(n))))
 
-    myPrintln(7, isRepUnit(7))
-
+    myAssert2(doZejob(1000), 15864)
+    
+    def doZejob(limit: Int) = {
+        val result = (1 until limit).map(n => (n, isRepUnit(n))).filter(_._2.length > 1)
+        myPrintln("\n" + result.map(_._1).sum + " " + result)
+        result.map(_._1).sum + 1
+    }
     def isRepUnit(n: Int) = {
-        (2 until n).filter(b => {
-            var shifted = shift(n, b)
-            myPrintDln(n, b, shifted)
-            if (shifted == 0) {
-                false
-            } else if (shifted == 1) {
-                true
-            } else if (shifted > b) {
-                shifted = shift(shifted, b)
-                myPrintDln(n, b, shifted)
-                if (shifted == 0) {
-                    false
-                } else if (shifted == 1) {
-                    true
-                } else if (shifted > b) {
-                    shifted = shift(shifted, b)
-                    myPrintDln(n, b, shifted)
-                    if (shifted == 1) {
-                        true
-                    } else {
-                        false
-                    }
-                } else {
-                    false
-                }
+        myPrint(".")
+        val z = (2 until n).filter(b => shiftrec(n, b)._1).toList
+        if (z.length > 1) {
+            myPrint("\n." + n + " " + z)
+        }
+        z
+    }
+    def shiftrec(n: Int, b: Int): (Boolean, Int) = {
+        var shifted = shift(n, b)
+        shifted match {
+            case 0 => (false, 0)
+            case 1 => (true, 1)
+            case _ => if (shifted >= b) {
+                shiftrec(shifted, b)
             } else {
-                false
+                (false, shifted)
             }
-        }).toList
+        }
     }
     def shift(n: Int, b: Int) = {
-        myPrintDln("  ", n, b, (n - 1) % b)
         if ((n - 1) % b == 0) {
-            myPrintDln("    ", n, b, (n - 1) % b, (n - 1) / b)
             (n - 1) / b
         } else {
             0
