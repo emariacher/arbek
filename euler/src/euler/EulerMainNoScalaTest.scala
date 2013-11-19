@@ -27,7 +27,8 @@ object EulerMainNoScalaTest extends App {
         var t_start = Calendar.getInstance
         myPrintDln("Hello World!")
 
-        new Euler133
+        new Euler346
+        //new Euler133
 
         timeStamp(t_start, "Au revoir Monde!")
     } catch {
@@ -43,17 +44,70 @@ object EulerMainNoScalaTest extends App {
     }
 }
 
+class Euler346 {
+    //myPrintln((1 until 10).map(n => (n, isRepUnit(n))))
+
+    myPrintln(7, isRepUnit(7))
+
+    def isRepUnit(n: Int) = {
+        (2 until n).filter(b => {
+            var shifted = shift(n, b)
+            myPrintDln(n, b, shifted)
+            if (shifted == 0) {
+                false
+            } else if (shifted == 1) {
+                true
+            } else if (shifted > b) {
+                shifted = shift(shifted, b)
+                myPrintDln(n, b, shifted)
+                if (shifted == 0) {
+                    false
+                } else if (shifted == 1) {
+                    true
+                } else if (shifted > b) {
+                    shifted = shift(shifted, b)
+                    myPrintDln(n, b, shifted)
+                    if (shifted == 1) {
+                        true
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        }).toList
+    }
+    def shift(n: Int, b: Int) = {
+        myPrintDln("  ", n, b, (n - 1) % b)
+        if ((n - 1) % b == 0) {
+            myPrintDln("    ", n, b, (n - 1) % b, (n - 1) / b)
+            (n - 1) / b
+        } else {
+            0
+        }
+    }
+}
+
 class Euler133 {
     // 615963 10Millions :(
+    // 453688666 10Millions mais correct
     val premiers = EulerPrime.premiers100000
 
-    val list2test = List[Int](Math.pow(10, 4).toInt, Math.pow(10, 5).toInt, Math.pow(10, 6).toInt, Math.pow(2, 22).toInt, Math.pow(5, 9).toInt, Math.pow(10, 7).toInt)
+    val list2test = List[Int](Math.pow(10, 4).toInt, Math.pow(10, 5).toInt, Math.pow(10, 6).toInt, Math.pow(2, 23).toInt, Math.pow(5, 10).toInt, Math.pow(10, 7).toInt)
 
     doZeJob
 
     def doZeJob {
-        doZeJob6
+        val primes2 = doZeJob6
 
+        val result = premiers.filter(!primes2.contains(_)).sum
+
+        myPrintIt(result)
+        myPrintIt(primes2)
+        myPrintIt(premiers.filter(!primes2.contains(_)).take(40))
         myPrintDln("Job done!")
     }
 
@@ -87,6 +141,7 @@ class Euler133 {
             myErrPrintln("\n  zprimes2: ", zprimes2, zprimes2.length)
             MyLog.waiting(1 second)
         })
+        primes2
     }
 
 }
