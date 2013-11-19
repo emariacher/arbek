@@ -1,6 +1,7 @@
 package euler
 
 import kebra.MyLog._
+import kebra.MyLog
 import kebra.MyFileChooser
 import scala.collection.immutable.TreeSet
 import java.util.Calendar
@@ -15,12 +16,72 @@ import scala.io.Source
 import java.io.BufferedInputStream
 import scala.collection.JavaConversions._
 import scala.collection.immutable.ListSet
+import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 import Permutations._
 
+
 object MainNoScalatestPasEncoreReussi extends App {
+    new Euler133
     new Euler191
     new Euler241
 }
+
+class Euler133 {
+    // 615963 10Millions :(
+    // 453688666 10Millions mais correct
+    val premiers = EulerPrime.premiers100000
+
+    val list2test = List[Int](Math.pow(10, 4).toInt, Math.pow(10, 5).toInt, Math.pow(10, 6).toInt, Math.pow(2, 23).toInt, Math.pow(5, 10).toInt, Math.pow(10, 7).toInt)
+
+    doZeJob
+
+    def doZeJob {
+        val primes2 = doZeJob6
+
+        val result = premiers.filter(!primes2.contains(_)).sum
+
+        myPrintIt(result)
+        myPrintIt(primes2)
+        myPrintIt(premiers.filter(!primes2.contains(_)).take(40))
+        myPrintDln("Job done!")
+    }
+
+    def doZeJob4(n: Int, primesI: List[BigInt]): List[BigInt] = {
+        MyLog.waiting(1 second)
+        myErrPrintln("doZeJob4 *********** " + n)
+        MyLog.waiting(1 second)
+        val bi = BigInt((1 until n + 1).map(z => "1").mkString)
+        val bi2 = bi / primesI.product
+        //val start = primesI.last
+        val start = 1
+        //myPrintIt("\n", n, start, bi2)
+        val primes = new EulerDiv132(bi, premiers, start, 40).primes
+        val justChecking = primes.product
+        myPrintln("\n", n, primes.length, primes.sum, justChecking.toString.toList.length, "\n")
+        val zprimes = primes.take(40)
+        myPrintln("\n  zprimes: ", zprimes, zprimes.length)
+        MyLog.waiting(1 second)
+        myErrPrintln(n, primes.take(40).sum)
+        MyLog.waiting(1 second)
+        primes.sorted
+    }
+    def doZeJob6 = {
+        var primes2 = ListSet.empty[BigInt]
+        var primes = List[BigInt](1)
+        list2test.map(i => {
+            primes = doZeJob4(i, primes)
+            primes2 = primes2 ++ primes
+            val zprimes2 = primes2.toList.sorted.take(40)
+            MyLog.waiting(1 second)
+            myErrPrintln("\n  zprimes2: ", zprimes2, zprimes2.length)
+            MyLog.waiting(1 second)
+        })
+        primes2
+    }
+
+}
+
 
 class Euler191 {
     3 until 14 map (i => myAssert2(new doZeJob191_1(i).result, new doZeJob191_2(i).result))

@@ -26,6 +26,7 @@ object EulerMainNoScalaTestReussi extends App {
     new Euler114
     new Euler132
     new Euler187
+    new Euler346
 }
 class Euler6 {
     val z10 = (1 until 11).toList
@@ -537,3 +538,120 @@ EulerMainNoScalaTest:39 27_18:05_59,973
          (97,(1030927,1030919,80767))
      * */
 }
+
+class Euler346 {
+    doZeMainJob(1000, 15864, (true, true, true))
+    doZeMainJob(100000, 12755696, (true, true, true))
+    doZeMainJob(1000000, 372810163, (true, true, true))
+    doZeMainJob(Euler.powl(10, 12), BigInt("336108797689259276"), (false, false, true))
+
+    def doZeMainJob(limit: BigInt, check: BigInt, test: (Boolean, Boolean, Boolean)) {
+        var t_start = Calendar.getInstance
+        if (test._1) {
+            myAssert2(doZejob(limit.toInt), check)
+            t_start = timeStamp(t_start, "doZejob[" + limit + "]")
+        }
+        if (test._2) {
+            myAssert2(doZejob2(limit.toInt), check)
+            t_start = timeStamp(t_start, "doZejob2[" + limit + "]")
+        }
+        if (test._3) {
+            myAssert2(doZejob3(limit), check)
+            t_start = timeStamp(t_start, "doZejob3[" + limit + "]")
+        }
+    }
+
+    def doZejob3(limit: BigInt) = {
+        val z = getRepUnits(limit)
+        //val y = (ListSet.empty[Int] ++ z.map(_._2).flatten).toList.sorted
+        val y = (ListSet.empty[BigInt] ++ z.map(_._2).flatten).toList.sorted
+        y.sum + 1
+    }
+
+    def getRepUnits(limit: BigInt): List[(BigInt, List[BigInt], BigInt)] = {
+        (2 until Euler.sqrt(limit).toInt + 1).toList.map(n => getRepUnits(limit, n))
+    }
+
+    def getRepUnits(limit: BigInt, n: BigInt): (BigInt, List[BigInt], BigInt) = {
+        var powers = List.empty[BigInt]
+        var p = 1
+        var r = BigInt(1)
+        while (r < limit) {
+            powers = powers :+ r
+            r = Euler.powl(n, p)
+            p += 1
+        }
+        powers.sorted
+
+        var repUnits = List.empty[BigInt]
+        var lrepu = powers.sorted.reverse
+        while (lrepu.length > 1) {
+            repUnits = repUnits :+ lrepu.sum
+            //myPrintIt(lrepu, repUnits)
+            lrepu = lrepu.tail
+        }
+        repUnits = repUnits.sorted.reverse
+        if (repUnits.head > limit) {
+            repUnits = repUnits.tail
+        }
+        repUnits = repUnits.reverse.tail
+        //myPrintln(n, repUnits.sorted, repUnits.sum)
+        (n, repUnits.sorted, repUnits.sum)
+    }
+
+    def doZejob2(limit: Int) = {
+        val result = (6 until limit).map(n => (n, isRepUnit2(n))).filter(_._2).map(_._1)
+        myPrintDln("\n" + result.sum + " " + result.toList)
+        result.sum + 1
+    }
+    def isRepUnit2(n: Int) = {
+        getRacines(n).exists(b => shiftrec(n, b)._1)
+    }
+
+    def doZejob(limit: Int) = {
+        val result = (1 until limit).map(n => (n, isRepUnit(n))).filter(_._2.length > 0)
+        myPrintDln("\n" + result.map(_._1).sum + " " + result.map(_._1).toList)
+        result.map(_._1).sum + 1
+    }
+    def isRepUnit(n: Int) = {
+        //myPrint(".")
+        val z = (2 until (Math.sqrt(n) + 1).toInt).filter(b => shiftrec(n, b)._1).toList
+        if (z.length == 1) {
+            myPrintln("  " + n + " " + z + " " + getRacines(n))
+        }
+        z
+    }
+    def shiftrec(n: Int, b: Int): (Boolean, Int) = {
+        var shifted = shift(n, b)
+        shifted match {
+            case 0 => (false, 0)
+            case 1 => (true, 1)
+            case _ => if (shifted >= b) {
+                shiftrec(shifted, b)
+            } else {
+                (false, shifted)
+            }
+        }
+    }
+    def shift(n: Int, b: Int) = {
+        if ((n - 1) % b == 0) {
+            (n - 1) / b
+        } else {
+            0
+        }
+    }
+
+    def getRacines(n: Int) = {
+        var racines = ListSet.empty[Int]
+        var p = 2
+        var r = 0
+        do {
+            r = Math.pow(n, 1.0 / p).toInt
+            racines = racines + r
+            p += 1
+        } while (r > 2)
+        racines.toList.sorted.reverse
+    }
+}
+
+
