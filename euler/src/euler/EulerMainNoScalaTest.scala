@@ -67,38 +67,19 @@ class Euler132 {
     // 10millions
     // List(11, 17, 41, 73, 101, 137, 251, 257, 271, 353, 401, 449, 641, 751, 1201, 1409, 1601, 3541, 4001, 4801, 5051, 9091, 10753, 15361, 16001, 19841, 21001, 21401, 24001, 25601, 27961, 37501, 43201, 60101, 62501, 69857, 76001, 76801, 160001, 162251),40)
 
+    val list8M = List(11, 17, 41, 73, 101, 137, 251, 257, 271, 353, 401, 449, 641, 751, 1201, 1409, 1601, 3541, 4001, 4801, 5051, 9091, 10753, 15361, 16001, 19841, 21001, 21401, 24001, 25601, 27961, 37501, 40961, 43201, 60101, 62501, 69857, 76001, 76801, 160001, 162251)
 
-    //doZeJob1(10)
-    /*doZeJob2(2, 11)
-    doZeJob2(5, 6)
-    doZeJob2(10, 5)*/
-    var z = ListSet[BigInt]()
-    /*z = z ++ doZeJob3(2, 10)
-    MyLog.waiting(1 second)
-    z = z ++ doZeJob3(5, 5)
-    MyLog.waiting(1 second)*/
-    //doZeJob5(10, 9)
-    doZeJob6
-    /*val y = z.toList.sorted
-    myErrPrintln(z)
-    myErrPrintln(y, y.length)
-    myErrPrintln(y.take(40))
-    myErrPrintln(y.take(40).sum)*/
+    val list10M = List(11, 17, 41, 73, 101, 137, 251, 257, 271, 353, 401, 449, 641, 751, 1201, 1409, 1601, 3541, 4001, 4801, 5051, 9091, 10753, 15361, 16001, 19841, 21001, 21401, 24001, 25601, 27961, 37501, 43201, 60101, 62501, 69857, 76001, 76801, 160001, 162251)
 
-    def doZeJob1(n: Int) = {
-        MyLog.waiting(1 second)
-        myErrPrintln("doZeJob1 *********** " + n)
-        MyLog.waiting(1 second)
-        val bi = BigInt((1 until n + 1).map(z => "1").mkString)
-        val primes = new EulerDiv132(bi, premiers, 1, 40).primes
-        val justChecking = primes.product
-        myPrintln("\n\n\n", n, primes.length, primes.sum, justChecking.toString.toList.length, "\n\n\n")
-        myPrintln("\n  ", primes, primes.length)
-        MyLog.waiting(1 second)
-        myErrPrintln(primes.take(40).sum)
-        MyLog.waiting(1 second)
-        primes
-    }
+    val bothLists = ListSet.empty[Int] ++ list8M ++ list10M
+
+    val result = bothLists.toList.sorted.take(40)
+
+    myPrintln(result.sum, result)
+    myAssert2(result.sum, 843296)
+
+    //doZeJob6
+
     def doZeJob4(n: Int, primesI: List[BigInt]): List[BigInt] = {
         MyLog.waiting(1 second)
         myErrPrintln("doZeJob4 *********** " + n)
@@ -118,13 +99,6 @@ class Euler132 {
         MyLog.waiting(1 second)
         primes.sorted
     }
-    def doZeJob2(n: Int, limit: Int) = {
-        (2 until limit).toList.map(i => doZeJob1(Math.pow(n, i).toInt))
-    }
-    def doZeJob5(n: Int, limit: Int) = {
-        var primes = List[BigInt](1)
-        (2 until limit).toList.map(i => primes = doZeJob4(8 * Math.pow(n, i).toInt, primes))
-    }
     def doZeJob6 = {
         var primes2 = ListSet.empty[BigInt]
         var primes = List[BigInt](1)
@@ -136,9 +110,6 @@ class Euler132 {
             myErrPrintln("\n  zprimes2: ", zprimes2, zprimes2.length)
             MyLog.waiting(1 second)
         })
-    }
-    def doZeJob3(n: Int, limit: Int) = {
-        doZeJob1(Math.pow(n, limit).toInt)
     }
 }
 
