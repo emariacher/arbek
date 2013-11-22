@@ -49,6 +49,26 @@ class Euler347 {
     //waiting(1 second)
     (1 until 30).foreach(doZeJob1(_))
     myAssert2(doZeJob3(100)._2, 2262)
+    myAssert2(doZeJob4(100)._2, 2262)
+
+    def doZeJob4(n: BigInt) = {
+        if (n > EulerPrime.premiers100000.last * 2) {
+            throw new Exception(n + " > " + EulerPrime.premiers100000.last * 2)
+        }
+        
+        val onePrime = getOnePrimes(n)
+        myPrintIt(onePrime)
+
+        val combis = onePrime.filter(_._1 < Euler.sqrt(n)).map(op => (op, onePrime.dropWhile(_._1 < op._1).takeWhile(_._1 <= (n / op._1)).
+                toList.filter(z => (z._1 % op._1) * (op._1 % z._1) != 0)))
+        myPrintIt(combis.mkString("\n  ", "\n  ", "\n  "))
+        /*val r = combis.map(z => z._2.map(findMpq(n, z._1, _)))
+        myPrintIt(r.mkString("\n  ", "\n  ", "\n  "))
+        val sum = r.flatten.map(_._3).sum
+        myPrintln(n, sum, r)
+        (n, sum, r)*/
+        (n,0)
+    }
 
     def doZeJob3(n: BigInt) = {
         if (n > EulerPrime.premiers100000.last * 2) {
@@ -57,7 +77,8 @@ class Euler347 {
         val onePrime = premiers.takeWhile(_ <= (n / 2)).toList
         myPrintIt(onePrime)
 
-        val combis = onePrime.filter(_ < Euler.sqrt(n)).map(op => (op, onePrime.dropWhile(_ < op).takeWhile(_ <= (n / op)).toList.filter(z => (z % op) * (op % z) != 0)))
+        val combis = onePrime.filter(_ < Euler.sqrt(n)).map(op => (op, onePrime.dropWhile(_ < op).takeWhile(_ <= (n / op)).
+                toList.filter(z => (z % op) * (op % z) != 0)))
 
         myPrintIt(combis.mkString("\n  ", "\n  ", "\n  "))
         val r = combis.map(z => z._2.map(findMpq(n, z._1, _)))
@@ -65,27 +86,6 @@ class Euler347 {
         val sum = r.flatten.map(_._3).sum
         myPrintln(n, sum, r)
         (n, sum, r)
-    }
-
-    def doZeJob2(jprev: Job) = {
-        val n = jprev.n + 1
-        var sum = BigInt(0)
-        var pr = List.empty[BigInt]
-        var r = List.empty[(BigInt, BigInt, BigInt)]
-        if (n == 5) {
-            sum = 0
-            pr = List(2)
-        } else if (EulerPrime.isPrime(n)) {
-            sum = jprev.sum
-            pr = jprev.pr
-            r = jprev.r
-        } else {
-            pr = premiers.takeWhile(_ <= (n / 2)).toList
-            r = pr.combinations(2).toList.map(pq => findMpq(n, pq)).filter(_._3 > 0)
-            sum = r.map(_._3).sum
-            myPrintln(n, sum, new EulerDiv(n).primes, pr, r)
-        }
-        new Job(n, sum, pr, r)
     }
 
     def doZeJob1(n: BigInt) = {
@@ -144,6 +144,18 @@ class Euler347 {
         }
         lexp
     }
+
+    def getOnePrimes(n: BigInt) = {
+        if (n > BigInt(Integer.MAX_VALUE)) {
+            throw new Exception(n + " > " + Integer.MAX_VALUE)
+        }
+        (2 until ((n / 2) + 1).toInt).map(i => {
+            val primes = new EulerDiv(i).primes
+            val primesUnique = TreeSet[BigInt]() ++ primes
+            (BigInt(i),primesUnique)
+        }).filter(_._2.toList.length==1).sortBy{_._1}.map(z => (z._1,z._2.head))
+    }
+    
     class Job(val n: BigInt, val sum: BigInt, val pr: List[BigInt], val r: List[(BigInt, BigInt, BigInt)]) {
         def this(j: Job) = this(j.n, j.sum, j.pr, j.r)
         if (n > EulerPrime.premiers100000.last * 2) {
