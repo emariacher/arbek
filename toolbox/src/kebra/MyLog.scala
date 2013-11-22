@@ -19,7 +19,7 @@ object MyLog {
     val MatchFunc = """(.+)\(.+""".r
     var L: MyLog = _
     var vierge = true
-    
+
     var g_t_start = Calendar.getInstance();
 
     def getMylog: MyLog = L
@@ -127,7 +127,7 @@ object MyLog {
         import c.universe._
         c.enclosingDef match {
             case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
-                c.universe.reify(c.literal("#"+name.toString).splice+"# ")
+                c.universe.reify(c.literal("#" + name.toString).splice + "# ")
             case _ => c.abort(c.enclosingPosition, "NoEnclosingMethod")
         }
     }
@@ -227,11 +227,11 @@ object MyLog {
     def mtimeStampx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
         val msg = linecode.tree.toString
-        reify({g_t_start = timeStamp(g_t_start, c.Expr[String](Literal(Constant(msg))).splice); linecode.splice;})
+        reify({ linecode.splice; g_t_start = timeStamp(g_t_start, c.Expr[String](Literal(Constant(msg))).splice); })
     }
-    
-        def timeStampIt(linecode: Any) = macro mtimeStampx
-    
+
+    def timeStampIt(linecode: Any) = macro mtimeStampx
+
     def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
         val t_end = Calendar.getInstance();
         myPrintln("    t_now: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
