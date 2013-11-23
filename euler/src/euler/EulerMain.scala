@@ -75,6 +75,20 @@ object Euler {
 
         n1
     }
+    def max(p: BigInt, q: BigInt) = {
+        if (p > q) {
+            p
+        } else {
+            q
+        }
+    }
+    def min(p: BigInt, q: BigInt) = {
+        if (p > q) {
+            q
+        } else {
+            p
+        }
+    }
 }
 
 class Euler extends FunSuite with Matchers with BeforeAndAfter {
