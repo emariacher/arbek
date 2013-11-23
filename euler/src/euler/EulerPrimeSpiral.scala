@@ -125,7 +125,7 @@ class Euler58ter extends EulerPrime(100000, 1000) {
     var total = primesDiags.size
     var ratio = 0.0
     val limit = 10.0
-    override val sqtop = ((carres.last * 2) + 5).toInt + 1
+    override val sqtop = BigInt((carres.last * 2) + 5) + 1
 
     override def computePrime(callback: (Int, TreeSet[BigInt]) => Int) = {
         carres.foreach((carre: Int) => {

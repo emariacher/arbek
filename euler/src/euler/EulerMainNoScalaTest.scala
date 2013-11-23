@@ -45,20 +45,19 @@ object EulerMainNoScalaTest extends App {
 
 class Euler347 {
     //    val premiers = EulerPrime.premiers100000
-    val premiers = (new CheckEulerPrime(5001000, 1000)).premiers
+    myPrintln(EulerPrime.premiers1000.takeWhile(_ < 110))
+    val premiers = (new CheckEulerPrime(5010000, 10000)).premiers
 
-        myPrintIt(new EulerDiv(1018081).primes) // 1009 1st prime over 1000?
+    myPrintIt(new EulerDiv(1018081).primes) // 1009 1st prime over 1000?
 
-    myAssert(EulerPrime.isPrime(1018081))
+    myAssert(!premiers.contains(1018081))
     myPrintIt(findPow(1000, 2))
     myPrintIt(findMpq(100, 2, 3))
     doZeStats(100, 2262)
     doZeStats(1000, 0) // dozeJob4 sucks here
     doZeStats(10000, 0) // dozeJob4 does not suck here
 
-    timeStampIt(myErrPrintln(doZeJob3(100000, 0)._2))
-    timeStampIt(myErrPrintln(doZeJob3(1000000, 0)._2))
-    timeStampIt(myErrPrintln(doZeJob3(10000000, 0)._2))
+    timeStampIt(myErrPrintln(doZeJob3(10000000, BigInt("11109800204052"))._2))
 
     def doZeStats(n: BigInt, expected: BigInt) {
         timeStampIt(myErrPrintln(doZeJob1(n, expected)._2))
@@ -92,7 +91,7 @@ class Euler347 {
 
     def doZeJob3(n: BigInt, expected: BigInt) = {
         if (n > premiers.last * 2) {
-            throw new Exception(""+n + " > " + premiers.last * 2)
+            throw new Exception("" + n + " > " + premiers.last * 2)
         }
         myPrintDln(n, premiers.last, premiers.last * 2)
         val onePrime = premiers.takeWhile(_ <= (n / 2)).toList
@@ -135,10 +134,10 @@ class Euler347 {
     def findMpq(n: BigInt, pq: List[BigInt]): (BigInt, BigInt, BigInt) = findMpq(n, pq.head, pq.last)
 
     def findMpq(n: BigInt, p: BigInt, q: BigInt): (BigInt, BigInt, BigInt) = {
-        myPrintDln(n, p, q)
+        //myPrintDln(n, p, q)
         myAssert(EulerPrime.isPrime(p))
         myAssert(EulerPrime.isPrime(q))
-        myPrintDln(n, p, q)
+        //myPrintDln(n, p, q)
         if (p * q <= n) {
             val lp = findPow(n, p)
             val lq = findPow(n, q)
@@ -183,7 +182,7 @@ class Euler347 {
             throw new Exception(n + " > " + Integer.MAX_VALUE)
         }
         (2 until ((n / 2) + 1).toInt).map(i => {
-            val primes = new EulerDiv(i).primes
+            val primes = new EulerDiv2(i, premiers).primes
             val primesUnique = TreeSet[BigInt]() ++ primes
             (BigInt(i), primesUnique)
         }).filter(_._2.toList.length == 1).sortBy { _._1 }.map(z => (z._1, z._2.head))

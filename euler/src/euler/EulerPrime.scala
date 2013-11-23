@@ -44,7 +44,7 @@ object EulerPrime {
 
 class EulerPrime(val top: BigInt, val inc: Int) {
     var premiersForCompute = TreeSet[BigInt]()
-    val sqtop = Math.sqrt(top.toInt).toInt + 1
+    val sqtop = Euler.sqrt(top) + 1
     assume(sqtop * sqtop > top)
     assume((new Range(0, 10, 1)).last == 9)
     assume((new Range(1, 11, 2)).last == 9)
@@ -53,9 +53,10 @@ class EulerPrime(val top: BigInt, val inc: Int) {
 
     def init1er4compute = {
         inc match {
-            case 100  => premiersForCompute = TreeSet(2, 3, 5, 7, 11)
-            case 1000 => premiersForCompute = TreeSet(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)
-            case _    => require(false, inc + " not allowed!")
+            case 100   => premiersForCompute = TreeSet(2, 3, 5, 7, 11)
+            case 1000  => premiersForCompute = TreeSet(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)
+            case 10000 => premiersForCompute = TreeSet(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101)
+            case _     => require(false, inc + " not allowed!")
         }
     }
 
@@ -103,7 +104,7 @@ class EulerPrime(val top: BigInt, val inc: Int) {
         })
         premiersForCompute = premiers
         myAssert2(top % inc, 0)
-        premiers = premiersForCompute ++ (1 to (top / inc).toInt-1).par.map(mi => {
+        premiers = premiersForCompute ++ (1 to (top / inc).toInt - 1).par.map(mi => {
             val base = mi * inc
             val premiersForCompute2 = premiersForCompute.toList.takeWhile(_.toDouble < Math.sqrt(base + inc.toDouble) + 1)
             val plength = premiersForCompute2.length
