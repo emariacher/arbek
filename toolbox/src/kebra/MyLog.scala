@@ -21,6 +21,8 @@ object MyLog {
     var vierge = true
 
     var g_t_start = Calendar.getInstance();
+    var g_t_end = Calendar.getInstance();
+    var timeStampsList = List.empty[(Long, String)]
 
     def getMylog: MyLog = L
     def newMyLog(s_title: String, fil: File, errExt: String): MyLog = {
@@ -227,10 +229,17 @@ object MyLog {
     def mtimeStampx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
         val msg = linecode.tree.toString
-        reify({ linecode.splice; g_t_start = timeStamp(g_t_start, c.Expr[String](Literal(Constant(msg))).splice); })
+        reify({
+            g_t_start = timeStamp(g_t_start, "---");
+            linecode.splice;
+            g_t_end = timeStamp(g_t_start, c.Expr[String](Literal(Constant(msg))).splice);
+            timeStampsList = timeStampsList :+ ((g_t_end.getTimeInMillis() - g_t_start.getTimeInMillis()), c.Expr[String](Literal(Constant(msg))).splice);
+        })
     }
 
     def timeStampIt(linecode: Any) = macro mtimeStampx
+
+    def printTimeStampsList = myPrintDln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
     def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
         val t_end = Calendar.getInstance();
