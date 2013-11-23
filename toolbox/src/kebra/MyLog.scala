@@ -239,7 +239,7 @@ object MyLog {
 
     def timeStampIt(linecode: Any) = macro mtimeStampx
 
-    def printTimeStampsList = myPrintDln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
+    def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintDln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
     def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
         val t_end = Calendar.getInstance();
