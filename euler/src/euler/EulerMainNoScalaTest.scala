@@ -29,8 +29,7 @@ object EulerMainNoScalaTest extends App {
     try {
         myPrintDln("Hello World!")
 
-        timeStampIt(myPrintDln("DoIt!"))
-        timeStampIt(new regressionScalalab)
+        timeStampIt(new Euler448)
     } catch {
         case ex: Exception => {
             println("\n" + ex)
@@ -46,16 +45,19 @@ object EulerMainNoScalaTest extends App {
     }
 }
 
-class regressionScalalab {
-
-    jfigure(1)
-    var t = (0.0 until 10.0 by 0.1).toArray
-    var x = t.map(z => Math.sin(0.23 * z))
-    var lineSpecs = "."
-
-    jtitle("drawing multiple line styles")
-    jhold(true) // hold axis
-    jplot(t, x, lineSpecs)
-    jlineColor(1, Color.GREEN)
+class Euler448 {
+    def A(n: BigInt) = {
+        var out = BigInt(0)
+        var bi = BigInt(0)
+        while(bi<=n) {
+            bi = bi + 1
+            out+=lcm(n,bi)
+        }
+        out/n
+    }
+    
+    def lcm(p: BigInt, q: BigInt) = {
+        BigInt(0)
+    }
 }
 
