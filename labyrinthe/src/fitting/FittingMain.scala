@@ -5,12 +5,9 @@ import kebra.MyLog._
 import java.io.File
 import statlaby._
 import scalation.stat._
-/*import _root_.scalaSci.math.plot.plotTypes._
+import _root_.scalaSci.math.plot.plotTypes._
 import _root_.scalaSci.math.plot.plot._
-import _root_.scalaSci.math.plot.canvas._*/
-import _root_.JFplot._
-import _root_.JFplot.jFigure._
-
+import _root_.scalaSci.math.plot.canvas._
 import java.awt.Color
 import kebra.MyPlotUtils._
 import kebra.LinearRegression
@@ -31,12 +28,10 @@ object MemeDistriMaisSamplesDifferent extends App {
     val lvert = i.ll.apply(2)._2.map(_.toDouble)
     val (serieX, serieY, variateY) = FittingVariate.getSeries(lrouge, lvert)
     val lr = new LinearRegression(serieY.zip(variateY))
-    /*plot(serieX.toArray, serieY.toArray, Color.red, "rouge " + lr)
+    plot(serieX.toArray, serieY.toArray, Color.red, "rouge " + lr)
     plot(serieX.toArray, variateY.toArray, Color.green, "vert " + lr)
     scatterPlotsOn
-    plot(serieX.toArray, serieX.map((d: Double) => 0.0).toArray, Color.green, "X[" + serieX.length + "]")*/
-    jplot(serieX.toArray, serieY.toArray, "rouge " + lr)
-    jlineColor(1, Color.RED)
+    plot(serieX.toArray, serieX.map((d: Double) => 0.0).toArray, Color.green, "X[" + serieX.length + "]")
 }
 
 object FittingMain extends App {
