@@ -13,6 +13,7 @@ import kebra.MyLog
 import kebra.MyLog._
 import scala.concurrent.duration._
 import labyrinthe.LL._
+import scala.language.postfixOps 
 
 class ZeActor extends Actor {
     context.setReceiveTimeout(1 second)

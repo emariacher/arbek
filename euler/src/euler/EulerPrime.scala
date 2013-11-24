@@ -137,7 +137,7 @@ class CheckEulerPrime(override val top: BigInt, override val inc: Int) extends E
         //println("\n  act 1000premiers="+premiers.filter(_<1000))
         println("\n  act 10000eme premier=" + prems.apply(9999))
         myAssert2(prems.apply(9999), 104729)
-        myAssert2(premiers.last, 999983)
+        myAssert2(premiers.last, 104999)
         val ref10000PrimeNumbers = getref10000PrimeNumbersFromWeb
         println("\n  exp 10000eme premier=" + ref10000PrimeNumbers.apply(9999))
         val diff = prems.filterNot(ref10000PrimeNumbers.contains(_)).grouped(10).toList

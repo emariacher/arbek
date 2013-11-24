@@ -21,27 +21,12 @@ import scala.concurrent.duration._
 
 object EulerMainNoScalaTestReussi extends App {
     myPrintDln("Hello World!")
-    new Euler6
     new Euler26
     new Euler114
     new Euler132
     new Euler187
     new Euler346
     new Euler347
-}
-class Euler6 {
-    val z10 = (1 until 11).toList
-    val sum10 = z10.sum
-    val sumSquare10 = sum10 * sum10
-    val squareSum10 = z10.map(i => i * i).sum
-    printIt(z10, sumSquare10 - squareSum10)
-    myAssert2(sumSquare10 - squareSum10, 2640)
-    val z100 = (1 until 101).toList
-    val sum100 = z100.sum
-    val sumSquare100 = sum100 * sum100
-    val squareSum100 = z100.map(i => i * i).sum
-    printIt(z100, sumSquare100 - squareSum100)
-    myAssert2(sumSquare100 - squareSum100, 25164150)
 }
 
 class Euler203 {

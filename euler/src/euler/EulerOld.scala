@@ -21,11 +21,11 @@ class EulerOld extends FunSuite with Matchers with BeforeAndAfter {
 
     before {
         Euler
-        println("\n****avant****")
+        println("\n****avant************************************************************")
     }
 
     after {
-        Euler.timeStamp(Euler.t_start, "Euler")
+        g_t_start = timeStamp(g_t_start,"")
         println("****apres****")
     }
 
@@ -69,6 +69,24 @@ class EulerOld extends FunSuite with Matchers with BeforeAndAfter {
         val solution = third.head._2
         println("Euler4 solution: " + solution)
         solution should equal(906609)
+    }
+
+    test("euler6") {
+        // http://projecteuler.net/problem=5
+        val z10 = (1 until 11).toList
+        val sum10 = z10.sum
+        val sumSquare10 = sum10 * sum10
+        val squareSum10 = z10.map(i => i * i).sum
+        printIt(z10, sumSquare10 - squareSum10)
+        myAssert2(sumSquare10 - squareSum10, 2640)
+        val z100 = (1 until 101).toList
+        val sum100 = z100.sum
+        val sumSquare100 = sum100 * sum100
+        val squareSum100 = z100.map(i => i * i).sum
+        val solution = sumSquare100 - squareSum100
+        printIt(z100, solution)
+        println("euler6 solution: " + solution)
+        solution should equal(25164150)
     }
 
     test("euler8") {

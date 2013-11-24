@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import scala.collection.immutable.TreeSet
 import EulerPrime._
 import language.postfixOps
+import kebra.MyLog._
 
 // scala org.scalatest.tools.Runner -p . -o -s euler.EulerPrimeRegression
 
