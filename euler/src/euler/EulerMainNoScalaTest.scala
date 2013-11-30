@@ -182,33 +182,35 @@ class Euler448 {
         val z = (1 until (n + 1).toInt).map(i => (i, f(n, i)))
         val s1 = S1(n)
         val s2 = S2(n)
+        val s2z = s2.groupBy(_._2).toList.map(u => (u._1, u._2.map(_._3).sum, u._2)).sortBy(_._1)
         val s = z.map(_._2).sum
-        myPrintln("************", n, s, s1, z)
-        myPrintln(s2.groupBy(_._1).mkString("\n"))
-        myPrintIt(s2.map(_._3).sum)
+        myPrintln(s2z.mkString("\n"))
+        myPrintln(s2z.map(u => (u._1, u._2)))
+        myPrintln("************", n, s, s1, s2.map(_._3).sum, "\n" + z.toList)
         assert(s1 == s)
     }
 
     def A2(n: BigInt) = {
         val dn = new EulerDiv(n).primes
         val mdn = dn.groupBy(bi => bi).map(bbi => bbi._1 -> bbi._2.length)
-        var out = BigInt(0)
+        var out = List.empty[(BigInt, BigInt)]
         var bi = BigInt(0)
         while (bi < n) {
             bi = bi + 1
-            out += ppcm2(n, mdn, bi)
+            //out += ppcm2(n, mdn, bi)
+            out = out :+ (bi, ppcm2(n, mdn, bi))
             myPrint(bi, ppcm2(n, mdn, bi))
         }
-        (bi, ppcm2(n, mdn, bi), out)
+        out
     }
-    
+
     def S2(n: BigInt) = {
         var out = List.empty[(BigInt, BigInt, BigInt)]
         var bi = BigInt(0)
         while (bi < n) {
             bi = bi + 1
             val a = A2(bi)
-            out = out :+ a
+            out = out ++ a.map(b => (bi, b._1, b._2))
             myPrintln("\n", bi, a, out.map(_._3).sum)
         }
         out
