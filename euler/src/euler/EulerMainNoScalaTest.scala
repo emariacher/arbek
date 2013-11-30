@@ -60,23 +60,10 @@ class Euler448 {
         val base = g(n, bi)
         bi.toInt match {
             case 1 => n
-            case 2 => (n % bi).toInt match {
-                case 1 => ((n / bi) * (((bi - 1) * bi) + 1))
-                case _ => f(n - 1, bi) + 1
-            }
-            case 3 => (n % bi).toInt match {
-                case 2 => ((n / bi) * (((bi - 1) * bi) + 1))
-                case 1 => f(n - 2, bi) + bi + 1
-                case _ => f(n - 1, bi) + 1
-            }
             case 4 => (n % bi).toInt match {
                 case 3 => h(n, bi)
                 case 2 => base - 2
                 case _ => base
-            }
-            case 5 => (n % bi).toInt match {
-                case 4 => ((n / bi) * (((bi - 1) * bi) + 1))
-                case _ => f(n - ((n % bi) + 1), bi) + 1 + ((n % bi) * bi)
             }
             case 6 => (n % bi).toInt match {
                 case 5 => h(n, bi)
@@ -84,10 +71,6 @@ class Euler448 {
                 case 3 => base - 7
                 case 2 => base - 3
                 case _ => base
-            }
-            case 7 => (n % bi).toInt match {
-                case 6 => ((n / bi) * (((bi - 1) * bi) + 1))
-                case _ => f(n - ((n % bi) + 1), bi) + 1 + ((n % bi) * bi)
             }
             case 8 => (n % bi).toInt match {
                 case 7 => h(n, bi)
@@ -172,7 +155,14 @@ class Euler448 {
                 case 2  => base - 10
                 case _  => base
             }
-            case _ => (((n / bi) - 1) * (((bi - 2) * 4) + 3)) + 1 + ((n % bi) * bi) // for primes > 2
+            case _ => biprime(n, bi)
+        }
+    }
+    def biprime(n: BigInt, bi: BigInt): BigInt = {
+        if ((n % bi) == (bi - 1)) {
+            ((n / bi) * (((bi - 1) * bi) + 1))
+        } else {
+            f(n - ((n % bi) + 1), bi) + 1 + ((n % bi) * bi)
         }
     }
     def g(n: BigInt, bi: BigInt): BigInt = h(n - ((n % bi) + 1), bi) + 1 + ((n % bi) * bi)
