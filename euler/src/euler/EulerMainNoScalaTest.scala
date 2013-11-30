@@ -116,6 +116,8 @@ class Euler448 {
             }
             case 14 => (n % bi).toInt match {
                 case 13 => h(n, bi)
+                case 10 => base - 47
+                case 9  => base - 40
                 case 8  => base - 40
                 case 7  => base - 33
                 case 6  => base - 21
@@ -127,6 +129,8 @@ class Euler448 {
             }
             case 15 => (n % bi).toInt match {
                 case 14 => h(n, bi)
+                case 9  => base - 42
+                case 8  => base - 32
                 case 7  => base - 32
                 case 6  => base - 32
                 case 5  => base - 22
@@ -136,6 +140,8 @@ class Euler448 {
             }
             case 16 => (n % bi).toInt match {
                 case 15 => h(n, bi)
+                case 8  => base - 42
+                case 7  => base - 28
                 case 6  => base - 28
                 case 5  => base - 20
                 case 4  => base - 20
@@ -145,6 +151,8 @@ class Euler448 {
             }
             case 18 => (n % bi).toInt match {
                 case 17 => h(n, bi)
+                case 6  => base - 45
+                case 5  => base - 30
                 case 4  => base - 30
                 case 3  => base - 21
                 case 2  => base - 9
@@ -152,7 +160,20 @@ class Euler448 {
             }
             case 20 => (n % bi).toInt match {
                 case 19 => h(n, bi)
+                case 4  => base - 25
+                case 3  => base - 10
                 case 2  => base - 10
+                case _  => base
+            }
+            case 21 => (n % bi).toInt match {
+                case 20 => h(n, bi)
+                case 3  => base - 14
+                case _  => base
+            }
+            case 22 => (n % bi).toInt match {
+                case 21 => h(n, bi)
+                case 3  => base - 11
+                case 2  => base - 11
                 case _  => base
             }
             case _ => biprime(n, bi)
