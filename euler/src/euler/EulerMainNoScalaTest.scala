@@ -29,7 +29,7 @@ object EulerMainNoScalaTest extends App {
     try {
         myPrintDln("Hello World!")
 
-        timeStampIt(new Euler35)
+        timeStampIt(new Euler265)
     } catch {
         case ex: Exception => {
             println("\n" + ex)
@@ -45,26 +45,6 @@ object EulerMainNoScalaTest extends App {
     }
 }
 
-class Euler35 {
-    val premiers = new CheckEulerPrime(BigInt(1000000), 1000).premiers.filter(p => p.toString.toList.intersect("02468".toList).isEmpty).toList.map(_.toInt)
-    //myPrintln(premiers.filter(isCircular(_)))
-    myPrintln((ListSet(2) ++ premiers.map(isCircular(_)).flatten).toList.length, 55)
-    def isCircular(p: Int) = {
-        val rot = rotations(p)
-        if (rot.intersect(premiers) == rot) {
-            myPrintln(rot)
-            rot
-        } else {
-            List.empty[Int]
-        }
-    }
-    def rotations(p: Int) = {
-        var s = p.toString()
-        var out = ListSet(p)
-        (1 to s.length).map(i => {
-            s = s.substring(1)+s.head
-            out = out + s.toInt
-        })
-        out.toList
-    }
+class Euler265 {
+    myPrintln("000111".combinations(3).toList.map(_.permutations.toList).mkString("\n"))
 }

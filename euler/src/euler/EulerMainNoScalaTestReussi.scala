@@ -22,6 +22,7 @@ import scala.concurrent.duration._
 object EulerMainNoScalaTestReussi extends App {
     myPrintDln("Hello World!")
     new Euler26
+    new Euler35
     new Euler114
     new Euler132
     new Euler187
@@ -41,6 +42,7 @@ class Euler203 {
                 length == c._2.length).map(_._1).sum
     }
 }
+
 
 class Euler26 {
     myPrintln(EulerPrime.premiers1000.toList.map(bi => new Calculate(bi.toInt)).mkString("\n"))
@@ -88,6 +90,31 @@ class Euler26 {
 
     }
 }
+
+class Euler35 {
+    val premiers = new CheckEulerPrime(BigInt(1000000), 1000).premiers.filter(p => p.toString.toList.intersect("02468".toList).isEmpty).toList.map(_.toInt)
+    //myPrintln(premiers.filter(isCircular(_)))
+    myPrintln((ListSet(2) ++ premiers.map(isCircular(_)).flatten).toList.length, 55)
+    def isCircular(p: Int) = {
+        val rot = rotations(p)
+        if (rot.intersect(premiers) == rot) {
+            myPrintln(rot)
+            rot
+        } else {
+            List.empty[Int]
+        }
+    }
+    def rotations(p: Int) = {
+        var s = p.toString()
+        var out = ListSet(p)
+        (1 to s.length).map(i => {
+            s = s.substring(1)+s.head
+            out = out + s.toInt
+        })
+        out.toList
+    }
+}
+
 
 class Euler114(val len: Int) {
     def this() = this(50)
