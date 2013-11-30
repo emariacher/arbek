@@ -100,6 +100,7 @@ class Euler448 {
       }
       case 9 => (n % bi).toInt match {
         case 8 => h(n, bi)
+        case 6 => base - 12
         case 5 => base - 6
         case 4 => base - 6
         case 3 => base - 6
@@ -107,6 +108,7 @@ class Euler448 {
       }
       case 10 => (n % bi).toInt match {
         case 9 => h(n, bi)
+        case 5 => base - 18
         case 4 => base - 10
         case 3 => base - 5
         case 2 => base - 5
@@ -115,7 +117,7 @@ class Euler448 {
       case 12 => (n % bi).toInt match {
         case 9 => h(n, bi)
         case 4 => base - 10
-        case 3 => base - 6
+        case 3 => base - 14
         case 2 => base - 6
         case _ => base
       }
