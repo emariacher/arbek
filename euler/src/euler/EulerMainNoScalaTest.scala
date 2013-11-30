@@ -58,50 +58,55 @@ class Euler448 {
 
     def f(n: BigInt, bi: BigInt): BigInt = {
         val base = g(n, bi)
+        val dn = new EulerDiv(n).primes
+        val dbi = new EulerDiv(bi).primes
+        val nmodbi = n % bi
+        
+                
+        def low = {
+                    if (nmodbi < dbi.head) {
+                        base
+                    } else {
+                        base - ((bi / dbi.head) * (dbi.head - 1))
+                    }
+                }
+        
         bi.toInt match {
             case 1 => n
-            case 4 => (n % bi).toInt match {
+            case 4 => nmodbi.toInt match {
                 case 3 => h(n, bi)
                 case 2 => base - 2
                 case _ => base
             }
-            case 6 => (n % bi).toInt match {
+            case 6 => nmodbi.toInt match {
                 case 5 => h(n, bi)
                 case 4 => base - 10
                 case 3 => base - 7
-                case 2 => base - 3
-                case _ => base
+                case _ => low
             }
-            case 8 => (n % bi).toInt match {
+            case 8 => nmodbi.toInt match {
                 case 7 => h(n, bi)
                 case 6 => base - 14
                 case 5 => base - 10
                 case 4 => base - 10
-                case 3 => base - 4
-                case 2 => base - 4
-                case _ => base
+                case _ => low
             }
-            case 9 => (n % bi).toInt match {
+            case 9 => nmodbi.toInt match {
                 case 8 => h(n, bi)
                 case 7 => base - 12
                 case 6 => base - 12
-                case 5 => base - 6
-                case 4 => base - 6
-                case 3 => base - 6
-                case _ => base
+                case _ => low
             }
-            case 10 => (n % bi).toInt match {
+            case 10 => nmodbi.toInt match {
                 case 9 => h(n, bi)
                 case 8 => base - 28
                 case 7 => base - 23
                 case 6 => base - 23
                 case 5 => base - 18
                 case 4 => base - 10
-                case 3 => base - 5
-                case 2 => base - 5
-                case _ => base
+                case _ => low
             }
-            case 12 => (n % bi).toInt match {
+            case 12 => nmodbi.toInt match {
                 case 11 => h(n, bi)
                 case 10 => base - 56
                 case 9  => base - 50
@@ -111,10 +116,9 @@ class Euler448 {
                 case 5  => base - 23
                 case 4  => base - 23
                 case 3  => base - 14
-                case 2  => base - 6
-                case _  => base
+                case _ => low
             }
-            case 14 => (n % bi).toInt match {
+            case 14 => nmodbi.toInt match {
                 case 13 => h(n, bi)
                 case 10 => base - 47
                 case 9  => base - 40
@@ -123,62 +127,57 @@ class Euler448 {
                 case 6  => base - 21
                 case 5  => base - 14
                 case 4  => base - 14
-                case 3  => base - 7
-                case 2  => base - 7
-                case _  => base
+                //case 3  => base - 7
+                //case 2  => base - 7
+                //case _  => base
+                case _ => low
             }
-            case 15 => (n % bi).toInt match {
+            case 15 => nmodbi.toInt match {
                 case 14 => h(n, bi)
                 case 9  => base - 42
                 case 8  => base - 32
                 case 7  => base - 32
                 case 6  => base - 32
                 case 5  => base - 22
-                case 4  => base - 10
+                /*case 4  => base - 10
                 case 3  => base - 10
-                case _  => base
+                case _  => base*/
+                case _ => low
             }
-            case 16 => (n % bi).toInt match {
+            case 16 => nmodbi.toInt match {
                 case 15 => h(n, bi)
                 case 8  => base - 42
                 case 7  => base - 28
                 case 6  => base - 28
                 case 5  => base - 20
                 case 4  => base - 20
-                case 3  => base - 8
-                case 2  => base - 8
-                case _  => base
+                case _ => low
             }
-            case 18 => (n % bi).toInt match {
+            case 18 => nmodbi.toInt match {
                 case 17 => h(n, bi)
                 case 6  => base - 45
                 case 5  => base - 30
                 case 4  => base - 30
                 case 3  => base - 21
-                case 2  => base - 9
-                case _  => base
+                case _ => low
             }
-            case 20 => (n % bi).toInt match {
+            case 20 => nmodbi.toInt match {
                 case 19 => h(n, bi)
                 case 4  => base - 25
-                case 3  => base - 10
-                case 2  => base - 10
-                case _  => base
+                case _ => low
             }
-            case 21 => (n % bi).toInt match {
+            case 21 => nmodbi.toInt match {
                 case 20 => h(n, bi)
-                case 3  => base - 14
-                case _  => base
-            }
-            case 22 => (n % bi).toInt match {
+                case _ => low
+           }
+            case 22 => nmodbi.toInt match {
                 case 21 => h(n, bi)
-                case 3  => base - 11
-                case 2  => base - 11
-                case _  => base
+                case _ => low
             }
             case _ => biprime(n, bi)
         }
     }
+    
     def biprime(n: BigInt, bi: BigInt): BigInt = {
         if ((n % bi) == (bi - 1)) {
             ((n / bi) * (((bi - 1) * bi) + 1))
