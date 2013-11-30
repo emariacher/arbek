@@ -54,7 +54,7 @@ class Euler448 {
     myAssert2(S1(100), 122726)
     //myPrintIt(new EulerDivisors(new EulerDiv(12)).divisors)
     myAssert2(h(15, 8), 43)
-    (1 until 20).foreach(pf(_))
+    (1 until 30).foreach(pf(_))
 
     def f(n: BigInt, bi: BigInt): BigInt = {
         val base = g(n, bi)
@@ -119,16 +119,23 @@ class Euler448 {
                 case _ => base
             }
             case 12 => (n % bi).toInt match {
-                case 9 => h(n, bi)
-                case 6 => base - 33
-                case 5 => base - 23
-                case 4 => base - 23
-                case 3 => base - 14
-                case 2 => base - 6
-                case _ => base
+                case 11 => h(n, bi)
+                case 10 => base - 56
+                case 9  => base - 50
+                case 8  => base - 42
+                case 7  => base - 33
+                case 6  => base - 33
+                case 5  => base - 23
+                case 4  => base - 23
+                case 3  => base - 14
+                case 2  => base - 6
+                case _  => base
             }
             case 14 => (n % bi).toInt match {
                 case 13 => h(n, bi)
+                case 8  => base - 40
+                case 7  => base - 33
+                case 6  => base - 21
                 case 5  => base - 14
                 case 4  => base - 14
                 case 3  => base - 7
@@ -136,14 +143,33 @@ class Euler448 {
                 case _  => base
             }
             case 15 => (n % bi).toInt match {
-                case 13 => h(n, bi)
+                case 14 => h(n, bi)
+                case 7  => base - 32
+                case 6  => base - 32
+                case 5  => base - 22
+                case 4  => base - 10
                 case 3  => base - 10
                 case _  => base
             }
             case 16 => (n % bi).toInt match {
-                case 13 => h(n, bi)
+                case 15 => h(n, bi)
+                case 6  => base - 28
+                case 5  => base - 20
+                case 4  => base - 20
                 case 3  => base - 8
                 case 2  => base - 8
+                case _  => base
+            }
+            case 18 => (n % bi).toInt match {
+                case 17 => h(n, bi)
+                case 4  => base - 30
+                case 3  => base - 21
+                case 2  => base - 9
+                case _  => base
+            }
+            case 20 => (n % bi).toInt match {
+                case 19 => h(n, bi)
+                case 2  => base - 10
                 case _  => base
             }
             case _ => (((n / bi) - 1) * (((bi - 2) * 4) + 3)) + 1 + ((n % bi) * bi) // for primes > 2
