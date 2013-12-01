@@ -50,10 +50,11 @@ class Euler265 {
     doZeStuff("00010111", 3)
     doZeStuff("00011101", 3)
     doZeStuff("01010101", 3)
+    generatePotentialSolutions(3)
 
     def combperm(s: String, length: Int) = s.combinations(length).toList.map(_.permutations.toList)
     def rotations(s: String, length: Int) = {
-        val sz = s + s.substring(0,length-1)
+        val sz = s + s.substring(0, length - 1)
         (0 to sz.length - length).map(i => sz.substring(i, i + length)).toList
     }
 
@@ -66,5 +67,17 @@ class Euler265 {
         val result = (r.intersect(cpf).sorted == cpf, r.length == cpf.length)
         myPrintln("\n  " + r, "\n  " + r.sorted, "\n  " + (ListSet.empty[String] ++ r.sorted), "\n  " + s, result)
         result
+    }
+
+    def generatePotentialSolutions(length: Int) {
+        val tl = Math.pow(2, length).toInt
+        val root = ("u" ++ (1 to ((tl / 2) - length)).map(z => "01")).mkString
+        val head0 = (1 to length).map(z => "0").mkString
+        val head1 = (1 to length).map(z => "1").mkString
+        myPrintln(root)
+        val perms = root.permutations.toList.filter(z => z.indexOf("u1") < 0 && z.indexOf("1u") < 0).
+            map(z => head0 + z.replaceAll("u", head1))
+        val result = perms.map(z => Integer.parseInt(z, 2))
+        myPrintln(perms, result)
     }
 }
