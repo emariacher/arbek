@@ -46,5 +46,25 @@ object EulerMainNoScalaTest extends App {
 }
 
 class Euler265 {
-    myPrintln("000111".combinations(3).toList.map(_.permutations.toList).mkString("\n"))
+
+    doZeStuff("00010111", 3)
+    doZeStuff("00011101", 3)
+    doZeStuff("01010101", 3)
+
+    def combperm(s: String, length: Int) = s.combinations(length).toList.map(_.permutations.toList)
+    def rotations(s: String, length: Int) = {
+        val sz = s + s.substring(0,length-1)
+        (0 to sz.length - length).map(i => sz.substring(i, i + length)).toList
+    }
+
+    def doZeStuff(s: String, length: Int) = {
+        val sz = (1 to length).map(z => "01").mkString
+        val cp = combperm(sz, length)
+        val cpf = cp.flatten.sorted
+        myPrintln(s, "\n  " + cpf)
+        val r = rotations(s, length)
+        val result = (r.intersect(cpf).sorted == cpf, r.length == cpf.length)
+        myPrintln("\n  " + r, "\n  " + r.sorted, "\n  " + (ListSet.empty[String] ++ r.sorted), "\n  " + s, result)
+        result
+    }
 }
