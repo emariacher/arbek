@@ -74,16 +74,18 @@ class Euler265 {
 
     def generatePotentialSolutions2(length: Int) {
         val tl = Math.pow(2, length).toInt
-        val root = (1 to ((tl / 2) - length)).map(z => "01").mkString
-        val head0 = (1 to length).map(z => "0").mkString
-        val head1 = (1 to length).map(z => "1").mkString
-        myPrintln(root, head0, head1)
-        val perms = root.permutations.toList.partition(z => z.head == '0')
-        val z0 = perms._1.map(z => head0 + head1 + z)
-        val z1 = perms._2.map(z => head0 + z + head1)
-        val result = (z0 ++ z1).map(z => Integer.parseInt(z, 2))
-        myPrintln(z0,z1)
-        myPrintln(length, perms, "\n" + result, "\n" + result.sum)
+        val rep0 = (1 to length).map(z => "0").mkString
+        val rep1 = (1 to length).map(z => "1").mkString
+        val root = (1 to ((tl / 2) - (length + 3))).map(z => "10").mkString + "11"
+        myPrintln(length, root, rep0, rep1)
+        // u=rep1, v=u0, w=0u0
+        val zu0 = (root + "v" + 0).permutations.toList
+        val z0u = (root + "v" + 0).permutations.toList
+        val z0u0 = (root + "w").permutations.toList
+        printIt(zu0)
+        printIt(z0u)
+        printIt(z0u0)
+        //myPrintln(length, perms, "\n" + result, "\n" + result.sum)
     }
 
     def generatePotentialSolutions(length: Int) {
