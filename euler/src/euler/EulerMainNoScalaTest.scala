@@ -52,8 +52,7 @@ class Euler265 {
     doZeStuff("01010101", 3)
     generatePotentialSolutions(3)
     generatePotentialSolutions2(3)
-    generatePotentialSolutions(4)
-    generatePotentialSolutions2(4)
+    doZeJob(4)
 
     def combperm(s: String, length: Int) = s.combinations(length).toList.map(_.permutations.toList)
     def rotations(s: String, length: Int) = {
@@ -72,20 +71,36 @@ class Euler265 {
         result
     }
 
-    def generatePotentialSolutions2(length: Int) {
+    def doZeJob(length: Int) = {
+        val sz = (1 to length).map(z => "01").mkString
+        val cp = combperm(sz, length)
+        val cpf = cp.flatten.sorted
+        myPrintln(length+ "***************************************")
+        printIt(cpf)
+            def checkZeStuff(s: String) = {
+                val r = rotations(s, length)
+                val result = (r.intersect(cpf).sorted == cpf && r.length == cpf.length)
+                myPrintDln("\n  " + r, "\n  " + r.sorted, "\n  " + (ListSet.empty[String] ++ r.sorted), "\n  " + s, result)
+                result
+            }
+        val potsol = generatePotentialSolutions2(length).filter(checkZeStuff(_))
+        myPrintln(length, potsol.mkString("\n"))
+    }
+
+    def generatePotentialSolutions2(length: Int) = {
         val tl = Math.pow(2, length).toInt
         val rep0 = (1 to length).map(z => "0").mkString
         val rep1 = (1 to length).map(z => "1").mkString
         val root = (1 to ((tl / 2) - (length + 3))).map(z => "10").mkString + "11"
-        myPrintln(length, root, rep0, rep1)
+        myPrintln(length, tl, root, rep0, rep1)
         // u=rep1, v=u0, w=0u0
-        val zu0 = (root + "v" + 0).permutations.toList
-        val z0u = (root + "v" + 0).permutations.toList
-        val z0u0 = (root + "w").permutations.toList
-        printIt(zu0)
-        printIt(z0u)
-        printIt(z0u0)
-        //myPrintln(length, perms, "\n" + result, "\n" + result.sum)
+        val zu0 = (root + "v" + 0).permutations.toList.map(z => rep0 + z.replaceAll("v", rep1 + "0"))
+        val z0u = (root + "w" + 0).permutations.toList.map(z => rep0 + z.replaceAll("w", "0" + rep1))
+        val z0u0 = (root + "x").permutations.toList.map(z => rep0 + z.replaceAll("x", "0" + rep1 + "0"))
+        myPrintln(rep1 + "0", zu0.length, zu0)
+        myPrintln("0" + rep1, z0u.length, z0u)
+        myPrintln("0" + rep1 + "0", z0u0.length, z0u0)
+        zu0 ++ z0u ++ z0u0
     }
 
     def generatePotentialSolutions(length: Int) {
