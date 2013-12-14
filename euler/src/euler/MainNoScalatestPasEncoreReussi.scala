@@ -25,6 +25,7 @@ object MainNoScalatestPasEncoreReussi extends App {
     new Euler133
     new Euler191
     new Euler241
+    new Euler266
     new Euler448
 }
 
@@ -237,6 +238,35 @@ class Euler191 {
         } else {
             0
         }
+    }
+}
+
+class Euler266 {
+    val premiers = EulerPrime.premiers1000
+    printIt(Math.pow(2, 1.0 / 2))
+    (2 to 19).foreach(z => myAssert2(doZeJob1(z), doZeJob2(z)))
+
+    def doZeJob2(n: Int) = {
+        val primes = premiers.take(n).toList
+        val plend2 = primes.length / 2
+        val divs = (primes.combinations(plend2 - 1) ++ primes.combinations(plend2) ++ primes.combinations(plend2 + 1)).toList.map(_.product).sorted
+        val sqrt = primes.map(z => Math.sqrt(z.doubleValue)).product
+        val psr = divs.takeWhile(_.doubleValue < sqrt).last
+        val psrprimes = new EulerDiv(psr).primes
+        val repartition = psrprimes.partition(_ < primes.last / 2)
+        myPrintDln(n, plend2, primes.last, "%1.0f".format(sqrt), "%1.0f".format(sqrt - psr.doubleValue), divs.length, psr, psrprimes, repartition._1.length, repartition._2.length, psrprimes.length)
+        myAssert(Math.abs(repartition._1.length - repartition._2.length) < 5)
+        psr
+    }
+
+    def doZeJob1(n: Int) = {
+        val primes = premiers.take(n).toList
+        val divs = new EulerDivisors(primes).divisors
+        val sqrt = primes.map(z => Math.sqrt(z.doubleValue)).product
+        val psr = divs.takeWhile(_.doubleValue < sqrt).last
+        val psrprimes = new EulerDiv(psr).primes
+        //myPrintDln(n, primes.last, "%1.0f".format(sqrt), "%1.0f".format(sqrt - psr.doubleValue), divs.length, psr, psrprimes, psrprimes.length)
+        psr
     }
 }
 
