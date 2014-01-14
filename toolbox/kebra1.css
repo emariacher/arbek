@@ -1,0 +1,15 @@
+<style>
+body{ background-color:#e0e0e0;}
+h1{ color:orange; text-align:center; }
+p { font-family:"Times New Roman"; font-size:20px; color:darkgreen; }
+.trINFO { background-color:#d0e0d0; text-align:right; }
+.trWARN { background-color:#ffe6ff; text-align:right; }
+.trFATAL { background-color:#ffe6e6; text-align:right; }
+.trDEBUG { text-align:right; }
+.tdINFO { font-weight:bold; width:2000px; text-align:left; }
+.tdWARN { font-weight:bold; width:2000px; text-align:left; color:#ff00ff;}
+.tdFATAL { font-weight:bold; width:2000px; text-align:left; color:#ff0000;}
+.tdDEBUG { width:2000px; text-align:left; }
+.sourcelink  { width:500px; }
+#tests { width: 1500px; height: 10px; }
+</style>
