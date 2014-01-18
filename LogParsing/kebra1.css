@@ -1,0 +1,18 @@
+<style>
+body{ background-color:#e0e0e0;}
+h1{ color:orange; text-align:center; }
+p { font-family:"Times New Roman"; font-size:20px; color:darkgreen; }
+tr { font-family:"Courier New", Courier, monospace; text-align:right; }
+.trINFO { background-color:#d0e0d0; }
+.trWARN { background-color:#ffe6ff; }
+.trFATAL { background-color:#ffe6e6; }
+.trERROR { background-color:#ffe6e6; }
+td[class*="td"] { width:2000px; text-align:left; }
+td[class$="dup"] { font-style:italic; font-size:80%; }
+.tdINFO { font-weight:bold; }
+.tdWARN { font-weight:bold; color:#ff00ff;}
+.tdFATAL { font-weight:bold; color:#ff0000;}
+.tdERROR { font-weight:bold; color:#ff0000;}
+.sourcelink  { width:500px; }
+#tests { width: 1500px; height: 10px; }
+</style>
