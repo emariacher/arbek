@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="http://dojotoolkit.org/reference-guide/1.9/_static/js/dijit/themes/claro/claro.css" />
+<style type="text/css">body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }</style>
+<script>dojoConfig = {async: true}</script>
+<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.2/dojo/dojo.js"></script>
+<script>require([
+"dojo/_base/window", "dojo/store/Memory","dijit/tree/ObjectStoreModel", "dijit/Tree","dojo/domReady!"
+], function(win, Memory, ObjectStoreModel, Tree){
+var myStore = new Memory({
+data: [
+{ "id": "world", "name":"Tests", "type":"title"},
+  { "id": "ControllerTests", "name":"ControllerTests", "parent":"world", "type":"title0"},
+    { "id": "ControllerTests_SystemTests", "name":"SystemTests", "parent":"ControllerTests", "type":"title1"},
+      { "type":"test2", "name":"ZobiLaMouche_FmGmrToggleButton", "parent":"ControllerTests_SystemTests", "id": "ControllerTests_SystemTests_ZobiLaMouche_FmGmrToggleButton"},
+      { "id": "ControllerTests_SystemTests_UseCaseMonaural", "name":"UseCaseMonaural", "parent":"ControllerTests_SystemTests", "type":"title2"},
+        { "type":"test3", "name":"FmGmrToggleButton", "parent":"ControllerTests_SystemTests_UseCaseMonaural", "id": "ControllerTests_SystemTests_UseCaseMonaural_FmGmrToggleButton"},
+        { "type":"test3", "name":"FmGmrTriggersPriorities", "parent":"ControllerTests_SystemTests_UseCaseMonaural", "id": "ControllerTests_SystemTests_UseCaseMonaural_FmGmrTriggersPriorities"},
+    { "type":"test1", "name":"ZobiLaMouche_FmGmrToggleButton", "parent":"ControllerTests", "id": "ControllerTests_ZobiLaMouche_FmGmrToggleButton"},
+    { "type":"test1", "name":"Zarbi_UseCaseMonaural_FmGmrTriggersPriorities", "parent":"ControllerTests", "id": "ControllerTests_Zarbi_UseCaseMonaural_FmGmrTriggersPriorities"},
+],
+        getChildren: function(object){
+            return this.query({parent: object.id});
+        }
+    });
+
+    // Create the model
+    var myModel = new ObjectStoreModel({
+        store: myStore,
+        query: {
+            id: 'world'
+        }
+    });
+
+    // Create the Tree.
+    var tree = new Tree({
+        model: myModel,
+        onClick: function (item) {
+            console.log("menuItem1: " + item.id)
+            menuItem = item.id
+
+            if (menuItem.length > 0) {
+                console.log("1 menuItem: " + menuItem)
+                divtest = document.getElementById(menuItem);
+                console.log("1 divtest: " + divtest)
+                divs = document.getElementsByTagName("DIV");
+                if (divtest != null) {
+                    for (i = 0; i < divs.length; i++) {
+                        if (divs[i].id.length == 0) {} else if (divs[i].id.indexOf("dijit") == 0) {} else if (divs[i].id.indexOf("mytree") == 0) {} else {
+                            divs[i].style.display = "none";
+                        }
+                    }
+                    divtest.style.display = "block";
+                    menuItem = "#" + menuItem
+                } else {
+                    for (i = 0; i < divs.length; i++) {
+						if(divs[i].id.length>1)
+						{
+							console.log("divs[" + i + "]: " + divs[i].id)
+							if(divs[i].id.indexOf(menuItem)==0) {
+								divs[i].style.display = "block";
+							} else if(divs[i].id.indexOf("dijit")==0){
+								divs[i].style.display = "block";
+							} else {
+								divs[i].style.display = "none";
+							}
+						} else {
+							divs[i].style.display = "block";
+						}
+                    }
+                    menuItem = ""
+                }
+            }
+        }
+    });
+    tree.placeAt(win.body(), "first");
+    tree.startup();
+});	
+</script>
+<title>Ceci est un titre 3</title>
+<style>
+body{ background-color:#e0e0e0;}
+h1{ color:orange; text-align:center; }
+p { font-family:"Times New Roman"; font-size:20px; color:darkgreen; }
+tr { font-family:"Courier New", Courier, monospace; text-align:right; }
+.trINFO { background-color:#d0e0d0; }
+.trWARN { background-color:#ffe6ff; }
+.trFATAL { background-color:#ffe6e6; }
+.trERROR { background-color:#ffe6e6; }
+td[class*="td"] { width:2000px; text-align:left; }
+td[class$="dup"] { font-style:italic; font-size:80%; }
+.tdINFO { font-weight:bold; }
+.tdWARN { font-weight:bold; color:#ff00ff;}
+.tdFATAL { font-weight:bold; color:#ff0000;}
+.tdERROR { font-weight:bold; color:#ff0000;}
+.sourcelink  { width:500px; }
+#tests { width: 1500px; height: 10px; }
+</style>
+<script>
+require(["dijit/form/TextBox", "dojo/domReady!"], function(TextBox){
+  var C_Files = new TextBox({ name: "C_Files", value: "",
+ placeHolder: "type in filtering string 4 C_Files", onChange: function(filter){
+    console.log("filterC_Files 2[" + filter+"]");
+    tr = document.getElementsByTagName("tr");
+    if(filter.length==0) {
+      for (i = 0; i < tr.length; i++) {
+         tr[i].style.display = "table-row";
+    }} else {
+      for (i = 0; i < tr.length; i++) {
+         if(tr[i].className.length<2) {
+           tr[i].style.display = "table-row";
+         } else {
+           if(tr[i].cells[2].innerHTML.indexOf(filter)>=0) {
+             tr[i].style.display = "table-row";
+           } else {
+             tr[i].style.display = "none";
+           }
+         }
+      }
+    }}}, "C_Files");
+});</script>
+
+
+<script>
+require(["dijit/form/TextBox", "dojo/domReady!"], function(TextBox){
+  var LogMsg = new TextBox({ name: "LogMsg", value: "",
+ placeHolder: "type in filtering string 4 LogMsg", onChange: function(filter){
+    console.log("filterLogMsg 4[" + filter+"]");
+    tr = document.getElementsByTagName("tr");
+    if(filter.length==0) {
+      for (i = 0; i < tr.length; i++) {
+         tr[i].style.display = "table-row";
+    }} else {
+      for (i = 0; i < tr.length; i++) {
+         if(tr[i].className.length<2) {
+           tr[i].style.display = "table-row";
+         } else {
+           if(tr[i].cells[4].innerHTML.indexOf(filter)>=0) {
+             tr[i].style.display = "table-row";
+           } else {
+             tr[i].style.display = "none";
+           }
+         }
+      }
+    }}}, "LogMsg");
+});</script>
+
+<script>
+require(["dijit/form/CheckBox", "dojo/domReady!"], function(CheckBox){
+  var chkboxINFO = new CheckBox({ name: "chkboxINFO", checked: true, onChange: function(b){
+    trs = document.getElementsByClassName("trINFO");
+    if(b) {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "table-row";
+    }} else {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "none";
+    }}}}, "chkboxINFO");
+  var chkboxDEBUG = new CheckBox({ name: "chkboxDEBUG", checked: true, onChange: function(b){
+    trs = document.getElementsByClassName("trDEBUG");
+    if(b) {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "table-row";
+    }} else {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "none";
+    }}}}, "chkboxDEBUG");
+  var chkboxTRACE = new CheckBox({ name: "chkboxTRACE", checked: true, onChange: function(b){
+    trs = document.getElementsByClassName("trTRACE");
+    if(b) {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "table-row";
+    }} else {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "none";
+    }}}}, "chkboxTRACE");
+  var chkboxERROR = new CheckBox({ name: "chkboxERROR", checked: true, onChange: function(b){
+    trs = document.getElementsByClassName("trERROR");
+    if(b) {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "table-row";
+    }} else {
+      for (i = 0; i < trs.length; i++) {
+         trs[i].style.display = "none";
+    }}}}, "chkboxERROR");
+});</script>
+</head><body class="claro">
+<p>Here!</p>
+
+<table border= "1"><tr>
+  <td><input id="C_Files" /> <label for="C_Files">C_Files</label></td>
+  <td><input id="LogMsg" /> <label for="LogMsg">LogMsg</label></td>
+<td><button>Filter!</button></td></tr></table>
+
+<table border= "1"><tr>
+  <td class="tdINFO"><input id="chkboxINFO" /> <label for="chkboxINFO">INFO</label></td>
+  <td class="tdDEBUG"><input id="chkboxDEBUG" /> <label for="chkboxDEBUG">DEBUG</label></td>
+  <td class="tdTRACE"><input id="chkboxTRACE" /> <label for="chkboxTRACE">TRACE</label></td>
+  <td class="tdERROR"><input id="chkboxERROR" /> <label for="chkboxERROR">ERROR</label></td>
+</tr></table>
+<div id="ControllerTests_SystemTests_UseCaseMonaural_FmGmrToggleButton">
+<h2>ControllerTests.SystemTests.UseCaseMonaural.FmGmrToggleButton : Error</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>115</td><td/><td/><td class="tdINFOdup">PowerOn Reset</td></tr>
+  <tr class="trDEBUG"><td></td><td>115</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trTRACE"><td>14:08:04</td><td>592</td><td><a href="Domain/BinaeMachine_hlp.c">Domain/BinaeMachine_hlp.c</a></td><td>111</td><td class="tdTRACE">Q_INIT_SIG: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trERROR"><td>15:17:26</td><td>119</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_SystemTests_UseCaseMonaural_FmGmrTriggersPriorities">
+<h2>ControllerTests.SystemTests.UseCaseMonaural.FmGmrTriggersPriorities : NOGOOD</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>628</td><td/><td/><td class="tdINFOdup">Performing safe reset with normal (full) boot </td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Reset VdigStd/Mem to default</td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trTRACE"><td>14:08:04</td><td>592</td><td><a href="Domain/BinaeMachine_hlp.c">Domain/BinaeMachine_hlp.c</a></td><td>111</td><td class="tdTRACE">Q_INIT_SIG: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trTRACE"><td></td><td>592</td><td/><td>313</td><td class="tdTRACE">Q_INIT_S1G: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_232ms_532us</td><td/><td/><td class="tdDefault">MultiFrameSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_252ms_749us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_252ms_793us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_252ms_660us</td><td/><td/><td class="tdDefault">DataSlaveToMaster - <-ind-- PowerStateChanged:                    0B 0A A0                  86 01 04 00 00 00 00 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">powerState = APP_RUNNING,                                                      01 00 00 00 $ assertCode = NONE,                                                              $ assertAddress = 0x00000000,                                                     $ marconiStatus = HAPI_MARCONI_STATUS_REGISTER_T = {                              $ val = 0x00000001,                                                             $ fields = {                                                                    $ smiWakeupSmiCs = 1,                                                         $ smiWakeupSmiUbs = 0,                                                        $ spiWakeup = 0,                                                              $ sleepTimer = 0,                                                             $ smiReset = 0,                                                               $ bodVcore = 0,                                                               $ bodVmem = 0,                                                                $ watchdog = 0,                                                               $ limiter = 0,                                                                $ csReady = 0,                                                                $ reserved = 0,                                                               $ persistentDataVersionNotEqual = 0,                                          $ persistentDataInvalid = 0,                                                  $ remoteOn = 0,                                                               $ hostAssert = 0,                                                             $ invalidImage = 0,                                                           $ invalidUlpFile = 0,                                                         $ invalidUlpScratchSignature = 0}                                            </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2483s_254ms_526us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> Read:                                 07 0A A0                  8A 87 04 00 1A 01 14 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">length = 0x04,                                                                  $ res = 0x00,                                                                     $ address = 0x0014011A                                                           </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2483s_262ms_967us</td><td/><td/><td class="tdDefault">DataSlaveToMaster - <-conf- Read:                                 07 0A A0                  8B 87 00 04 E0 01 3F 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">err = OK,                                                                       $ length = 0x04,                                                                  $ data = [hex] E0-01-3F-00                                                       </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2483s_263ms_57us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trINFO"><td>14:08:04</td><td>493</td><td><a href="Main/main_hlp.c">Main/main_hlp.c</a></td><td>504</td><td class="tdINFO">BOOT(0x39): Preparing HLP (AA-01-23)</td></tr>
+  <tr class="trDEBUG"><td>15:17:26</td><td>628</td><td/><td/><td class="tdDEBUG">For device #0, connect to serial number 58004688</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_8ms_169us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_11ms_15us</td><td/><td/><td class="tdDefault">MultiFrameSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_98ms_849us</td><td/><td/><td class="tdDefault">AdapterUnsyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_740ms_683us</td><td/><td/><td class="tdDefault">AdapterSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_740ms_702us</td><td/><td/><td class="tdDefault">AdapterSniffing</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_745ms_15us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> ChangeNetworkingState:                03 0A A0                  9C C5 00 02</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">res = 0x00,                                                                     $ networkingState = BEACONING                                                    </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_745ms_570us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> SendCtrlData:                         12 0A A0                  A8 C4 00 0B 01 01 0A 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">res = 0x00,                                                                    02 03 00 86 80 80 80 00 $ length = 0x0B,                                                                 00 00 02 $ destAddr = 0x01,                                                                $ ackPolicy = ACKNOWLEDGED,                                                       $ retries = 0x0A,                                                                 $ sharedChannelUse = PRIVATE,                                                     $ data = [hex] 02-03-00-86-80-80-80-00-00-00-02;                                 </td></tr></table></tr>
+  <tr class="trERROR"><td>15:17:26</td><td>633</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_SystemTests_ZobiLaMouche_FmGmrToggleButton">
+<h2>ControllerTests.SystemTests.ZobiLaMouche.FmGmrToggleButton : Error</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>115</td><td/><td/><td class="tdINFOdup">PowerOn Reset</td></tr>
+  <tr class="trDEBUG"><td></td><td>115</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trERROR"><td></td><td>119</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_800ms_47us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_800ms_513us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> SetWss:                               07 0A A0                  9E BD 00 00 00 25 00 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">wssInfo = HIBAN_WSS_INFO_T = {                                                  $ val = 0x0000,                                                                 $ fields = {                                                                    $ id = NONE,                                                                  $ fillLevel = 0,                                                              $ priority = 0,                                                               $ isSource = FALSE,                                                           $ isDestination = FALSE,                                                      $ ready = FALSE}                                                              $ res = 0x00,                                                                     $ token = 0x25,                                                                   $ updateTs = DO_NOT_UPDATE,                                                       $ fillLevel = 0x00                                                               </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_801ms_471us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_800ms_513us</td><td/><td/><td class="tdDefault">DataMasterToSlave - null</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">wssInfo = HIBAN_WSS_INFO_T = {                                                  $ val = 0x0000,                                                                 $ fields = {                                                                    $ id = NONE,                                                                  $ fillLevel = 0,                                                              $ priority = 0,                                                               $ isSource = FALSE,                                                           $ isDestination = FALSE,                                                      $ ready = FALSE}                                                              $ res = 0x00,                                                                     $ token = 0x25,                                                                   $ updateTs = DO_NOT_UPDATE,                                                       $ fillLevel = 0x00                                                               </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_801ms_471us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_802ms_893us</td><td/><td/><td class="tdDefault">MultiFrameSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_810ms_612us</td><td/><td/><td class="tdDefault">DataSlaveToMaster - <-conf- SetWss:                               02 0A A0                  9F BD 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">err = OK                                                                       </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_836us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_902us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_903us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_904us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_909us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_901us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_905us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_906us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_907us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_908us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_Zarbi_UseCaseMonaural_FmGmrTriggersPriorities">
+<h2>ControllerTests.Zarbi.UseCaseMonaural.FmGmrTriggersPriorities : Good</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>628</td><td/><td/><td class="tdINFOdup">Performing safe reset with normal (full) boot </td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Reset VdigStd/Mem to default</td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUG">For device #0, connect to serial number 58004688</td></tr>
+  <tr class="trERROR"><td></td><td>633</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_ZobiLaMouche_FmGmrToggleButton">
+<h2>ControllerTests.ZobiLaMouche.FmGmrToggleButton : Error</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>115</td><td/><td/><td class="tdINFO">Unique head line</td></tr>
+  <tr class="trDEBUG"><td></td><td>115</td><td/><td/><td class="tdDEBUG">Opening device #0 for WriteMem</td></tr>
+  <tr class="trTRACE"><td>14:08:04</td><td>592</td><td><a href="Domain/BinaeMachine_hlp.c">Domain/BinaeMachine_hlp.c</a></td><td>111</td><td class="tdTRACE">Q_INIT_SIG: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trERROR"><td>15:17:26</td><td>119</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+</body></html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<title>Ceci est un titre 1</title>
+<link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.common.min.css" rel="stylesheet" />
+<link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.default.min.css" rel="stylesheet" />
+<script src="http://cdn.kendostatic.com/2013.3.1119/js/jquery.min.js"></script>
+<script src="http://cdn.kendostatic.com/2013.3.1119/js/kendo.all.min.js"></script>
+<style>
+body{ background-color:#e0e0e0;}
+h1{ color:orange; text-align:center; }
+p { font-family:"Times New Roman"; font-size:20px; color:darkgreen; }
+tr { font-family:"Courier New", Courier, monospace; text-align:right; }
+.trINFO { background-color:#d0e0d0; }
+.trWARN { background-color:#ffe6ff; }
+.trFATAL { background-color:#ffe6e6; }
+.trERROR { background-color:#ffe6e6; }
+td[class*="td"] { width:2000px; text-align:left; }
+td[class$="dup"] { font-style:italic; font-size:80%; }
+.tdINFO { font-weight:bold; }
+.tdWARN { font-weight:bold; color:#ff00ff;}
+.tdFATAL { font-weight:bold; color:#ff0000;}
+.tdERROR { font-weight:bold; color:#ff0000;}
+.sourcelink  { width:500px; }
+#tests { width: 1500px; height: 10px; }
+</style></head><body>
+<p>Here!</p>
+
+<div id="example" class="k-content">
+<div id="tests">
+<div id="tabstrip">
+<ul>
+  <li class="k-state-active">ControllerTests.SystemTests.UseCaseMonaural.FmGmrToggleButton</li>
+  <li>ControllerTests.SystemTests.UseCaseMonaural.FmGmrTriggersPriorities</li>
+  <li>ControllerTests.SystemTests.ZobiLaMouche.FmGmrToggleButton</li>
+  <li>ControllerTests.Zarbi.UseCaseMonaural.FmGmrTriggersPriorities</li>
+  <li>ControllerTests.ZobiLaMouche.FmGmrToggleButton</li>
+</ul><div id="ControllerTests_SystemTests_UseCaseMonaural_FmGmrToggleButton">
+<h2>ControllerTests.SystemTests.UseCaseMonaural.FmGmrToggleButton : Error</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>115</td><td/><td/><td class="tdINFOdup">PowerOn Reset</td></tr>
+  <tr class="trDEBUG"><td></td><td>115</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trTRACE"><td>14:08:04</td><td>592</td><td><a href="Domain/BinaeMachine_hlp.c">Domain/BinaeMachine_hlp.c</a></td><td>111</td><td class="tdTRACE">Q_INIT_SIG: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trERROR"><td>15:17:26</td><td>119</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_SystemTests_UseCaseMonaural_FmGmrTriggersPriorities">
+<h2>ControllerTests.SystemTests.UseCaseMonaural.FmGmrTriggersPriorities : NOGOOD</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>628</td><td/><td/><td class="tdINFOdup">Performing safe reset with normal (full) boot </td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Reset VdigStd/Mem to default</td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trTRACE"><td>14:08:04</td><td>592</td><td><a href="Domain/BinaeMachine_hlp.c">Domain/BinaeMachine_hlp.c</a></td><td>111</td><td class="tdTRACE">Q_INIT_SIG: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trTRACE"><td></td><td>592</td><td/><td>313</td><td class="tdTRACE">Q_INIT_S1G: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_232ms_532us</td><td/><td/><td class="tdDefault">MultiFrameSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_252ms_749us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_252ms_793us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2483s_252ms_660us</td><td/><td/><td class="tdDefault">DataSlaveToMaster - <-ind-- PowerStateChanged:                    0B 0A A0                  86 01 04 00 00 00 00 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">powerState = APP_RUNNING,                                                      01 00 00 00 $ assertCode = NONE,                                                              $ assertAddress = 0x00000000,                                                     $ marconiStatus = HAPI_MARCONI_STATUS_REGISTER_T = {                              $ val = 0x00000001,                                                             $ fields = {                                                                    $ smiWakeupSmiCs = 1,                                                         $ smiWakeupSmiUbs = 0,                                                        $ spiWakeup = 0,                                                              $ sleepTimer = 0,                                                             $ smiReset = 0,                                                               $ bodVcore = 0,                                                               $ bodVmem = 0,                                                                $ watchdog = 0,                                                               $ limiter = 0,                                                                $ csReady = 0,                                                                $ reserved = 0,                                                               $ persistentDataVersionNotEqual = 0,                                          $ persistentDataInvalid = 0,                                                  $ remoteOn = 0,                                                               $ hostAssert = 0,                                                             $ invalidImage = 0,                                                           $ invalidUlpFile = 0,                                                         $ invalidUlpScratchSignature = 0}                                            </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2483s_254ms_526us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> Read:                                 07 0A A0                  8A 87 04 00 1A 01 14 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">length = 0x04,                                                                  $ res = 0x00,                                                                     $ address = 0x0014011A                                                           </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2483s_262ms_967us</td><td/><td/><td class="tdDefault">DataSlaveToMaster - <-conf- Read:                                 07 0A A0                  8B 87 00 04 E0 01 3F 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">err = OK,                                                                       $ length = 0x04,                                                                  $ data = [hex] E0-01-3F-00                                                       </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2483s_263ms_57us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trINFO"><td>14:08:04</td><td>493</td><td><a href="Main/main_hlp.c">Main/main_hlp.c</a></td><td>504</td><td class="tdINFO">BOOT(0x39): Preparing HLP (AA-01-23)</td></tr>
+  <tr class="trDEBUG"><td>15:17:26</td><td>628</td><td/><td/><td class="tdDEBUG">For device #0, connect to serial number 58004688</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_8ms_169us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_11ms_15us</td><td/><td/><td class="tdDefault">MultiFrameSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_98ms_849us</td><td/><td/><td class="tdDefault">AdapterUnsyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_740ms_683us</td><td/><td/><td class="tdDefault">AdapterSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_740ms_702us</td><td/><td/><td class="tdDefault">AdapterSniffing</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_745ms_15us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> ChangeNetworkingState:                03 0A A0                  9C C5 00 02</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">res = 0x00,                                                                     $ networkingState = BEACONING                                                    </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_745ms_570us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> SendCtrlData:                         12 0A A0                  A8 C4 00 0B 01 01 0A 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">res = 0x00,                                                                    02 03 00 86 80 80 80 00 $ length = 0x0B,                                                                 00 00 02 $ destAddr = 0x01,                                                                $ ackPolicy = ACKNOWLEDGED,                                                       $ retries = 0x0A,                                                                 $ sharedChannelUse = PRIVATE,                                                     $ data = [hex] 02-03-00-86-80-80-80-00-00-00-02;                                 </td></tr></table></tr>
+  <tr class="trERROR"><td>15:17:26</td><td>633</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_SystemTests_ZobiLaMouche_FmGmrToggleButton">
+<h2>ControllerTests.SystemTests.ZobiLaMouche.FmGmrToggleButton : Error</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>115</td><td/><td/><td class="tdINFOdup">PowerOn Reset</td></tr>
+  <tr class="trDEBUG"><td></td><td>115</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trERROR"><td></td><td>119</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_800ms_47us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_800ms_513us</td><td/><td/><td class="tdDefault">DataMasterToSlave - --req-> SetWss:                               07 0A A0                  9E BD 00 00 00 25 00 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">wssInfo = HIBAN_WSS_INFO_T = {                                                  $ val = 0x0000,                                                                 $ fields = {                                                                    $ id = NONE,                                                                  $ fillLevel = 0,                                                              $ priority = 0,                                                               $ isSource = FALSE,                                                           $ isDestination = FALSE,                                                      $ ready = FALSE}                                                              $ res = 0x00,                                                                     $ token = 0x25,                                                                   $ updateTs = DO_NOT_UPDATE,                                                       $ fillLevel = 0x00                                                               </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_801ms_471us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_800ms_513us</td><td/><td/><td class="tdDefault">DataMasterToSlave - null</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">wssInfo = HIBAN_WSS_INFO_T = {                                                  $ val = 0x0000,                                                                 $ fields = {                                                                    $ id = NONE,                                                                  $ fillLevel = 0,                                                              $ priority = 0,                                                               $ isSource = FALSE,                                                           $ isDestination = FALSE,                                                      $ ready = FALSE}                                                              $ res = 0x00,                                                                     $ token = 0x25,                                                                   $ updateTs = DO_NOT_UPDATE,                                                       $ fillLevel = 0x00                                                               </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_801ms_471us</td><td/><td/><td class="tdDefault">SmiIdle</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_802ms_893us</td><td/><td/><td class="tdDefault">MultiFrameSyncd</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_810ms_612us</td><td/><td/><td class="tdDefault">DataSlaveToMaster - <-conf- SetWss:                               02 0A A0                  9F BD 00</td></tr><td colspan="4" /><td><table border="0"><tr class="trDefault"><td>&nbsp;&nbsp;</td><td class="tdDefault">err = OK                                                                       </td></tr></table></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_836us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_902us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_903us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_904us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_909us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_901us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_905us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_906us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_907us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+  <tr class="trDefault"><td colspan="2">2526s_812ms_908us</td><td/><td/><td class="tdDefault">SmiMasterPushBack</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_Zarbi_UseCaseMonaural_FmGmrTriggersPriorities">
+<h2>ControllerTests.Zarbi.UseCaseMonaural.FmGmrTriggersPriorities : Good</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>628</td><td/><td/><td class="tdINFOdup">Performing safe reset with normal (full) boot </td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Reset VdigStd/Mem to default</td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUGdup">Opening device #0 for WriteMem</td></tr>
+  <tr class="trDEBUG"><td></td><td>628</td><td/><td/><td class="tdDEBUG">For device #0, connect to serial number 58004688</td></tr>
+  <tr class="trERROR"><td></td><td>633</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+
+<div id="ControllerTests_ZobiLaMouche_FmGmrToggleButton">
+<h2>ControllerTests.ZobiLaMouche.FmGmrToggleButton : Error</h2>
+<table border="0">
+  <tr class="trINFO"><td>15:17:26</td><td>115</td><td/><td/><td class="tdINFO">Unique head line</td></tr>
+  <tr class="trDEBUG"><td></td><td>115</td><td/><td/><td class="tdDEBUG">Opening device #0 for WriteMem</td></tr>
+  <tr class="trTRACE"><td>14:08:04</td><td>592</td><td><a href="Domain/BinaeMachine_hlp.c">Domain/BinaeMachine_hlp.c</a></td><td>111</td><td class="tdTRACE">Q_INIT_SIG: bc_qsSm_super (AA-00-CF)</td></tr>
+  <tr class="trERROR"><td>15:17:26</td><td>119</td><td/><td/><td class="tdERROR">Error on opening J-Link: "Can not connect to J-Link via USB."</td></tr>
+</table>
+</div>
+
+</div>
+</div>
+
+<script>
+  $(document).ready(function() {$("#tabstrip").kendoTabStrip({animation: { open: { effects: "fadeIn"}}});});
+</script></div>
+</body></html>
