@@ -14,12 +14,17 @@ object MainLogParsing extends App {
     println("Hello World!")
 
     val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString
-    val lines = clipboard.split("\n").toList
+    var lines = clipboard.split("\n").toList
+
+    if (lines.length < 10) {
+        lines = copyFromFile("log2.log").split("\n").toList.map(s => s.substring(0, s.length - 1))
+    }
 
     val tests = LineDeux.getTests2(lines)
     new DetectBoot(tests)
     toFileAndDisplay("tests_"+new SimpleDateFormat("ddMMMyy_HH_mm").format(Calendar.getInstance.getTime)+"_1.html", toStringHtml1(tests))
     toFileAndDisplay("tests_"+new SimpleDateFormat("ddMMMyy_HH_mm").format(Calendar.getInstance.getTime)+"_2.html", toStringHtml2(tests))
+    toFileAndDisplay("tests_"+new SimpleDateFormat("ddMMMyy_HH_mm").format(Calendar.getInstance.getTime)+"_3.html", toStringHtml3(tests))
 
     def toStringHtml1(lt: List[Test2]) = {
         var out = "<!DOCTYPE html>\n<html>\n"
@@ -61,6 +66,97 @@ object MainLogParsing extends App {
         out
     }
 
+    def toStringHtml3(lt: List[Test2]) = {
+        val lFilterNames = List(("C_Files", 2), ("LogMsg", 4))
+        var out = "<!DOCTYPE html>\n<html>\n"
+        out += "<head>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dojotoolkit.org/reference-guide/1.9/_static/js/dijit/themes/claro/claro.css\" />\n"
+        out += "<style type=\"text/css\">body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }</style>\n"
+        out += "<script>dojoConfig = {async: true}</script>\n"
+        out += "<script src=\"http://ajax.googleapis.com/ajax/libs/dojo/1.9.2/dojo/dojo.js\"></script>\n"
+        out += "<script>require([\n"
+        out += "\"dojo/_base/window\", \"dojo/store/Memory\",\"dijit/tree/ObjectStoreModel\", \"dijit/Tree\",\"dojo/domReady!\"\n"
+        out += "], function(win, Memory, ObjectStoreModel, Tree){\n"
+        out += "var myStore = new Memory({\n"
+        out += "data: [\n"
+        out += "{ \"id\": \"world\", \"name\":\"Tests\", \"type\":\"title\"},\n"
+        out += hierarchy3(lt, 0, "world")
+        out += "],\n"
+        out += copyFromFile("htmlheader3.html")
+        out += "\n<title>Ceci est un titre 3</title>\n"
+        out += copyFromFile("kebra1.css")
+        out += lFilterNames.map(f => stringFilterPart1Javascript(f._1, f._2)).mkString("\n")
+        out += getTraceLevelCheckBoxesPart1Javascript(lt)
+        out += "</head><body class=\"claro\">\n"
+        out += "<p>Here!</p>\n"
+        out += stringFilterPart2Html(lFilterNames.map(_._1))
+        out += getTraceLevelCheckBoxesPart2Html(lt)
+        out += lt.map(_.toStringHtml).mkString("\n")
+        out += "</body></html>"
+        out
+    }
+
+    def stringFilterPart1Javascript(name: String, cellIndexInRow: Int) = {
+        var out = "\n<script>\n"
+        out += "require([\"dijit/form/TextBox\", \"dojo/domReady!\"], function(TextBox){\n"
+        out += "  var "+name+" = new TextBox({ name: \""+name+"\", value: \"\",\n placeHolder: \"type in filtering string 4 "+name+"\", onChange: function(filter){\n"
+        out += "    console.log(\"filter"+name+" "+cellIndexInRow+"[\" + filter+\"]\");\n"
+        out += "    tr = document.getElementsByTagName(\"tr\");\n"
+        out += "    if(filter.length==0) {\n"
+        out += "      for (i = 0; i < tr.length; i++) {\n"
+        out += "         tr[i].style.display = \"table-row\";\n"
+        out += "    }} else {\n"
+        out += "      for (i = 0; i < tr.length; i++) {\n"
+        out += "         if(tr[i].className.length<2) {\n"
+        out += "           tr[i].style.display = \"table-row\";\n"
+        out += "         } else {\n"
+        out += "           if(tr[i].cells["+cellIndexInRow+"].innerHTML.indexOf(filter)>=0) {\n"
+        out += "             tr[i].style.display = \"table-row\";\n"
+        out += "           } else {\n"
+        out += "             tr[i].style.display = \"none\";\n"
+        out += "           }\n"
+        out += "         }\n"
+        out += "      }\n"
+        out += "    }}}, \""+name+"\");\n"
+        out += "});</script>\n"
+        out
+    }
+
+    def stringFilterPart2Html(lFilterNames: List[String]) = {
+        var out = "\n<table border= \"1\"><tr>\n"
+        lFilterNames.map(tl => {
+            out += "  <td><input id=\""+tl+"\" /> <label for=\""+tl+"\">"+tl+"</label></td>\n"
+        })
+        out += "<td><button>Filter!</button></td></tr></table>\n"
+        out
+    }
+
+    def getTraceLevelCheckBoxesPart1Javascript(lt: List[Test2]) = {
+        var out = "\n<script>\n"
+        out += "require([\"dijit/form/CheckBox\", \"dojo/domReady!\"], function(CheckBox){\n"
+        lt.flatMap(_.lines.filter(_.traceLevel != "None").map(_.traceLevel)).distinct.map(tl => {
+            out += "  var chkbox"+tl+" = new CheckBox({ name: \"chkbox"+tl+"\", checked: true, onChange: function(b){\n"
+            out += "    trs = document.getElementsByClassName(\"tr"+tl+"\");\n"
+            out += "    if(b) {\n"
+            out += "      for (i = 0; i < trs.length; i++) {\n"
+            out += "         trs[i].style.display = \"table-row\";\n"
+            out += "    }} else {\n"
+            out += "      for (i = 0; i < trs.length; i++) {\n"
+            out += "         trs[i].style.display = \"none\";\n"
+            out += "    }}}}, \"chkbox"+tl+"\");\n"
+        })
+        out += "});</script>\n"
+        out
+    }
+
+    def getTraceLevelCheckBoxesPart2Html(lt: List[Test2]) = {
+        var out = "\n<table border= \"1\"><tr>\n"
+        lt.flatMap(_.lines.filter(_.traceLevel != "None").map(_.traceLevel)).distinct.map(tl => {
+            out += "  <td class=\"td"+tl+"\"><input id=\"chkbox"+tl+"\" /> <label for=\"chkbox"+tl+"\">"+tl+"</label></td>\n"
+        })
+        out += "</tr></table>\n"
+        out
+    }
+
     def hierarchy(lt: List[Test2], depth: Int): String = {
         val indent = (0 to depth).map(z => "  ").mkString
         lt.groupBy(_.path.apply(depth)).map(z => {
@@ -71,6 +167,21 @@ object MainLogParsing extends App {
                 s += indent+"{ \"tidtoc\": \""+z._1+"\", \"msg\":\""+z._1+"\", \"type\":\"title\",\"children\":[\n"
                 s += hierarchy(z._2, depth + 1)
                 s += indent+"]},\n"
+                s
+            }
+        }).mkString
+    }
+
+    def hierarchy3(lt: List[Test2], depth: Int, parent: String): String = {
+        val indent = (0 to depth).map(z => "  ").mkString
+        lt.groupBy(_.path.apply(depth)).map(z => {
+            var s = ""
+            if (z._2.size == 1) {
+                z._2.map(y => indent+"{ \"type\":\"test"+depth+"\", \"name\":\""+y.path.drop(depth).mkString("_")+"\", \"parent\":\""+parent+"\", \"id\": \""+y.name2+"\"},").mkString("\n")+"\n"
+            } else {
+                val myId = z._2.head.path.take(depth + 1).mkString("_")
+                s += indent+"{ \"id\": \""+myId+"\", \"name\":\""+z._1+"\", \"parent\":\""+parent+"\", \"type\":\"title"+depth+"\"},\n"
+                s += hierarchy3(z._2, depth + 1, myId)
                 s
             }
         }).mkString

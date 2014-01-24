@@ -2,7 +2,7 @@ package logparsing
 
 import scala.util.parsing.combinator.JavaTokenParsers
 
-case class LineTest2(val tpe: TokenType, val line: String) extends JavaTokenParsers {
+case class LineTest2(val tpe: TokenType, val line: String, lt3: List[LineTest2]) extends JavaTokenParsers {
     val start = Int.MaxValue
     var name: String = _ // ControllerTests.SystemTests.UseCaseMonaural.Fitting
     var result: String = _ // "Error"
@@ -11,9 +11,10 @@ case class LineTest2(val tpe: TokenType, val line: String) extends JavaTokenPars
     var msg: String = _ // disabled sniffers due to toggling (AA-00-8E)
     var origin: String = _ // [Domain\Binaination_hlp.c]:1172:
     var originl = 0 // Domain\Binaination_hlp.c:[1172]:
-    var side: String = _ // (Left)
+    var side: String = "None" // (Left)
+    var ttype: String = "None" // DataSlaveToMaster
     var lctrl = List[String]()
-    var traceLevel: String = _ // TRACE
+    var traceLevel: String = "None" // TRACE
     var duplicate = false // check if part of a common part at the beginning of each test
     tpe match {
         case TokenType.TestName => name = line
@@ -31,6 +32,13 @@ case class LineTest2(val tpe: TokenType, val line: String) extends JavaTokenPars
             } else {
                 null
             }
+        case TokenType.TestLog2 =>
+            parseAll(ztestline2, line) // (Left-SMI) 2483s 252ms 660us   DataSlaveToMaster (HAPI) <-ind-- PowerStateChanged: 0B 0A A0 86 01 04 00 00 00 00 00
+            if (!lctrl.isEmpty) {
+                ttype = lctrl.head
+            }
+        case TokenType.TestLog3 =>
+            parseAll(ztestline3, line) // (Right-SMI)                                                isDestination = FALSE,
         case _ =>
     }
     System.err.println(toString)
@@ -44,11 +52,24 @@ case class LineTest2(val tpe: TokenType, val line: String) extends JavaTokenPars
     def zoriginl = """\d+""".r ^^ { t => originl = t.toInt } // Domain\Binaination_hlp.c:[1172]:
     def zmsg = """[^\\]+""".r ^^ { t => msg = t } // disabled sniffers due to toggling (AA-00-8E)
 
+    // this is a 2nd test line definition
+    def ztestline2 = zpar ~ ztimeStamp2 ~ zword ~ opt(zpar2 ~ (rep(zmsg2 | zpar2 | ztime | zword)))
+    def zpar = """\(([^\)]+)\)""".r ^^ { t => side = t } // (Left-SMI)
+    def zpar2 = """\(([^\)]+)\)""".r ^^ { t => t } // (HAPI)
+    def ztime = """(\d+[m|u]*s)""".r ^^ { t => t }
+    def ztimeStamp2 = ztime ~ ztime ~ ztime ^^ { t => timeStamp = new TimeStamp(t._1._1+"_"+t._1._2+"_"+t._2) } // 2483s 252ms 749us
+    def zmsg2 = """\S+.*""".r ^^ { t => msg = t.toString } // <-conf- SetWss: 02 0A A0 9F BD 00
+
+    // this is a 3rd test line definition
+    def ztestline3 = zpar ~ zmsg2
+
     override def toString: String = {
         tpe match {
             case TokenType.TestName => "Test ["+name+"]" // ***** ControllerTests.SystemTests.UseCaseMonaural.Fitting
             case TokenType.TestEnd  => "RESULT ["+result+"]" // Test finished in 00:00:01.1727224 seconds with "Error"
-            case TokenType.TestLog  => "Line ["+timeStamp+","+msg+","+side+","+origin+"]" // 14:08:04.592 - TraceLog - TRACE -  UART> (Left) Domain\Binaination_hlp.c:1172: disabled sniffers due to toggling (AA-00-8E)
+            case TokenType.TestLog  => "Line1 ["+timeStamp+","+msg+","+side+","+origin+"]" // 14:08:04.592 - TraceLog - TRACE -  UART> (Left) Domain\Binaination_hlp.c:1172: disabled sniffers due to toggling (AA-00-8E)
+            case TokenType.TestLog2 => line // (Left-SMI) 2483s 252ms 749us   SmiMasterPushBack
+            case TokenType.TestLog3 => line // (Right-SMI)                                                isDestination = FALSE,
             case TokenType.Eof      => "Eof"
         }
     }
@@ -61,6 +82,16 @@ case class LineTest2(val tpe: TokenType, val line: String) extends JavaTokenPars
                     s += "<td class=\"td"+traceLevel+"dup\">"+msg+"</td></tr>" // 14:08:04.592 - TraceLog - TRACE -  UART> (Left) Domain\Binaination_hlp.c:1172: disabled sniffers due to toggling (AA-00-8E)
                 } else {
                     s += "<td class=\"td"+traceLevel+"\">"+msg+"</td></tr>" // 14:08:04.592 - TraceLog - TRACE -  UART> (Left) Domain\Binaination_hlp.c:1172: disabled sniffers due to toggling (AA-00-8E)
+                }
+                s
+            case TokenType.TestLog2 =>
+                var s = "<tr class=\"trDefault\"><td colspan=\"2\">"+timeStamp+"</td><td/><td/>"
+                if (lt3.isEmpty) {
+                    s += "<td class=\"tdDefault\">"+ttype+"</td></tr>" // (Left-SMI) 2483s 252ms 749us   SmiMasterPushBack
+                } else {
+                    s += "<td class=\"tdDefault\">"+ttype+" - "+msg+
+                        "</td></tr><td colspan=\"4\" /><td><table border=\"0\"><tr class=\"trDefault\"><td>&nbsp;&nbsp;</td><td class=\"tdDefault\">"+
+                        lt3.map(_.msg).mkString(" $ ")+"</td></tr></table></tr>" // (Left-SMI) 2483s 252ms 749us   SmiMasterPushBack
                 }
                 s
             case _ => ""

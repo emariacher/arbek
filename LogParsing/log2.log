@@ -1,0 +1,159 @@
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:504: BOOT(0x39): Preparing HLP (AA-01-23)
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:507: BOOT(0x3A): Fully booted and ready to communicate (AA-01-24)
+**********************************************************************************************************************
+***** ControllerTests.SystemTests.UseCaseMonaural.FmGmrToggleButton
+**********************************************************************************************************************
+15:17:26.115 -     Resetter -  INFO - TALIO> (Left) PowerOn Reset
+15:17:26.115 -    JTagJLink - DEBUG - TALIO> (Left) Opening device #0 for WriteMem
+14:08:04.592 -     TraceLog - TRACE -  UART> (Left) Domain\BinaeMachine_hlp.c:111: Q_INIT_SIG: bc_qsSm_super (AA-00-CF)
+15:17:26.119 -    JTagJLink - ERROR - TALIO> Error on opening J-Link: "Can not connect to J-Link via USB."
+Test finished in 00:00:00.3240307 seconds with "Error"
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:504: BOOT(0x39): Preparing HLP (AA-01-23)
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:507: BOOT(0x3A): Fully booted and ready to communicate (AA-01-24)
+* **********************************************************************************************************************
+***** ControllerTests.SystemTests.UseCaseMonaural.FmGmrTriggersPriorities
+**********************************************************************************************************************
+15:17:26.628 -     Resetter -  INFO - TALIO> (Left) Performing safe reset with normal (full) boot 
+15:17:26.628 -     Resetter - DEBUG - TALIO> (Left) Reset VdigStd/Mem to default
+15:17:26.628 -    JTagJLink - DEBUG - TALIO> (Left) Opening device #0 for WriteMem
+14:08:04.592 -     TraceLog - TRACE -  UART> (Left) Domain\BinaeMachine_hlp.c:111: Q_INIT_SIG: bc_qsSm_super (AA-00-CF)
+14:08:04.592 -     TraceLog - TRACE -  UART> (Left) Domain\BinaeMachine_hlp.c:313: Q_INIT_S1G: bc_qsSm_super (AA-00-CF)
+  (Left-SMI) 2483s 232ms 532us   MultiFrameSyncd                                                                                       
+  (Left-SMI) 2483s 252ms 749us   SmiMasterPushBack                                                                                     
+  (Left-SMI) 2483s 252ms 793us   SmiMasterPushBack                                                                                     
+  (Left-SMI) 2483s 252ms 660us   DataSlaveToMaster      (HAPI) <-ind-- PowerStateChanged:                    0B 0A A0                  86 01 04 00 00 00 00 00
+  (Left-SMI)                                            powerState = APP_RUNNING,                                                      01 00 00 00
+  (Left-SMI)                                            assertCode = NONE,                                                             
+  (Left-SMI)                                            assertAddress = 0x00000000,                                                    
+  (Left-SMI)                                            marconiStatus = HAPI_MARCONI_STATUS_REGISTER_T = {                             
+  (Left-SMI)                                              val = 0x00000001,                                                            
+  (Left-SMI)                                              fields = {                                                                   
+  (Left-SMI)                                                smiWakeupSmiCs = 1,                                                        
+  (Left-SMI)                                                smiWakeupSmiUbs = 0,                                                       
+  (Left-SMI)                                                spiWakeup = 0,                                                             
+  (Left-SMI)                                                sleepTimer = 0,                                                            
+  (Left-SMI)                                                smiReset = 0,                                                              
+  (Left-SMI)                                                bodVcore = 0,                                                              
+  (Left-SMI)                                                bodVmem = 0,                                                               
+  (Left-SMI)                                                watchdog = 0,                                                              
+  (Left-SMI)                                                limiter = 0,                                                               
+  (Left-SMI)                                                csReady = 0,                                                               
+  (Left-SMI)                                                reserved = 0,                                                              
+  (Left-SMI)                                                persistentDataVersionNotEqual = 0,                                         
+  (Left-SMI)                                                persistentDataInvalid = 0,                                                 
+  (Left-SMI)                                                remoteOn = 0,                                                              
+  (Left-SMI)                                                hostAssert = 0,                                                            
+  (Left-SMI)                                                invalidImage = 0,                                                          
+  (Left-SMI)                                                invalidUlpFile = 0,                                                        
+  (Left-SMI)                                                invalidUlpScratchSignature = 0}                                            
+  (Left-SMI)                                              }                                                                            
+  (Left-SMI) 2483s 254ms 526us   DataMasterToSlave      (HAPI) --req-> Read:                                 07 0A A0                  8A 87 04 00 1A 01 14 00
+  (Left-SMI)                                            length = 0x04,                                                                 
+  (Left-SMI)                                            res = 0x00,                                                                    
+  (Left-SMI)                                            address = 0x0014011A                                                           
+  (Left-SMI) 2483s 262ms 967us   DataSlaveToMaster      (HAPI) <-conf- Read:                                 07 0A A0                  8B 87 00 04 E0 01 3F 00
+  (Left-SMI)                                            err = OK,                                                                      
+  (Left-SMI)                                            length = 0x04,                                                                 
+  (Left-SMI)                                            data = [hex] E0-01-3F-00                                                       
+  (Left-SMI) 2483s 263ms  57us   SmiMasterPushBack                                                                                     
+
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:504: BOOT(0x39): Preparing HLP (AA-01-23)
+15:17:26.628 -    JTagJLink - DEBUG - TALIO> (Left) For device #0, connect to serial number 58004688
+                                                                                     
+ (Right-SMI) 2526s   8ms 169us   SmiIdle                                                                                               
+ (Right-SMI) 2526s  11ms  15us   MultiFrameSyncd                                                                                       
+ (Right-SMI) 2526s  98ms 849us   AdapterUnsyncd                                                                                        
+  (Left-SMI) 2526s 740ms 683us   AdapterSyncd                                                                                          
+  (Left-SMI) 2526s 740ms 702us   AdapterSniffing                                                                                       
+  (Left-SMI) 2526s 745ms  15us   DataMasterToSlave      (HAPI) --req-> ChangeNetworkingState:                03 0A A0                  9C C5 00 02
+  (Left-SMI)                                            res = 0x00,                                                                    
+  (Left-SMI)                                            networkingState = BEACONING                                                    
+  (Left-SMI) 2526s 745ms 570us   DataMasterToSlave      (HAPI) --req-> SendCtrlData:                         12 0A A0                  A8 C4 00 0B 01 01 0A 00
+  (Left-SMI)                                            res = 0x00,                                                                    02 03 00 86 80 80 80 00
+  (Left-SMI)                                            length = 0x0B,                                                                 00 00 02
+  (Left-SMI)                                            destAddr = 0x01,                                                               
+  (Left-SMI)                                            ackPolicy = ACKNOWLEDGED,                                                      
+  (Left-SMI)                                            retries = 0x0A,                                                                
+  (Left-SMI)                                            sharedChannelUse = PRIVATE,                                                    
+  (Left-SMI)                                            data = [hex] 02-03-00-86-80-80-80-00-00-00-02;                                 
+
+15:17:26.633 -    JTagJLink - ERROR - TALIO> Error on opening J-Link: "Can not connect to J-Link via USB."
+Test finished in 00:00:00.0095908 seconds with "NOGOOD"
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:504: BOOT(0x39): Preparing HLP (AA-01-23)
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:507: BOOT(0x3A): Fully booted and ready to communicate (AA-01-24)
+**********************************************************************************************************************
+***** ControllerTests.SystemTests.ZobiLaMouche.FmGmrToggleButton
+**********************************************************************************************************************
+15:17:26.115 -     Resetter -  INFO - TALIO> (Left) PowerOn Reset
+15:17:26.115 -    JTagJLink - DEBUG - TALIO> (Left) Opening device #0 for WriteMem
+15:17:26.119 -    JTagJLink - ERROR - TALIO> Error on opening J-Link: "Can not connect to J-Link via USB."
+                                                                                    
+ (Right-SMI) 2526s 800ms  47us   SmiIdle                                                                                               
+ (Right-SMI) 2526s 800ms 513us   DataMasterToSlave      (HAPI) --req-> SetWss:                               07 0A A0                  9E BD 00 00 00 25 00 00
+ (Right-SMI)                                            wssInfo = HIBAN_WSS_INFO_T = {                                                 
+ (Right-SMI)                                              val = 0x0000,                                                                
+ (Right-SMI)                                              fields = {                                                                   
+ (Right-SMI)                                                id = NONE,                                                                 
+ (Right-SMI)                                                fillLevel = 0,                                                             
+ (Right-SMI)                                                priority = 0,                                                              
+ (Right-SMI)                                                isSource = FALSE,                                                          
+ (Right-SMI)                                                isDestination = FALSE,                                                     
+ (Right-SMI)                                                ready = FALSE}                                                             
+ (Right-SMI)                                              },                                                                           
+ (Right-SMI)                                            res = 0x00,                                                                    
+ (Right-SMI)                                            token = 0x25,                                                                  
+ (Right-SMI)                                            updateTs = DO_NOT_UPDATE,                                                      
+ (Right-SMI)                                            fillLevel = 0x00                                                               
+ (Right-SMI) 2526s 801ms 471us   SmiIdle                                                                                               
+ (Right-SMI) 2526s 800ms 513us   DataMasterToSlave      _HAPI_ --req-> SetWss:                               07 0A A0                  9E BD 00 00 00 25 00 00
+ (Right-SMI)                                            wssInfo = HIBAN_WSS_INFO_T = {                                                 
+ (Right-SMI)                                              val = 0x0000,                                                                
+ (Right-SMI)                                              fields = {                                                                   
+ (Right-SMI)                                                id = NONE,                                                                 
+ (Right-SMI)                                                fillLevel = 0,                                                             
+ (Right-SMI)                                                priority = 0,                                                              
+ (Right-SMI)                                                isSource = FALSE,                                                          
+ (Right-SMI)                                                isDestination = FALSE,                                                     
+ (Right-SMI)                                                ready = FALSE}                                                             
+ (Right-SMI)                                              },                                                                           
+ (Right-SMI)                                            res = 0x00,                                                                    
+ (Right-SMI)                                            token = 0x25,                                                                  
+ (Right-SMI)                                            updateTs = DO_NOT_UPDATE,                                                      
+ (Right-SMI)                                            fillLevel = 0x00                                                               
+ (Right-SMI) 2526s 801ms 471us   SmiIdle                                                                                               
+ (Right-SMI) 2526s 802ms 893us   MultiFrameSyncd                                                                                       
+ (Right-SMI) 2526s 810ms 612us   DataSlaveToMaster      (HAPI) <-conf- SetWss:                               02 0A A0                  9F BD 00
+ (Right-SMI)                                            err = OK                                                                       
+ (Right-SMI) 2526s 812ms 836us   SmiMasterPushBack      (HAPI) --req-> SetWss:                               07 0A A0                  9E BD 00 00 00 25 00 00                                                                                     
+ (Right-SMI) 2526s 812ms 902us   SmiMasterPushBack      zobi la  mouche                                                                                   
+ (Right-SMI) 2526s 812ms 903us   SmiMasterPushBack      zobi la  mouche    02                                                                               
+ (Right-SMI) 2526s 812ms 904us   SmiMasterPushBack      (HAPI) --req->                                                                               
+ (Right-SMI) 2526s 812ms 909us   SmiMasterPushBack      --req->                                                                               
+ (Right-SMI) 2526s 812ms 901us   SmiMasterPushBack      --req->   (HAPI)                                                                            
+ (Right-SMI) 2526s 812ms 905us   SmiMasterPushBack      (HAPI)                                                                               
+ (Right-SMI) 2526s 812ms 906us   SmiMasterPushBack      (HAPI_                                                                               
+ (Right-SMI) 2526s 812ms 907us   SmiMasterPushBack      _HAPI)                                                                               
+ (Right-SMI) 2526s 812ms 908us   SmiMasterPushBack      _HAPI_                                                                               
+
+Test finished in 00:00:00.3240307 seconds with "Error"
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:504: BOOT(0x39): Preparing HLP (AA-01-23)
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:507: BOOT(0x3A): Fully booted and ready to communicate (AA-01-24)
+* **********************************************************************************************************************
+***** ControllerTests.Zarbi.UseCaseMonaural.FmGmrTriggersPriorities
+**********************************************************************************************************************
+15:17:26.628 -     Resetter -  INFO - TALIO> (Left) Performing safe reset with normal (full) boot 
+15:17:26.628 -     Resetter - DEBUG - TALIO> (Left) Reset VdigStd/Mem to default
+15:17:26.628 -    JTagJLink - DEBUG - TALIO> (Left) Opening device #0 for WriteMem
+15:17:26.628 -    JTagJLink - DEBUG - TALIO> (Left) For device #0, connect to serial number 58004688
+15:17:26.633 -    JTagJLink - ERROR - TALIO> Error on opening J-Link: "Can not connect to J-Link via USB."
+Test finished in 00:00:00.0095908 seconds with "Good"
+**********************************************************************************************************************
+***** ControllerTests.ZobiLaMouche.FmGmrToggleButton
+**********************************************************************************************************************
+15:17:26.115 -     Resetter -  INFO - TALIO> (Left) Unique head line
+15:17:26.115 -    JTagJLink - DEBUG - TALIO> (Left) Opening device #0 for WriteMem
+14:08:04.592 -     TraceLog - TRACE -  UART> (Left) Domain\BinaeMachine_hlp.c:111: Q_INIT_SIG: bc_qsSm_super (AA-00-CF)
+15:17:26.119 -    JTagJLink - ERROR - TALIO> Error on opening J-Link: "Can not connect to J-Link via USB."
+Test finished in 00:00:00.3240307 seconds with "Error"
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:504: BOOT(0x39): Preparing HLP (AA-01-23)
+14:08:04.493 -     TraceLog -  INFO -  UART> (Left) Main\main_hlp.c:507: BOOT(0x3A): Fully booted and ready to communicate (AA-01-24)

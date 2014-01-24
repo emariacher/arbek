@@ -16,6 +16,8 @@ object LineDeux {
     val r_digit = """(\d.+)""".r
     val r_test = """\*\*\*\*\* (.+)""".r // ***** ControllerTests.SystemTests.UseCaseMonaural.Fitting
     val r_testEnd = """Test [^\"]+\"(\w+)\"""".r // Test finished in 00:00:00.0078374 seconds with "Error"
+    val r_par2 = """\s*(\(.+\)\s*\d.+)""".r // (Left-SMI) 2526s 740ms 683us   AdapterSyncd
+    val r_par3 = """\s*(\(.+\)\s*\p{Alpha}.+)""".r // (Left-SMI) assertCode = NONE, 
 
     def getTests2(lines: List[String]): List[Test2] = {
         val l2 = getLines2(lines)
@@ -29,10 +31,12 @@ object LineDeux {
         lines.foreach((si: String) => {
             println(si)
             si match {
-                case r_test(n)    => l2 = l2 :+ new LineTest2(TokenType.TestName, n)
-                case r_digit(s)   => l2 = l2 :+ new LineTest2(TokenType.TestLog, s)
-                case r_testEnd(r) => l2 = l2 :+ new LineTest2(TokenType.TestEnd, r)
-                case _            =>
+                case r_test(n)    => l2 = l2 :+ new LineTest2(TokenType.TestName, n,List.empty[LineTest2])
+                case r_digit(s)   => l2 = l2 :+ new LineTest2(TokenType.TestLog, s,List.empty[LineTest2])
+                case r_par2(s)    => l2 = l2 :+ new LineTest2(TokenType.TestLog2, s,List.empty[LineTest2])
+                case r_par3(s)    => l2 = l2 :+ new LineTest2(TokenType.TestLog3, s,List.empty[LineTest2])
+                case r_testEnd(r) => l2 = l2 :+ new LineTest2(TokenType.TestEnd, r,List.empty[LineTest2])
+                case _            => println("====>["+si+"]")
             }
         })
         l2
@@ -53,7 +57,7 @@ object LineDeux {
                         tokens.next()
                     } else {
                         println("*2* NOGOOD Parsing! ["+msg+"] eof")
-                        new LineTest2(TokenType.Eof, "")
+                        new LineTest2(TokenType.Eof, "",List.empty[LineTest2])
                     }
                 } else {
                     println("*3* NOGOOD Parsing! ["+msg+"] - rest.first: ["+rest.first.toString+"]")
@@ -85,14 +89,16 @@ class StructureCombinators4
     override type Elem = LineTest2
 
     // top level entry point. output will be a Seq[Test2]
-    def program: Parser[Seq[Test2]] = phrase(rep(testDeclaration | linelog)) ^^ { case decs => decs }
-    def tokenType(expected: String, tpe: TokenType): Parser[LineTest2] = acceptMatch(expected, { case t @ LineTest2(`tpe`, _) => t })
+    def program: Parser[Seq[Test2]] = phrase(rep(testDeclaration | line_log)) ^^ { case decs => decs }
+    def tokenType(expected: String, tpe: TokenType): Parser[LineTest2] = acceptMatch(expected, { case t @ LineTest2(`tpe`, _, _) => t })
     def lineTestName: Parser[LineTest2] = tokenType("NAME", TokenType.TestName)
     def lineLog: Parser[LineTest2] = tokenType("LOG", TokenType.TestLog)
+    def lineLog2: Parser[LineTest2] = tokenType("LOG", TokenType.TestLog2) ~ opt(rep(lineLog3)) ^^ { t => new LineTest2(TokenType.TestLog2, t._1.toString, t._2 match { case Some(l) => l }) }
+    def lineLog3: Parser[LineTest2] = tokenType("LOG", TokenType.TestLog3)
     def lineTestEnd: Parser[LineTest2] = tokenType("END", TokenType.TestEnd)
-    def linelog: Parser[Test2] = lineLog ^^ { t => new Test2("", "", List.empty[LineTest2]) }
+    def line_log: Parser[Test2] = lineLog ^^ { t => new Test2("", "", List.empty[LineTest2]) }
     // this is the test structure definition
-    def testDeclaration: Parser[Test2] = (lineTestName ~ rep(lineLog) ~ lineTestEnd) ^^ { t => new Test2(t._1._1.name, t._2.result, t._1._2) }
+    def testDeclaration: Parser[Test2] = (lineTestName ~ rep(lineLog | lineLog2 | lineLog3) ~ lineTestEnd) ^^ { t => new Test2(t._1._1.name, t._2.result, t._1._2) }
 }
 
 abstract sealed trait TokenType
@@ -100,6 +106,8 @@ abstract sealed trait TokenType
 object TokenType {
     case object TestName extends TokenType
     case object TestLog extends TokenType
+    case object TestLog2 extends TokenType
+    case object TestLog3 extends TokenType
     case object TestEnd extends TokenType
     case object Eof extends TokenType
 }

@@ -1,0 +1,58 @@
+        getChildren: function(object){
+            return this.query({parent: object.id});
+        }
+    });
+
+    // Create the model
+    var myModel = new ObjectStoreModel({
+        store: myStore,
+        query: {
+            id: 'world'
+        }
+    });
+
+    // Create the Tree.
+    var tree = new Tree({
+        model: myModel,
+        onClick: function (item) {
+            console.log("menuItem1: " + item.id)
+            menuItem = item.id
+
+            if (menuItem.length > 0) {
+                console.log("1 menuItem: " + menuItem)
+                divtest = document.getElementById(menuItem);
+                console.log("1 divtest: " + divtest)
+                divs = document.getElementsByTagName("DIV");
+                if (divtest != null) {
+                    for (i = 0; i < divs.length; i++) {
+                        if (divs[i].id.length == 0) {} else if (divs[i].id.indexOf("dijit") == 0) {} else if (divs[i].id.indexOf("mytree") == 0) {} else {
+                            divs[i].style.display = "none";
+                        }
+                    }
+                    divtest.style.display = "block";
+                    menuItem = "#" + menuItem
+                } else {
+                    for (i = 0; i < divs.length; i++) {
+						if(divs[i].id.length>1)
+						{
+							console.log("divs[" + i + "]: " + divs[i].id)
+							if(divs[i].id.indexOf(menuItem)==0) {
+								divs[i].style.display = "block";
+							} else if(divs[i].id.indexOf("dijit")==0){
+								divs[i].style.display = "block";
+							} else {
+								divs[i].style.display = "none";
+							}
+						} else {
+							divs[i].style.display = "block";
+						}
+                    }
+                    menuItem = ""
+                }
+            }
+        }
+    });
+    tree.placeAt(win.body(), "first");
+    tree.startup();
+});	
+</script>
