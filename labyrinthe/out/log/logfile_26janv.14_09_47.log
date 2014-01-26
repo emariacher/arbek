@@ -1,0 +1,27 @@
+  fig(1)
+  fig2(2)
+.StatLabyMainApp:95 26_09:47_31,634  empty l: List(41.0)
+StatLabyMainApp:95 26_09:47_31,634  empty l: List(89.0)
+StatLabyMainApp:95 26_09:47_31,634  empty l: List(80.0)
+StatLabyMainApp:95 26_09:47_31,634  empty l: List(39.0)
+StatLabyMainApp:95 26_09:47_31,634  empty l: List(58.0)
+StatLabyMainApp:95 26_09:47_31,634  empty l: List(41.0)
+StatLabyMainApp:50 26_09:47_31,677  
+List(
+  (orange,List()),
+  (bleu,List()),
+  (vertFonce,List()),
+  (bleuClair,List()),
+  (rouge,List()),
+  (vertClair,List())
+)
+....................StatLabyMainApp:50 26_09:47_50,011  
+List(
+  (orange,List(36, 30, 19, 28, 26, 46, 180, 33)),
+  (bleu,List(87, 49, 191, 80, 21, 34, 29, 140, 98)),
+  (vertFonce,List(40, 67, 149, 119, 68, 27, 79, 51, 77)),
+  (bleuClair,List(100, 77, 47, 25, 22, 38, 73, 36, 17)),
+  (rouge,List(43, 35, 201, 32, 81, 107, 54, 137, 85)),
+  (vertClair,List(28, 65, 33, 36, 59, 27, 72, 43, 17))
+)
+.......
