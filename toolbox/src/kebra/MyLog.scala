@@ -11,6 +11,8 @@ import scala.concurrent.duration._
 import scala.language.experimental.macros
 import scala.reflect.macros.Context
 import language.reflectiveCalls
+import java.awt.Toolkit
+import java.awt.datatransfer.DataFlavor
 
 object MyLog {
     var system: ActorSystem = _
@@ -261,6 +263,17 @@ object MyLog {
         };
         L.myPrintln("[" + MyLog.tag(2) + "] checkException [" + s + "]")
     }
+    
+    def toFileAndDisplay(fileName: String, htmlString: String) {
+        val filo = new File(fileName)
+        Some(new PrintWriter(filo)).foreach { p => p.write(htmlString); p.close }
+        java.awt.Desktop.getDesktop().browse(new java.net.URI("file:///"+filo.getCanonicalPath().replaceAll("\\\\", "/")))
+    }
+    
+    def getFromClipBoard: List[String] = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString.split("\n").toList
+    def copyFromFile(fileName: String): String = Some(scala.io.Source.fromFile(fileName)).map(p => { val s = p.mkString; p.close; s }).mkString
+    def copy2File(fileName: String, s: String) = Some(new PrintWriter(fileName)).foreach { p => p.write(s); p.close }
+    
     def copy(from: String, to: String) {
         use(new FileInputStream(from)) { in =>
             use(new FileOutputStream(to)) { out =>
