@@ -58,6 +58,10 @@ object FFT extends App {
         h.map(_ / h.size)
     }
 
+    def ifft4display(f: List[Complex]): List[Double] = {
+        ifft(f).map(c => if (c.re < 0.0) -c.absolute else c.absolute) // bon, y'a pas la phase, mais c'est mieux que rien
+    }
+
     def filtre(f: List[Complex], drop: Int, garde: Int): List[Complex] = {
         myAssert(drop < garde)
         (1 to drop).map(z => Complex(0)).toList ++ f.drop(drop).take(garde - drop) ++ (1 to f.length - garde).map(z => Complex(0)).toList
@@ -84,7 +88,7 @@ object FFT extends App {
         }
     }
 
-    def findPow2(num: Int) = (0 to 20).map(Math.pow(2, _)).toList.takeWhile(_ < num).last.toInt
+    def findPow2(num: Int) = (0 to 20).map(Math.pow(2, _)).toList.takeWhile(_ <= num).last.toInt
 
     def fftD(ld: List[Double]): List[Complex] = fft(ld.take(findPow2(ld.length)).map(d => Complex(d)))
 

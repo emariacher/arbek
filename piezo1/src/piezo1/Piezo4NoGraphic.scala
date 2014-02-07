@@ -8,12 +8,14 @@ import scala.concurrent.duration._
 import java.util.concurrent.TimeUnit
 import FFT._
 import PhysiologicalConstants._
+import scalation.stat.StatVector
 
 class Piezo4NoGraphic {
     myAssert2(128, FFT.findPow2(130))
 
     myPrintln("Hello World!")
-    val f = (new MyFileChooser("GetArduinoLogs")).justChooseFile("log");
+    val extensionLogFiles = "log"
+    val f = (new MyFileChooser("GetArduinoLogs")).justChooseFile(extensionLogFiles);
     val lraw = copyFromFile(f.getCanonicalPath).split("\n").toList
     val lraw2 = (lraw.reverse.take(10) ++ lraw.reverse.drop(10).takeWhile(s => s.indexOf("t") < 0 && s.length > 2)).reverse
     val lpartition = lraw2.partition(s => s.indexOf("t") < 0 && s.length > 2)
@@ -34,16 +36,14 @@ class Piezo4NoGraphic {
     myPrintIt(lowestFreqIndex, greatestFreqIndex)
     val ffted7 = filtre(ffted6, lowestFreqIndex, greatestFreqIndex)
     val filtered = ffted7.map(_.absolute.toInt).zipWithIndex.filter(_._1 > 0)
-    val picFreq = getPicFreqIndex(filtered, sampleDuration)
-    val bpm = getBpm(picFreq._2, sampleDuration)
-    myPrintIt(sampleSize, decimation, "%3.2f bpm".format(bpm))
-
-    val iffted8 = FFT.ifft(filtre(ffted6, lowestFreqIndex, sampleSize / 2)).map(_.absolute).zipWithIndex
-    val iffted9 = FFT.ifft(filtre(ffted6, lowestFreqIndex, sampleSize / 4)).map(_.absolute).zipWithIndex
-
-    val pics = new Pics(ldecimed, ttick, bpm, decimation)
-
-    val goodSample = new GoodSamples(l.zipWithIndex, pics.goodSampleRoots)
+    var picFreq = (0, 0)
+    var bpm = 0.0
+    var iffted = List.empty[(Int, List[(Double, Int)])]
+    var pics: Pics = _
+    var normalizedGoodSamples = List.empty[Sample]
+    var fit = new Fit(normalizedGoodSamples)
+    var correlationStats = new StatVector(List.empty[Double].toArray)
+    var lcorrelations = List.empty[Double]
 
     /** functions **/
 
@@ -62,7 +62,11 @@ class Piezo4NoGraphic {
         // compute "quality" pic found vx max and pic vs following lower
         val found_pic = (filtered.apply(picFreqIndexTemp)._1 * 1.0) / sorted.last._1
         val lowerThanFound = onlyLowerIndices(sorted, picFreqIndex)
-        val nextBelowFound = lowerThanFound.reverse.tail.head
+        val nextBelowFound = if (lowerThanFound.size > 1) {
+            lowerThanFound.reverse.tail.head
+        } else {
+            (0, 0)
+        }
         val found_nextfound = (nextBelowFound._1 * 1.0) / (picFreq._1 * 1.0)
         myPrintIt(picMax._2, picFreqIndex, nextBelowFound._2)
         myPrintIt(picMax._2, picFreqIndex, "%3.2f %3.2f (greater is better 1.0 is max)".format(found_pic, found_nextfound))
@@ -83,4 +87,114 @@ class Piezo4NoGraphic {
         myAssert(sampleSize >= 1024)
         (decimation, sampleSize)
     }
+
+    def doZeJob {
+        picFreq = getPicFreqIndex(filtered, sampleDuration)
+        bpm = getBpm(picFreq._2, sampleDuration)
+        myPrintIt(sampleSize, decimation)
+        myErrPrintln("%3.2f bpm".format(bpm))
+
+        iffted = List(4, 8, 16).map(i => (i, ifft4display(filtre(ffted6, lowestFreqIndex, sampleSize / i)).zipWithIndex))
+
+        pics = new Pics(ldecimed, ttick, bpm, decimation)
+
+        if (!pics.goodSampleRoots.isEmpty) {
+            normalizedGoodSamples = new GoodSamples(l.zipWithIndex, pics.goodSampleRoots).normalizedGoodSamples
+            fit = new Fit(normalizedGoodSamples)
+            lcorrelations = fit.getCorrelations(true)
+            if (!lcorrelations.isEmpty) {
+                correlationStats = new StatVector(lcorrelations.toArray)
+                println(correlationStats.labels)
+                myErrPrintln(correlationStats.toString)
+            }
+        } else {
+            myErrPrintDln("Unable 2 fit :(")
+        }
+        myErrPrintln(f.getName, " %3.2f bpm".format(bpm))
+
+        var s = GoogleCharts.htmlHeaderJustZeGraphs
+        s += printToday("dd_HH:mm_ss,SSS")
+
+        s += displaySamples(normalizedGoodSamples, lcorrelations, " 1st pass")
+        s += fit.displayPatterns(" 1st pass")
+
+        val normalizedGoodSamples2 = removeExtremSamples(normalizedGoodSamples, lcorrelations, correlationStats, 2)
+        val fit2 = new Fit(normalizedGoodSamples2)
+        val lcorrelations2 = fit2.getCorrelations(true)
+        if (!lcorrelations.isEmpty) {
+            val correlationStats2 = new StatVector(lcorrelations2.toArray)
+            println(correlationStats2.labels)
+            myErrPrintln(correlationStats2.toString)
+        }
+
+        s += displaySamples(normalizedGoodSamples2, lcorrelations2, " 2nd pass")
+        s += fit2.displayPatterns(" 2nd pass")
+
+        s += "\n</body></html>"
+        copy2File("zob.html", s)
+        //toFileAndDisplay("zob.html", s)
+
+    }
+
+    def removeExtremSamples(lsamplesIn: List[Sample], lcorrelationsIn: List[Double], correlationStats: StatVector, stdDevMulLimit: Double) = {
+        myPrintIt((correlationStats.stddev * stdDevMulLimit), lcorrelationsIn.zipWithIndex.map(z => abs(z._1 - correlationStats.mean)))
+        val outsiders = lcorrelationsIn.zipWithIndex.filter(z => abs(z._1 - correlationStats.mean) > (correlationStats.stddev * stdDevMulLimit)).map(_._2)
+        lsamplesIn.zipWithIndex.filter(!outsiders.contains(_)).map(_._1)
+    }
+
+    def displaySamples(lsamples: List[Sample], lcorrelations: List[Double], title: String) = {
+        var lcurves = List(("pulse", ldecimed)) ++ iffted.map(z => ("low pass at maxfreq/"+z._1, z._2.map(y => (y._1 + (25 * z._1), y._2))))
+        var lTime = lcurves.head._2.map(_._2.toString)
+        if (!lsamples.isEmpty) {
+            var queueCorr = lcorrelations
+            var queueSamples = lsamples
+            var prev = 0.0
+            var lastIndex = 0
+            val correlationsList = lTime.map(z => if (!queueSamples.isEmpty) {
+                if (z.toInt < lastIndex) {
+                    (prev * 20, z.toInt)
+                } else if (z.toInt >= queueSamples.head.startIndex) {
+                    prev = queueCorr.head
+                    lastIndex = queueSamples.head.l.last._2
+                    queueSamples = queueSamples.tail
+                    queueCorr = queueCorr.tail
+                    (prev * 20, z.toInt)
+                } else {
+                    (0.0, z.toInt)
+                }
+            } else {
+                (0.0, z.toInt)
+            })
+            lcurves = lcurves :+ ("correlations (lower is better)", correlationsList)
+        }
+        val rangees = MyLog.inverseMatrix(List(lTime) ++ lcurves.map(_._2.map(_._1.toInt.toString)))
+        GoogleCharts.lineChart(curveName + title, rangees.asInstanceOf[List[List[String]]], lcurves.map(_._1), true, 1, 0)
+    }
+
+    def validateFitting {
+        val lNumsamples = List(1, 2, 5, 10)
+        val fitList = lNumsamples.map(numSamples => new Fit(normalizedGoodSamples.take(numSamples)))
+        fitList.foreach(fit => {
+            myPrintDln("*******"+fit)
+            val corrs = normalizedGoodSamples.zipWithIndex.take(10).map(sample => {
+                sample._1.correlate(fit, true)
+                myPrintDln("    "+fit+" "+sample._2+" %3.4f ".format(sample._1.coeffCorrelation))
+                sample._1.coeffCorrelation
+            })
+            myPrintDln("  avgCorrelation[raw] %3.4f\n".format(corrs.sum / corrs.size))
+        })
+
+        fitList.takeRight(1).foreach(fit => {
+            if (!fit.zeFitCurveNo50Hz.isEmpty) {
+                myPrintDln("*******"+fit)
+                val corrs = normalizedGoodSamples.zipWithIndex.take(10).map(sample => {
+                    sample._1.correlate(fit, false)
+                    myPrintDln("    "+fit+" "+sample._2+" %3.4f ".format(sample._1.coeffCorrelation))
+                    sample._1.coeffCorrelation
+                })
+                myPrintDln("  avgCorrelation[No50Hz] %3.4f\n".format(corrs.sum / corrs.size))
+            }
+        })
+    }
+
 }
