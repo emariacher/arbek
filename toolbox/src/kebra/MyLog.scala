@@ -11,8 +11,6 @@ import scala.concurrent.duration._
 import scala.language.experimental.macros
 import scala.reflect.macros.Context
 import language.reflectiveCalls
-import java.awt.Toolkit
-import java.awt.datatransfer.DataFlavor
 
 object MyLog {
     var system: ActorSystem = _
@@ -46,15 +44,15 @@ object MyLog {
     }
 
     def myPrint(a: Any) = if (vierge) print(a) else L.myPrint(a)
-    def myPrintln(a: Any) = myPrint(a + "\n")
-    def myPrintD(a: Any) = myPrint(MyLog.tag(3) + " " + a)
-    def myPrintDln(a: Any) = myPrintD(a + "\n")
+    def myPrintln(a: Any) = myPrint(a+"\n")
+    def myPrintD(a: Any) = myPrint(MyLog.tag(3)+" "+a)
+    def myPrintDln(a: Any) = myPrintD(a+"\n")
     def myErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myErrPrint(a)
-    def myErrPrintln(a: Any) = myErrPrint(a + "\n")
-    def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3) + " " + a)
-    def myErrPrintDln(a: Any) = myErrPrintD(a + "\n")
+    def myErrPrintln(a: Any) = myErrPrint(a+"\n")
+    def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3)+" "+a)
+    def myErrPrintDln(a: Any) = myErrPrintD(a+"\n")
     def myHErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myHErrPrint(a)
-    def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
+    def myHErrPrintln(a: Any) = myHErrPrint(a+"\n")
 
     def printToday(fmt: String): String = printZisday(Calendar.getInstance(), fmt)
 
@@ -80,23 +78,23 @@ object MyLog {
         ext
     }
     def tag(i_level: Int): String = {
-        val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime) + " "
+        val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime)+" "
         try {
             throw new Exception()
         } catch {
             case unknown: Throwable => unknown.getStackTrace.toList.apply(i_level).toString match {
-                case MatchFileLine(file, line) => file + ":" + line + " " + s_time
+                case MatchFileLine(file, line) => file+":"+line+" "+s_time
             }
         }
     }
 
     def tagnt(i_level: Int): String = {
-        val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime) + " "
+        val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime)+" "
         try {
             throw new Exception()
         } catch {
             case unknown: Throwable => unknown.getStackTrace.toList.apply(i_level).toString match {
-                case MatchFileLine(file, line) => file + ":" + line
+                case MatchFileLine(file, line) => file+":"+line
             }
         }
     }
@@ -113,7 +111,7 @@ object MyLog {
         }
     }
 
-    def km_func2(c: Context) = {
+    /*def km_func2(c: Context) = {
         import c.universe._
         c.enclosingDef match {
             case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
@@ -148,7 +146,7 @@ object MyLog {
         }
     }
     def __FUNC__ = macro km_func
-    def __CLASS__ = macro km_class3
+    def __CLASS__ = macro km_class3*/
 
     def assertx(c: Context)(cond: c.Expr[Boolean]): c.Expr[Unit] = {
         import c.universe._
@@ -171,9 +169,9 @@ object MyLog {
         reify({
             if (act.splice != exp.splice) {
                 try {
-                    throw new Exception("AssertionError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
+                    throw new Exception("AssertionError: "+c.Expr[String](Literal(Constant(actm))).splice+"["+act.splice+"]==["+exp.splice+"]"+c.Expr[String](Literal(Constant(expm))).splice)
                 } catch {
-                    case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
+                    case unknown: Throwable => System.err.println(""+unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
                 }
             }
         })
@@ -188,9 +186,9 @@ object MyLog {
         reify({
             if (act.splice != exp.splice) {
                 try {
-                    throw new Exception("RequireError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
+                    throw new Exception("RequireError: "+c.Expr[String](Literal(Constant(actm))).splice+"["+act.splice+"]==["+exp.splice+"]"+c.Expr[String](Literal(Constant(expm))).splice)
                 } catch {
-                    case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
+                    case unknown: Throwable => System.err.println(""+unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
                 }
             }
         })
@@ -206,14 +204,14 @@ object MyLog {
     def printx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
         val msg = linecode.tree.toString
-        reify(println(c.Expr[String](Literal(Constant(msg))).splice + " ---> " + linecode.splice))
+        reify(println(c.Expr[String](Literal(Constant(msg))).splice+" ---> "+linecode.splice))
     }
     def printIt(linecode: Any) = macro printx
 
     def mprintx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
         val msg = linecode.tree.toString
-        reify(myPrintDln(c.Expr[String](Literal(Constant(msg))).splice + "\n    ---> " + linecode.splice))
+        reify(myPrintDln(c.Expr[String](Literal(Constant(msg))).splice+"\n    ---> "+linecode.splice))
     }
     def myPrintIt(linecode: Any) = macro mprintx
 
@@ -241,12 +239,12 @@ object MyLog {
 
     def timeStampIt(linecode: Any) = macro mtimeStampx
 
-    def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintDln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
+    def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintDln(timeStampsList.filter(_._2 != "---").map(t => (t._1+" ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
     def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
         val t_end = Calendar.getInstance();
-        myPrintln("    t_now: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
-            "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()));
+        myPrintln("    t_now: "+MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title+
+            "] t_diff: "+(t_end.getTimeInMillis() - c_t_start.getTimeInMillis()));
         t_end;
     }
 
@@ -258,22 +256,21 @@ object MyLog {
 
     def checkException(L: MyLog, i_rc: Int, s: String) {
         if (i_rc != 0) {
-            L.myErrPrintln("**Exception** [" + s + "] thrown!")
+            L.myErrPrintln("**Exception** ["+s+"] thrown!")
             throw new Exception(s)
         };
-        L.myPrintln("[" + MyLog.tag(2) + "] checkException [" + s + "]")
+        L.myPrintln("["+MyLog.tag(2)+"] checkException ["+s+"]")
     }
-    
+
     def toFileAndDisplay(fileName: String, htmlString: String) {
         val filo = new File(fileName)
         Some(new PrintWriter(filo)).foreach { p => p.write(htmlString); p.close }
         java.awt.Desktop.getDesktop().browse(new java.net.URI("file:///"+filo.getCanonicalPath().replaceAll("\\\\", "/")))
     }
-    
-    def getFromClipBoard: List[String] = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString.split("\n").toList
+
     def copyFromFile(fileName: String): String = Some(scala.io.Source.fromFile(fileName)).map(p => { val s = p.mkString; p.close; s }).mkString
     def copy2File(fileName: String, s: String) = Some(new PrintWriter(fileName)).foreach { p => p.write(s); p.close }
-    
+
     def copy(from: String, to: String) {
         use(new FileInputStream(from)) { in =>
             use(new FileOutputStream(to)) { out =>
@@ -312,6 +309,14 @@ object MyLog {
             closable.close()
         }
     }
+
+    def inverseMatrix(lin: List[List[Any]]): List[List[Any]] = {
+        val size = lin.map(_.size).min
+        if (lin.map(_.size).indexWhere(_ != size) >= 0) {
+            myErrPrintDln("Truncating size! "+lin.map(_.size))
+        }
+        lin.head.take(size).zipWithIndex.map(rangee => lin.map(_.apply(rangee._2)))
+    }
 }
 
 class MyLog(s_title: String, fil: File, errExt: String) {
@@ -327,10 +332,10 @@ class MyLog(s_title: String, fil: File, errExt: String) {
         name_no_ext = name.substring(0, name.lastIndexOf(ext) - 1)
     }
     val working_directory = new String(CanonicalPath.substring(0, index))
-    val logfileName = working_directory + "log" + File.separatorChar + "logfile_" +
-        MyLog.printToday("ddMMMyy_HH_mm") + ".log"
-    val errfileName = working_directory + File.separatorChar + "out_" + name_no_ext.replaceAll("\\W", "_") + "_" +
-        MyLog.printToday("ddMMMyy_HH_mm") + "." + errExt
+    val logfileName = working_directory+"log"+File.separatorChar+"logfile_"+
+        MyLog.printToday("ddMMMyy_HH_mm")+".log"
+    val errfileName = working_directory + File.separatorChar+"out_"+name_no_ext.replaceAll("\\W", "_")+"_"+
+        MyLog.printToday("ddMMMyy_HH_mm")+"."+errExt
     var MLA: ActorRef = _
     var Gui: MyUI = _
     var b_GuiActive = false
@@ -346,35 +351,35 @@ class MyLog(s_title: String, fil: File, errExt: String) {
     }
 
     def myPrint(a: Any) = MLA ! logMsg("L", a)
-    def myPrintln(a: Any) = myPrint(a + "\n")
-    def myPrintD(a: Any) = myPrint(MyLog.tag(3) + " " + a)
-    def myPrintDln(a: Any) = myPrintD(a + "\n")
+    def myPrintln(a: Any) = myPrint(a+"\n")
+    def myPrintD(a: Any) = myPrint(MyLog.tag(3)+" "+a)
+    def myPrintDln(a: Any) = myPrintD(a+"\n")
     def myErrPrint(a: Any) = MLA ! logMsg("E", a)
-    def myErrPrintln(a: Any) = myErrPrint(a + "\n")
-    def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3) + " " + a)
-    def myErrPrintDln(a: Any) = myErrPrintD(a + "\n")
+    def myErrPrintln(a: Any) = myErrPrint(a+"\n")
+    def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3)+" "+a)
+    def myErrPrintDln(a: Any) = myErrPrintD(a+"\n")
     def myHErrPrint(a: Any) = MLA ! logMsg("H", a)
-    def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
+    def myHErrPrintln(a: Any) = myHErrPrint(a+"\n")
 
     def closeFiles() {
         val t_end = Calendar.getInstance()
-        myPrintDln("t_end: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS"))
-        myErrPrintDln("l_diff: " + (t_end.getTimeInMillis() - t_start.getTimeInMillis()))
+        myPrintDln("t_end: "+MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS"))
+        myErrPrintDln("l_diff: "+(t_end.getTimeInMillis() - t_start.getTimeInMillis()))
         MLA ! closeMsg
         Thread.sleep(100)
     }
 
     def hcloseFiles(headerFileName: String, postProcessFunc: (List[String], String) => String) {
         val t_end = Calendar.getInstance()
-        myPrintDln("t_end: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS"))
-        myPrintDln("l_diff: " + (t_end.getTimeInMillis() - t_start.getTimeInMillis()))
+        myPrintDln("t_end: "+MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS"))
+        myPrintDln("l_diff: "+(t_end.getTimeInMillis() - t_start.getTimeInMillis()))
         MLA ! hcloseMsg(headerFileName, postProcessFunc)
         Thread.sleep(100)
     }
 
     def getJarFileCompilationDate(): String = {
         val jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
-        "[" + jarFile.getName() + "] Version: " + new Date(jarFile.lastModified()).toString();
+        "["+jarFile.getName()+"] Version: "+new Date(jarFile.lastModified()).toString();
     }
 }
 
@@ -419,7 +424,7 @@ class MyLogActor extends Actor {
                     logfile.writeFile(msg.toString)
                 }
                 System.out.print(msg)
-            case _ => throw new Exception("wrong trace type: " + errorType.toString)
+            case _ => throw new Exception("wrong trace type: "+errorType.toString)
         }
         case closeMsg =>
             b_filesActive = false
@@ -429,4 +434,3 @@ class MyLogActor extends Actor {
     }
 
 }
-

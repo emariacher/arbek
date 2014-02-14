@@ -26,18 +26,14 @@ import akka.agent.Agent
 import scala.concurrent.duration._
 import akka.util.Timeout
 import kebra.MyLog._
-import language.postfixOps
-import scala.concurrent.ExecutionContext
-import scala.concurrent.ExecutionContext.Implicits.global
-import akka.agent.Agent
 
-class MyNewUI(val s_title: String, val parameters: ZeParameters) extends Frame {
-    //implicit val system = ActorSystem("app")
-    //implicit val system = someExecutionContext()
+/*class MyNewUI(val s_title: String, val parameters: ZeParameters) extends Frame {
+    implicit val system = ActorSystem("app")
 
-    val swingAnswerAgent = Agent(100)
+    //val swingAnswerAgent = Agent("NotYet")(system)
+//    val swingAnswerAgent = Agent.create("NotYet")(system)
 
-    val gpanel = new gridpanel(parameters.size + 1, 2, parameters, swingAnswerAgent)
+    //val gpanel = new gridpanel(parameters.size + 1, 2, parameters, swingAnswerAgent)
     if (!parameters.isEmpty) {
         title = s_title
         contents = gpanel
@@ -52,7 +48,7 @@ class MyNewUI(val s_title: String, val parameters: ZeParameters) extends Frame {
 
     def get2(): ZeParameters = {
         implicit val timeout = Timeout(1 minute)
-        val result = swingAnswerAgent.get
+        //val result = swingAnswerAgent.await
         gpanel.getFromPanel
     }
 
@@ -61,13 +57,13 @@ class MyNewUI(val s_title: String, val parameters: ZeParameters) extends Frame {
         close
         l_output
     }
-}
+}*/
 
 class MyFile(fname: String) extends File(fname) {
     try {
         new FileOutputStream(this).close
     } catch {
-        case unknown: Throwable => throw new Exception("File[" + getCanonicalPath + "]: Maybe you did not create the directory...")
+        case unknown: Throwable => throw new Exception("File["+getCanonicalPath+"]: Maybe you did not create the directory...")
     }
 
     val fos = new FileOutputStream(this)
@@ -82,21 +78,31 @@ class MyFile(fname: String) extends File(fname) {
 class MyFileChooser(s_title: String) extends Panel {
     final val DEFAULTDIRECTORY = 0
     val f_defvardiff = new File(s_title)
+    var s_directory = new String()
 
     def justChooseFile(s_extension: String): File = {
         var l_parameters = readSavedParameters()
         val f = chooseFile(l_parameters, s_extension)
         if (l_parameters.isEmpty) {
-            l_parameters = List(f.getParent)
+            l_parameters = List(s_directory)
         } else {
-            l_parameters = f.getParent :: l_parameters.tail
+            l_parameters = s_directory :: l_parameters.tail
         }
         writeSavedParameters(l_parameters)
         f
     }
+
+    def justChooseFileOrDirectory(s_extension: String): File = {
+        val f = justChooseFile(s_extension)
+        if (f != null) {
+            f
+        } else {
+            new File(s_directory)
+        }
+    }
+
     def chooseFile(l_parameters: List[String], s_extension: String): File = {
-        var s_directory = new String()
-        if (l_parameters.length == 0) {
+        if (l_parameters.isEmpty) {
             s_directory = System.getProperty("user.home")
         } else {
             s_directory = l_parameters.apply(DEFAULTDIRECTORY)
@@ -138,21 +144,21 @@ class MyFileChooser(s_title: String) extends Panel {
                 l_parameters = l_parameters :+ sc.nextLine()
             }
         } else {
-            println("Cannot read " + f_defvardiff)
+            println("Cannot read "+f_defvardiff)
         }
         l_parameters
     }
 
     def writeSavedParameters(l_parameters: List[String]) {
         val outputf = new FileOutputStream(f_defvardiff)
-        l_parameters.foreach((s: String) => outputf.write((s + "\n").getBytes()))
+        l_parameters.foreach((s: String) => outputf.write((s+"\n").getBytes()))
         outputf.close();
     }
 }
 
 class GrabFilter(val s_extension: String) extends FileFilter {
     def accept(f: File) = f.getName.contains(s_extension) || f.isDirectory
-    def getDescription(): String = "Just " + s_extension + " files"
+    def getDescription(): String = "Just "+s_extension+" files"
 }
 
 class MyUI(val s_title: String, val parameters: ZeParameters) extends Frame {
@@ -182,7 +188,7 @@ class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters, va
     parameters.foreach(add2Panel(_))
     contents += new Button {
         action = Action("Do the Stuff") {
-            println("Someone clicked button \"" + action.title + "\"")
+            println("Someone clicked button \""+action.title+"\"")
             myText = this.text
             if (swingAnswerAgent != None) {
                 swingAnswerAgent.asInstanceOf[Agent[String]] send this.text
@@ -215,7 +221,7 @@ class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters, va
         } else if (p._2.classtype.isInstanceOf[TextField]) {
             (p._1, new MyParameter(p._2.classtype.asInstanceOf[TextField].text))
         } else {
-            (p._1, new MyParameter(MyLog.tag(1) + "You most probably have an issue with [" + p + "]"))
+            (p._1, new MyParameter(MyLog.tag(1)+"You most probably have an issue with ["+p+"]"))
         }
     }
 }
@@ -228,11 +234,11 @@ class getUrlFromClipboard {
     var source: scala.io.BufferedSource = _
     try {
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString
-        println("Trying to make a URL of:[" + clipboard + "]")
+        println("Trying to make a URL of:["+clipboard+"]")
         url = new URL(clipboard)
         source = scala.io.Source.fromURL(url)
     } catch {
-        case e: Exception => throw new Exception(e + " [" + clipboard + "]")
+        case e: Exception => throw new Exception(e+" ["+clipboard+"]")
     }
 }
 
@@ -268,7 +274,7 @@ class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[Str
             case MyParameter.pair(k, v) => get(k) match {
                 case Some(p) =>
                     p.value = v; true
-                case _       => false
+                case _ => false
             }
             case _ => false
         }
@@ -278,7 +284,7 @@ class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[Str
         get(name) match {
             case Some(p) =>
                 p.value = v; true
-            case _       => false
+            case _ => false
         }
     }
 
@@ -325,7 +331,7 @@ class MyParameter(val v: String, val defaultValue: String, val classtype: Compon
     def toString2: String = {
         classtype match {
             case pwd: PasswordField => "[XXXX,,pwd]"
-            case _                  => "[" + value + "," + defaultValue + ",txt]"
+            case _                  => "["+value+","+defaultValue+",txt]"
         }
     }
 }
