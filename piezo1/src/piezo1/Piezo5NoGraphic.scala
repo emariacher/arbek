@@ -35,6 +35,7 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
     val filtered = ffted7.map(_.absolute.toInt).zipWithIndex.filter(_._1 > 0)
     var picFreq = (0, 0)
     var bpm = 0.0
+    var bpmUsed4Fitting = 0.0
     var iffted = List.empty[(Int, List[(Double, Int)])]
     var pics: Pics = _
     var normalizedGoodSamples = List.empty[Sample]
@@ -88,6 +89,7 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
 
     def getFittingCurve(bpm: Double) {
         myPrintDln(curveName, func(1), sampleSize, decimation, "In: %3.2f bpm".format(bpm))
+        bpmUsed4Fitting = bpm
 
         //iffted = List(4, 8, 16).map(i => (i, ifft4display(filtre(ffted6, lowestFreqIndex, sampleSize / i)).zipWithIndex))
 
@@ -188,7 +190,7 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
         var s = "<h2>"+curveName+": "+"%3.2f bpm".format(bpm)+"</h2>"
         s += "<p>"+normalizedGoodSamples.size+" processed samples<p>"
         if (pics != null) {
-            s += "<p>fit precision: %3.4f ".format(pics.precision)+", fit mean Correlation: %3.4f (lower is better)</p> ".format(correlationStats.mean)
+            s += "<p>bpm used4fitting: %3.2f bpm".format(bpmUsed4Fitting)+", fit precision: %3.4f ".format(pics.precision)+", fit mean Correlation: %3.4f (lower is better)</p> ".format(correlationStats.mean)
             s += displaySamples(normalizedGoodSamples, lcorrelations, "")
             s += fit.displayPatterns("")
         } else {
