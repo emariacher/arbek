@@ -27,21 +27,21 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
     val sampleDuration = decimation * sampleSize * ttick
     myPrintln(curveName, ttick.toString, Duration.apply((sampleDuration).toSeconds, SECONDS).toString, decimation, l.size)
     val ldecimed = Pz5.sample(l.zipWithIndex, decimation)
-    val ffted6 = fftD(ldecimed.map(_._1))
+    //val ffted6 = 
     val lowestFreqIndex = (lowestBpm * sampleDuration.toMillis / 1.minute.toMillis).toInt
     val greatestFreqIndex = (greatestBpm * sampleDuration.toMillis / 1.minute.toMillis).toInt
     myPrintIt(lowestFreqIndex, greatestFreqIndex)
-    val ffted7 = filtre(ffted6, lowestFreqIndex, greatestFreqIndex)
-    val filtered = ffted7.map(_.absolute.toInt).zipWithIndex.filter(_._1 > 0)
     var picFreq = (0, 0)
     var bpm = 0.0
     var bpmUsed4Fitting = 0.0
     var iffted = List.empty[(Int, List[(Double, Int)])]
-    var pics: Pics = _
+    var precision = 0.0
     var normalizedGoodSamples = List.empty[Sample]
     var fit = new Fit(normalizedGoodSamples)
     var correlationStats = new StatVector(List.empty[Double].toArray)
     var lcorrelations = List.empty[Double]
+    var numTicks4OneBpm = 0
+    var naturallyFitted = false
 
     /** functions **/
 
@@ -70,9 +70,13 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
     }
 
     def getBpm: Double = {
+        val filtered = filtre(fftD(ldecimed.map(_._1)), lowestFreqIndex, greatestFreqIndex).map(_.absolute.toInt).zipWithIndex.filter(_._1 > 0)
         picFreq = getPicFreqIndex(filtered, sampleDuration)
         bpm = (picFreq._2 * 1.minute).toMillis.toDouble / sampleDuration.toMillis.toDouble
         myErrPrintln(curveName, func(1), "%3.2f bpm".format(bpm))
+        if (bpm > PhysiologicalConstants.lowestBpm) {
+            numTicks4OneBpm = ((1 minute).toMicros / (ttick * bpm).toMicros.toInt).toInt
+        }
         bpm
     }
 
@@ -94,9 +98,11 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
         //iffted = List(4, 8, 16).map(i => (i, ifft4display(filtre(ffted6, lowestFreqIndex, sampleSize / i)).zipWithIndex))
 
         if (bpm > PhysiologicalConstants.lowestBpm) {
-            pics = new Pics(ldecimed, ttick, bpm, decimation)
+            val pics = new Pics(ldecimed, ttick, bpm, decimation)
+            precision = pics.precision
 
             if (!pics.goodSampleRoots.isEmpty) {
+                myPrintIt(pics.goodSampleRoots)
                 normalizedGoodSamples = new GoodSamples(l.zipWithIndex, pics.goodSampleRoots, !pics.directionUp).normalizedGoodSamples
                 fit = new Fit(normalizedGoodSamples)
                 lcorrelations = fit.getCorrelations(true)
@@ -104,9 +110,26 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
                     correlationStats = new StatVector(lcorrelations.toArray)
                     println(curveName + correlationStats.labels)
                     myErrPrintln(curveName + correlationStats.toString)
+                    naturallyFitted = true
                 }
             } else {
-                myErrPrintDln(curveName+" Unable 2 fit :(")
+                myErrPrintDln(curveName+" Unable 2 fit :( , but we try anyway :)")
+                if (numTicks4OneBpm > 0) {
+                    var sampleSize = numTicks4OneBpm
+                    while (sampleSize < Sample.normalizedNumSamples) {
+                        sampleSize = sampleSize * 2
+                    }
+                    val lgz = l.zipWithIndex.grouped(sampleSize).toList.map(z => (z.head._2, sampleSize))
+                    myPrintIt(lgz.size, lgz)
+                    normalizedGoodSamples = new GoodSamples(l.zipWithIndex, l.zipWithIndex.grouped(numTicks4OneBpm).toList.map(z => (z.head._2, numTicks4OneBpm)), !pics.directionUp).normalizedGoodSamples
+                    fit = new Fit(normalizedGoodSamples)
+                    lcorrelations = fit.getCorrelations(true)
+                    if (!lcorrelations.isEmpty) {
+                        correlationStats = new StatVector(lcorrelations.toArray)
+                        println(curveName + correlationStats.labels)
+                        myErrPrintln(curveName + correlationStats.toString)
+                    }
+                }
             }
             myErrPrintln(curveName, " %3.2f bpm".format(bpm))
 
@@ -189,8 +212,8 @@ class Piezo5NoGraphic(val l: List[Double], val ttick: Duration, val curveName: S
     def display = {
         var s = "<h2>"+curveName+": "+"%3.2f bpm".format(bpm)+"</h2>"
         s += "<p>"+normalizedGoodSamples.size+" processed samples<p>"
-        if (pics != null) {
-            s += "<p>bpm used4fitting: %3.2f bpm".format(bpmUsed4Fitting)+", fit precision: %3.4f ".format(pics.precision)+", fit mean Correlation: %3.4f (lower is better)</p> ".format(correlationStats.mean)
+        if (precision>0.0) {
+            s += "<p>bpm used4fitting: %3.2f bpm".format(bpmUsed4Fitting)+", fit precision: %3.4f ".format(precision)+", fit mean Correlation: %3.4f (lower is better)</p> ".format(correlationStats.mean)
             s += displaySamples(normalizedGoodSamples, lcorrelations, "")
             s += fit.displayPatterns("")
         } else {

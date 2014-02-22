@@ -55,5 +55,4 @@ class Pics(l: List[(Double, Int)], ttick: Duration, bpm: Double, decimation: Int
     }
 
     def within(act: Double, exp: Double, precision: Double) = (act > (exp * (1 - precision))) && (act < (exp * (1 + precision)))
-
 }

@@ -1,7 +1,3 @@
-
-
-
-
 package piezo1
 
 import kebra._
