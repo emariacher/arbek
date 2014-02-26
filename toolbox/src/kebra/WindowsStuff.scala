@@ -2,6 +2,7 @@ package kebra
 
 import scala.util._
 import kebra.MyLog._
+import kebra.FileVersionInfo
 import java.io.File
 import scala.util.matching.Regex
 import scala.concurrent.duration._
@@ -11,11 +12,16 @@ import scala.concurrent.Future._
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.sys.process._
-import language.postfixOps
+import java.nio.file.Path
+import java.nio.file.FileSystems
+import java.util.Calendar
+import java.nio.file.attribute.FileTime
 
 object WindowsStuff {
+    val fileSystem = FileSystems.getDefault
+    val cal = Calendar.getInstance
 
-    def getEnvVar(name: String): String = Properties.envOrElse(name, "Rien[" + name + "]")
+    def getEnvVar(name: String): String = Properties.envOrElse(name, "Rien["+name+"]")
 
     def getAllEnvVars: Map[String, String] = exec("set")._2.tail.map((line: String) => {
         val c = line.split("=").toList
@@ -45,11 +51,30 @@ object WindowsStuff {
         }
     }
 
+    //http://docs.oracle.com/javase/7/docs/api/java/nio/file/attribute/BasicFileAttributeView.html
+    //http://docs.oracle.com/javase/7/docs/api/index.html?java/nio/file/attribute/BasicFileAttributes.html
+    //myPrintIt(java.nio.file.Files.getOwner(path), FileSystems.getDefault.supportedFileAttributeViews)
+    def getLastModified(file: File): Calendar = {
+        val path = fileSystem.getPath(file.getAbsolutePath)
+        cal.setTimeInMillis(java.nio.file.Files.getLastModifiedTime(path).toMillis)
+        cal
+    }
+
+    def getCreationTime(file: File): Calendar = {
+        val path = fileSystem.getPath(file.getAbsolutePath)
+        cal.setTimeInMillis(java.nio.file.Files.getAttribute(path, "basic:creationTime").asInstanceOf[FileTime].toMillis)
+        cal
+    }
+    
+    //myPrintIt(getfileversion.FileVersionInfo.getVersion("C:\\Program Files (x86)\\Java\\jre7\\bin\\java.exe"))
+    //http://stackoverflow.com/questions/6918022/get-version-info-for-exe
+    def getFileVersion(fileName: String) = FileVersionInfo.getVersion(fileName)
+
     def taskList: List[List[String]] = exec(4, "tasklist /V /FO CSV", 2 seconds)._2.tail.map(_.split(",").toList.map(_.tail.reverse.tail.reverse))
     def taskExist(tName: String): Boolean = taskList.filter(!_.isEmpty).exists(_.head == tName)
-    def taskKill(tName: String): Int = exec("taskkill /F /IM " + tName + " /T")._1
+    def taskKill(tName: String): Int = exec("taskkill /F /IM "+tName+" /T")._1
 
-    def regQuery(cmd: String) = exec("REG QUERY " + cmd)
+    def regQuery(cmd: String) = exec("REG QUERY "+cmd)
 
     def exec(Tlvl: Int, s_cmd: String, timeOut: Duration) = new ScalaBatshNew4(Tlvl, s_cmd, "cowabunga", timeOut).result
     def exec(Tlvl: Int, s_cmd: String, s_pwd: String) = new ScalaBatshNew4(Tlvl, s_cmd, s_pwd, 1 second).result
@@ -63,11 +88,11 @@ class ScalaBatshNew4(Tlvl: Int, s_cmd: String, s_pwd: String, timeOut: Duration)
     def this(Tlvl: Int, s_cmd: String) = this(Tlvl, s_cmd, "cowabunga", 1 second)
     def this(s_cmd: String) = this(3, s_cmd, "cowabunga", 1 second)
 
-    myErrPrintln(MyLog.tag(Tlvl) + getClass.getName + ".exec(<i>" +
-        s_cmd.replaceAll(s_pwd, "##hidden##") + "</i>)")
-    val s_filename = "zz" + new Random().nextInt(1000) + ".bat";
+    myErrPrintln(MyLog.tag(Tlvl) + getClass.getName+".exec(<i>"+
+        s_cmd.replaceAll(s_pwd, "##hidden##")+"</i>)")
+    val s_filename = "zz"+new Random().nextInt(1000)+".bat";
     val f = new File(s_filename)
-    val fw = new FileWriter(f, false); fw.write(s_cmd + "\n"); fw.close
+    val fw = new FileWriter(f, false); fw.write(s_cmd+"\n"); fw.close
 
     val future = Future { run(s_filename) }
     var result = try {
@@ -78,7 +103,7 @@ class ScalaBatshNew4(Tlvl: Int, s_cmd: String, s_pwd: String, timeOut: Duration)
     }
     fw.close
     f.delete
-    myErrPrintln("  rc: {" + result._1 + "}")
+    myErrPrintln("  rc: {"+result._1+"}")
 
     def run(in: String): (Int, List[String], List[String]) = {
         val qb = Process(in)
