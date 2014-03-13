@@ -12,11 +12,36 @@ import scala.language.experimental.macros
 import scala.reflect.macros.Context
 import language.reflectiveCalls
 
+trait LogFunction {
+    def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "")
+}
+
+class myPrintDln extends LogFunction {
+    val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime)+" "
+    def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "") {
+        MyLog.myPrint(srcFile+":"+srcLine+" "+s_time+" "+msg+"\n")
+    }
+}
+
+trait LogFunctionE {
+    def logE(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "")
+}
+
+class myErrPrintDln extends LogFunctionE {
+    val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime)+" "
+    def logE(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "") {
+        MyLog.myErrPrint(srcFile+":"+srcLine+" "+s_time+" "+msg+"\n")
+    }
+}
+
 object MyLog {
+    implicit val myPrintDln = new kebra.myPrintDln
+    implicit val myErrPrintDln = new kebra.myErrPrintDln
     var system: ActorSystem = _
 
     val MatchFileLine = """.+\((.+)\..+:(\d+)\)""".r
     val MatchFunc = """(.+)\(.+""".r
+    val r_name = """Expr\[String\]\(\"(.+)\"\)""".r
     var L: MyLog = _
     var vierge = true
 
@@ -39,18 +64,18 @@ object MyLog {
         if (!vierge) {
             L.closeFiles
         } else {
-            myPrintDln("MyLog not activated")
+            myPrintln(MyLog.tag(3)+" MyLog not activated")
         }
     }
 
     def myPrint(a: Any) = if (vierge) print(a) else L.myPrint(a)
     def myPrintln(a: Any) = myPrint(a+"\n")
     def myPrintD(a: Any) = myPrint(MyLog.tag(3)+" "+a)
-    def myPrintDln(a: Any) = myPrintD(a+"\n")
+    //def myPrintDln(a: Any) = myPrintD(a+"\n")
     def myErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myErrPrint(a)
     def myErrPrintln(a: Any) = myErrPrint(a+"\n")
     def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3)+" "+a)
-    def myErrPrintDln(a: Any) = myErrPrintD(a+"\n")
+    //def myErrPrintDln(a: Any) = myErrPrintD(a+"\n")
     def myHErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myHErrPrint(a)
     def myHErrPrintln(a: Any) = myHErrPrint(a+"\n")
 
@@ -150,7 +175,19 @@ object MyLog {
 
     def assertx(c: Context)(cond: c.Expr[Boolean]): c.Expr[Unit] = {
         import c.universe._
-        val msg = cond.tree.toString
+
+        val namez = (c.enclosingImpl match {
+            case ClassDef(mods, name, tparams, impl) =>
+                c.universe.reify(c.literal(name.toString).splice)
+            case ModuleDef(mods, name, impl) =>
+                c.universe.reify(c.literal(name.toString).splice)
+            case _ => c.abort(c.enclosingPosition, "NoEnclosingClass")
+        }).toString match {
+            case r_name(n) => n
+            case _         => "Unknown?"
+        }
+
+        val msg = cond.tree.toString.replaceAll(namez+"\\.this\\.", "")
         reify(assert(cond.splice, c.Expr[String](Literal(Constant(msg))).splice))
     }
     /*def assert3(cond: Boolean, linecode: String) = {
@@ -160,12 +197,24 @@ object MyLog {
                     assert(false,linecode)
                 }
             }*/
-    def myAssert(cond: Boolean) = macro assertx
+    def myAssert(cond: Boolean): Any = macro assertx
 
     def assert2(c: Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
-        val actm = act.tree.toString
-        val expm = exp.tree.toString
+
+        val namez = (c.enclosingImpl match {
+            case ClassDef(mods, name, tparams, impl) =>
+                c.universe.reify(c.literal(name.toString).splice)
+            case ModuleDef(mods, name, impl) =>
+                c.universe.reify(c.literal(name.toString).splice)
+            case _ => c.abort(c.enclosingPosition, "NoEnclosingClass")
+        }).toString match {
+            case r_name(n) => n
+            case _         => "Unknown?"
+        }
+
+        val actm = act.tree.toString.replaceAll(namez+"\\.this\\.", "")
+        val expm = exp.tree.toString.replaceAll(namez+"\\.this\\.", "")
         reify({
             if (act.splice != exp.splice) {
                 try {
@@ -181,8 +230,20 @@ object MyLog {
 
     def require2(c: Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
-        val actm = act.tree.toString
-        val expm = exp.tree.toString
+
+        val namez = (c.enclosingImpl match {
+            case ClassDef(mods, name, tparams, impl) =>
+                c.universe.reify(c.literal(name.toString).splice)
+            case ModuleDef(mods, name, impl) =>
+                c.universe.reify(c.literal(name.toString).splice)
+            case _ => c.abort(c.enclosingPosition, "NoEnclosingClass")
+        }).toString match {
+            case r_name(n) => n
+            case _         => "Unknown?"
+        }
+
+        val actm = act.tree.toString.replaceAll(namez+"\\.this\\.", "")
+        val expm = exp.tree.toString.replaceAll(namez+"\\.this\\.", "")
         reify({
             if (act.splice != exp.splice) {
                 try {
@@ -199,7 +260,7 @@ object MyLog {
         val msg = cond.tree.toString
         reify(require(cond.splice, c.Expr[String](Literal(Constant(msg))).splice))
     }
-    def myRequire(cond: Boolean) = macro requirex
+    def myRequire(cond: Boolean): Any = macro requirex
 
     def printx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
@@ -208,12 +269,68 @@ object MyLog {
     }
     def printIt(linecode: Any) = macro printx
 
-    def mprintx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
+    def mprintx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
-        val msg = linecode.tree.toString
-        reify(myPrintDln(c.Expr[String](Literal(Constant(msg))).splice+"\n    ---> "+linecode.splice))
+
+        val namez = (c.enclosingClass match {
+            case clazz @ ClassDef(_, _, _, _) => clazz.symbol.asClass.name
+            case module @ ModuleDef(_, _, _)  => module.symbol.asModule.name
+            case _                            => "" // not inside a class or a module. package object, REPL, somewhere else weird
+        }).toString
+
+        //val paramRep = show(s.tree)
+        //c.Expr(q"""println($paramRep + " = " + $s)""")
+
+        var f1rst = linecode.tree.productIterator.toList.head.toString
+        if (f1rst.indexOf("scala") == 0) {
+            f1rst = ""
+        } else {
+            f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez+"\\.this\\.", "").replaceAll("List", "")
+        }
+        val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez+"\\.this\\.", "").replaceAll("List", "")
+        //reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice+" "+c.Expr[String](Literal(Constant(s2cond))).splice+" ---> "+linecode.splice+" ---> "+c.Expr[String](Literal(Constant(namez))).splice))
+        reify(myPrintln(c.Expr[String](Literal(Constant(f1rst))).splice+" "+c.Expr[String](Literal(Constant(s2cond))).splice+" ---> "+linecode.splice))
     }
-    def myPrintIt(linecode: Any) = macro mprintx
+    def myPrintIt(linecode: Any): Any = macro mprintx
+
+    // get current line in source code
+    def L_ : Int = macro lineImpl
+    def lineImpl(c: Context): c.Expr[Int] = {
+        import c.universe._
+        val line = Literal(Constant(c.enclosingPosition.line))
+        c.Expr[Int](line)
+    }
+
+    // get current file from source code (relative path)
+    def F_ : String = macro fileImpl
+    def fileImpl(c: Context): c.Expr[String] = {
+        import c.universe._
+        val absolute = c.enclosingPosition.source.file.file.toURI
+        val base = new File(".").toURI
+        val path = Literal(Constant(c.enclosingPosition.source.file.file.getName()))
+        c.Expr[String](path)
+    }
+
+    // get current class/object (a bit sketchy)
+    def C_ : String = macro classImpl
+    def classImpl(c: Context): c.Expr[String] = {
+        import c.universe._
+
+        val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
+        c.Expr[String](class_)
+    }
+
+    def myPrintDln(msg: Any)(implicit logFunc: LogFunction): Unit = macro logImpl
+    def logImpl(c: Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunction]): c.Expr[Unit] = {
+        import c.universe._
+        reify(logFunc.splice.log(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
+    }
+
+    def myErrPrintDln(msg: Any)(implicit logFunc: LogFunctionE): Unit = macro logImplE
+    def logImplE(c: Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunctionE]): c.Expr[Unit] = {
+        import c.universe._
+        reify(logFunc.splice.logE(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
+    }
 
     def raise(msg: Any) = throw new AssertionError(msg)
     //def myAssert(c: Context)(cond: c.Expr[Boolean]) : c.Expr[Unit] =  <[ if (!cond) raise("NOGOOD!") ]>
@@ -226,7 +343,7 @@ object MyLog {
         } while (t1 - t0 < d.toMillis)
     }
 
-    def mtimeStampx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
+    def mtimeStampx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
         import c.universe._
         val msg = linecode.tree.toString
         reify({
@@ -237,9 +354,9 @@ object MyLog {
         })
     }
 
-    def timeStampIt(linecode: Any) = macro mtimeStampx
+    def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
-    def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintDln(timeStampsList.filter(_._2 != "---").map(t => (t._1+" ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
+    def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1+" ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
     def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
         val t_end = Calendar.getInstance();
@@ -265,6 +382,10 @@ object MyLog {
     def toFileAndDisplay(fileName: String, htmlString: String) {
         val filo = new File(fileName)
         Some(new PrintWriter(filo)).foreach { p => p.write(htmlString); p.close }
+        display(filo)
+    }
+
+    def display(filo: File) {
         java.awt.Desktop.getDesktop().browse(new java.net.URI("file:///"+filo.getCanonicalPath().replaceAll("\\\\", "/")))
     }
 
@@ -313,7 +434,7 @@ object MyLog {
     def inverseMatrix(lin: List[List[Any]]): List[List[Any]] = {
         val size = lin.map(_.size).min
         if (lin.map(_.size).indexWhere(_ != size) >= 0) {
-            myErrPrintDln("Truncating size! "+lin.map(_.size))
+            myErrPrintln(MyLog.tag(3)+" Truncating size! "+lin.map(_.size))
         }
         lin.head.take(size).zipWithIndex.map(rangee => lin.map(_.apply(rangee._2)))
     }
