@@ -1,0 +1,45 @@
+{ "name": "flare", "children":
+[
+  {"name": "S7", "children":
+  [
+    {"name": "S7020 Synaptics Edgepad FW", "totalBugs": "4", "openBugs": "4", "openAndQaBugs": "4", "openP0_P1Bugs": "4"}
+  ]
+  },
+  {"name": "An", "children":
+  [
+    {"name": "Antivenom", "totalBugs": "8", "openBugs": "8", "openAndQaBugs": "8", "openP0_P1Bugs": "6"}
+  ]
+  },
+  {"name": "Sl", "children":
+  [
+    {"name": "Slash 12", "totalBugs": "2", "openBugs": "2", "openAndQaBugs": "2", "openP0_P1Bugs": "0"}
+  ]
+  },
+  {"name": "Sh", "children":
+  [
+    {"name": "Shen", "totalBugs": "3", "openBugs": "3", "openAndQaBugs": "3", "openP0_P1Bugs": "0"}
+  ]
+  },
+  {"name": "Z_", "children":
+  [
+    {"name": "Z_Xian 12 USB", "totalBugs": "6", "openBugs": "6", "openAndQaBugs": "6", "openP0_P1Bugs": "1"},
+    {"name": "Z_Unicron", "totalBugs": "4", "openBugs": "4", "openAndQaBugs": "4", "openP0_P1Bugs": "1"},
+    {"name": "Z_other_keyboards", "totalBugs": "1", "openBugs": "0", "openAndQaBugs": "0", "openP0_P1Bugs": "0"}
+  ]
+  },
+  {"name": "RB", "children":
+  [
+    {"name": "RBK07_SunBook", "totalBugs": "62", "openBugs": "15", "openAndQaBugs": "16", "openP0_P1Bugs": "6"},
+    {"name": "RBK08_BabyPhoton", "totalBugs": "84", "openBugs": "28", "openAndQaBugs": "33", "openP0_P1Bugs": "12"},
+    {"name": "RBK09_MexicoCity", "totalBugs": "6", "openBugs": "5", "openAndQaBugs": "5", "openP0_P1Bugs": "3"},
+    {"name": "RBK14_Reda", "totalBugs": "26", "openBugs": "4", "openAndQaBugs": "8", "openP0_P1Bugs": "4"}
+  ]
+  },
+  {"name": "RQ", "children":
+  [
+    {"name": "RQR24_Goldie", "totalBugs": "1", "openBugs": "1", "openAndQaBugs": "1", "openP0_P1Bugs": "1"},
+    {"name": "RQM34_Ninja", "totalBugs": "1", "openBugs": "1", "openAndQaBugs": "1", "openP0_P1Bugs": "0"}
+  ]
+  }
+]
+}
