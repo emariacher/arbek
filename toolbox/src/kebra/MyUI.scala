@@ -121,6 +121,7 @@ class MyFileChooser(s_title: String) extends Panel {
         fChooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
         val returnVal = fChooser.showOpenDialog(this)
         if (returnVal == FileChooser.Result.Approve) {
+            s_directory = fChooser.selectedFile.getParent
             fChooser.selectedFile
         } else {
             null
@@ -335,5 +336,3 @@ class MyParameter(val v: String, val defaultValue: String, val classtype: Compon
         }
     }
 }
-
-
