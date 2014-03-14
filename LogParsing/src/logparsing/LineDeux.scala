@@ -13,7 +13,7 @@ import scala.util.parsing.input
 import java.io.File
 
 object LineDeux {
-    val r_digit = """(\d.+)""".r
+    val r_digit = """(\d+:.+)""".r
     val r_test = """\*\*\*\*\* (.+)""".r // ***** ControllerTests.SystemTests.UseCaseMonaural.Fitting
     val r_testEnd = """Test [^\"]+\"(\w+)\"""".r // Test finished in 00:00:00.0078374 seconds with "Error"
     val r_par2 = """\s*(\(.+\)\s*\d.+)""".r // (Left-SMI) 2526s 740ms 683us   AdapterSyncd
