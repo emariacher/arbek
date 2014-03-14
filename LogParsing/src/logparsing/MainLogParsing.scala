@@ -159,7 +159,7 @@ object MainLogParsing extends App {
 
     def hierarchy(lt: List[Test2], depth: Int): String = {
         val indent = (0 to depth).map(z => "  ").mkString
-        lt.groupBy(_.path.apply(depth)).map(z => {
+        lt.filter(_.path.size>depth).groupBy(_.path.apply(depth)).map(z => {
             var s = ""
             if (z._2.size == 1) {
                 z._2.map(y => indent+"{ \"type\":\"title\", \"msg\":\""+y.path.drop(depth).mkString("_")+"\", \"tidtoc\": \""+y.name2+"\"},").mkString("\n")+"\n"
@@ -174,7 +174,7 @@ object MainLogParsing extends App {
 
     def hierarchy3(lt: List[Test2], depth: Int, parent: String): String = {
         val indent = (0 to depth).map(z => "  ").mkString
-        lt.groupBy(_.path.apply(depth)).map(z => {
+        lt.filter(_.path.size>depth).groupBy(_.path.apply(depth)).map(z => {
             var s = ""
             if (z._2.size == 1) {
                 z._2.map(y => indent+"{ \"type\":\"test"+depth+"\", \"name\":\""+y.path.drop(depth).mkString("_")+"\", \"parent\":\""+parent+"\", \"id\": \""+y.name2+"\"},").mkString("\n")+"\n"
