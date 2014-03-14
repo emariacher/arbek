@@ -31,11 +31,11 @@ object LineDeux {
         lines.foreach((si: String) => {
             println(si)
             si match {
-                case r_test(n)    => l2 = l2 :+ new LineTest2(TokenType.TestName, n,List.empty[LineTest2])
-                case r_digit(s)   => l2 = l2 :+ new LineTest2(TokenType.TestLog, s,List.empty[LineTest2])
-                case r_par2(s)    => l2 = l2 :+ new LineTest2(TokenType.TestLog2, s,List.empty[LineTest2])
-                case r_par3(s)    => l2 = l2 :+ new LineTest2(TokenType.TestLog3, s,List.empty[LineTest2])
-                case r_testEnd(r) => l2 = l2 :+ new LineTest2(TokenType.TestEnd, r,List.empty[LineTest2])
+                case r_test(n)    => l2 = l2 :+ new LineTest2(TokenType.TestName, n, List.empty[LineTest2])
+                case r_digit(s)   => l2 = l2 :+ new LineTest2(TokenType.TestLog, s, List.empty[LineTest2])
+                case r_par2(s)    => l2 = l2 :+ new LineTest2(TokenType.TestLog2, s, List.empty[LineTest2])
+                case r_par3(s)    => l2 = l2 :+ new LineTest2(TokenType.TestLog3, s, List.empty[LineTest2])
+                case r_testEnd(r) => l2 = l2 :+ new LineTest2(TokenType.TestEnd, r, List.empty[LineTest2])
                 case _            => println("====>["+si+"]")
             }
         })
@@ -57,7 +57,7 @@ object LineDeux {
                         tokens.next()
                     } else {
                         println("*2* NOGOOD Parsing! ["+msg+"] eof")
-                        new LineTest2(TokenType.Eof, "",List.empty[LineTest2])
+                        new LineTest2(TokenType.Eof, "", List.empty[LineTest2])
                     }
                 } else {
                     println("*3* NOGOOD Parsing! ["+msg+"] - rest.first: ["+rest.first.toString+"]")
@@ -98,7 +98,28 @@ class StructureCombinators4
     def lineTestEnd: Parser[LineTest2] = tokenType("END", TokenType.TestEnd)
     def line_log: Parser[Test2] = lineLog ^^ { t => new Test2("", "", List.empty[LineTest2]) }
     // this is the test structure definition
-    def testDeclaration: Parser[Test2] = (lineTestName ~ rep(lineLog | lineLog2 | lineLog3) ~ lineTestEnd) ^^ { t => new Test2(t._1._1.name, t._2.result, t._1._2) }
+    //def testDeclaration: Parser[Test2] = (lineTestName ~ rep(lineLog | lineLog2 | lineLog3) ~ lineTestEnd) ^^ { t => new Test2(t._1._1.name, t._2.result, t._1._2) }
+    def testDeclaration: Parser[Test2] = (lineTestName ~ rep(lineLog | lineLog2 | lineLog3) ~ opt(lineTestEnd)) ^^ { t =>
+        {
+            val result = t._2 match {
+                case Some(z) => z.result
+                case _       => "NoGood1"
+            }
+            val logs = t._1._2 /*match {
+                case Some(z) => {
+                    System.err.println("Here! ["+t._1._1.name+"] ["+z+"]")
+                    z
+                }
+                case _ => {
+                    System.err.println("There! ["+t._1._1.name+"]")
+                    List.empty[LineTest2]
+                }
+            }*/
+            System.err.println("Here! ["+t._1._1.name+"] ["+result+"] ["+logs+"] ["+t+"]")
+            new Test2(t._1._1.name, result, logs)
+        }
+    }
+
 }
 
 abstract sealed trait TokenType
