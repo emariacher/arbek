@@ -12,8 +12,9 @@ class EcatFrame(val hdr: LineWsHdr, val hexdata: List[String]) {
     var index = 16
     while ((index < hdr.length)) {
       //myPrintln(toString)
-      val edg = new EcatDatagram(hex, index)
+      val edg = new EcatDatagram(hex, index, direction, hdr.timeStamp)
       datagrams = datagrams :+ edg
+      datagrams = datagrams.filter(dg => dg.coesdo.length>=10 || dg.isPdo)
       index = edg.endIndex
     }
   }
@@ -26,7 +27,7 @@ class EcatFrame(val hdr: LineWsHdr, val hexdata: List[String]) {
     } else {
       s += "M<-S"
     }
-    s+"["+hdr.line+"\n   "+checkEcat(false)+"\n   "+datagrams.mkString("\n   ")+"]\n"
+    s+"["+hdr.line+"\n   "+datagrams.mkString("\n   ")+"]\n"
   }
 
   def checkEcat(stop: Boolean): Boolean = {

@@ -21,8 +21,15 @@ object LineDeux {
   def getTests2(lines: List[String]): List[EcatFrame] = {
     val l2 = getLines2(lines)
     val lt = parse(l2.toIterator).toList
-    //println(lt.mkString("\n"))
-    myErrPrintln(lt.filter(_.direction == Direction.Rx_Outputs_MS).filter(!_.datagrams.filter(_.coesdo.isGood).isEmpty).mkString("\n"))
+    println(lt.mkString("\n"))
+    val sdosFromMaster = lt.filter(_.direction == Direction.Rx_Outputs_MS).filter(!_.datagrams.filter(_.coesdo.isGood).isEmpty)
+    val datagramsFromMasterNotNull = sdosFromMaster.map(_.datagrams).flatten.filter(_.coesdo.data != 0)
+    //myPrintln(sdosFromMaster.mkString("\n"))
+    //myErrPrintln(datagramsFromMasterNotNull.mkString("\n"))
+    PdoMappings.initMappings(datagramsFromMasterNotNull)
+    val pdos = lt.map(_.datagrams).flatten.filter(_.isPdo).map(new PDO(_))
+    myPrintIt(pdos)
+    new GenerateCurves(pdos)
     lt
   }
 

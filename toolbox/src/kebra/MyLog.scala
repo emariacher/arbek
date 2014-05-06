@@ -356,20 +356,19 @@ object MyLog {
 
     def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
-    def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1+" ms", t._2.replaceAll(".this", ""))).mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
+  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1+" ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
-    def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
-        val t_end = Calendar.getInstance();
-        myPrintln("    t_now: "+MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title+
-            "] t_diff: "+(t_end.getTimeInMillis() - c_t_start.getTimeInMillis()));
-        t_end;
-    }
+  def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
+    val t_end = Calendar.getInstance()
+    myPrintln("    t_now: "+MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title+
+      "] t_diff: "+(t_end.getTimeInMillis() - c_t_start.getTimeInMillis()))
+    timeStampsList = timeStampsList :+ ((t_end.getTimeInMillis() - c_t_start.getTimeInMillis()), s_title);
+    t_end
+  }
 
-    def timeStamp(c_t_start: Calendar): Long = Calendar.getInstance().getTimeInMillis() - c_t_start.getTimeInMillis()
+  def timeStamp(c_t_start: Calendar): Long = Calendar.getInstance().getTimeInMillis() - c_t_start.getTimeInMillis()
 
-    def timeStamp(s_title: String): Calendar = {
-        timeStamp(L.t_start, s_title)
-    }
+  def timeStamp(s_title: String): Calendar = timeStamp(Calendar.getInstance(), s_title)
 
     def checkException(L: MyLog, i_rc: Int, s: String) {
         if (i_rc != 0) {

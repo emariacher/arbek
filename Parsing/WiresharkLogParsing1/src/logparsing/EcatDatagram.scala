@@ -3,7 +3,7 @@ package logparsing
 import kebra.MyLog
 import kebra.MyLog._
 
-class EcatDatagram(val hex: List[Int], val startIndex: Int) {
+class EcatDatagram(val hex: List[Int], val startIndex: Int, val direction: Direction, val timestamp: TimeStamp) {
   val command = EcatDatagram.dgType.getOrElse(hex.apply(startIndex + EcatDatagram.indexCommand), "EC_DATAGRAM_NONE")
   val command2 = EcatDatagram.dgType2.getOrElse(hex.apply(startIndex + EcatDatagram.indexCommand), ec_datagram_type_t.EC_DATAGRAM_NONE)
   var index = hex.apply(startIndex + EcatDatagram.indexIndex)
@@ -13,6 +13,7 @@ class EcatDatagram(val hex: List[Int], val startIndex: Int) {
   var data = List(0)
   var endIndex = 0
   var coesdo = new CoESdo
+  var isPdo = false
 
   //myErrPrintDln(command+" "+command2+" {"+hex.map("0x%02X".format(_)).mkString(", ")+"}")
   //myErrPrintDln(startIndex+" {"+hex.drop(startIndex).map("0x%02X".format(_)).mkString(", ")+"}")
@@ -30,11 +31,27 @@ class EcatDatagram(val hex: List[Int], val startIndex: Int) {
   }
 
   command2 match {
-    case ec_datagram_type_t.EC_DATAGRAM_LRW  =>
+    case ec_datagram_type_t.EC_DATAGRAM_LRW  => isPdo = true // parsed later when Pdo mappings are defined
     case ec_datagram_type_t.EC_DATAGRAM_NPWR => if (length >= 16) coesdo = new CoESdo(data)
     case _                                   =>
   }
-  override def toString = "["+command+" "+length+" {"+data.map("0x%02X".format(_)).mkString(", ")+"}"+coesdo+"]"
+  
+  override def toString = {
+      command2 match {
+    case ec_datagram_type_t.EC_DATAGRAM_LRW  => "["+command+" "+command2+" "+length+" {"+data.map("0x%02X".format(_)).mkString(", ")+"}"+isPdo+"]"
+    case ec_datagram_type_t.EC_DATAGRAM_NPWR => "["+command+" "+command2+" "+length+" {"+data.map("0x%02X".format(_)).mkString(", ")+"}"+coesdo+"]"
+    case _                                   => "["+command+" "+command2+" "+length+" {"+data.map("0x%02X".format(_)).mkString(", ")+"}]"
+  }
+
+  }
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 object EcatDatagram {
