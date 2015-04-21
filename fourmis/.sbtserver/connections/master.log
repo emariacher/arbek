@@ -1,0 +1,7 @@
+New log file opened at Mon Apr 20 16:07:20 CEST 2015 by 9704@CHREN-PC-087
+Taking next connection to: 27192
+New client attempting to connect on port: 27193-27192
+  Address = /10.96.3.62:27192
+This client on port 27193 has uuid 6fb16329-d084-4aa6-8c8f-cceabf147d3c configName activator humanReadableName Activator protocolVersion 1 featureTags Vector()
+Connected Clients: activator-6fb16329-d084-4aa6-8c8f-cceabf147d3c
+Taking next connection to: 27192
