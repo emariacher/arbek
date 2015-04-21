@@ -11,7 +11,7 @@ import kebra.MyLog._
 import labyrinthe._
 import labyrinthe.Tableaux._
 
-object AkkaJeton {
+object AkkaJeton extends App {
     sealed trait AvanceJeton
     case object Demarre extends AvanceJeton
     case class GoJeton(j: Jeton) extends AvanceJeton
