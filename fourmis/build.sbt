@@ -1,28 +1,8 @@
-name := """hello-scala"""
+name := """fourmi"""
 
 version := "1.0"
 
-//scalaVersion := "2.11.5"
-
-lazy val commonSettings = Seq(
-  scalaVersion := "2.11.5",
-  organization := "com.example"
-)
-lazy val scalaRefect = Def.setting { "org.scala-lang" % "scala-reflect" % scalaVersion.value }
-
-lazy val core = (project in file("core")).
-  dependsOn(macroSub).
-  settings(commonSettings: _*).
-  settings(
-    // other settings here
-  )
-
-lazy val macroSub = (project in file("macro")).
-  settings(commonSettings: _*).
-  settings(
-    libraryDependencies += scalaRefect.value
-    // other settings here
-  )
+scalaVersion := "2.11.5"
 
 // add scala-xml dependency when needed (for Scala 2.11 and newer) in a robust way
 // this mechanism supports cross-version publishing
@@ -40,6 +20,8 @@ libraryDependencies := {
       libraryDependencies.value :+ "org.scala-lang" % "scala-swing" % scalaVersion.value
   }
 }
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.3.9",

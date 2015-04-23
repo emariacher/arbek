@@ -3,6 +3,7 @@ package labyrinthe
 import java.awt.Color
 import java.awt.Graphics2D
 import labyrinthe.Tableaux._
+import labyrinthe.ZePanel._
 import labyrinthe.FrontiereV._
 import kebra._
 import scala.swing.Label
@@ -31,28 +32,23 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     var traces = List.empty[RowCol]
     var next = new RowCol(888, 888)
     var lastDirection = nord
+    var statut = Pheronome.CHERCHE
+
+    def init = {
+        setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
+        visible = true
+        statut = Pheronome.CHERCHE
+    }
 
     def avance: StateMachine = {
         if ((next.r == 0) || (next.c == 0) || (next.r == tbx.maxRow) || (next.c == tbx.maxCol) || (cnt > StatJeton.limit)) {
-            l.myPrintln(MyLog.tagnt(1) + couleur + " " + next)
-            StateMachine.termine
-            /*} else if(cnt>StatJeton.limit/2) {
-			l.myErrPrintln(couleur+" est sans doute dans un cercle vicieux.")
-			// la detection de cercle vicieux ne marche probablement pas pour le pion fou bleu
-			// le cercle vicieux a au moins une dimension de 4 cellules
-			val par4l = traces.sliding(4).toList
-			val par4s = ListSet[List[RowCol]]() ++ par4l
-			par4sorted = par4s.map((l: List[RowCol]) => (l,par4l.count(_==l))).toList.filter(_._2>5).sortBy{_._2}
-			if(!par4sorted.isEmpty) {
-				l.myErrPrintln(couleur+" est dans le cercle vicieux: "+ par4sorted.last)			
-				tbx.zp.step = true
-				//cnt = StatJeton.limit+1
-				//StateMachine.termine
-				pasFini
-			} else {
-				l.myPrintln(MyLog.tagnt(1)+couleur+" fausse alerte")			
-				pasFini
-			}*/
+            l.myPrintln(MyLog.tagnt(1) + " "+couleur + " " + next)
+            if(zp.ptype==PanelType.LABY) {
+                StateMachine.termine
+            } else {
+                statut = Pheronome.RAMENE
+                StateMachine.termine
+            }
         } else {
             pasFini
         }
@@ -98,7 +94,11 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
             var yg = tbx.origin.getHeight.toInt + (vert * 2 * row)
             g.fillOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
             g.setColor(Color.black)
-            g.drawString(canGo, xg, yg)
+            if(statut==Pheronome.CHERCHE) {
+                g.drawString(canGo, xg, yg)
+            } else {
+                g.drawString("X", xg, yg)
+            }
             g.setColor(couleur.color)
             traces.foreach((rc: RowCol) => {
                 xg = tbx.origin.getWidth.toInt + (horiz * 2 * rc.c)
@@ -156,9 +156,13 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
                 }
             }
         }
+
         l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " " + traces)
         assert(next.r != 888)
         traces = traces :+ rc
+        if(zp.ptype==PanelType.FOURMI) {
+            tbx.lc.find(c => c.rc.equals(rc)).head.depotPheronomes = tbx.lc.find(c => c.rc.equals(rc)).head.depotPheronomes :+ new Depot(0, statut, this)
+        }
         if (next.r > row) lastDirection = sud
         if (next.r < row) lastDirection = nord
         if (next.c > col) lastDirection = est

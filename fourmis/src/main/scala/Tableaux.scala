@@ -84,8 +84,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
 
     def nettoie: StateMachine = {
         lc.foreach(_.nettoie)
-        lj.foreach(_.setRowCol(maxRow / 2, maxCol / 2))
-        lj.foreach(_.visible = true)
+        lj.foreach(_.init)
 
         StateMachine.avance
     }

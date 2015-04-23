@@ -42,13 +42,13 @@ object ZePanel {
     var zp: ZePanel = _
     var za: ActorRef = _
     implicit val system = MyLog.system
-    def newZePanel(lbl: Label, maxRC: RowCol) {
-        zp = new ZePanel(lbl, maxRC)
+    def newZePanel(lbl: Label, maxRC: RowCol, ptype: PanelType.Value) {
+        zp = new ZePanel(lbl, maxRC, ptype)
         za = ActorDSL.actor(new ZeActor)
     }
 }
 
-class ZePanel(val lbl: Label, val maxRC: RowCol) extends Panel {
+class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) extends Panel {
     var pause = false
     var step = false
     var run = false
@@ -68,3 +68,8 @@ class ZePanel(val lbl: Label, val maxRC: RowCol) extends Panel {
     }
 }
 
+object PanelType extends Enumeration {
+    type PanelType = Value
+    val LABY, FOURMI = Value
+    PanelType.values foreach println
+}

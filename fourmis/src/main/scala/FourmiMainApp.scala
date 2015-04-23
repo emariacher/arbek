@@ -16,11 +16,11 @@ import labyrinthe.LL._
 import java.io.File
 import kebra.MyLog._
 
-object LabyrintheMainApp extends SimpleSwingApplication {
+object FourmiMainApp extends SimpleSwingApplication {
     newMyLL(this.getClass.getName, new File("out\\cowabunga"), "htm", true)
 
     def top = new MainFrame {
-        title = "Sors du Labyrinthe. Vert va toujours a tribord, Rouge toujours a babord et bleu est fou."
+        title = "Phéromones de fourmis."
         val sliderpp = new Slider {
             majorTickSpacing = 100
             minorTickSpacing = 10
@@ -32,7 +32,7 @@ object LabyrintheMainApp extends SimpleSwingApplication {
 
         //val tableau = new ZePanel(label, new RowCol(40,40))
 
-        ZePanel.newZePanel(label, new RowCol(40, 40), PanelType.LABY)
+        ZePanel.newZePanel(label, new RowCol(20, 20), PanelType.FOURMI)
 
         contents = new BoxPanel(Orientation.Vertical) {
             contents += label

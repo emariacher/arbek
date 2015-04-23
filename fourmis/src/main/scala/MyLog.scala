@@ -113,7 +113,7 @@ var timeStampsList = List.empty[(Long, String)]
             throw new Exception()
         } catch {
             case unknown: Throwable => unknown.getStackTrace.toList.apply(i_level).toString match {
-                case MatchFileLine(file, line) => file+":"+line+" "+s_time
+                case MatchFileLine(file, line) => file+":"+line+" "+s_time+" "
             }
         }
     }
@@ -124,7 +124,7 @@ var timeStampsList = List.empty[(Long, String)]
             throw new Exception()
         } catch {
             case unknown: Throwable => unknown.getStackTrace.toList.apply(i_level).toString match {
-                case MatchFileLine(file, line) => file+":"+line
+                case MatchFileLine(file, line) => file+":"+line+" "
             }
         }
     }
@@ -135,7 +135,7 @@ var timeStampsList = List.empty[(Long, String)]
             throw new Exception()
         } catch {
             case unknown: Throwable => unknown.getStackTrace.toList.apply(i_level).toString match {
-                case MatchFunc(funcs) => funcs.split('.').toList.last
+                case MatchFunc(funcs) => funcs.split('.').toList.last+" "
                 case _                => s_rien
             }
         }
@@ -239,8 +239,8 @@ class MyLogActor extends Actor {
             b_filesActive = false
             errfile.writeFile(postProcessFunc(hlines, javascriptHeader))
             files.foreach(_.close)
-            //context.system.shutdown()
-        exit
+            context.system.shutdown()
+        //exit
         case logMsg(errorType, msg) => errorType match {
             case "H" =>
                 if (b_filesActive) {
@@ -264,8 +264,8 @@ class MyLogActor extends Actor {
         case closeMsg =>
             b_filesActive = false
             files.foreach(_.close)
-            //context.system.shutdown()
-        exit
+            context.system.shutdown()
+        //exit
     }
 
 }
