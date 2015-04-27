@@ -19,7 +19,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         foreground = couleur.color
     }
     var state = StateMachineJeton.normal
-    var par4sorted = List.empty[(List[RowCol], Int)]
+    //var par4sorted = List.empty[(List[RowCol], Int)]
     var cnt = 0
     var visible = false
     var rc: RowCol = _
@@ -41,13 +41,15 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     }
 
     def avance: StateMachine = {
-        if ((next.r == 0) || (next.c == 0) || (next.r == tbx.maxRow) || (next.c == tbx.maxCol) || (cnt > StatJeton.limit)) {
+        if (cnt > StatJeton.limit) {
+            StateMachine.termine
+        } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow+1)) || (next.c == (tbx.maxCol+1))) {
             l.myPrintln(MyLog.tagnt(1) + " "+couleur + " " + next)
             if(zp.ptype==PanelType.LABY) {
                 StateMachine.termine
             } else {
                 statut = Pheronome.RAMENE
-                StateMachine.termine
+                pasFini
             }
         } else {
             pasFini
@@ -120,48 +122,105 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
 
     def pasFini: StateMachine = {
         l.myPrintln(MyLog.func(1) + " " + toString + " " + lastDirection)
-        // essaye de trouver une case vierge en suivant l'ordre de priorite defini
-        next = firstStep
-        while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
-        var cpt = 0
-        while ((next.r == 888) && (cpt < 3)) {
-            getNext(ordreChoix.nextf(ordreChoix), true, true)
-            cpt += 1
-        }
-        // accepte d'aller dans les cases deflorees en suivant l'ordre de priorite defini vu que tu n'as rien trouve de mieux
-        if (next.r == 888) {
-            getNext(lastDirection, true, true)
-            while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
-            cpt = 0
-            while ((next.r == 888) && (cpt < 4)) {
-                getNext(ordreChoix.prevf(ordreChoix), false, true)
-                cpt += 1
+        if(statut==Pheronome.CHERCHE) {
+            next = firstStep
+            // essaye de trouver une case qui a le maximum de pheronomes[RAMENE]
+            var possibles = List.empty[RowCol]
+            if(goNorth) {
+                possibles = possibles :+ rc.haut
             }
-            // mais si ca te fait revenir exactement sur tes pas essaye de trouver mieux quand meme si c'est possible
+            if(goSouth) {
+                possibles = possibles :+ rc.bas
+            }
+            if(goEast) {
+                possibles = possibles :+ rc.droite
+            }
+            if(goWest) {
+                possibles = possibles :+ rc.gauche
+            }
+            l.myPrintln(MyLog.func(1) + " maxRow " + tbx.maxRow + " maxRow " + tbx.maxCol  + " tbxlcsize " + tbx.lc.length + " possibles: " + possibles)
+            possibles = possibles.filter( z => {
+                z.r<=tbx.maxRow && z.c<=tbx.maxCol && traces.find(_.equals(z)).isEmpty
+            }).filter( z => {
+                    var c = tbx.lc.find(_.rc.equals(z)).head
+                    !c.depotPheronomes.filter(_.ph==Pheronome.RAMENE).isEmpty
+            }).sortWith((a,b) => {
+                var ca = tbx.lc.find(_.rc.equals(a)).head
+                var cb = tbx.lc.find(_.rc.equals(b)).head
+                ca.depotPheronomes.filter(_.ph==Pheronome.RAMENE).length>cb.depotPheronomes.filter(_.ph==Pheronome.RAMENE).length
+            })
+            l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
+            if(!possibles.isEmpty) {
+                next = new RowCol(possibles.head.r,possibles.head.c)
+                // mais ne reviens pas sur tes pas!
+                l.myPrintln(MyLog.func(1) + "traces: " + traces)
+                if(!traces.isEmpty) {
+                    l.myPrintln(MyLog.func(1) + "traceslast: " + traces.last+" nextr "+next)
+                    if (next.equals(traces.last)) {
+                        possibles = possibles.drop(1)
+                        l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
+                        if (!possibles.isEmpty) {
+                            next = new RowCol(possibles.head.r, possibles.head.c)
+                        }
+                    }
+                }
+            }
+            // essaye de trouver une case vierge en suivant l'ordre de priorite defini
             if (next.r == 888) {
-                getNext(lastDirection, true, true)
+                next = firstStep
                 while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
-                cpt = 0
-                while ((next.r == 888) && (cpt < 4)) {
-                    getNext(ordreChoix.nextf(ordreChoix), false, false)
+                var cpt = 0
+                while ((next.r == 888) && (cpt < 3)) {
+                    getNext(ordreChoix.nextf(ordreChoix), true, true)
                     cpt += 1
+                }
+                // accepte d'aller dans les cases deflorees en suivant l'ordre de priorite defini vu que tu n'as rien trouve de mieux
+                if (next.r == 888) {
+                    getNext(lastDirection, true, true)
+                    while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
+                    cpt = 0
+                    while ((next.r == 888) && (cpt < 4)) {
+                        getNext(ordreChoix.prevf(ordreChoix), false, true)
+                        cpt += 1
+                    }
+                    // mais si ca te fait revenir exactement sur tes pas essaye de trouver mieux quand meme si c'est possible
+                    if (next.r == 888) {
+                        getNext(lastDirection, true, true)
+                        while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
+                        cpt = 0
+                        while ((next.r == 888) && (cpt < 4)) {
+                            getNext(ordreChoix.nextf(ordreChoix), false, false)
+                            cpt += 1
+                        }
+                    }
+                    //bon, si tu n'y arrive pas, reviens sur tes pas
+                    if (next.r == 888) {
+                        cpt = 0
+                        while ((next.r == 888) && (cpt < StatJeton.limit)) {
+                            // normalement c'est 4, mais avec le fou bleu, on sait jamais
+                            getNext(ordreChoix.nextf(ordreChoix), false, false)
+                            cpt += 1
+                        }
+                    }
                 }
             }
-            //bon, si tu n'y arrive pas, reviens sur tes pas
-            if (next.r == 888) {
-                cpt = 0
-                while ((next.r == 888) && (cpt < StatJeton.limit)) { // normalement c'est 4, mais avec le fou bleu, on sait jamais			
-                    getNext(ordreChoix.nextf(ordreChoix), false, false)
-                    cpt += 1
-                }
+            traces = traces :+ rc
+        } else {
+            if((traces.isEmpty)||((next.r==tbx.maxRow / 2)&&(next.c==tbx.maxCol / 2))) {
+                statut=Pheronome.CHERCHE;
+                traces  = List.empty[RowCol]
+            } else {
+                next = traces.last
+                traces = traces.dropRight(1)
             }
         }
 
         l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " " + traces)
         assert(next.r != 888)
-        traces = traces :+ rc
         if(zp.ptype==PanelType.FOURMI) {
-            tbx.lc.find(c => c.rc.equals(rc)).head.depotPheronomes = tbx.lc.find(c => c.rc.equals(rc)).head.depotPheronomes :+ new Depot(0, statut, this)
+            if(!tbx.lc.find(_.rc.equals(rc)).isEmpty) {
+                tbx.lc.find(_.rc.equals(rc)).head.depotPheronomes = tbx.lc.find(_.rc.equals(rc)).head.depotPheronomes :+ new Depot(0, statut, this)
+            }
         }
         if (next.r > row) lastDirection = sud
         if (next.r < row) lastDirection = nord
@@ -198,7 +257,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         next
     }
 
-    override def toString = "{" + couleur + " " + rc + " " + canGo + "}"
+    override def toString = "{" + couleur + " " + rc + " " + canGo + " " + statut + "}"
 }
 
 class Couleur(val couleur: String) {

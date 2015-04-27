@@ -106,7 +106,7 @@ class Carre(val rc: RowCol) {
     g.setColor(Color.black)
     frontieres.foreach(_.paint(g, horiz, vert, x, y))
     if (depotPheronomes.length > 0) {
-      g.drawString(""+depotPheronomes.length, x-horiz, y-vert)
+      g.drawString(""+depotPheronomes.filter(_.ph==Pheronome.RAMENE).length, x-horiz, y-vert)
     }
     //g.drawString(toString,x,y)
   }

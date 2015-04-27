@@ -32,7 +32,7 @@ object FourmiMainApp extends SimpleSwingApplication {
 
         //val tableau = new ZePanel(label, new RowCol(40,40))
 
-        ZePanel.newZePanel(label, new RowCol(20, 20), PanelType.FOURMI)
+        ZePanel.newZePanel(label, new RowCol(8, 8), PanelType.FOURMI)
 
         contents = new BoxPanel(Orientation.Vertical) {
             contents += label
