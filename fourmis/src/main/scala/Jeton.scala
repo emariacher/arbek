@@ -209,6 +209,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
             if((traces.isEmpty)||((next.r==tbx.maxRow / 2)&&(next.c==tbx.maxCol / 2))) {
                 statut=Pheronome.CHERCHE;
                 traces  = List.empty[RowCol]
+                tbx.lc.find(_.rc.equals(rc)).head.depotPheronomes = tbx.lc.find(_.rc.equals(rc)).head.depotPheronomes :+ new Depot(0, statut, this)
             } else {
                 next = traces.last
                 traces = traces.dropRight(1)

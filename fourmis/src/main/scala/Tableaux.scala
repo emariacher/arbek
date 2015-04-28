@@ -32,10 +32,10 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     var countGenere = 0
     var countAvance = 0
     var lc = List.empty[Carre]
-        var lj = List(new Rouge("rouge", 80), new Orange("orange", 75),
-            new VertFonce("vertFonce", 70), new VertClair("vertClair", 65),
-            new Bleu("bleu", 60), new BleuClair("bleuClair", 55))
-    lj = List(new Bleu("bleu", 60))
+    var lj = List(new Rouge("rouge", 80), new Orange("orange", 75),
+        new VertFonce("vertFonce", 70), new VertClair("vertClair", 65),
+        new Bleu("bleu", 60), new BleuClair("bleuClair", 55))
+    //lj = List(new Bleu("bleu", 60))
     val mj = lj.map((j: Jeton) => (j.couleur, j)).toMap
     val mjs = lj.map((j: Jeton) => (j.couleur, new StatJeton(j.couleur))).toMap
     var ltimestamps = List[Long](0)
