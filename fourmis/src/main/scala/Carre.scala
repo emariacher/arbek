@@ -104,16 +104,15 @@ class Carre(val rc: RowCol) {
     val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
     val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
 
-    if(bloque) {
-      g.setColor(Color.red)
-    } else {
-      g.setColor(Color.black)
+    g.setColor(Color.black)
+    if (bloque) {
+      g.fillOval(x-3, y-3, 6, 6)
     }
 
     frontieres.foreach(_.paint(g, horiz, vert, x, y))
     g.setColor(Color.black)
     if (depotPheronomes.length > 0) {
-      g.drawString(""+depotPheronomes.filter(_.ph==Pheronome.RAMENE).length, x-horiz, y-vert)
+      g.drawString("" + calculePheromone, x - horiz, y - vert)
     }
     //g.drawString(toString,x,y)
   }
@@ -137,6 +136,10 @@ class Carre(val rc: RowCol) {
 
   def getDownCarre: Option[Carre] = {
     tbx.lc.find((cf: Carre) => cf.row == row + 1 && cf.col == col)
+  }
+
+  def calculePheromone: Int = {
+    depotPheronomes.filter(_.ph == Pheronome.RAMENE).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
   }
 
 }

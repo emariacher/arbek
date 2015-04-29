@@ -62,7 +62,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         countAvance += 1
         if (command == "bloque") {
           l.myErrPrintDln("trouve le carre le plus actif")
-          var carreLePlusActif = lc.filter(c => c.row > maxRC.r / 4 && c.col > maxRC.c / 4).maxBy(c => c.depotPheronomes.filter(_.ph == Pheronome.RAMENE).length)
+          var carreLePlusActif = lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / 4)) &&
+            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / 4))).maxBy(_.calculePheromone)
           l.myErrPrintDln("et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
           val cn = carreLePlusActif.getUpCarre match {
@@ -221,6 +222,14 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       //L.myPrintDln(seedIndex+" "+mperfs)
     }
     state = StateMachine.termine
+  }
+  def findCarre(rc2f: RowCol) = {
+    var z = lc.find(_.rc.equals(rc2f))
+    if(z.isEmpty) {
+      null
+    }else {
+      z.head
+    }
   }
 }
 
