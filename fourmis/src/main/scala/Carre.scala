@@ -18,6 +18,7 @@ class Carre(val rc: RowCol) {
   val prolongeThreshold = 550
   var frontieres = List[Frontiere]()
   var depotPheronomes = List[Depot]()
+  var bloque = false
 
   def autre(maFrontiere: Frontiere) = {
     maFrontiere.f match {
@@ -103,8 +104,14 @@ class Carre(val rc: RowCol) {
     val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
     val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
 
-    g.setColor(Color.black)
+    if(bloque) {
+      g.setColor(Color.red)
+    } else {
+      g.setColor(Color.black)
+    }
+
     frontieres.foreach(_.paint(g, horiz, vert, x, y))
+    g.setColor(Color.black)
     if (depotPheronomes.length > 0) {
       g.drawString(""+depotPheronomes.filter(_.ph==Pheronome.RAMENE).length, x-horiz, y-vert)
     }

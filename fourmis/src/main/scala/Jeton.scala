@@ -41,7 +41,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     }
 
     def avance: StateMachine = {
-        if (cnt > StatJeton.limit) {
+        if (cnt > zp.limit) {
             StateMachine.termine
         } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow+1)) || (next.c == (tbx.maxCol+1))) {
             l.myPrintln(MyLog.tagnt(1) + " "+couleur + " " + next)
@@ -66,13 +66,13 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         row = rc.r
         val NO = tbx.lc.find((c: Carre) => c.rc == rc.moinsUn) match {
             case Some(c) =>
-                l.myPrintln(MyLog.tagnt(1) + "NO: " + c)
+                //l.myPrintln(MyLog.tagnt(1) + "NO: " + c)
                 c.frontieres.filter((f: Frontiere) => f == sud || f == est)
             case _ => List.empty[Frontiere]
         }
         val SE = tbx.lc.find((c: Carre) => c.rc == rc) match {
             case Some(c) =>
-                l.myPrintln(MyLog.tagnt(1) + "SE: " + c)
+                //l.myPrintln(MyLog.tagnt(1) + "SE: " + c)
                 c.frontieres.filter((f: Frontiere) => f == nord || f == ouest)
             case _ => List.empty[Frontiere]
         }
@@ -80,7 +80,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         goSouth = SE.find(_ == ouest).isEmpty
         goWest = NO.find(_ == sud).isEmpty
         goEast = SE.find(_ == nord).isEmpty
-        l.myPrintln(MyLog.func(1) + " " + canGo)
+        //l.myPrintln(MyLog.func(1) + " " + canGo)
     }
 
     def canGo = (if (goNorth) "N1" else "N0") + (if (goSouth) "S1" else "S0") + (if (goWest) "O1" else "O0") + (if (goEast) "E1" else "E0")
@@ -138,7 +138,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
             if(goWest) {
                 possibles = possibles :+ rc.gauche
             }
-            l.myPrintln(MyLog.func(1) + " maxRow " + tbx.maxRow + " maxRow " + tbx.maxCol  + " tbxlcsize " + tbx.lc.length + " possibles: " + possibles)
             possibles = possibles.filter( z => {
                 z.r<=tbx.maxRow && z.c<=tbx.maxCol && traces.find(_.equals(z)).isEmpty
             }).filter( z => {
@@ -149,13 +148,14 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
                 var cb = tbx.lc.find(_.rc.equals(b)).head
                 ca.depotPheronomes.filter(_.ph==Pheronome.RAMENE).length>cb.depotPheronomes.filter(_.ph==Pheronome.RAMENE).length
             })
-            l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
+
             if(!possibles.isEmpty) {
+                l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
                 next = new RowCol(possibles.head.r,possibles.head.c)
                 // mais ne reviens pas sur tes pas!
-                l.myPrintln(MyLog.func(1) + "traces: " + traces)
+                //l.myPrintln(MyLog.func(1) + "traces: " + traces)
                 if(!traces.isEmpty) {
-                    l.myPrintln(MyLog.func(1) + "traceslast: " + traces.last+" nextr "+next)
+                    //l.myPrintln(MyLog.func(1) + "traceslast: " + traces.last+" nextr "+next)
                     if (next.equals(traces.last)) {
                         possibles = possibles.drop(1)
                         l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
@@ -196,7 +196,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
                     //bon, si tu n'y arrive pas, reviens sur tes pas
                     if (next.r == 888) {
                         cpt = 0
-                        while ((next.r == 888) && (cpt < StatJeton.limit)) {
+                        while ((next.r == 888) && (cpt < zp.limit)) {
                             // normalement c'est 4, mais avec le fou bleu, on sait jamais
                             getNext(ordreChoix.nextf(ordreChoix), false, false)
                             cpt += 1
@@ -209,14 +209,12 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
             if((traces.isEmpty)||((next.r==tbx.maxRow / 2)&&(next.c==tbx.maxCol / 2))) {
                 statut=Pheronome.CHERCHE;
                 traces  = List.empty[RowCol]
-                tbx.lc.find(_.rc.equals(rc)).head.depotPheronomes = tbx.lc.find(_.rc.equals(rc)).head.depotPheronomes :+ new Depot(0, statut, this)
             } else {
-                next = traces.last
-                traces = traces.dropRight(1)
+                retourne()
             }
         }
 
-        l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " " + traces)
+        l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
         assert(next.r != 888)
         if(zp.ptype==PanelType.FOURMI) {
             if(!tbx.lc.find(_.rc.equals(rc)).isEmpty) {
@@ -231,6 +229,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         cnt += 1
         StateMachine.avance
     }
+    def retourne(): Unit = {
+        next = traces.last
+        traces = traces.dropRight(1)
+    }
 
     def getNext(f: Frontiere, newCarreOnly: Boolean, notBack: Boolean): RowCol = {
         next = new RowCol(888, 888)
@@ -240,9 +242,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
             case OUEST => if (goWest) next = rc.gauche
             case EST   => if (goEast) next = rc.droite
         }
-        l.myPrintln(MyLog.tagnt(2) + couleur + "  *1*  (" + f + " nco: " + newCarreOnly + " nb: " + notBack + ") : " + rc + " -> " + next)
+        //l.myPrintln(MyLog.tagnt(2) + couleur + "  *1*  (" + f + " nco: " + newCarreOnly + " nb: " + notBack + ") : " + rc + " -> " + next)
         if (newCarreOnly && !traces.filter(_ == next).isEmpty) {
-            l.myPrintln(MyLog.tagnt(2) + couleur + " **2** (" + f + " nco: " + newCarreOnly + ") : " + rc + " -> " + next)
+            //l.myPrintln(MyLog.tagnt(2) + couleur + " **2** (" + f + " nco: " + newCarreOnly + ") : " + rc + " -> " + next)
             next = new RowCol(888, 888)
         }
         if (!traces.isEmpty) if (notBack && next == traces.last) {
@@ -254,7 +256,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
 				l.myPrintln(MyLog.tagnt(2)+couleur+" **4** ("+f+" cv: "+state+") : "+rc+" -> "+next)
 				next = new RowCol(888,888)			
 			}*/
-        l.myPrintln(MyLog.tagnt(2) + couleur + "  *5*  (" + f + " nco: " + newCarreOnly + " nb: " + notBack + ") : " + rc + " -> " + next)
+        //l.myPrintln(MyLog.tagnt(2) + couleur + "  *5*  (" + f + " nco: " + newCarreOnly + " nb: " + notBack + ") : " + rc + " -> " + next)
         next
     }
 

@@ -27,7 +27,7 @@ object FourmiMainApp extends SimpleSwingApplication {
             paintLabels = true
             paintTicks = true
         }
-        val buttonStep = new Button { text = "step" }
+        val buttonStep = new Button { text = "bloque" }
         val label = new Label { text = "Idle Label" }
 
         //val tableau = new ZePanel(label, new RowCol(40,40))

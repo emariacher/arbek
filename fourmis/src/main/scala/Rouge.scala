@@ -32,6 +32,33 @@ class Rouge(couleur: String, rayon: Int) extends Jeton(couleur, rayon) {
 class Orange(couleur: String, rayon: Int) extends Rouge(couleur, rayon) {
     // essaye de continuer dans la meme direction que la derniere fois
     override def firstStep: RowCol = getNext(lastDirection, true, true)
+    override def retourne(): Unit = {
+        /*next = traces.last
+        traces = traces.dropRight(1)*/
+        // liste les possibles et prends celui qui raccourci plus le chemin de retour
+        var possibles = List.empty[RowCol]
+        if (goNorth) {
+            possibles = possibles :+ rc.haut
+        }
+        if (goSouth) {
+            possibles = possibles :+ rc.bas
+        }
+        if (goEast) {
+            possibles = possibles :+ rc.droite
+        }
+        if (goWest) {
+            possibles = possibles :+ rc.gauche
+        }
+        var zpossibles = possibles.map(z => (z, traces.indexOf(z))
+        ).sortWith((a, b) => {
+            a._2 > b._2
+        })
+        var znext = zpossibles.head
+        var diff = traces.length - znext._2
+        l.myPrintln("------" + couleur + " " + diff + " zpossibles: " + zpossibles)
+        next = znext._1
+        traces = traces.dropRight(diff)
+    }
 }
 
 class VertFonce(couleur: String, rayon: Int) extends Rouge(couleur, rayon) {
@@ -42,4 +69,32 @@ class VertFonce(couleur: String, rayon: Int) extends Rouge(couleur, rayon) {
 class VertClair(couleur: String, rayon: Int) extends VertFonce(couleur, rayon) {
     // essaye de continuer dans la meme direction que la derniere fois
     override def firstStep: RowCol = getNext(lastDirection, true, true)
+    override def retourne(): Unit = {
+        /*next = traces.last
+        traces = traces.dropRight(1)*/
+        // liste les possibles et prends celui qui raccourci plus le chemin de retour
+        var possibles = List.empty[RowCol]
+        if (goNorth) {
+            possibles = possibles :+ rc.haut
+        }
+        if (goSouth) {
+            possibles = possibles :+ rc.bas
+        }
+        if (goEast) {
+            possibles = possibles :+ rc.droite
+        }
+        if (goWest) {
+            possibles = possibles :+ rc.gauche
+        }
+        var zpossibles = possibles.map(z => (z, traces.indexOf(z))
+        ).sortWith((a, b) => {
+            a._2 > b._2
+        })
+        var znext = zpossibles.head
+        var diff = traces.length - znext._2
+        l.myPrintln("------" + couleur + " " + diff + " zpossibles: " + zpossibles)
+        next = znext._1
+        traces = traces.dropRight(diff)
+    }
 }
+

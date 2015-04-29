@@ -1,8 +1,6 @@
 package labyrinthe
 
-object StatJeton {
-    val limit = 1000
-}
+import labyrinthe.ZePanel._
 
 class StatJeton(val couleur: Couleur) {
     def this() = this(new Couleur("Couleur du temps"))
@@ -15,7 +13,7 @@ class StatJeton(val couleur: Couleur) {
 
     def update(score: Int) {
         if (score == 0) {
-        } else if (score < StatJeton.limit) {
+        } else if (score < zp.limit) {
             history = history :+ score
             min = Math.min(min, score)
             max = Math.max(max, score)

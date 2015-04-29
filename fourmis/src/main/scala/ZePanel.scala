@@ -1,4 +1,7 @@
 package labyrinthe
+
+import labyrinthe.ZePanel._
+
 import scala.swing.Panel
 import akka.actor._
 import akka.actor.ActorDSL._
@@ -35,6 +38,10 @@ class ZeActor extends Actor {
             ZePanel.zp.repaint
             tbx.doZeJob("step", true)
             ZePanel.zp.step = true
+        case "bloque" =>
+            l.myErrPrintDln("bloque")
+            ZePanel.zp.repaint
+            tbx.doZeJob("bloque", true)
     }
 }
 
@@ -54,9 +61,15 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
     var run = false
     var largeur = 1000
     val hauteur = 700
+    var limit: Int = _
     preferredSize = new Dimension(largeur, hauteur)
     val origin = new Dimension(0, 0)
     newTbx(this, maxRC, preferredSize, origin)
+    if(ptype==PanelType.FOURMI) {
+        limit = 5000
+    } else {
+        limit = 1000
+    }
 
     override def paint(g: Graphics2D) {
         g.setColor(Color.white)
