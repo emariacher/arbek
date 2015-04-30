@@ -118,7 +118,7 @@ class Carre(val rc: RowCol) {
   }
 
   override def toString: String = {
-    "Carre{" + rc + "}"
+    "{" + rc + " " + calculePheromone + "}"
     //"Carre{("+row+","+col+"), "+frontieres+"}"
   }
 

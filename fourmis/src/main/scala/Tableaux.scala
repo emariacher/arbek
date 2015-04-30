@@ -48,7 +48,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var nrOfWorkers = 4
 
   def doZeJob(command: String, graphic: Boolean) {
-    l.myPrintDln(" state: " + state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
+    l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
     if (graphic) {
       zp.lbl.text = "Seed: " + seed + ", CountSteps: " + countGenere
     }
@@ -61,35 +61,34 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         state = avance
         countAvance += 1
         if (command == "bloque") {
+          var rayonBloqueDiv = 5
           l.myErrPrintDln("trouve le carre le plus actif")
-          var carreLePlusActif = lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / 4)) &&
-            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / 4))).maxBy(_.calculePheromone)
+          l.myErrPrintDln(lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) &&
+            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).filter(_.calculePheromone>0))
+          val carreLePlusActif = lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) &&
+            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
           l.myErrPrintDln("et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
-          val cn = carreLePlusActif.getUpCarre match {
-            case Some(c) => c
-            case _ => null
+          carreLePlusActif.getUpCarre match {
+            case Some(c) => c.frontieres = c.frontieres :+ FrontiereV.sud
+              c.frontieres = (new ListSet[Frontiere]() ++ c.frontieres).toList
+            case _ =>
           }
-          cn.frontieres = cn.frontieres :+ FrontiereV.sud
-          cn.frontieres = (new ListSet[Frontiere]() ++ cn.frontieres).toList
-          val ce = carreLePlusActif.getRightCarre match {
-            case Some(c) => c
-            case _ => null
+          carreLePlusActif.getRightCarre match {
+            case Some(c) => c.frontieres = c.frontieres :+ FrontiereV.ouest
+              c.frontieres = (new ListSet[Frontiere]() ++ c.frontieres).toList
+            case _ =>
           }
-          ce.frontieres = ce.frontieres :+ FrontiereV.ouest
-          ce.frontieres = (new ListSet[Frontiere]() ++ ce.frontieres).toList
-          val cs = carreLePlusActif.getDownCarre match {
-            case Some(c) => c
-            case _ => null
+          carreLePlusActif.getDownCarre match {
+            case Some(c) => c.frontieres = c.frontieres :+ FrontiereV.nord
+              c.frontieres = (new ListSet[Frontiere]() ++ c.frontieres).toList
+            case _ =>
           }
-          cs.frontieres = cs.frontieres :+ FrontiereV.nord
-          cs.frontieres = (new ListSet[Frontiere]() ++ cs.frontieres).toList
-          val co = carreLePlusActif.getLeftCarre match {
-            case Some(c) => c
-            case _ => null
+          carreLePlusActif.getLeftCarre match {
+            case Some(c) => c.frontieres = c.frontieres :+ FrontiereV.est
+              c.frontieres = (new ListSet[Frontiere]() ++ c.frontieres).toList
+            case _ =>
           }
-          co.frontieres = co.frontieres :+ FrontiereV.est
-          co.frontieres = (new ListSet[Frontiere]() ++ co.frontieres).toList
           carreLePlusActif.bloque = true
         }
       case StateMachine.reset => state = reset

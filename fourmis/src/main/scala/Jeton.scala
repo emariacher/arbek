@@ -33,6 +33,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   var next = new RowCol(888, 888)
   var lastDirection = nord
   var statut = Pheronome.CHERCHE
+  val ventrePlein = 800
+  var ventre = ventrePlein
 
   def init = {
     setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
@@ -41,8 +43,14 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   }
 
   def avance: StateMachine = {
+    if (zp.ptype == PanelType.FOURMI) {
+      ventre -= 1
+    }
     if (cnt > zp.limit) {
       StateMachine.termine
+    } else if (ventre < 1) {
+      statut = Pheronome.MORT
+      pasFini
     } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
       l.myPrintln(MyLog.tagnt(1) + " " + couleur + " " + next)
       if (zp.ptype == PanelType.LABY) {
@@ -51,6 +59,13 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         statut = Pheronome.RAMENE
         pasFini
       }
+    } else if (rc.equals(new RowCol(tbx.maxRow / 2, tbx.maxCol / 2))) {
+      ventre = ventrePlein
+      if (statut == Pheronome.REVIENS) {
+        l.myPrintln(MyLog.tagnt(1) + " " + couleur + " " + next)
+        statut = Pheronome.CHERCHE
+      }
+      pasFini
     } else {
       pasFini
     }
@@ -86,18 +101,23 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   def canGo = (if (goNorth) "N1" else "N0") + (if (goSouth) "S1" else "S0") + (if (goWest) "O1" else "O0") + (if (goEast) "E1" else "E0")
 
   def canGo2(z: RowCol) = {
-    l.myPrintln(MyLog.func(1) + " " + z + " " + toString)
+    //l.myPrintDln(z + " " + toString)
     if (math.abs(z.r - row) == 1 || math.abs(z.c - col) == 1) {
-      //setRowCol(z)
+      //l.myPrintDln((z.r == row - 1) + " " + (z.r == row + 1) + " " + (z.c == col - 1) + " " + (z.c == col + 1))
       if ((z.r == row - 1) && (goNorth)) {
+        //l.myPrintDln(z + " " + toString)
         true
       } else if ((z.r == row + 1) && (goSouth)) {
+        //l.myPrintDln(z + " " + toString)
         true
       } else if ((z.c == col - 1) && (goWest)) {
+        //l.myPrintDln(z + " " + toString)
         true
-      } else if ((z.r == col + 1) && (goEast)) {
+      } else if ((z.c == col + 1) && (goEast)) {
+        //l.myPrintDln(z + " " + toString)
         true
       } else {
+        //l.myPrintDln(z + " " + toString)
         false
       }
     } else {
@@ -116,10 +136,12 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       var yg = tbx.origin.getHeight.toInt + (vert * 2 * row)
       g.fillOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
       g.setColor(Color.black)
-      if (statut == Pheronome.CHERCHE) {
-        g.drawString(canGo, xg, yg)
-      } else {
-        g.drawString("X", xg, yg)
+      statut match {
+        case Pheronome.CHERCHE => g.drawString(" ", xg, yg)
+        case Pheronome.RAMENE => g.drawString("+", xg, yg)
+        case Pheronome.REVIENS => g.drawString("-", xg, yg)
+        case Pheronome.MORT => g.drawString("*", xg, yg)
+        case _ => g.drawString("?", xg, yg)
       }
       g.setColor(couleur.color)
       traces.foreach((rc: RowCol) => {
@@ -144,9 +166,13 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   val ordreChoix: Circular
 
   def pasFini: StateMachine = {
-    l.myPrintln(MyLog.func(1) + " " + toString + " " + lastDirection)
+    //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
     statut match {
-      case Pheronome.CHERCHE => {
+      case Pheronome.REVIENS =>
+        next = firstStep
+        sortDuLabyrinthe
+        traces = traces :+ rc
+      case Pheronome.CHERCHE =>
         next = firstStep
         // essaye de trouver une case qui a le maximum de pheronomes[RAMENE]
         var possibles = List.empty[RowCol]
@@ -165,7 +191,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         possibles = possibles.filter(z => {
           z.r <= tbx.maxRow && z.c <= tbx.maxCol && traces.find(_.equals(z)).isEmpty
         }).filter(z => {
-          tbx.findCarre(z).calculePheromone>0
+          tbx.findCarre(z).calculePheromone > 0
         }).sortWith((a, b) => {
           tbx.findCarre(a).calculePheromone > tbx.findCarre(b).calculePheromone
         })
@@ -186,55 +212,20 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
             }
           }
         }
-        // essaye de trouver une case vierge en suivant l'ordre de priorite defini
-        if (next.r == 888) {
-          next = firstStep
-          while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
-          var cpt = 0
-          while ((next.r == 888) && (cpt < 3)) {
-            getNext(ordreChoix.nextf(ordreChoix), true, true)
-            cpt += 1
-          }
-          // accepte d'aller dans les cases deflorees en suivant l'ordre de priorite defini vu que tu n'as rien trouve de mieux
-          if (next.r == 888) {
-            getNext(lastDirection, true, true)
-            while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
-            cpt = 0
-            while ((next.r == 888) && (cpt < 4)) {
-              getNext(ordreChoix.prevf(ordreChoix), false, true)
-              cpt += 1
-            }
-            // mais si ca te fait revenir exactement sur tes pas essaye de trouver mieux quand meme si c'est possible
-            if (next.r == 888) {
-              getNext(lastDirection, true, true)
-              while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
-              cpt = 0
-              while ((next.r == 888) && (cpt < 4)) {
-                getNext(ordreChoix.nextf(ordreChoix), false, false)
-                cpt += 1
-              }
-            }
-            //bon, si tu n'y arrive pas, reviens sur tes pas
-            if (next.r == 888) {
-              cpt = 0
-              while ((next.r == 888) && (cpt < zp.limit)) {
-                // normalement c'est 4, mais avec le fou bleu, on sait jamais
-                getNext(ordreChoix.nextf(ordreChoix), false, false)
-                cpt += 1
-              }
-            }
-          }
-        }
+        sortDuLabyrinthe
         traces = traces :+ rc
+      case Pheronome.RAMENE => retourne
+      case Pheronome.MORT => {
+        // rien
       }
-      case Pheronome.RAMENE => {
-        retourne()
-      }
-      case _ => l.myErrPrintln(MyLog.tag(1) + couleur + " " + statut)
+      case _ => l.myErrPrintDln(toString)
     }
 
     //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
-    assert(next.r != 888)
+    if (next.r == 888) {
+      l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
+      statut = Pheronome.MORT
+    }
     if (zp.ptype == PanelType.FOURMI) {
       val zc = tbx.findCarre(rc)
       if (zc != null) {
@@ -250,26 +241,69 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     StateMachine.avance
   }
 
+  def sortDuLabyrinthe {
+    // essaye de trouver une case vierge en suivant l'ordre de priorite defini
+    if (next.r == 888) {
+      next = firstStep
+      while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
+      var cpt = 0
+      while ((next.r == 888) && (cpt < 3)) {
+        getNext(ordreChoix.nextf(ordreChoix), true, true)
+        cpt += 1
+      }
+      // accepte d'aller dans les cases deflorees en suivant l'ordre de priorite defini vu que tu n'as rien trouve de mieux
+      if (next.r == 888) {
+        getNext(lastDirection, true, true)
+        while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
+        cpt = 0
+        while ((next.r == 888) && (cpt < 4)) {
+          getNext(ordreChoix.prevf(ordreChoix), false, true)
+          cpt += 1
+        }
+        // mais si ca te fait revenir exactement sur tes pas essaye de trouver mieux quand meme si c'est possible
+        if (next.r == 888) {
+          getNext(lastDirection, true, true)
+          while (ordreChoix.nextf(ordreChoix) != lastDirection) {}
+          cpt = 0
+          while ((next.r == 888) && (cpt < 4)) {
+            getNext(ordreChoix.nextf(ordreChoix), false, false)
+            cpt += 1
+          }
+        }
+        //bon, si tu n'y arrive pas, reviens sur tes pas
+        if (next.r == 888) {
+          cpt = 0
+          while ((next.r == 888) && (cpt < zp.limit)) {
+            // normalement c'est 4, mais avec le fou bleu, on ne sait jamais
+            getNext(ordreChoix.nextf(ordreChoix), false, false)
+            cpt += 1
+          }
+        }
+      }
+    }
+  }
+
   def retourne() {
 
     if ((traces.isEmpty) || ((next.r == tbx.maxRow / 2) && (next.c == tbx.maxCol / 2))) {
       // tu es revenue au nid
       statut = Pheronome.CHERCHE;
       traces = List.empty[RowCol]
-    } else {
-      // retourne sur tes pas
-      next = traces.last
-      traces = traces.dropRight(1)
-    }
-    /*} else if (canGo(traces.last)) {
+      /*} else {
+        // retourne sur tes pas
+        next = traces.last
+        traces = traces.dropRight(1)
+      }*/
+    } else if (canGo2(traces.last)) {
       // retourne sur tes pas
       next = traces.last
       traces = traces.dropRight(1)
     } else {
       // bah maintenant il y a une barriere qui a ete creee
+      l.myErrPrintDln(toString)
       statut = Pheronome.REVIENS
       traces = List.empty[RowCol]
-    }*/
+    }
   }
 
   def raccourci() {
@@ -280,10 +314,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       // tu es revenue au nid
       statut = Pheronome.CHERCHE;
       traces = List.empty[RowCol]
-      /*} else if (canGo2(traces.last)) {
-        // retourne sur tes pas
-        next = traces.last
-        traces = traces.dropRight(1)*/
     } else {
 
       var possibles = List.empty[RowCol]
@@ -299,15 +329,17 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       if (goWest) {
         possibles = possibles :+ rc.gauche
       }
-      var zpossibles = possibles.map(z => (z, traces.indexOf(z))
-      ).sortWith((a, b) => {
-        a._2 > b._2
-      })
-      var znext = zpossibles.head
-      var diff = traces.length - znext._2
-      l.myPrintln("------" + couleur + " " + diff + " zpossibles: " + zpossibles)
-      next = znext._1
-      traces = traces.dropRight(diff)
+      if (!possibles.isEmpty) {
+        var zpossibles = possibles.map(z => (z, traces.indexOf(z))
+        ).sortWith((a, b) => {
+          a._2 > b._2
+        })
+        var znext = zpossibles.head
+        var diff = traces.length - znext._2
+        //l.myPrintln("------" + couleur + " " + diff + " zpossibles: " + zpossibles)
+        next = znext._1
+        traces = traces.dropRight(diff)
+      }
     }
   }
 
@@ -325,7 +357,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       next = new RowCol(888, 888)
     }
     if (!traces.isEmpty) if (notBack && next == traces.last) {
-      l.myPrintln(MyLog.tagnt(2) + couleur + " **3** (" + f + " nb: " + notBack + ") : " + rc + " -> " + next)
+      //l.myPrintln(MyLog.tagnt(2) + couleur + " **3** (" + f + " nb: " + notBack + ") : " + rc + " -> " + next)
       next = new RowCol(888, 888)
     }
     /*if(state==StateMachineJeton.cercleVicieux) {
@@ -337,7 +369,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     next
   }
 
-  override def toString = "{" + couleur + " " + rc + " " + canGo + " " + statut + "}"
+  override def toString = "{" + couleur + " " + rc + " " + canGo + " " + statut + " v" + ventre + "}"
 }
 
 class Couleur(val couleur: String) {
