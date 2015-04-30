@@ -33,13 +33,14 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   var next = new RowCol(888, 888)
   var lastDirection = nord
   var statut = Pheronome.CHERCHE
-  val ventrePlein = 800
+  val ventrePlein = 1000
   var ventre = ventrePlein
 
   def init = {
     setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
     visible = true
     statut = Pheronome.CHERCHE
+    ventre = ventrePlein
   }
 
   def avance: StateMachine = {
@@ -49,20 +50,29 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     if (cnt > zp.limit) {
       StateMachine.termine
     } else if (ventre < 1) {
+      if (ventre == 0) {
+        l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
+      }
       statut = Pheronome.MORT
       pasFini
     } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
-      l.myPrintln(MyLog.tagnt(1) + " " + couleur + " " + next)
-      if (zp.ptype == PanelType.LABY) {
-        StateMachine.termine
+      // a l'exterieur
+      l.myPrintln(MyLog.tagnt(1) + " " + toString)
+      if (statut == Pheronome.CHERCHE) {
+        if (zp.ptype == PanelType.LABY) {
+          StateMachine.termine
+        } else {
+          statut = Pheronome.RAMENE
+          pasFini
+        }
       } else {
-        statut = Pheronome.RAMENE
         pasFini
       }
     } else if (rc.equals(new RowCol(tbx.maxRow / 2, tbx.maxCol / 2))) {
+      // a la maison
       ventre = ventrePlein
       if (statut == Pheronome.REVIENS) {
-        l.myPrintln(MyLog.tagnt(1) + " " + couleur + " " + next)
+        l.myPrintln(MyLog.tagnt(1) + " " + toString)
         statut = Pheronome.CHERCHE
       }
       pasFini
@@ -169,8 +179,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
     statut match {
       case Pheronome.REVIENS =>
+        //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
         next = firstStep
         sortDuLabyrinthe
+        //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
         traces = traces :+ rc
       case Pheronome.CHERCHE =>
         next = firstStep
@@ -223,7 +235,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
 
     //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
     if (next.r == 888) {
-      l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
+      //l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
       statut = Pheronome.MORT
     }
     if (zp.ptype == PanelType.FOURMI) {
@@ -300,7 +312,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       traces = traces.dropRight(1)
     } else {
       // bah maintenant il y a une barriere qui a ete creee
-      l.myErrPrintDln(toString)
+      l.myErrPrintDln("Je n'arrive plus a revenir sur mes traces car une barrierre vient d etre installee "+toString)
       statut = Pheronome.REVIENS
       traces = List.empty[RowCol]
     }
@@ -364,7 +376,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     if(par2s.filter((c: (List[RowCol],Int)) => {})
     l.myPrintln(MyLog.tagnt(2)+couleur+" **4** ("+f+" cv: "+state+") : "+rc+" -> "+next)
     next = new RowCol(888,888)
-  }*/
+    }*/
     //l.myPrintln(MyLog.tagnt(2) + couleur + "  *5*  (" + f + " nco: " + newCarreOnly + " nb: " + notBack + ") : " + rc + " -> " + next)
     next
   }

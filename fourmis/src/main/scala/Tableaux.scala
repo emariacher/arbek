@@ -48,7 +48,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var nrOfWorkers = 4
 
   def doZeJob(command: String, graphic: Boolean) {
-    l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
+    //l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
     if (graphic) {
       zp.lbl.text = "Seed: " + seed + ", CountSteps: " + countGenere
     }
@@ -63,8 +63,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         if (command == "bloque") {
           var rayonBloqueDiv = 5
           l.myErrPrintDln("trouve le carre le plus actif")
-          l.myErrPrintDln(lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) &&
-            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).filter(_.calculePheromone>0))
+          /*l.myErrPrintDln(lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) &&
+            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).filter(_.calculePheromone>0))*/
           val carreLePlusActif = lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) &&
             (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
           l.myErrPrintDln("et bloque le [" + carreLePlusActif + "]")

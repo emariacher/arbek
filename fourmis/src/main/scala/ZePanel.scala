@@ -30,7 +30,7 @@ class ZeActor extends Actor {
                 context.setReceiveTimeout(1 millisecond)
                 ZePanel.zp.run = true
             } else {
-                context.setReceiveTimeout(max(50, slider._2 * 4) millisecond)
+                context.setReceiveTimeout(max(500, slider._2 * 10) millisecond)
             }
             ZePanel.zp.step = false
         case "step" =>
@@ -40,7 +40,6 @@ class ZeActor extends Actor {
             ZePanel.zp.step = true
         case "bloque" =>
             l.myErrPrintDln("bloque")
-            ZePanel.zp.repaint
             tbx.doZeJob("bloque", true)
     }
 }
