@@ -35,6 +35,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   var statut = Pheronome.CHERCHE
   val ventrePlein = 1000
   var ventre = ventrePlein
+  var indexBlocage = ventrePlein
+  var aRameneDeLaJaffe = 0
 
   def init = {
     setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
@@ -54,15 +56,17 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
       }
       statut = Pheronome.MORT
-      pasFini
+      cnt = zp.limit+1
+      StateMachine.termine
     } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
       // a l'exterieur
-      l.myPrintln(MyLog.tagnt(1) + " " + toString)
+      //l.myPrintln(MyLog.tagnt(1) + " " + toString)
       if (statut == Pheronome.CHERCHE) {
         if (zp.ptype == PanelType.LABY) {
           StateMachine.termine
         } else {
           statut = Pheronome.RAMENE
+          aRameneDeLaJaffe += 1
           pasFini
         }
       } else {
@@ -72,7 +76,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       // a la maison
       ventre = ventrePlein
       if (statut == Pheronome.REVIENS) {
-        l.myPrintln(MyLog.tagnt(1) + " " + toString)
+        l.myErrPrintDln("******************************************************")
+        l.myErrPrintDln("***************** Miracle! " + toString)
+        l.myErrPrintDln("******************************************************")
         statut = Pheronome.CHERCHE
       }
       pasFini
@@ -181,27 +187,21 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       case Pheronome.REVIENS =>
         //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
         next = firstStep
-        sortDuLabyrinthe
-        //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
-        traces = traces :+ rc
-      case Pheronome.CHERCHE =>
-        next = firstStep
-        // essaye de trouver une case qui a le maximum de pheronomes[RAMENE]
-        var possibles = List.empty[RowCol]
-        if (goNorth) {
-          possibles = possibles :+ rc.haut
-        }
-        if (goSouth) {
-          possibles = possibles :+ rc.bas
-        }
-        if (goEast) {
-          possibles = possibles :+ rc.droite
-        }
-        if (goWest) {
-          possibles = possibles :+ rc.gauche
-        }
-        possibles = possibles.filter(z => {
-          z.r <= tbx.maxRow && z.c <= tbx.maxCol && traces.find(_.equals(z)).isEmpty
+        /* verifie si tu ne retombes pas sur tes traces avant le blocage
+        l.myPrintDln(toString + " " + indexBlocage)
+        var possibles = findPossibles.filter(z => {
+          traces.find(!_.equals(z)).isEmpty
+        }).filter(z => {
+          traces.indexOf(z) < indexBlocage
+        }).sortBy(z => {
+          traces.indexOf(z)
+        })
+        if (!possibles.isEmpty) {
+          l.myErrPrintDln(toString + " " + indexBlocage + " " + possibles)
+          next = possibles.head
+        }*/
+        var possibles = findPossibles.filter(z => {
+          traces.find(_.equals(z)).isEmpty
         }).filter(z => {
           tbx.findCarre(z).calculePheromone > 0
         }).sortWith((a, b) => {
@@ -224,6 +224,40 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
             }
           }
         }
+
+        // sinon continue à essayer de sortir de revenir au centre du labyrinthe
+        sortDuLabyrinthe
+        //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
+        traces = traces :+ rc
+      case Pheronome.CHERCHE =>
+        next = firstStep
+        // essaye de trouver une case qui a le maximum de pheronomes[RAMENE]
+        var possibles = findPossibles.filter(z => {
+          traces.find(_.equals(z)).isEmpty
+        }).filter(z => {
+          tbx.findCarre(z).calculePheromone > 0
+        }).sortWith((a, b) => {
+          tbx.findCarre(a).calculePheromone > tbx.findCarre(b).calculePheromone
+        })
+
+        if (!possibles.isEmpty) {
+          //l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
+          next = new RowCol(possibles.head.r, possibles.head.c)
+          // mais ne reviens pas sur tes pas!
+          //l.myPrintln(MyLog.func(1) + "traces: " + traces)
+          if (!traces.isEmpty) {
+            //l.myPrintln(MyLog.func(1) + "traceslast: " + traces.last+" nextr "+next)
+            if (next.equals(traces.last)) {
+              possibles = possibles.drop(1)
+              //l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
+              if (!possibles.isEmpty) {
+                next = new RowCol(possibles.head.r, possibles.head.c)
+              }
+            }
+          }
+        }
+
+        // sinon continue à essayer de sortir du labyrinthe
         sortDuLabyrinthe
         traces = traces :+ rc
       case Pheronome.RAMENE => retourne
@@ -251,6 +285,25 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     setRowCol(next)
     cnt += 1
     StateMachine.avance
+  }
+
+  def findPossibles: List[RowCol] = {
+    var possibles = List.empty[RowCol]
+    if (goNorth) {
+      possibles = possibles :+ rc.haut
+    }
+    if (goSouth) {
+      possibles = possibles :+ rc.bas
+    }
+    if (goEast) {
+      possibles = possibles :+ rc.droite
+    }
+    if (goWest) {
+      possibles = possibles :+ rc.gauche
+    }
+    possibles.filter(z => {
+      z.r <= tbx.maxRow && z.c <= tbx.maxCol
+    })
   }
 
   def sortDuLabyrinthe {
@@ -312,9 +365,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       traces = traces.dropRight(1)
     } else {
       // bah maintenant il y a une barriere qui a ete creee
-      l.myErrPrintDln("Je n'arrive plus a revenir sur mes traces car une barrierre vient d etre installee "+toString)
+      l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur mes traces car une barrierre vient d etre installee ")
       statut = Pheronome.REVIENS
-      traces = List.empty[RowCol]
+      indexBlocage = traces.length - 1
+      //traces = List.empty[RowCol]
     }
   }
 

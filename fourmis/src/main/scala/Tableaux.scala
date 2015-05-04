@@ -63,9 +63,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         if (command == "bloque") {
           var rayonBloqueDiv = 5
           l.myErrPrintDln("trouve le carre le plus actif")
-          /*l.myErrPrintDln(lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) &&
-            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).filter(_.calculePheromone>0))*/
-          val carreLePlusActif = lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) &&
+          val carreLePlusActif = lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) ||
             (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
           l.myErrPrintDln("et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
@@ -136,7 +134,11 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     l.myPrintln(seed)
     lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
     mj.foreach((cj: (Couleur, Jeton)) => {
-      val cnt = cj._2.cnt
+     // val cnt = cj._2.cnt
+      val cnt = zp.ptype match {
+       case PanelType.LABY => cj._2.cnt
+       case PanelType.FOURMI => cj._2.aRameneDeLaJaffe
+     }
       val js = mjs.getOrElse(cj._1, new StatJeton())
       if (cnt != 0) {
         cj._2.label.text = js.toString
