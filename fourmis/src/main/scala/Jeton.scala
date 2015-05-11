@@ -12,12 +12,12 @@ import scala.collection.immutable.ListSet
 import labyrinthe.LL._
 
 abstract class Jeton(val couleur: Couleur, val rayon: Int) {
-  def this(s: String, rayon: Int) = this(new Couleur(s), rayon)
-
   val label = new Label {
     text = couleur.toString
     foreground = couleur.color
   }
+  val ventrePlein = 1000
+  val ordreChoix: Circular
   var state = StateMachineJeton.normal
   //var par4sorted = List.empty[(List[RowCol], Int)]
   var cnt = 0
@@ -33,16 +33,44 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   var next = new RowCol(888, 888)
   var lastDirection = nord
   var statut = Pheronome.CHERCHE
-  val ventrePlein = 1000
   var ventre = ventrePlein
   var indexBlocage = ventrePlein
   var aRameneDeLaJaffe = 0
+
+  def this(s: String, rayon: Int) = this(new Couleur(s), rayon)
 
   def init = {
     setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
     visible = true
     statut = Pheronome.CHERCHE
     ventre = ventrePlein
+  }
+
+  def setRowCol(r: Int, c: Int) {
+    setRowCol(new RowCol(r, c))
+  }
+
+  def setRowCol(rci: RowCol) {
+    rc = rci
+    col = rc.c
+    row = rc.r
+    val NO = tbx.lc.find((c: Carre) => c.rc == rc.moinsUn) match {
+      case Some(c) =>
+        //l.myPrintln(MyLog.tagnt(1) + "NO: " + c)
+        c.frontieres.filter((f: Frontiere) => f == sud || f == est)
+      case _ => List.empty[Frontiere]
+    }
+    val SE = tbx.lc.find((c: Carre) => c.rc == rc) match {
+      case Some(c) =>
+        //l.myPrintln(MyLog.tagnt(1) + "SE: " + c)
+        c.frontieres.filter((f: Frontiere) => f == nord || f == ouest)
+      case _ => List.empty[Frontiere]
+    }
+    goNorth = NO.find(_ == est).isEmpty
+    goSouth = SE.find(_ == ouest).isEmpty
+    goWest = NO.find(_ == sud).isEmpty
+    goEast = SE.find(_ == nord).isEmpty
+    //l.myPrintln(MyLog.func(1) + " " + canGo)
   }
 
   def avance: StateMachine = {
@@ -56,7 +84,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
       }
       statut = Pheronome.MORT
-      cnt = zp.limit+1
+      cnt = zp.limit + 1
       StateMachine.termine
     } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
       // a l'exterieur
@@ -85,33 +113,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     } else {
       pasFini
     }
-  }
-
-  def setRowCol(r: Int, c: Int) {
-    setRowCol(new RowCol(r, c))
-  }
-
-  def setRowCol(rci: RowCol) {
-    rc = rci
-    col = rc.c
-    row = rc.r
-    val NO = tbx.lc.find((c: Carre) => c.rc == rc.moinsUn) match {
-      case Some(c) =>
-        //l.myPrintln(MyLog.tagnt(1) + "NO: " + c)
-        c.frontieres.filter((f: Frontiere) => f == sud || f == est)
-      case _ => List.empty[Frontiere]
-    }
-    val SE = tbx.lc.find((c: Carre) => c.rc == rc) match {
-      case Some(c) =>
-        //l.myPrintln(MyLog.tagnt(1) + "SE: " + c)
-        c.frontieres.filter((f: Frontiere) => f == nord || f == ouest)
-      case _ => List.empty[Frontiere]
-    }
-    goNorth = NO.find(_ == est).isEmpty
-    goSouth = SE.find(_ == ouest).isEmpty
-    goWest = NO.find(_ == sud).isEmpty
-    goEast = SE.find(_ == nord).isEmpty
-    //l.myPrintln(MyLog.func(1) + " " + canGo)
   }
 
   def canGo = (if (goNorth) "N1" else "N0") + (if (goSouth) "S1" else "S0") + (if (goWest) "O1" else "O0") + (if (goEast) "E1" else "E0")
@@ -146,11 +147,34 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       g.setColor(couleur.color)
       val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
       val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
-      val rayonh = (tbx.size.getWidth.toInt * rayon) / (tbx.maxCol * 200)
-      val rayonv = (tbx.size.getHeight.toInt * rayon) / (tbx.maxRow * 200)
       var xg = tbx.origin.getWidth.toInt + (horiz * 2 * col)
       var yg = tbx.origin.getHeight.toInt + (vert * 2 * row)
-      g.fillOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
+      var rayonh = (tbx.size.getWidth.toInt * rayon) / (tbx.maxCol * 200)
+      var rayonv = (tbx.size.getHeight.toInt * rayon) / (tbx.maxRow * 200)
+      g.setColor(couleur.color)
+      traces.foreach((rc: RowCol) => {
+        xg = tbx.origin.getWidth.toInt + (horiz * 2 * rc.c)
+        yg = tbx.origin.getHeight.toInt + (vert * 2 * rc.r)
+        g.drawOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
+        //g.drawString(""+rc,xg,yg)
+      })
+      zp.ptype match {
+        case PanelType.LABY =>
+          g.fillOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
+        case PanelType.FOURMI =>
+          rayonh = (tbx.size.getWidth.toInt * 60) / (tbx.maxCol * 200)
+          rayonv = (tbx.size.getHeight.toInt * 60) / (tbx.maxRow * 200)
+          lastDirection.f match {
+            case NORD => g.fillOval(xg, yg - rayonv, rayonh, rayonv)
+              g.fillOval(xg, yg, rayonh, rayonv * 2)
+            case SUD => g.fillOval(xg, yg, rayonh, rayonv * 2)
+              g.fillOval(xg, yg + rayonv, rayonh, rayonv)
+            case OUEST => g.fillOval(xg - rayonh, yg, rayonh, rayonv)
+              g.fillOval(xg, yg, rayonh * 2, rayonv)
+            case EST => g.fillOval(xg, yg, rayonh * 2, rayonv)
+              g.fillOval(xg + rayonh, yg, rayonh, rayonv)
+          }
+      }
       g.setColor(Color.black)
       statut match {
         case Pheronome.CHERCHE => g.drawString(" ", xg, yg)
@@ -159,13 +183,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         case Pheronome.MORT => g.drawString("*", xg, yg)
         case _ => g.drawString("?", xg, yg)
       }
-      g.setColor(couleur.color)
-      traces.foreach((rc: RowCol) => {
-        xg = tbx.origin.getWidth.toInt + (horiz * 2 * rc.c)
-        yg = tbx.origin.getHeight.toInt + (vert * 2 * rc.r)
-        g.drawOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
-        //g.drawString(""+rc,xg,yg)
-      })
     }
   }
 
@@ -178,8 +195,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   }
 
   def firstStep: RowCol
-
-  val ordreChoix: Circular
 
   def pasFini: StateMachine = {
     //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
