@@ -1,9 +1,9 @@
 package kebra
 
+import java.text.{ParsePosition, SimpleDateFormat}
 import java.util.Calendar
-import java.text.SimpleDateFormat
-import java.text.ParsePosition
-import language.postfixOps
+
+import scala.language.postfixOps
 
 class DateDSL(val cal: Calendar) {
     cal.clear(Calendar.HOUR)

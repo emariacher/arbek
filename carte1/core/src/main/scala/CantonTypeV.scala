@@ -35,7 +35,7 @@ class CantonType(val i: CantonTypeV.Value) {
 object CantonTypeV extends Enumeration {
 	type CantonTypeV = Value
 			val NORDOUEST, NORDEST, SUDOUEST, SUDEST = Value
-			CantonTypeV.values foreach println			
+			// CantonTypeV.values foreach println
 			val nordouest = new CantonType(CantonTypeV.NORDOUEST)
 	val nordest   = new CantonType(CantonTypeV.NORDEST)
 	val sudouest  = new CantonType(CantonTypeV.SUDOUEST)

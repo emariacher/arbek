@@ -4,7 +4,7 @@ import scala.swing._
 import scala.swing.event._
 import akka.actor._
 import java.io.File
-import carte.LL._
+import kebra.LL._
 
 
 object CarteMainApp extends SimpleSwingApplication {

@@ -12,7 +12,7 @@ import carte.Tableaux._
 import kebra.MyLog
 import kebra.MyLog._
 import scala.concurrent.duration._
-import carte.LL._
+import kebra.LL._
 import scala.language.postfixOps
 
 class ZeActor extends Actor {

@@ -20,6 +20,6 @@ object FrontiereV extends Enumeration {
 			val est = new Frontiere(FrontiereV.EST)
 			val sud = new Frontiere(FrontiereV.SUD)
 			val ouest = new Frontiere(FrontiereV.OUEST)
-	FrontiereV.values foreach println
+	//FrontiereV.values foreach println
 }
 
