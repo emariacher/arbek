@@ -1,12 +1,15 @@
-bin/
-.cache
-.classpath
-.project
-.htm
-.html
-.xml
-.class
-/project/project/
-/project/target/
-/target/
+*/bin/
+*.cache
+*.classpath
+*.project
+*.htm
+*.html
+*.xml
+*.log
+*.export
+*.class
+*/project/project/
+*/project/target/
+*/target/*
+*/.idea
 
