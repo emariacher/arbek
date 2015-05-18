@@ -2,7 +2,7 @@ package labyrinthe
 
 import java.awt.Dimension
 import java.awt.Graphics2D
-import scala.collection.immutable.ListSet
+import scala.collection.immutable.{List, ListSet}
 import java.awt.Color
 import labyrinthe.FrontiereV._
 import labyrinthe.Tableaux._
@@ -17,6 +17,7 @@ class Carre(val rc: RowCol) {
   val engendreThreshold = 998
   val prolongeThreshold = 550
   var frontieres = List[Frontiere]()
+  var frontieresColor = scala.collection.mutable.Map.empty[Frontiere, Color]
   var depotPheronomes = List[Depot]()
   var bloque = false
 
@@ -51,12 +52,27 @@ class Carre(val rc: RowCol) {
       autreCarre match {
         case Some(c) => if (frontieres.isEmpty) {
           if (c hasFrontiere autreFrontiere) {
-            if (rnd > prolongeThreshold) frontieres = frontieres :+ maFrontiere
+            if (rnd > prolongeThreshold) {
+              frontieres = frontieres :+ maFrontiere
+              frontieresColor(maFrontiere) = c.frontieresColor(autreFrontiere)
+            }
           } else {
-            if (rnd > engendreThreshold) frontieres = frontieres :+ maFrontiere
+            if (rnd > engendreThreshold) {
+              frontieres = frontieres :+ maFrontiere
+              frontieresColor(maFrontiere) = new Color(tbx.rnd.nextInt(0xc0ffff))
+            }
           }
         } else if (!hasFrontiere(maFrontiere)) {
-          if (!c.hasFrontiere(autreFrontiere)) if (rnd > prolongeThreshold) frontieres = frontieres :+ maFrontiere
+          if (!c.hasFrontiere(autreFrontiere)) {
+            if (rnd > prolongeThreshold) {
+              frontieres = frontieres :+ maFrontiere
+              if(frontieresColor.size==0) {
+                frontieresColor(maFrontiere) = new Color(tbx.rnd.nextInt(0xC0ffff))
+              } else {
+                frontieresColor(maFrontiere) = frontieresColor.toList.map(_._2).head
+              }
+            }
+          }
         }
         case _ =>
       }
@@ -72,6 +88,7 @@ class Carre(val rc: RowCol) {
   def rnd = tbx.rnd.nextInt(1000)
 
   def hasFrontiere(f: Frontiere) = !frontieres.filter(_ == f).isEmpty
+  def getFrontiere(f: Frontiere) = frontieres.filter(_ == f).head
 
   def notFull = {
     var sum = 0
@@ -109,7 +126,11 @@ class Carre(val rc: RowCol) {
       g.fillOval(x-3, y-3, 6, 6)
     }
 
-    frontieres.foreach(_.paint(g, horiz, vert, x, y))
+    tbx.zp.ptype match {
+      case PanelType.LABY => frontieres.foreach(f => f.paint(g, horiz, vert, x, y,frontieresColor(f)))
+      case PanelType.FOURMI => frontieres.foreach(f => f.paint(g, horiz, vert, x, y))
+    }
+
     g.setColor(Color.black)
     if (depotPheronomes.length > 0) {
       g.drawString("" + calculePheromone, x - horiz, y - vert)

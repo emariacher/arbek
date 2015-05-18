@@ -1,6 +1,6 @@
 package labyrinthe
 
-import java.awt.Graphics2D
+import java.awt.{Color, Graphics2D}
 
 class Frontiere(val f: FrontiereV.Value) {
     def paint(g: Graphics2D, horiz: Int, vert: Int, x: Int, y: Int) {
@@ -11,6 +11,17 @@ class Frontiere(val f: FrontiereV.Value) {
             case FrontiereV.OUEST => g.drawLine(x, y, x - horiz, y)
         }
     }
+
+    def paint(g: Graphics2D, horiz: Int, vert: Int, x: Int, y: Int, color: Color) {
+        g.setColor(color)
+        f match {
+            case FrontiereV.NORD  => g.drawLine(x, y, x, y - vert)
+            case FrontiereV.EST   => g.drawLine(x, y, x + horiz, y)
+            case FrontiereV.SUD   => g.drawLine(x, y, x, y + vert)
+            case FrontiereV.OUEST => g.drawLine(x, y, x - horiz, y)
+        }
+    }
+
     override def toString = {
         f match {
             case FrontiereV.NORD  => f.toString + "_A"
