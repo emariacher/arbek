@@ -204,16 +204,16 @@ object MyLog {
     reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice+" "+c.Expr[String](Literal(Constant(s2cond))).splice+" ---> "+linecode.splice+" ---> "+c.Expr[String](Literal(Constant(namez))).splice))
     //reify(println(c.Expr[String](Literal(Constant(f1rst))).splice+" "+c.Expr[String](Literal(Constant(s2cond))).splice+" ---> "+linecode.splice))
   }
-  def myPrintIt(linecode: Any): Any = macro mprintx
+  def myPrintIt2(linecode: Any): Any = macro mprintx
 
-  def debugqqMacro(c: Context)(s: c.Expr[Any]) : c.Expr[Unit] = {
+  def myPrintItMacro(c: Context)(s: c.Expr[Any]) : c.Expr[Unit] = {
     import c.universe._
-    val paramRep = show(s.tree)
+    val paramRep = show(s.tree).replaceAll("scala.*\\]", "").replaceAll("List", "")
     //c.Expr(q"""println($paramRep + " = " + $s)""")
-    c.Expr(q"""myPrintDln($paramRep + " = " + $s)""")
+    c.Expr(q"""myPrintDln($paramRep + " ---> " + $s)""")
   }
 
-  def debugqq(s: Any): Unit = macro debugqqMacro
+  def myPrintIt(s: Any): Unit = macro myPrintItMacro
 
 
   def assert2(c: Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
@@ -221,7 +221,9 @@ object MyLog {
     val paramRepAct = show(act.tree)
     val paramRepExp = show(exp.tree)
 
-    c.Expr(q"""myPrintDln($paramRepAct + "[" + $act + "] vs " + $paramRepExp + "[" + $exp + "]: "); assert($act==$exp,$paramRepAct + "[" + $act + "] vs " + $paramRepExp + "[" + $exp + "]: ")""")
+    //c.Expr(q"""myPrintDln($paramRepAct + "[" + $act + "] vs " + $paramRepExp + "[" + $exp + "]: "); assert($act==$exp,$paramRepAct + "[" + $act + "] vs " + $paramRepExp + "[" + $exp + "]: ")""")
+    c.Expr(
+      q"""if($act==$exp) myPrintDln("assert "+$paramRepAct + "[" + $act + "] vs " + $paramRepExp + "[" + $exp + "]: ") else assert($act==$exp,$paramRepAct + "[" + $act + "] vs " + $paramRepExp + "[" + $exp + "]: ")""")
   }
 
   def myAssert2(act: Any, exp: Any): Unit = macro assert2
