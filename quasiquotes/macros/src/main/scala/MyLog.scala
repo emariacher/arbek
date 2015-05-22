@@ -228,6 +228,23 @@ object MyLog {
 
   def myAssert2(act: Any, exp: Any): Unit = macro assert2
 
+  // trace function call with parameters
+  def traceFuncMacro(c: Context)(f: c.Expr[(List[Any]) => Unit],p: c.Expr[Any]) : c.Expr[Unit] = {
+    import c.universe._
+    val funcRep = show(f.tree).split("\\.").toList.reverse.head.split("\\(").head
+    val paramRep = show(p.tree).split("\\]").toList.reverse.head
+    val line = Literal(Constant(c.enclosingPosition.line))
+    val absolute = c.enclosingPosition.source.file.file.toURI
+    val base = new File(".").toURI
+    val path = Literal(Constant(c.enclosingPosition.source.file.file.getName()))
+    val callfunc = Literal(Constant(c.internal.enclosingOwner.toString.split(" ")(1)))
+    c.Expr(q"""myPrintln($path+":"+$line+" "+$callfunc+" "+$funcRep+"(" + $paramRep+"/"+$p+")"); $f($p)""")
+  }
+
+  def TraceFunc(f: (List[Any]) => Unit, p: Any): Unit = macro traceFuncMacro
+
+
+
   // get current line in source code
   def L_ : Int = macro lineImpl
   def lineImpl(c: Context): c.Expr[Int] = {
@@ -246,7 +263,7 @@ object MyLog {
     c.Expr[String](path)
   }
 
-  // get current class/object (a bit sketchy)
+  // get current Method
   def C_ : String = macro classImpl
   def classImpl(c: Context): c.Expr[String] = {
     import c.universe._

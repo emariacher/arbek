@@ -18,6 +18,8 @@ object MainDsl {
     println(z.p.targetDate + " before " + now + ": " + (z.p.targetDate before now))
     println(z.p.targetDate + " after " + now + ": " + (z.p.targetDate after now))
     println((now + 1 day) + " after " + now + ": " + ((now + 1 day) after now))
+    myPrintIt(L_,F_,C_)
+    func2
 
     val a = 1
     val b = 2
@@ -30,12 +32,14 @@ object MainDsl {
     myPrintDln("Printed at compile time!")
     apply((x: Int) => x + 1)
 
-
-
+    TraceFunc(func_1,List(a,b,a+b))
+    
     // last one because it shall fail
     myAssert2(a + b, 4)
 
   }
 
   def func(z: Int, s: String) = myPrintDln("func([" + s + "]: " + z + ")")
+  def func2 = myPrintIt(L_,F_,C_)
+  def func_1(lany: List[Any]) = myPrintDln("func_1([" + lany + "]: " + lany + ")")
 }
