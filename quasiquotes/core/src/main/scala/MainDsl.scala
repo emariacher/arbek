@@ -33,6 +33,7 @@ object MainDsl {
     apply((x: Int) => x + 1)
 
     TraceFunc(func_1,List(a,b,a+b))
+    zobi_lamouche(a+b)
     
     // last one because it shall fail
     myAssert2(a + b, 4)
@@ -42,4 +43,5 @@ object MainDsl {
   def func(z: Int, s: String) = myPrintDln("func([" + s + "]: " + z + ")")
   def func2 = myPrintIt(L_,F_,C_)
   def func_1(lany: List[Any]) = myPrintDln("func_1([" + lany + "]: " + lany + ")")
+  def zobi_lamouche(z: Int) = TraceFunc(func_1,List(3,4,7*z))
 }
