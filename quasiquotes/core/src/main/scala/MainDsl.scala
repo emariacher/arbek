@@ -13,12 +13,12 @@ object MainDsl {
       )
     myPrintDln(z.p.toString)
     myPrintIt(z.p, now, z.p.targetDate after now)
-    myPrintIt(List(1,2,3,4,5))
+    myPrintIt(List(1, 2, 3, 4, 5))
     myPrintIt2(now, z.p.targetDate after now)
     println(z.p.targetDate + " before " + now + ": " + (z.p.targetDate before now))
     println(z.p.targetDate + " after " + now + ": " + (z.p.targetDate after now))
     println((now + 1 day) + " after " + now + ": " + ((now + 1 day) after now))
-    myPrintIt(L_,F_,C_)
+    myPrintIt(L_, F_, C_)
     func2
 
     val a = 1
@@ -32,16 +32,39 @@ object MainDsl {
     myPrintDln("Printed at compile time!")
     apply((x: Int) => x + 1)
 
-    TraceFunc(func_1,List(a,b,a+b))
-    zobi_lamouche(a+b)
-    
+    TraceFunc(func_1, List(a, b, a + b))
+    TraceFunc(func3, List(a, a + b, new Class1(a + b), b, new Class2(b * b)))
+    TraceFunc(func3, List("coucou", new Class2(5), 8.0, new Class1(7)))
+
     // last one because it shall fail
     myAssert2(a + b, 4)
 
   }
 
   def func(z: Int, s: String) = myPrintDln("func([" + s + "]: " + z + ")")
-  def func2 = myPrintIt(L_,F_,C_)
+
+  def func2 = myPrintIt(L_, F_, C_)
+
   def func_1(lany: List[Any]) = myPrintDln("func_1([" + lany + "]: " + lany + ")")
-  def zobi_lamouche(z: Int) = TraceFunc(func_1,List(3,4,7*z))
+
+  def func3(lany: List[Any]) = {
+    myPrintDln("func3 {\n" +
+      lany.map(any => {
+        any match {
+          case y: Int => "Integer[" + y + "]"
+          case y: String => "String[" + y + "]"
+          case Class1(y) => "--class1[" + y.toString + "]--"
+          case _ => "unsupported type[" + any.toString + "/" + any.getClass + "]"
+        }
+      })
+    )
+  }
+}
+
+case class Class1(val z: Int) {
+  override def toString = this.getClass.getName + "[z=" + z + "]"
+}
+
+case class Class2(val z: Int) {
+  override def toString = this.getClass.getName + "[z=" + z + "]"
 }
