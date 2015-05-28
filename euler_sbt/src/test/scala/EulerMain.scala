@@ -3,54 +3,73 @@ import org.scalatest._
 import scala.collection.immutable.ListSet
 
 class EulerMain extends FlatSpec with Matchers {
-  "Euler32" should "be OK" in {
-    println("Euler32")
-    val result = Range(13 * 245, 9876 + 1).filter(i => {
-      val lz = i.toString.toList
-      lz.length == (new ListSet() ++ lz).toList.length
-    }).filter(c => {
-      c.toString.indexOf("0") < 0
-    }).map(i => {
-      val divs = new EulerDivisors(new EulerDiv(i).primes).divisors
-      (i, divs)
-    }).filter(c => {
-      if (c._2.length == 2) {
-        val lz = (c._2.mkString("", "", "") + c._1).toList
-        lz.length == (new ListSet() ++ lz).toList.length && lz.length == 5
-      } else if (c._2.length > 0) {
-        true
-      } else {
-        false
-      }
-    }).map(c => {
-      val z1 = c._1.toString.toList
-      val z2 = c._2.filter(d => {
-        z1.intersect(d.toString.toList).isEmpty && d.toString.indexOf("0") < 0
-      })
-      (c._1, z2.toList)
-    }).filter(c => {
-      c._2.length > 1
-    }).map(c => {
-      (c._1, c._2.combinations(2).filter(
-        cb => cb.head * cb.last == c._1 &&
-          (cb.head.toString + cb.last.toString).length == 5
-      ).toList)
-    }).filter(c => {
-      !c._2.isEmpty
-    }).map(c => {
-      (c._1, c._2.filter(
-        cb => {
-          val lz = (cb.head.toString + cb.last.toString + c._1.toString).toList
-          lz.length == (new ListSet() ++ lz).toList.length
+  "Euler89" should "be OK" in {
+    println("Euler89")
+
+    val M = 'M'
+    val D = 'D'
+    val C = 'C'
+    val L = 'L'
+    val X = 'X'
+    val V = 'V'
+    val I = 'I'
+    var state = '0'
+    var nombre = 0
+
+
+    val url = "https://projecteuler.net/project/resources/p089_roman.txt"
+    val romnumList = io.Source.fromURL(url).mkString.split("\n").toList
+    //val romnumList = List("M", "I")
+
+    //println(romnumList)
+    romnumList.map(romnum => {
+      nombre = 0
+      state = '0'
+      val z = romnum.map(c => {
+        val value = c match {
+          case M => 1000
+          case D => 500
+          case C => 100
+          case L => 50
+          case X => 10
+          case V => 5
+          case I => 1
         }
-      ))
-    }).filter(c => {
-      !c._2.isEmpty
-    }).map(c => {
-      println(c)
-      c._1
-    }).sum
-    println("Euler32[" + result + "]")
-    result should be === 45228
+        state match {
+          case C => c match {
+            case M => nombre += 800
+            case D => nombre += 300
+            case _ => nombre += value
+          }
+          case X => c match {
+            case C => nombre += 80
+            case L => nombre += 30
+            case _ => nombre += value
+          }
+          case I => c match {
+            case X => nombre += 8
+            case V => nombre += 3
+            case _ => nombre += value
+          }
+          case _ => nombre += value
+        }
+        state = c
+        (state, c, value, nombre)
+      })
+      println(romnum, nombre)
+      (romnum, nombre)
+    }).map(rn => {
+      val mille = rn._2 / 1000
+      val cent = (rn._2 - (mille*1000)) / 100
+      val dix = (rn._2 - ((mille*1000) + (cent*100))) / 10
+      val un = (rn._2 - ((mille*1000) + (cent*100) + (dix*10)))
+      println(rn._1, rn._2, mille, cent, dix, un)
+      (rn._1, rn._2, mille, cent, dix, un)
+    })
+
+    var result = 0
+    println("Euler89[" + result + "]")
+    result should be === 0
+
   }
 }

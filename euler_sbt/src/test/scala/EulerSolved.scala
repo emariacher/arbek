@@ -125,4 +125,136 @@ class EulerSolved extends FlatSpec with Matchers {
     result should be === 5777
   }
 
+  "Euler65" should "be OK" in {
+    println("Euler65")
+    println(math.E)
+
+    //87 = 4*19 + 11
+    //1264 = 6*193 + 106
+    // 465 = 6*71 + 39
+
+    var rang = 101
+    var num = BigInt(0)
+    var prevnum = BigInt(0)
+    var prevprevnum = BigInt(0)
+    var den = BigInt(0)
+    var prevden = BigInt(0)
+    var prevprevden = BigInt(0)
+
+
+    val notcontfrac_E = Range(3, rang + 5).map(i => {
+      val j = i - 1
+      if (j % 3 == 0) {
+        (j / 3) * 2
+      } else {
+        1
+      }
+    }).toList
+    println(notcontfrac_E)
+
+    val z = Range(0, rang + 1).map(r => {
+      r match {
+        case 0 => num = 2; den = 1
+        case 1 => num = 3; den = 1
+        case 2 => num = (prevnum * notcontfrac_E.apply(r - 1)) + prevprevnum; den = (prevden * notcontfrac_E.apply(r - 1)) + prevprevden
+        case _ => num = (prevnum * notcontfrac_E.apply(r - 1)) + prevprevnum; den = (prevden * notcontfrac_E.apply(r - 1)) + prevprevden
+      }
+      prevprevnum = prevnum
+      prevnum = num
+      prevprevden = prevden
+      prevden = den
+      println(r, notcontfrac_E.apply(r), (num, den), num.toDouble / den.toDouble, num.toString().toList.map(_.toString.toInt), num.toString().toList.map(_.toString.toInt).sum)
+      num.toString().toList.map(_.toString.toInt).sum
+    })
+    println(math.E)
+    z.apply(10 - 1) should be === 17
+
+    val result = z.apply(100 - 1)
+    println("Euler65[" + result + "]")
+    result should be === 272
+
+  }
+
+  "Euler79" should "be OK" in {
+    println("Euler79")
+    var p079_keylogS = List(319, 680, 180, 690, 129, 620, 762, 689, 762, 318, 368, 710, 720, 710, 629, 168, 160, 689, 716, 731, 736,
+      729, 316, 729, 729, 710, 769, 290, 719, 680, 318, 389, 162, 289, 162, 718, 729, 319, 790, 680, 890, 362, 319, 760, 316, 729,
+      380, 319, 728, 716).map(_.toString)
+    var p079_keylogL = p079_keylogS.map(_.toList)
+    println(p079_keylogS)
+
+    var possibleHead = p079_keylogL.map(_.head).distinct
+    println(possibleHead)
+
+    var possibleLast = p079_keylogL.map(_.last).distinct
+    println(possibleLast)
+
+    var probableHead = possibleHead diff possibleLast
+    println(probableHead)
+
+    var headCouples = probableHead.mkString("", "", "").combinations(2).map(_.permutations).flatten.toList
+    println(headCouples)
+
+    var first = headCouples.map(c => {
+      (c, p079_keylogS.filter(k => k.indexOf(c) == 0).length)
+    }).sortBy(_._2).last._1.charAt(0).toString
+
+    var result = List(first)
+
+    println("first[" + first + "]" + result + "\n*********************")
+    z
+    println("second[" + first + "]" + result + "\n*********************")
+    z
+    println("third[" + first + "]" + result + "\n*********************")
+    z
+    println("fourth[" + first + "]" + result + "\n*********************")
+    z
+    println("fifth[" + first + "]" + result + "\n*********************")
+    z
+    println("sixth[" + first + "]" + result + "\n*********************")
+    z
+    println("seventh[" + first + "]" + result + "\n*********************")
+    z
+    println("eighth[" + first + "]" + result + "\n*********************")
+
+    println("Euler79[" + result.mkString("", "", "") + "]")
+    result.mkString("", "", "") should be === "73162890"
+
+    def z = {
+      p079_keylogS = p079_keylogS.map(_.replaceAll(first, "")).filter(_.length > 1)
+      if(p079_keylogS.isEmpty) {
+        first = "0" // Je sais: c'est mal
+      } else {
+        p079_keylogL = p079_keylogS.map(_.toList)
+        println(p079_keylogS)
+
+        possibleHead = p079_keylogL.map(_.head).distinct
+        println(possibleHead)
+
+        possibleLast = p079_keylogL.map(_.last).distinct
+        println(possibleLast)
+
+        probableHead = possibleHead diff possibleLast
+        println("probableHead " + probableHead)
+        if (probableHead.isEmpty) {
+          probableHead = possibleHead
+        }
+        println("probableHead " + probableHead)
+        if (probableHead.length > 1) {
+          headCouples = probableHead.mkString("", "", "").combinations(2).map(_.permutations).flatten.toList
+          println(headCouples)
+
+          first = headCouples.map(c => {
+            (c, p079_keylogS.filter(k => k.indexOf(c) == 0).length)
+          }).sortBy(_._2).last._1.charAt(0).toString
+        } else {
+          first = probableHead.head.toString
+        }
+      }
+      result = result :+ first
+    }
+
+  }
+
+
 }
