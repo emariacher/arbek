@@ -1,6 +1,6 @@
 import org.scalatest._
 
-import scala.collection.immutable.ListSet
+import scala.collection.immutable.{Range, ListSet}
 
 class EulerSolved extends FlatSpec with Matchers {
   "Euler32" should "be OK" in {
@@ -56,6 +56,17 @@ class EulerSolved extends FlatSpec with Matchers {
 
   "Euler38" should "be OK" in {
     println("Euler38")
+
+    def isPanDigital(s: String): Boolean = {
+      val lz = s.toList
+      lz.length == (new ListSet() ++ lz).toList.length && s.indexOf("0") < 0
+    }
+
+    def isPanDigital1to9(s: String): Boolean = {
+      isPanDigital(s) && s.length == 9
+    }
+
+
     val result = (Range(123, 988).toList.filter(
       i => isPanDigital(i.toString)
     ).map(i => {
@@ -86,14 +97,6 @@ class EulerSolved extends FlatSpec with Matchers {
 
   }
 
-  def isPanDigital(s: String): Boolean = {
-    val lz = s.toList
-    lz.length == (new ListSet() ++ lz).toList.length && s.indexOf("0") < 0
-  }
-
-  def isPanDigital1to9(s: String): Boolean = {
-    isPanDigital(s) && s.length == 9
-  }
 
   "Euler46" should "be OK" in {
     println("Euler46")
@@ -253,6 +256,94 @@ class EulerSolved extends FlatSpec with Matchers {
       }
       result = result :+ first
     }
+
+  }
+
+  "Euler89" should "be OK" in {
+    println("Euler89")
+
+    val M = 'M'
+    val D = 'D'
+    val C = 'C'
+    val L = 'L'
+    val X = 'X'
+    val V = 'V'
+    val I = 'I'
+
+
+    val url = "https://projecteuler.net/project/resources/p089_roman.txt"
+    val romnumList = io.Source.fromURL(url).mkString.split("\n").toList
+    val romnumListLength = romnumList.mkString("", "", "").length
+
+    //println(romnumList)
+    println("******\n******["+(romnumListLength - romnumList.map(rn => {
+      //val nombre2 = roman2arab(romnum)
+      //println(romnum, nombre)
+      (rn, roman2arab(rn))
+    }).map(rn => {
+      val mille = rn._2 / 1000
+      val cent = (rn._2 - (mille * 1000)) / 100
+      val dix = (rn._2 - ((mille * 1000) + (cent * 100))) / 10
+      val un = (rn._2 - ((mille * 1000) + (cent * 100) + (dix * 10)))
+      //println(rn._1, rn._2, mille, cent, dix, un)
+      (rn._1, rn._2, mille, cent, dix, un)
+    }).map(rn => {
+      var frn = Range(0, rn._3).map(z => "M").mkString("", "", "")
+      frn = frn + List("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM").apply(rn._4)
+      frn = frn + List("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC").apply(rn._5)
+      frn = frn + List("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX").apply(rn._6)
+      val fra = roman2arab(frn)
+      rn._2 should be === fra
+      println(rn._1, rn._2, frn, fra)
+      (rn._1, rn._2, frn, fra)
+    }).map(_._3).mkString("", "", "").length)+"]*******"
+    )
+    //println(resultList.mkString("\n","\n","\n"))
+
+    def roman2arab(romnum: String): Int = {
+      var nombre = 0
+      var state = '0'
+      val z = romnum.foreach(c => {
+        val value = c match {
+          case M => 1000
+          case D => 500
+          case C => 100
+          case L => 50
+          case X => 10
+          case V => 5
+          case I => 1
+        }
+        state match {
+          case C => c match {
+            case M => nombre += 800
+            case D => nombre += 300
+            case _ => nombre += value
+          }
+          case X => c match {
+            case C => nombre += 80
+            case L => nombre += 30
+            case _ => nombre += value
+          }
+          case I => c match {
+            case X => nombre += 8
+            case V => nombre += 3
+            case _ => nombre += value
+          }
+          case _ => nombre += value
+        }
+        state = c
+        (state, c, value, nombre)
+      })
+      nombre
+    }
+
+    // val romnumListLength = romnumList.mkString("","","").length
+    // val result = romnumListLength - resultList.map(_._3).mkString("","","").length
+
+    val result = 743
+    println("Euler89[" + result + "]")
+    result should be === 743
+
 
   }
 
