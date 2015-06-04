@@ -3,7 +3,7 @@ package bugstats
 import java.io.File
 import kebra.MyLog._
 
-class TTPro {
+class TTProLogitech {
 	def ParseXml(f: File): List[Defect] = {
 			val r_priority = """P(\d+)""".r
 					val keywords = List(("product","product", (s: String) => s), 
