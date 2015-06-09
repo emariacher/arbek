@@ -35,7 +35,6 @@ class TTProEta {
       var h = List(new DefectEvent(ParseDate((defect \\ "date-entered").head.text, "MM/dd/yyyy"),
         DefectState.OPENED))
       h = h ++ (defect \\ "defect-event").map(f = de => {
-        //new DefectEvent(ParseDate((de \\ "event-date").head.text, "MM/dd/yyyy HH:mm a"), {
         new DefectEvent(ParseDate((de \\ "event-date").head.text, "MM/dd/yyyy"), {
           val state = (de \\ "event-name").head.text
           lstates.find(c => c._2.contains(state)) match {
@@ -48,7 +47,6 @@ class TTProEta {
       }
       printIt(h)
       new Defect(m, h)
-      //}).toList.filter(_.dtype == "Defect")
     }).toList
   }
 }

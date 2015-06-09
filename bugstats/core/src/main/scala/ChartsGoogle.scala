@@ -10,7 +10,7 @@ object ChartsGoogle {
 
 	def wordCloud(input: List[(String,String)], title: String): String = {
 		//http://visapi-gadgets.googlecode.com/svn/trunk/wordcloud/doc.html
-		val name = title.replaceAll(" ","")
+		val name = title.replaceAll("\\W","")
 				var s = "<script type=\"text/javascript\">\n"
 				s += "google.load(\"visualization\", \"1\");google.setOnLoadCallback(draw"+name+"WordCloud);\n"
 				s += "function draw"+name+"WordCloud() {\n"
@@ -31,7 +31,7 @@ object ChartsGoogle {
 
 def stackedCurve(title: String, rangees: List[(String, List[Int])], rangeeMaitresse: List[String]): String = {
 		//https://google-developers.appspot.com/chart/interactive/docs/gallery/areachart
-		val name = title.replaceAll(" ","")
+		val name = title.replaceAll("\\W","")
 				var s = "<script type=\"text/javascript\">\n"
 				s += "google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});google.setOnLoadCallback(draw"+name+"BugTrend);\n"
 				s += "function draw"+name+"BugTrend() {\n"
@@ -50,7 +50,7 @@ def stackedCurve(title: String, rangees: List[(String, List[Int])], rangeeMaitre
 
 def columnChart(title: String, rangees: List[(String, List[Int])], rangeeMaitresse: List[String]): String = {
 		//https://google-developers.appspot.com/chart/interactive/docs/gallery/columnchart
-		val name = title.replaceAll(" ","")
+		val name = title.replaceAll("\\W","")
 				var s = "<script type=\"text/javascript\">\n"
 				s += "google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});google.setOnLoadCallback(draw"+name+"ColumnChart);\n"
 				s += "function draw"+name+"ColumnChart() {\n"
@@ -73,7 +73,7 @@ def columnChart(title: String, rangees: List[(String, List[Int])], rangeeMaitres
 
 def barChart(title: String, rangees: List[(String, List[Int])], rangeeMaitresse: List[String]): String = {
 		//https://developers.google.com/chart/interactive/docs/gallery/imagebarchart
-		val name = title.replaceAll(" ","")
+		val name = title.replaceAll("\\W","")
 				var s = "<script type=\"text/javascript\">\n"
 				s += "google.load(\"visualization\", \"1\", {packages:[\"imagebarchart\"]});google.setOnLoadCallback(draw"+name+"BarChart);\n"
 				s += "function draw"+name+"BarChart() {\n"
