@@ -4,7 +4,7 @@ import java.io.File
 import kebra.MyLog._
 
 class TTProEta {
-  val rangeeMaitresse = List((DefectState.OPENED, "P0"), (DefectState.OPENED, "P1"), (DefectState.OPENED, "P2"), (DefectState.OPENED, "P3"),
+  val rangeeMaitresse = List((DefectState.OPENED, "Immediate"), (DefectState.OPENED, "Before Release"), (DefectState.OPENED, "Later"),
     (DefectState.INQA, ""), (DefectState.CLOSED, ""))
 
   def ParseXml(f: File): List[Defect] = {

@@ -44,7 +44,7 @@ object BugStatsMain extends App {
     projets.map(p => (p.p, p.rangees.last.r)),
     dbtype.rangeeMaitresse.map(c => c._1 + " " + c._2))
 
-  s += "\n<h2>Word Cloud</h2>\n" + ChartsGoogle.wordCloud(bugs.take(200).map(b => (b.product, b.summary)), "Word Cloud")
+  s += "\n<h2>Word Cloud</h2>\n" + ChartsGoogle.wordCloud(bugs.takeRight(200).map(b => (b.product, b.summary)), "Word Cloud")
 
   s += projets.map(p => {
     "\n<h3>" + p.p + "</h3>\n" +

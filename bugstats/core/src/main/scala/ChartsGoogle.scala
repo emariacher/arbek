@@ -18,7 +18,7 @@ object ChartsGoogle {
     s += "function draw" + name + "WordCloud() {\n"
     s += "var data = new google.visualization.DataTable();\n"
     s += "var raw_data = [\n"
-    s += input.map(c => "  ['" + c._1 + "','" + c._2 + "'],").mkString("", ",\n", "")
+    s += input.map(c => "  ['" + c._1 + "','" + c._2 + "']").mkString("", ",\n", "")
     s += "];\n"
     s += "data.addColumn('string', 'text1');data.addColumn('string', 'text2');\n"
     s += "data.addRows(raw_data.length);\n"
