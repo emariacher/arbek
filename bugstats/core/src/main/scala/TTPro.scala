@@ -22,15 +22,21 @@ class TTProEta {
       (DefectState.INQA, List("Verify")),
       (DefectState.OPENED, List("Re-Open", "Fix")))
 
-    val src = scala.io.Source.fromFile(f)
+    val src = scala.io.Source.fromFile(f)("UTF-8")
     val cpa = scala.xml.parsing.ConstructingParser.fromSource(src, false)
     val doc = cpa.document()
     val root = doc.docElem
 
     (root \\ "defect").map(defect => {
       var m = Map[String, String]()
-      keywords.foreach(k => m = m + (k._1 -> k._3((defect \\ k._2).head.text)))
-      printIt(m)
+      keywords.foreach(k => {
+        //printIt(k._2,(defect \\ k._2))
+        if((defect \\ k._2).toString.length==0) {
+          m = m + (k._1 -> k._3("Unknown"))
+        } else {
+          m = m + (k._1 -> k._3((defect \\ k._2).head.text))
+        }
+      })
 
       var h = List(new DefectEvent(ParseDate((defect \\ "date-entered").head.text, "MM/dd/yyyy"),
         DefectState.OPENED))
@@ -45,7 +51,6 @@ class TTProEta {
       }).toList.filter(_.d != DefectState.DONTCARE).sortBy {
         _.c
       }
-      printIt(h)
       new Defect(m, h)
     }).toList
   }
@@ -70,7 +75,7 @@ class TTProLogitech {
 									(DefectState.INQA,List("Release to Testing")),
 									(DefectState.OPENED,List("Re-Open","Request More Info (or Reject)","Fix")))
 
-									val src = scala.io.Source.fromFile(f)
+									val src = scala.io.Source.fromFile(f)("UTF-8")
 									val cpa = scala.xml.parsing.ConstructingParser.fromSource(src, false)
 									val doc = cpa.document()
 									val root = doc.docElem

@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 object BugStatsMain extends App {
     val f = (new MyFileChooser("GetBugsLog")).justChooseFile("xml");
 
-    val bugs = (new TTProLogitech).ParseXml(f)
+    val bugs = (new TTProEta).ParseXml(f)
     //println(bugs.mkString("\n"))
 
     val today = Calendar.getInstance
