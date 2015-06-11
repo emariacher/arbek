@@ -4,6 +4,9 @@ import java.io.File
 import kebra.MyLog._
 
 class TTProEta {
+  val rangeeMaitresse = List((DefectState.OPENED, "P0"), (DefectState.OPENED, "P1"), (DefectState.OPENED, "P2"), (DefectState.OPENED, "P3"),
+    (DefectState.INQA, ""), (DefectState.CLOSED, ""))
+
   def ParseXml(f: File): List[Defect] = {
     val r_priority = """P(\d+)""".r
     val keywords = List(("product", "product", (s: String) => s),
@@ -57,7 +60,10 @@ class TTProEta {
 }
 
 class TTProLogitech {
-	def ParseXml(f: File): List[Defect] = {
+  val rangeeMaitresse = List((DefectState.OPENED, "P0"), (DefectState.OPENED, "P1"), (DefectState.OPENED, "P2"), (DefectState.OPENED, "P3"),
+    (DefectState.INQA, ""), (DefectState.CLOSED, ""))
+
+  def ParseXml(f: File): List[Defect] = {
 			val r_priority = """P(\d+)""".r
 					val keywords = List(("product","product", (s: String) => s), 
 							("number","defect-number", (s: String) => s), 
