@@ -14,7 +14,8 @@ import java.text.SimpleDateFormat
 object BugStatsMain extends App {
   val f = (new MyFileChooser("GetBugsLog")).justChooseFile("xml");
 
-  val dbtype = new TTProEta;
+  val dbtype = new TTProEta
+  //val dbtype = new TTProLogitech
   val bugs = dbtype.ParseXml(f)
   //println(bugs.mkString("\n"))
 
@@ -36,7 +37,7 @@ object BugStatsMain extends App {
   endDate.clear(Calendar.HOUR)
   myPrintln("\nendDate: " + printZisday(endDate, "dMMMyyyy"))
 
-  val projets = bugs.map(_.product).distinct.map(new Projet(_, bugs, endDate, dbtype.rangeeMaitresse)).filter(_.isAlive)
+  val projets = bugs.map(_.product).distinct.map(new Projet(_, bugs, endDate, dbtype.rangeeMaitresse)).filter(_.isAlive).sortBy(_.activity).reverse
 
   var s = "<html><head>" + ChartsGoogle.htmlHeaderJustZeGraphs + "\n<title>" + printZisday(endDate, "dMMMyyyy") + " bug trends</title></head><body>\n"
 

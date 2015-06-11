@@ -10,7 +10,7 @@ import kebra._
 import kebra.MyLog
 import language.postfixOps
 
-class Projet(val p: String, val bugsi: List[Defect], val endDate: Calendar, val rangeeMaitresse: List[(DefectState,String)]) {
+class Projet(val p: String, val bugsi: List[Defect], val endDate: Calendar, val rangeeMaitresse: List[(DefectState, String)]) {
   val L = getMylog
   var rangees = List[Rangee]()
 
@@ -34,6 +34,12 @@ class Projet(val p: String, val bugsi: List[Defect], val endDate: Calendar, val 
     false
   } else {
     rangees.last.r != rangees.head.r
+  }
+
+  def activity = if (rangees.isEmpty) {
+    0
+  } else {
+    rangees.last.r.sum - rangees.dropRight(1).last.r.sum
   }
 
   //{"name": "AxisLayout", "size": 6725}
