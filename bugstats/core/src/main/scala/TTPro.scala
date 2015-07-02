@@ -2,10 +2,13 @@ package bugstats
 
 import java.io.File
 import kebra.MyLog._
+import kebra.DateDSL._
+import bugstats.DefectState.DefectState
+import java.util.Calendar
+import java.text.SimpleDateFormat
 
-class TTProReqEta {
-  val rangeeMaitresse = List((DefectState.OPENED, "Immediate"), (DefectState.OPENED, "Before Release"), (DefectState.OPENED, "Later"),
-    (DefectState.INQA, ""), (DefectState.CLOSED, ""))
+class TTProReqEta extends TTPro {
+  val rangeeMaitresse = List((DefectState.MODIFYING, ""), (DefectState.STABILIZING, ""), (DefectState.STABLE, ""))
 
   def ParseXml(f: File): List[Defect] = {
     val r_priority = """P(\d+)""".r
@@ -14,12 +17,6 @@ class TTProReqEta {
       ("type", "type", (s: String) => s),
       ("summary", "summary", (s: String) => s.replaceAll("\\p{Punct}", "")),
       ("priority", "priority", (s: String) => s)
-      /*("priority","priority",(s: String) => {
-        s match {
-        case r_priority(digits) => digits
-        case _ => s
-        }
-      })*/
     )
     val lstates = List((DefectState.CLOSED, List("Closed", "Force Close")),
       (DefectState.INQA, List("Verify")),
@@ -47,16 +44,31 @@ class TTProReqEta {
         _.c
       }
       new Requirement(m, h)
-    }).toList
+    }).toList.sortBy{_.number.toInt}
+  }
+  
+  def doZeHtml(endDate: Calendar, projets: List[Projet], bugs: List[Defect]){
+	    var s = "<html><head>" + ChartsGoogle.htmlHeaderJustZeGraphs + "\n<title>" + printZisday(endDate, "dMMMyyyy") + " bug trends</title></head><body>\n"
+
+  s += projets.map(p => {
+    "\n<h3>" + p.p + "</h3>\n" +
+      ChartsGoogle.stackedCurve(p.p, p.rangees.map(r => {
+        (r.c2string, r.r)
+      }), rangeeMaitresse.map(c => c._1 + " " + c._2))
+  }).mkString("")
+
+  s += "</body></html>"
+
+  toFileAndDisplay("tests_status_" + new SimpleDateFormat("ddMMMyy_HH_mm").format(Calendar.getInstance.getTime) + ".html", s)
   }
 }
 
 
-class TTProEta {
-  val rangeeMaitresse = List((DefectState.OPENED, "Immediate"), (DefectState.OPENED, "Before Release"), (DefectState.OPENED, "Later"),
-    (DefectState.INQA, ""), (DefectState.CLOSED, ""))
+class TTProEta extends TTProLogitech {
+  override val rangeeMaitresse = List((DefectState.OPENED, "Immediate"), (DefectState.OPENED, "Before Release"),
+    (DefectState.INQA, ""), (DefectState.OPENED, "Later"), (DefectState.CLOSED, ""))
 
-  def ParseXml(f: File): List[Defect] = {
+  override def ParseXml(f: File): List[Defect] = {
     val r_priority = """P(\d+)""".r
     val keywords = List(("product", "product", (s: String) => s),
       ("number", "defect-number", (s: String) => s),
@@ -106,9 +118,11 @@ class TTProEta {
       new Defect(m, h)
     }).toList
   }
+  
+  
 }
 
-class TTProLogitech {
+class TTProLogitech extends TTPro {
   val rangeeMaitresse = List((DefectState.OPENED, "P0"), (DefectState.OPENED, "P1"), (DefectState.OPENED, "P2"), (DefectState.OPENED, "P3"),
     (DefectState.INQA, ""), (DefectState.CLOSED, ""))
 
@@ -154,4 +168,40 @@ class TTProLogitech {
 														new Defect(m,h)
 									}).toList.filter(_.dtype=="Defect")
 	}
+	
+	def doZeHtml(endDate: Calendar, projets: List[Projet], bugs: List[Defect]) = {
+	    var s = "<html><head>" + ChartsGoogle.htmlHeaderJustZeGraphs + "\n<title>" + printZisday(endDate, "dMMMyyyy") + " bug trends</title></head><body>\n"
+
+  s += "\n<h2>Active Projects at " + printZisday(endDate, "dMMMyyyy") + "</h2>\n" + ChartsGoogle.columnChart("ActiveProjects",
+    projets.map(p => (p.p, p.rangees.last.r)),
+    rangeeMaitresse.map(c => c._1 + " " + c._2))
+
+  s += "\n<h2>Word Cloud</h2>\n" + ChartsGoogle.wordCloud(bugs.takeRight(200).map(b => (b.product, b.summary)), "Word Cloud")
+
+  s += projets.map(p => {
+    "\n<h3>" + p.p + "</h3>\n" +
+      ChartsGoogle.stackedCurve(p.p, p.rangees.map(r => {
+        (r.c2string, r.r)
+      }), rangeeMaitresse.map(c => c._1 + " " + c._2))
+  }).mkString("")
+
+  s += "</body></html>"
+
+  toFileAndDisplay("tests_status_" + new SimpleDateFormat("ddMMMyy_HH_mm").format(Calendar.getInstance.getTime) + ".html", s)
+
+  var sjson = "{ \"name\": \"flare\", \"children\":\n"
+  val projectsbyType = projets.groupBy(p => p.p.substring(0, 2))
+  myPrintDln(projectsbyType.map(z => z._1 + " " + z._2.size))
+  sjson += projectsbyType.map(z => {
+    "{\"name\": \"" + z._1 + "\", \"children\":\n" + z._2.map(p => p.json(Today)).mkString("  [\n    ", ",\n    ", "\n  ]\n  }")
+  }).mkString("[\n  ", ",\n  ", "\n]\n}")
+  copy2File("flare.json", sjson)
+  display(new File("treemap.html"))
+	}
+}
+
+abstract class TTPro {
+  val rangeeMaitresse: List[(DefectState, String)]
+  def ParseXml(f: File): List[Defect]
+  def doZeHtml(endDate: Calendar, projets: List[Projet], bugs: List[Defect])
 }

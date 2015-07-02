@@ -73,4 +73,9 @@ object DateDSL {
 
     def Now = Today
     def now = Today
+    
+    def wdate1 = Today
+    def wdate2 = Today
+    def wdate3 = Today
+    def wdate4 = Today
 }

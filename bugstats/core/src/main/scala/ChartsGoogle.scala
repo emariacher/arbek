@@ -44,7 +44,7 @@ object ChartsGoogle {
     s += rangees.map(r => "  ['" + r._1 + "', " + r._2.mkString(", ") + "]").mkString("", ",\n", "")
     s += "]);\n"
     s += "var " + name + "BugTrend = new google.visualization.AreaChart(document.getElementById('div_sc_" + name + "'));" + name +
-      "BugTrend.draw(data, {width: 600, height: 300, isStacked: true, title: '" + title +
+      "BugTrend.draw(data, {width: 700, height: 400, isStacked: true, title: '" + title +
       "', lineWidth: 1, pointSize: 4, colors: ["+colors.takeRight(rangeeMaitresse.length).mkString(",")+"]});\n"
     s += "}\n</script>\n<div id=\"div_sc_" + name + "\"></div>\n"
     s
