@@ -10,9 +10,9 @@ class CFileOutput(val lchars: List[Characteristic]) {
     s += "return &ble" + title + "Service;\n"
     s += "}\n"
     s += lchars.zipWithIndex.map(z => {
-      var s2 = "// " + Utils.firstLetter2LowerCase(z._1.name) + ": 0x5D%02X\n".format(z._2)
+      var s2 = "\n// " + Utils.firstLetter2LowerCase(z._1.name) + ": 0x5D%02X\n".format(z._2)
       s2 += "CONST_DECL U8 " + Utils.firstLetter2LowerCase(z._1.name) + "UUID[16] = {\n"
-      s2 += "   0X00, 0X00, 0x00, 0x00, 'O', 'S', 'S', 'I', 'T', 0X00, 0X00, 0X00, 0X%02X, 0X5D, 0X00, 0X00\n}\n".format(z._2)
+      s2 += "   0X00, 0X00, 0x00, 0x00, 'O', 'S', 'S', 'I', 'T', 0X00, 0X00, 0X00, 0X%02X, 0X5D, 0X00, 0X00 }\n".format(z._2)
       s2
     }).mkString("\n", "", "\n")
     s
@@ -20,13 +20,16 @@ class CFileOutput(val lchars: List[Characteristic]) {
 
   def toStringCfileFunctions(title: String) = {
     var s = ""
-    s += ""
+    s += lchars.map(c => {
+      c.setFunctionName(title) + c.setFunctionBody(title)
+    }).mkString("\n", "\n", "\n")
     s
   }
 
   def toStringCfileCallback(title: String) = {
     var s = ""
     s += ""
+    s += lchars.map(_.toStringCfileCallback(title)).mkString("\n", "\n", "\n")
     s
   }
 
@@ -62,8 +65,10 @@ class CFileOutput(val lchars: List[Characteristic]) {
     s += "} " + title + "ServiceMemory;\n"
     s += "\n// This function returns the pointer to the global variable containing the characteristics to be written in the flash memory\n"
     s += title + "ServiceMemory* API_" + title + "_get_ble" + title + "Service(void);\n\n"
-    s += "// BLESTATUS_FAILED indicates that the operation has failed, merely because " + title + " Service is not registered by any profile.\n"
-    s += lchars.map(c => "BleStatus " + title + "_SERVER_Set" + c.name + "(" + c.name + "Type *" + Utils.firstLetter2LowerCase(c.name) + ");").mkString("\n", "\n", "\n")
+    s += "/* @return The status of the operation:\n"
+    s += " * BLESTATUS_SUCCESS indicates that the operation succeeded.\n"
+    s += " * BLESTATUS_FAILED indicates that the operation has failed, merely because " + title + " Service is not registered by any profile.\n*/\n"
+    s += lchars.map(_.setFunctionName(title) + ";").mkString("\n", "\n", "\n")
     s += "\n"
     s
   }

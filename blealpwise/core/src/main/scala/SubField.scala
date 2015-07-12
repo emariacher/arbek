@@ -1,20 +1,24 @@
 package blealpwise
 import kebra.MyLog._
 
-class SubField(val lc: List[String]) {
+class SubField {
   var name = ""
   var bitmap = ""
   var comment = ""
   var comment2 = ""
-  if (lc.length > 9) {
-    name = lc.apply(5).trim
-    bitmap = lc.apply(8).trim
-    comment = lc.apply(9).trim
+
+  def ParseCsv(lc: List[String]) = {
+    if (lc.length > 9) {
+      name = lc.apply(5).trim
+      bitmap = lc.apply(8).trim
+      comment = lc.apply(9).trim
+    }
+    if (lc.length > 10) {
+      comment2 = lc.apply(10).trim
+    }
+    myPrintIt(lc, name, bitmap)
+    this
   }
-  if (lc.length > 10) {
-    comment2 = lc.apply(10).trim
-  }
-  myPrintIt(lc, name, bitmap)
 
   override def toString = (name, bitmap, comment).toString
 

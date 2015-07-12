@@ -30,10 +30,10 @@ object BleAlpwiseMain extends App {
       if (lc.length > 7) {
         if (lc.apply(2).trim.length == 0) {
           if (lc.apply(4).trim.length > 0) {
-            lfields = lfields :+ new Field(lc)
+            lfields = lfields :+ (new Field).ParseCsv(lc)
           }
           if (lc.apply(5).trim.length > 0) {
-            lfields.last.addSubField(lc)
+            lfields.last.addSubFieldCsv(lc)
           }
         } else {
           if ((name.trim.length > 0) && (!lfields.isEmpty)) {
