@@ -13,7 +13,7 @@ class Requirement(override val m: Map[String, String], override val h: List[Defe
   override def getStatus(c: Calendar): (DefectState, String) = {
     val z = h.sortBy {
       _.c.getTimeInMillis
-    }
+    }.takeWhile(_.c.getTimeInMillis < c.getTimeInMillis)
 
     if (z.isEmpty) {
       (DefectState.DONTCARE, "")
