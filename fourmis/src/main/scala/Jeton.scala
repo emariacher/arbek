@@ -77,6 +77,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     if (zp.ptype == PanelType.FOURMI) {
       ventre -= 1
     }
+    zp.ptype match {
+      case PanelType.FOURMI => label.text = ventre.toString + "/" + aRameneDeLaJaffe+ " "
+      case _ =>
+    }
     if (cnt > zp.limit) {
       StateMachine.termine
     } else if (ventre < 1) {

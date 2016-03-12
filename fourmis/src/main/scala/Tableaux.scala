@@ -63,8 +63,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         if (command == "bloque") {
           var rayonBloqueDiv = 5
           l.myErrPrintDln("trouve le carre le plus actif")
-          val carreLePlusActif = lc.filter(c => (math.abs(c.row-(maxRC.r / 2))>(maxRC.r / rayonBloqueDiv)) ||
-            (math.abs(c.col-(maxRC.c / 2))>(maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
+          val carreLePlusActif = lc.filter(c => (math.abs(c.row - (maxRC.r / 2)) > (maxRC.r / rayonBloqueDiv)) ||
+            (math.abs(c.col - (maxRC.c / 2)) > (maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
           l.myErrPrintDln("et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
           carreLePlusActif.getUpCarre match {
@@ -134,11 +134,11 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     l.myPrintln(seed)
     lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
     mj.foreach((cj: (Couleur, Jeton)) => {
-     // val cnt = cj._2.cnt
+      // val cnt = cj._2.cnt
       val cnt = zp.ptype match {
-       case PanelType.LABY => cj._2.cnt
-       case PanelType.FOURMI => cj._2.aRameneDeLaJaffe
-     }
+        case PanelType.LABY => cj._2.cnt
+        case PanelType.FOURMI => cj._2.aRameneDeLaJaffe
+      }
       val js = mjs.getOrElse(cj._1, new StatJeton())
       if (cnt != 0) {
         cj._2.label.text = js.toString
@@ -211,12 +211,12 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     StateMachine.genere
   }
 
-  def updateStats(lrjc: List[(Couleur, Int)]) {
-    lrjc.foreach((ci: (Couleur, Int)) => {
+  def updateStats(lrjc: List[(Couleur, Int, Int)]) {
+    lrjc.foreach((ci: (Couleur, Int, Int)) => {
       mjs.getOrElse(ci._1, new StatJeton()).update(ci._2)
     })
     if (seedIndex > 10) {
-      val ljArrivesAuBout = lrjc.filter((ci: (Couleur, Int)) => ci._2 > 0 && ci._2 < zp.limit).map((ci: (Couleur, Int)) => ci._2)
+      val ljArrivesAuBout = lrjc.filter((ci: (Couleur, Int, Int)) => ci._2 > 0 && ci._2 < zp.limit).map((ci: (Couleur, Int, Int)) => ci._2)
       val timeStamp = MyLog.timeStamp(t_startAkka)
       val perf = ljArrivesAuBout.sum * 1000.0 / (nrOfWorkers * ljArrivesAuBout.length * timeStamp)
       mperfs(nrOfWorkers) = mperfs.getOrElse(nrOfWorkers, List.empty[Double]) :+ perf
@@ -224,11 +224,12 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     }
     state = StateMachine.termine
   }
+
   def findCarre(rc2f: RowCol) = {
     var z = lc.find(_.rc.equals(rc2f))
-    if(z.isEmpty) {
+    if (z.isEmpty) {
       null
-    }else {
+    } else {
       z.head
     }
   }

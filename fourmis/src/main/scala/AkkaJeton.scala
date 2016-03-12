@@ -16,7 +16,7 @@ object AkkaJeton {
     case object Demarre extends AvanceJeton
     case class GoJeton(j: Jeton) extends AvanceJeton
     case class Resultat(c: Couleur, cnt: Int) extends AvanceJeton
-    case class ResultatsJetons(lrjc: List[(Couleur, Int)])
+    case class ResultatsJetons(lrjc: List[(Couleur, Int, Int)])
 
     class Worker extends Actor {
 
@@ -38,7 +38,7 @@ object AkkaJeton {
     class Master(nrOfWorkers: Int, lj: List[Jeton], listener: ActorRef) extends Actor {
 
         var nrOfResults: Int = _
-        var lrjc = List.empty[(Couleur, Int)]
+        var lrjc = List.empty[(Couleur, Int, Int)]
 
         val workerRouter = context.actorOf(
             Props[Worker].withRouter(RoundRobinRouter(nrOfWorkers)), name = "workerRouter")
@@ -49,7 +49,7 @@ object AkkaJeton {
                     workerRouter ! GoJeton(j))
             case Resultat(c, cnt) =>
                 //myPrintDln(" --("+c+", "+cnt+")")
-                lrjc = lrjc :+ (c, cnt)
+                lrjc = lrjc :+ (c, cnt, 0)
                 nrOfResults += 1
                 if (nrOfResults == lj.size) {
                     //myPrintDln("Send the result to the listener")
