@@ -39,7 +39,7 @@ class ZeActor extends Actor {
             tbx.doZeJob("step", true)
             ZePanel.zp.step = true
         case "bloque" =>
-            l.myErrPrintDln("bloque")
+            //l.myErrPrintDln("bloque")
             tbx.doZeJob("bloque", true)
     }
 }

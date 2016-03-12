@@ -36,6 +36,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   var ventre = ventrePlein
   var indexBlocage = ventrePlein
   var aRameneDeLaJaffe = 0
+  var aRameneDeLaJaffeTemp = 0
+  var miracule = 0
 
   def this(s: String, rayon: Int) = this(new Couleur(s), rayon)
 
@@ -78,7 +80,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       ventre -= 1
     }
     zp.ptype match {
-      case PanelType.FOURMI => label.text = ventre.toString + "/" + aRameneDeLaJaffe+ " "
+      case PanelType.FOURMI => label.text = math.max(0,ventre).toString + "/" + aRameneDeLaJaffeTemp+ "/" + aRameneDeLaJaffe+ "/" + miracule+ "! "
       case _ =>
     }
     if (cnt > zp.limit) {
@@ -99,6 +101,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         } else {
           statut = Pheronome.RAMENE
           aRameneDeLaJaffe += 1
+          aRameneDeLaJaffeTemp += 1
           pasFini
         }
       } else {
@@ -112,6 +115,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
         l.myErrPrintDln("***************** Miracle! " + toString)
         l.myErrPrintDln("******************************************************")
         statut = Pheronome.CHERCHE
+        miracule += 1
       }
       pasFini
     } else {
@@ -196,6 +200,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
     traces = List.empty[RowCol]
     lastDirection = nord
     cnt = 0
+    aRameneDeLaJaffeTemp = 0
   }
 
   def firstStep: RowCol
@@ -384,7 +389,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
       traces = traces.dropRight(1)
     } else {
       // bah maintenant il y a une barriere qui a ete creee
-      l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur mes traces car une barrierre vient d etre installee ")
+      l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur ses traces car une barriere vient d etre installee ")
       statut = Pheronome.REVIENS
       indexBlocage = traces.length - 1
       //traces = List.empty[RowCol]

@@ -62,10 +62,10 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         countAvance += 1
         if (command == "bloque") {
           var rayonBloqueDiv = 5
-          l.myErrPrintDln("trouve le carre le plus actif")
+          l.myErrPrintD("trouve le carre le plus actif")
           val carreLePlusActif = lc.filter(c => (math.abs(c.row - (maxRC.r / 2)) > (maxRC.r / rayonBloqueDiv)) ||
             (math.abs(c.col - (maxRC.c / 2)) > (maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
-          l.myErrPrintDln("et bloque le [" + carreLePlusActif + "]")
+          l.myErrPrintln(" et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
           carreLePlusActif.getUpCarre match {
             case Some(c) => c.frontieres = c.frontieres :+ FrontiereV.sud
@@ -120,9 +120,9 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   }
 
   def genere: StateMachine = {
-    l.myPrintln(MyLog.tag(1) + " genere")
+    //l.myPrintln(MyLog.tag(1) + " genere")
     val notFulls = lc.filter(_.notFull == true).map(_.genere).filter(_.notFull == true)
-    l.myPrintln(MyLog.tag(1) + " genere " + notFulls.size)
+    //l.myPrintln(MyLog.tag(1) + " genere " + notFulls.size)
     if (notFulls.isEmpty) StateMachine.nettoie else StateMachine.genere
   }
 
