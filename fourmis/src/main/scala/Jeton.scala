@@ -11,7 +11,7 @@ import scala.collection.mutable.Queue
 import scala.collection.immutable.ListSet
 import labyrinthe.LL._
 
-abstract class Jeton(val couleur: Couleur, val rayon: Int) {
+abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Fourmiliere) {
   val label = new Label {
     text = couleur.toString
     foreground = couleur.color
@@ -39,7 +39,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int) {
   var aRameneDeLaJaffeTemp = 0
   var miracule = 0
 
-  def this(s: String, rayon: Int) = this(new Couleur(s), rayon)
+  def this(s: String, rayon: Int) = this(new Couleur(s), rayon, new Fourmiliere(new RowCol(0,0)))
 
   def init = {
     setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
