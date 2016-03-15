@@ -7,7 +7,7 @@ import labyrinthe.Tableaux._
 import scala.collection.mutable.Queue
 import labyrinthe.LL._
 
-class Rouge(couleur: String, rayon: Int) extends Jeton(couleur, rayon) {
+class Rouge(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Jeton(couleur, rayon, fourmiliere) {
   val ordreChoix = new Circular(List(nord, ouest, sud, est), nextf, prevf)
   l.myPrintln(MyLog.func(1) + couleur + " " + lastDirection)
 
@@ -31,19 +31,19 @@ class Rouge(couleur: String, rayon: Int) extends Jeton(couleur, rayon) {
   }
 }
 
-class Orange(couleur: String, rayon: Int) extends Rouge(couleur, rayon) {
+class Orange(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Rouge(couleur, rayon, fourmiliere) {
   // essaye de continuer dans la meme direction que la derniere fois
   override def firstStep: RowCol = getNext(lastDirection, true, true)
 
   override def retourne() = raccourci()
 }
 
-class VertFonce(couleur: String, rayon: Int) extends Rouge(couleur, rayon) {
+class VertFonce(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Rouge(couleur, rayon, fourmiliere) {
   override val ordreChoix = new Circular(List(nord, est, sud, ouest), nextf, prevf)
   // n'essaye pas de continuer dans la meme direction que la derniere fois mais continue a parcourir les priorites
 }
 
-class VertClair(couleur: String, rayon: Int) extends VertFonce(couleur, rayon) {
+class VertClair(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends VertFonce(couleur, rayon, fourmiliere) {
   // essaye de continuer dans la meme direction que la derniere fois
   override def firstStep: RowCol = getNext(lastDirection, true, true)
 

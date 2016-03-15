@@ -39,10 +39,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   var aRameneDeLaJaffeTemp = 0
   var miracule = 0
 
-  def this(s: String, rayon: Int) = this(new Couleur(s), rayon, new Fourmiliere(new RowCol(0,0)))
+  def this(s: String, rayon: Int, fourmiliere: Fourmiliere) = this(new Couleur(s), rayon, fourmiliere)
 
   def init = {
-    setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
+    setRowCol(fourmiliere.nid)
     visible = true
     statut = Pheronome.CHERCHE
     ventre = ventrePlein
@@ -107,7 +107,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       } else {
         pasFini
       }
-    } else if (rc.equals(new RowCol(tbx.maxRow / 2, tbx.maxCol / 2))) {
+    } else if (rc.equals(fourmiliere.nid)) {
       // a la maison
       ventre = ventrePlein
       if (statut == Pheronome.REVIENS) {
@@ -374,7 +374,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
 
   def retourne() {
 
-    if ((traces.isEmpty) || ((next.r == tbx.maxRow / 2) && (next.c == tbx.maxCol / 2))) {
+    if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
       statut = Pheronome.CHERCHE;
       traces = List.empty[RowCol]
@@ -400,7 +400,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     /*next = traces.last
     traces = traces.dropRight(1)*/
     // liste les possibles et prends celui qui raccourci plus le chemin de retour
-    if ((traces.isEmpty) || ((next.r == tbx.maxRow / 2) && (next.c == tbx.maxCol / 2))) {
+    if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
       statut = Pheronome.CHERCHE;
       traces = List.empty[RowCol]
