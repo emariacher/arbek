@@ -37,6 +37,9 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var countGenere = 0
   var countAvance = 0
   var fourmilieres = List(new Fourmiliere(new RowCol(maxRow/2,maxCol/2),"violet"))
+  if(zp.ptype==PanelType.FOURMILIERES) {
+    fourmilieres = fourmilieres :+ new Fourmiliere(new RowCol(maxRow/3,maxCol/3),"pourpre")
+  }
   var lc = List.empty[Carre]
   var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
     new VertFonce("vertFonce", 70, fourmilieres.last), new VertClair("vertClair", 65, fourmilieres.head),
@@ -138,7 +141,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       // val cnt = cj._2.cnt
       val cnt = zp.ptype match {
         case PanelType.LABY => cj._2.cnt
-        case PanelType.FOURMI => cj._2.aRameneDeLaJaffe
+        case _ => cj._2.aRameneDeLaJaffe
       }
       val js = mjs.getOrElse(cj._1, new StatJeton())
       if (cnt != 0) {

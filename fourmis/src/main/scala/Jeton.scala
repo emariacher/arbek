@@ -76,12 +76,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   }
 
   def avance: StateMachine = {
-    if (zp.ptype == PanelType.FOURMI) {
-      ventre -= 1
-    }
     zp.ptype match {
-      case PanelType.FOURMI => label.text = math.max(0,ventre).toString + "/" + aRameneDeLaJaffeTemp+ "/" + aRameneDeLaJaffe+ "/" + miracule+ "! "
-      case _ =>
+      case PanelType.LABY =>
+      case _ => label.text = math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + miracule + "! "
+        ventre -= 1
     }
     if (cnt > zp.limit) {
       StateMachine.termine
@@ -169,7 +167,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       zp.ptype match {
         case PanelType.LABY =>
           g.fillOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
-        case PanelType.FOURMI =>
+        case _ =>
           rayonh = (tbx.size.getWidth.toInt * 60) / (tbx.maxCol * 200)
           rayonv = (tbx.size.getHeight.toInt * 60) / (tbx.maxRow * 200)
           lastDirection.f match {
@@ -296,7 +294,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       //l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
       statut = Pheromone.MORT
     }
-    if (zp.ptype == PanelType.FOURMI) {
+    if (zp.ptype != PanelType.LABY) {
       val zc = tbx.findCarre(rc)
       if (zc != null) {
         zc.depotPheromones = zc.depotPheromones :+ new Depot(tbx.countAvance, statut, this)

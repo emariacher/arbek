@@ -128,7 +128,7 @@ class Carre(val rc: RowCol) {
 
     tbx.zp.ptype match {
       case PanelType.LABY => frontieres.foreach(f => f.paint(g, horiz, vert, x, y,frontieresColor(f)))
-      case PanelType.FOURMI => frontieres.foreach(f => f.paint(g, horiz, vert, x, y))
+      case _ => frontieres.foreach(f => f.paint(g, horiz, vert, x, y))
     }
 
     g.setColor(Color.black)
