@@ -32,7 +32,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   var traces = List.empty[RowCol]
   var next = new RowCol(888, 888)
   var lastDirection = nord
-  var statut = Pheronome.CHERCHE
+  var statut = Pheromone.CHERCHE
   var ventre = ventrePlein
   var indexBlocage = ventrePlein
   var aRameneDeLaJaffe = 0
@@ -44,7 +44,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   def init = {
     setRowCol(fourmiliere.nid)
     visible = true
-    statut = Pheronome.CHERCHE
+    statut = Pheromone.CHERCHE
     ventre = ventrePlein
   }
 
@@ -89,17 +89,17 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       if (ventre == 0) {
         l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
       }
-      statut = Pheronome.MORT
+      statut = Pheromone.MORT
       cnt = zp.limit + 1
       StateMachine.termine
     } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
       // a l'exterieur
       //l.myPrintln(MyLog.tagnt(1) + " " + toString)
-      if (statut == Pheronome.CHERCHE) {
+      if (statut == Pheromone.CHERCHE) {
         if (zp.ptype == PanelType.LABY) {
           StateMachine.termine
         } else {
-          statut = Pheronome.RAMENE
+          statut = Pheromone.RAMENE
           aRameneDeLaJaffe += 1
           aRameneDeLaJaffeTemp += 1
           pasFini
@@ -110,11 +110,11 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     } else if (rc.equals(fourmiliere.nid)) {
       // a la maison
       ventre = ventrePlein
-      if (statut == Pheronome.REVIENS) {
+      if (statut == Pheromone.REVIENS) {
         l.myErrPrintDln("******************************************************")
         l.myErrPrintDln("***************** Miracle! " + toString)
         l.myErrPrintDln("******************************************************")
-        statut = Pheronome.CHERCHE
+        statut = Pheromone.CHERCHE
         miracule += 1
       }
       pasFini
@@ -185,10 +185,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       }
       g.setColor(Color.black)
       statut match {
-        case Pheronome.CHERCHE => g.drawString(" ", xg, yg)
-        case Pheronome.RAMENE => g.drawString("+", xg, yg)
-        case Pheronome.REVIENS => g.drawString("-", xg, yg)
-        case Pheronome.MORT => g.drawString("*", xg, yg)
+        case Pheromone.CHERCHE => g.drawString(" ", xg, yg)
+        case Pheromone.RAMENE => g.drawString("+", xg, yg)
+        case Pheromone.REVIENS => g.drawString("-", xg, yg)
+        case Pheromone.MORT => g.drawString("*", xg, yg)
         case _ => g.drawString("?", xg, yg)
       }
     }
@@ -208,7 +208,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   def pasFini: StateMachine = {
     //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
     statut match {
-      case Pheronome.REVIENS =>
+      case Pheromone.REVIENS =>
         //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
         next = firstStep
         /* verifie si tu ne retombes pas sur tes traces avant le blocage
@@ -253,9 +253,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         sortDuLabyrinthe
         //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
         traces = traces :+ rc
-      case Pheronome.CHERCHE =>
+      case Pheromone.CHERCHE =>
         next = firstStep
-        // essaye de trouver une case qui a le maximum de pheronomes[RAMENE]
+        // essaye de trouver une case qui a le maximum de Pheromones[RAMENE]
         var possibles = findPossibles.filter(z => {
           traces.find(_.equals(z)).isEmpty
         }).filter(z => {
@@ -284,8 +284,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         // sinon continue à essayer de sortir du labyrinthe
         sortDuLabyrinthe
         traces = traces :+ rc
-      case Pheronome.RAMENE => retourne
-      case Pheronome.MORT => {
+      case Pheromone.RAMENE => retourne
+      case Pheromone.MORT => {
         // rien
       }
       case _ => l.myErrPrintDln(toString)
@@ -294,12 +294,12 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
     if (next.r == 888) {
       //l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
-      statut = Pheronome.MORT
+      statut = Pheromone.MORT
     }
     if (zp.ptype == PanelType.FOURMI) {
       val zc = tbx.findCarre(rc)
       if (zc != null) {
-        zc.depotPheronomes = zc.depotPheronomes :+ new Depot(tbx.countAvance, statut, this)
+        zc.depotPheromones = zc.depotPheromones :+ new Depot(tbx.countAvance, statut, this)
       }
     }
     if (next.r > row) lastDirection = sud
@@ -376,7 +376,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
 
     if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
-      statut = Pheronome.CHERCHE;
+      statut = Pheromone.CHERCHE;
       traces = List.empty[RowCol]
       /*} else {
         // retourne sur tes pas
@@ -390,7 +390,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     } else {
       // bah maintenant il y a une barriere qui a ete creee
       l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur ses traces car une barriere vient d etre installee ")
-      statut = Pheronome.REVIENS
+      statut = Pheromone.REVIENS
       indexBlocage = traces.length - 1
       //traces = List.empty[RowCol]
     }
@@ -402,7 +402,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     // liste les possibles et prends celui qui raccourci plus le chemin de retour
     if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
-      statut = Pheronome.CHERCHE;
+      statut = Pheromone.CHERCHE;
       traces = List.empty[RowCol]
     } else {
 

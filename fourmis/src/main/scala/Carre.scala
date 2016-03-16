@@ -18,7 +18,7 @@ class Carre(val rc: RowCol) {
   val prolongeThreshold = 550
   var frontieres = List[Frontiere]()
   var frontieresColor = scala.collection.mutable.Map.empty[Frontiere, Color]
-  var depotPheronomes = List[Depot]()
+  var depotPheromones = List[Depot]()
   var bloque = false
 
   def autre(maFrontiere: Frontiere) = {
@@ -132,7 +132,7 @@ class Carre(val rc: RowCol) {
     }
 
     g.setColor(Color.black)
-    if (depotPheronomes.length > 0) {
+    if (depotPheromones.length > 0) {
       //g.drawString("" + calculePheromone, x - horiz, y - vert)
       g.setColor(Color.gray)
       g.fillOval(x - horiz, y - vert, math.log(calculePheromone).toInt+2, math.log(calculePheromone).toInt+2)
@@ -162,7 +162,7 @@ class Carre(val rc: RowCol) {
   }
 
   def calculePheromone: Int = {
-    depotPheronomes.filter(_.ph == Pheronome.RAMENE).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
+    depotPheromones.filter(_.ph == Pheromone.RAMENE).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
   }
 
 }

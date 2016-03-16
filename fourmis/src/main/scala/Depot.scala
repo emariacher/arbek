@@ -3,12 +3,12 @@
  */
 package labyrinthe
 
-class Depot(val ts: Int, val ph: Pheronome.Value, val fourmi: Jeton) {
+class Depot(val ts: Int, val ph: Pheromone.Value, val fourmi: Jeton) {
 
 }
 
-object Pheronome extends Enumeration {
+object Pheromone extends Enumeration {
   type Pheronome = Value
   val CHERCHE, RAMENE, REVIENS, MORT = Value
-  Pheronome.values foreach println
+  Pheromone.values foreach println
 }
