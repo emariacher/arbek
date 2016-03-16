@@ -36,7 +36,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var rnd: Random = _
   var countGenere = 0
   var countAvance = 0
-  var fourmilieres = List(new Fourmiliere(new RowCol(maxRow/2,maxCol/2)))
+  var fourmilieres = List(new Fourmiliere(new RowCol(maxRow/2,maxCol/2),"violet"))
   var lc = List.empty[Carre]
   var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
     new VertFonce("vertFonce", 70, fourmilieres.last), new VertClair("vertClair", 65, fourmilieres.head),
@@ -65,7 +65,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
           var rayonBloqueDiv = 5
           l.myErrPrintD("trouve le carre le plus actif")
           val carreLePlusActif = lc.filter(c => (math.abs(c.row - (maxRC.r / 2)) > (maxRC.r / rayonBloqueDiv)) ||
-            (math.abs(c.col - (maxRC.c / 2)) > (maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
+            (math.abs(c.col - (maxRC.c / 2)) > (maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromoneAll)
           l.myErrPrintln(" et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
           carreLePlusActif.getUpCarre match {

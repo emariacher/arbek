@@ -227,9 +227,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         var possibles = findPossibles.filter(z => {
           traces.find(_.equals(z)).isEmpty
         }).filter(z => {
-          tbx.findCarre(z).calculePheromone > 0
+          tbx.findCarre(z).calculePheromone(fourmiliere) > 0
         }).sortWith((a, b) => {
-          tbx.findCarre(a).calculePheromone > tbx.findCarre(b).calculePheromone
+          tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
         })
 
         if (!possibles.isEmpty) {
@@ -259,9 +259,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         var possibles = findPossibles.filter(z => {
           traces.find(_.equals(z)).isEmpty
         }).filter(z => {
-          tbx.findCarre(z).calculePheromone > 0
+          tbx.findCarre(z).calculePheromone(fourmiliere) > 0
         }).sortWith((a, b) => {
-          tbx.findCarre(a).calculePheromone > tbx.findCarre(b).calculePheromone
+          tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
         })
 
         if (!possibles.isEmpty) {
@@ -469,6 +469,10 @@ class Couleur(val couleur: String) {
     case "vertClair" => Color.green
     case "bleu" => Color.blue
     case "bleuClair" => Color.cyan
+    case "pourpre" => Color.magenta
+    case "grisFonce" => Color.darkGray
+    case "grisClair" => Color.lightGray
+    case "violet" => new Color(0x800080)
     case "vertFonce" => new Color(0x008000)
     case _ => throw new Exception("NOGOOD!")
   }

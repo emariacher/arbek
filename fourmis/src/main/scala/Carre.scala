@@ -134,14 +134,18 @@ class Carre(val rc: RowCol) {
     g.setColor(Color.black)
     if (depotPheromones.length > 0) {
       //g.drawString("" + calculePheromone, x - horiz, y - vert)
-      g.setColor(Color.gray)
-      g.fillOval(x - horiz, y - vert, math.log(calculePheromone).toInt+2, math.log(calculePheromone).toInt+2)
+      tbx.fourmilieres.zipWithIndex.map(fi =>{
+        g.setColor(fi._1.couleur.color)
+        g.fillOval(x - horiz+(fi._2*10), y - vert+(fi._2*10), math.log(calculePheromone(fi._1)).toInt+2, math.log(calculePheromone(fi._1)).toInt+2)
+      })
+      //g.setColor(Color.gray)
+      //g.fillOval(x - horiz, y - vert, math.log(calculePheromone).toInt+2, math.log(calculePheromone).toInt+2)
     }
     //g.drawString(toString,x,y)
   }
 
   override def toString: String = {
-    "{" + rc + " " + calculePheromone + "}"
+    "{" + rc + " " + tbx.fourmilieres.map(f => f.toString+"("+calculePheromone(f)+")" ) + "}"
     //"Carre{("+row+","+col+"), "+frontieres+"}"
   }
 
@@ -161,9 +165,12 @@ class Carre(val rc: RowCol) {
     tbx.lc.find((cf: Carre) => cf.row == row + 1 && cf.col == col)
   }
 
-  def calculePheromone: Int = {
-    depotPheromones.filter(_.ph == Pheromone.RAMENE).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
+  def calculePheromone(fourmiliere: Fourmiliere): Int = {
+    depotPheromones.filter(_.ph == Pheromone.RAMENE).filter(_.fourmi.fourmiliere == fourmiliere).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
   }
 
+  def calculePheromoneAll: Int = {
+    depotPheromones.filter(_.ph == Pheromone.RAMENE).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
+  }
 }
 
