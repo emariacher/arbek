@@ -32,19 +32,19 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   var traces = List.empty[RowCol]
   var next = new RowCol(888, 888)
   var lastDirection = nord
-  var statut = Pheronome.CHERCHE
+  var statut = Pheromone.CHERCHE
   var ventre = ventrePlein
   var indexBlocage = ventrePlein
   var aRameneDeLaJaffe = 0
   var aRameneDeLaJaffeTemp = 0
   var miracule = 0
 
-  def this(s: String, rayon: Int) = this(new Couleur(s), rayon, new Fourmiliere(new RowCol(0,0)))
+  def this(s: String, rayon: Int, fourmiliere: Fourmiliere) = this(new Couleur(s), rayon, fourmiliere)
 
   def init = {
-    setRowCol(tbx.maxRow / 2, tbx.maxCol / 2)
+    setRowCol(fourmiliere.nid)
     visible = true
-    statut = Pheronome.CHERCHE
+    statut = Pheromone.CHERCHE
     ventre = ventrePlein
   }
 
@@ -76,12 +76,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   }
 
   def avance: StateMachine = {
-    if (zp.ptype == PanelType.FOURMI) {
-      ventre -= 1
-    }
     zp.ptype match {
-      case PanelType.FOURMI => label.text = math.max(0,ventre).toString + "/" + aRameneDeLaJaffeTemp+ "/" + aRameneDeLaJaffe+ "/" + miracule+ "! "
-      case _ =>
+      case PanelType.LABY =>
+      case _ => label.text = math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + miracule + "! "
+        ventre -= 1
     }
     if (cnt > zp.limit) {
       StateMachine.termine
@@ -89,17 +87,17 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       if (ventre == 0) {
         l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
       }
-      statut = Pheronome.MORT
+      statut = Pheromone.MORT
       cnt = zp.limit + 1
       StateMachine.termine
     } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
       // a l'exterieur
       //l.myPrintln(MyLog.tagnt(1) + " " + toString)
-      if (statut == Pheronome.CHERCHE) {
+      if (statut == Pheromone.CHERCHE) {
         if (zp.ptype == PanelType.LABY) {
           StateMachine.termine
         } else {
-          statut = Pheronome.RAMENE
+          statut = Pheromone.RAMENE
           aRameneDeLaJaffe += 1
           aRameneDeLaJaffeTemp += 1
           pasFini
@@ -107,14 +105,14 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       } else {
         pasFini
       }
-    } else if (rc.equals(new RowCol(tbx.maxRow / 2, tbx.maxCol / 2))) {
+    } else if (rc.equals(fourmiliere.nid)) {
       // a la maison
       ventre = ventrePlein
-      if (statut == Pheronome.REVIENS) {
+      if (statut == Pheromone.REVIENS) {
         l.myErrPrintDln("******************************************************")
         l.myErrPrintDln("***************** Miracle! " + toString)
         l.myErrPrintDln("******************************************************")
-        statut = Pheronome.CHERCHE
+        statut = Pheromone.CHERCHE
         miracule += 1
       }
       pasFini
@@ -169,7 +167,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       zp.ptype match {
         case PanelType.LABY =>
           g.fillOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
-        case PanelType.FOURMI =>
+        case _ =>
           rayonh = (tbx.size.getWidth.toInt * 60) / (tbx.maxCol * 200)
           rayonv = (tbx.size.getHeight.toInt * 60) / (tbx.maxRow * 200)
           lastDirection.f match {
@@ -185,10 +183,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       }
       g.setColor(Color.black)
       statut match {
-        case Pheronome.CHERCHE => g.drawString(" ", xg, yg)
-        case Pheronome.RAMENE => g.drawString("+", xg, yg)
-        case Pheronome.REVIENS => g.drawString("-", xg, yg)
-        case Pheronome.MORT => g.drawString("*", xg, yg)
+        case Pheromone.CHERCHE => g.drawString(" ", xg, yg)
+        case Pheromone.RAMENE => g.drawString("+", xg, yg)
+        case Pheromone.REVIENS => g.drawString("-", xg, yg)
+        case Pheromone.MORT => g.drawString("*", xg, yg)
         case _ => g.drawString("?", xg, yg)
       }
     }
@@ -208,7 +206,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   def pasFini: StateMachine = {
     //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
     statut match {
-      case Pheronome.REVIENS =>
+      case Pheromone.REVIENS =>
         //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
         next = firstStep
         /* verifie si tu ne retombes pas sur tes traces avant le blocage
@@ -227,9 +225,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         var possibles = findPossibles.filter(z => {
           traces.find(_.equals(z)).isEmpty
         }).filter(z => {
-          tbx.findCarre(z).calculePheromone > 0
+          tbx.findCarre(z).calculePheromone(fourmiliere) > 0
         }).sortWith((a, b) => {
-          tbx.findCarre(a).calculePheromone > tbx.findCarre(b).calculePheromone
+          tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
         })
 
         if (!possibles.isEmpty) {
@@ -253,15 +251,15 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         sortDuLabyrinthe
         //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
         traces = traces :+ rc
-      case Pheronome.CHERCHE =>
+      case Pheromone.CHERCHE =>
         next = firstStep
-        // essaye de trouver une case qui a le maximum de pheronomes[RAMENE]
+        // essaye de trouver une case qui a le maximum de Pheromones[RAMENE]
         var possibles = findPossibles.filter(z => {
           traces.find(_.equals(z)).isEmpty
         }).filter(z => {
-          tbx.findCarre(z).calculePheromone > 0
+          tbx.findCarre(z).calculePheromone(fourmiliere) > 0
         }).sortWith((a, b) => {
-          tbx.findCarre(a).calculePheromone > tbx.findCarre(b).calculePheromone
+          tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
         })
 
         if (!possibles.isEmpty) {
@@ -284,8 +282,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         // sinon continue à essayer de sortir du labyrinthe
         sortDuLabyrinthe
         traces = traces :+ rc
-      case Pheronome.RAMENE => retourne
-      case Pheronome.MORT => {
+      case Pheromone.RAMENE => retourne
+      case Pheromone.MORT => {
         // rien
       }
       case _ => l.myErrPrintDln(toString)
@@ -294,12 +292,12 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
     if (next.r == 888) {
       //l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
-      statut = Pheronome.MORT
+      statut = Pheromone.MORT
     }
-    if (zp.ptype == PanelType.FOURMI) {
+    if (zp.ptype != PanelType.LABY) {
       val zc = tbx.findCarre(rc)
       if (zc != null) {
-        zc.depotPheronomes = zc.depotPheronomes :+ new Depot(tbx.countAvance, statut, this)
+        zc.depotPheromones = zc.depotPheromones :+ new Depot(tbx.countAvance, statut, this)
       }
     }
     if (next.r > row) lastDirection = sud
@@ -374,9 +372,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
 
   def retourne() {
 
-    if ((traces.isEmpty) || ((next.r == tbx.maxRow / 2) && (next.c == tbx.maxCol / 2))) {
+    if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
-      statut = Pheronome.CHERCHE;
+      statut = Pheromone.CHERCHE;
       traces = List.empty[RowCol]
       /*} else {
         // retourne sur tes pas
@@ -390,7 +388,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     } else {
       // bah maintenant il y a une barriere qui a ete creee
       l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur ses traces car une barriere vient d etre installee ")
-      statut = Pheronome.REVIENS
+      statut = Pheromone.REVIENS
       indexBlocage = traces.length - 1
       //traces = List.empty[RowCol]
     }
@@ -400,9 +398,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     /*next = traces.last
     traces = traces.dropRight(1)*/
     // liste les possibles et prends celui qui raccourci plus le chemin de retour
-    if ((traces.isEmpty) || ((next.r == tbx.maxRow / 2) && (next.c == tbx.maxCol / 2))) {
+    if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
-      statut = Pheronome.CHERCHE;
+      statut = Pheromone.CHERCHE;
       traces = List.empty[RowCol]
     } else {
 
@@ -469,6 +467,10 @@ class Couleur(val couleur: String) {
     case "vertClair" => Color.green
     case "bleu" => Color.blue
     case "bleuClair" => Color.cyan
+    case "pourpre" => Color.magenta
+    case "grisFonce" => Color.darkGray
+    case "grisClair" => Color.lightGray
+    case "violet" => new Color(0x800080)
     case "vertFonce" => new Color(0x008000)
     case _ => throw new Exception("NOGOOD!")
   }

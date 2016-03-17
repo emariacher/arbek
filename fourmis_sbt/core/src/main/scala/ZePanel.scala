@@ -82,6 +82,6 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
 
 object PanelType extends Enumeration {
     type PanelType = Value
-    val LABY, FOURMI = Value
+    val LABY, FOURMI, FOURMILIERES = Value
     PanelType.values foreach println
 }

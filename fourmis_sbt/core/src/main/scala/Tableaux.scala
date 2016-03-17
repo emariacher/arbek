@@ -36,10 +36,14 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var rnd: Random = _
   var countGenere = 0
   var countAvance = 0
+  var fourmilieres = List(new Fourmiliere(new RowCol(maxRow/2,maxCol/2),"violet"))
+  if(zp.ptype==PanelType.FOURMILIERES) {
+    fourmilieres = fourmilieres :+ new Fourmiliere(new RowCol(maxRow/3,maxCol/3),"pourpre")
+  }
   var lc = List.empty[Carre]
-  var lj = List(new Rouge("rouge", 80), new Orange("orange", 75),
-    new VertFonce("vertFonce", 70), new VertClair("vertClair", 65),
-    new Bleu("bleu", 60), new BleuClair("bleuClair", 55))
+  var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
+    new VertFonce("vertFonce", 70, fourmilieres.last), new VertClair("vertClair", 65, fourmilieres.head),
+    new Bleu("bleu", 60, fourmilieres.head), new BleuClair("bleuClair", 55, fourmilieres.last))
   //lj = List(new Orange("orange", 75))
   val mj = lj.map((j: Jeton) => (j.couleur, j)).toMap
   val mjs = lj.map((j: Jeton) => (j.couleur, new StatJeton(j.couleur))).toMap
@@ -64,7 +68,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
           var rayonBloqueDiv = 5
           l.myErrPrintD("trouve le carre le plus actif")
           val carreLePlusActif = lc.filter(c => (math.abs(c.row - (maxRC.r / 2)) > (maxRC.r / rayonBloqueDiv)) ||
-            (math.abs(c.col - (maxRC.c / 2)) > (maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromone)
+            (math.abs(c.col - (maxRC.c / 2)) > (maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromoneAll)
           l.myErrPrintln(" et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
           carreLePlusActif.getUpCarre match {
@@ -137,7 +141,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       // val cnt = cj._2.cnt
       val cnt = zp.ptype match {
         case PanelType.LABY => cj._2.cnt
-        case PanelType.FOURMI => cj._2.aRameneDeLaJaffe
+        case _ => cj._2.aRameneDeLaJaffe
       }
       val js = mjs.getOrElse(cj._1, new StatJeton())
       if (cnt != 0) {
