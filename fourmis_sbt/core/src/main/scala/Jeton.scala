@@ -473,7 +473,8 @@ class Couleur(val couleur: String) {
     case "pourpre" => Color.magenta
     case "grisFonce" => Color.darkGray
     case "grisClair" => Color.lightGray
-    case "violet" => new Color(0x800080)
+    case "violet" => new Color(0x900090)
+    case "marron" => new Color(0xb00050)
     case "vertFonce" => new Color(0x008000)
     case _ => throw new Exception("NOGOOD!")
   }

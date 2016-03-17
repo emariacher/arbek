@@ -45,6 +45,11 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
     new VertFonce("vertFonce", 70, fourmilieres.last), new VertClair("vertClair", 65, fourmilieres.head),
     new Bleu("bleu", 60, fourmilieres.head), new BleuClair("bleuClair", 55, fourmilieres.last))
+
+  zp.ptype match {
+    case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron",85,fourmilieres.head)
+    case _ =>
+  }
   //lj = List(new Orange("orange", 75))
   val mj = lj.map((j: Jeton) => (j.couleur, j)).toMap
   val mjs = lj.map((j: Jeton) => (j.couleur, new StatJeton(j.couleur))).toMap

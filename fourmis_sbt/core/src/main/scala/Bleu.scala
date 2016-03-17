@@ -1,9 +1,6 @@
 package labyrinthe
 
-import scala.collection.mutable.LinkedList
 import labyrinthe.FrontiereV._
-import scala.collection.mutable.Queue
-import kebra._
 import labyrinthe.Tableaux._
 
 class Bleu(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Jeton(couleur, rayon, fourmiliere) {
