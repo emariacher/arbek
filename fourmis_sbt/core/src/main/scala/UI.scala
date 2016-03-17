@@ -34,6 +34,7 @@ class UI extends SimpleSwingApplication {
             contents += label
             contents += new BoxPanel(Orientation.Horizontal) {
                 contents ++= tbx.lj.map(_.label)
+                contents ++= tbx.fourmilieres.map(_.label)
             }
             contents += ZePanel.zp
             contents += new BoxPanel(Orientation.Horizontal) {

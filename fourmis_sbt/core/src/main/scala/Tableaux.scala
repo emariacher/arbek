@@ -36,9 +36,10 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var rnd: Random = _
   var countGenere = 0
   var countAvance = 0
-  var fourmilieres = List(new Fourmiliere(new RowCol(maxRow/2,maxCol/2),"violet"))
-  if(zp.ptype==PanelType.FOURMILIERES) {
-    fourmilieres = fourmilieres :+ new Fourmiliere(new RowCol(maxRow/3,maxCol/3),"pourpre")
+  var fourmilieres = zp.ptype match {
+    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet"),
+      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre"))
+    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet"))
   }
   var lc = List.empty[Carre]
   var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
@@ -137,6 +138,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     countAvance = 0
     l.myPrintln(seed)
     lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
+    fourmilieres.foreach(_.cntmp=0)
     mj.foreach((cj: (Couleur, Jeton)) => {
       // val cnt = cj._2.cnt
       val cnt = zp.ptype match {

@@ -107,6 +107,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       }
     } else if (rc.equals(fourmiliere.nid)) {
       // a la maison
+      fourmiliere.cnt += 1
+      fourmiliere.cntmp += 1
+      fourmiliere.label.text = " " + fourmiliere.cntmp + "/" + fourmiliere.cnt
       ventre = ventrePlein
       if (statut == Pheromone.REVIENS) {
         l.myErrPrintDln("******************************************************")
