@@ -47,7 +47,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     new Bleu("bleu", 60, fourmilieres.head), new BleuClair("bleuClair", 55, fourmilieres.last))
 
   zp.ptype match {
-    case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron",85,fourmilieres.head)
+    case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron", 85, fourmilieres.head)
     case _ =>
   }
   //lj = List(new Orange("orange", 75))
@@ -99,6 +99,14 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
           }
           carreLePlusActif.bloque = true
         }
+        lj.filter(_.role == Role.SOLDAT).foreach(soldat => {
+          lj.filter(_.statut != Pheromone.MORT).foreach(j => {
+            if ((j.rc == soldat.rc) && (j.fourmiliere != soldat.fourmiliere)) {
+              j.statut = Pheromone.MORT
+              l.myErrPrintln(MyLog.tagnt(1) + " " + soldat.toString + " a tue " + j.toString)
+            }
+          })
+        })
       case StateMachine.reset => state = reset
       case StateMachine.termine =>
         if (graphic) {
@@ -143,7 +151,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     countAvance = 0
     l.myPrintln(seed)
     lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
-    fourmilieres.foreach(_.cntmp=0)
+    fourmilieres.foreach(_.cntmp = 0)
     mj.foreach((cj: (Couleur, Jeton)) => {
       // val cnt = cj._2.cnt
       val cnt = zp.ptype match {

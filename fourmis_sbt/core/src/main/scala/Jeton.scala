@@ -38,6 +38,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   var aRameneDeLaJaffe = 0
   var aRameneDeLaJaffeTemp = 0
   var miracule = 0
+  val role = Role.OUVRIERE
 
   def this(s: String, rayon: Int, fourmiliere: Fourmiliere) = this(new Couleur(s), rayon, fourmiliere)
 
@@ -83,12 +84,12 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     }
     if (cnt > zp.limit) {
       StateMachine.termine
-    } else if (ventre < 1) {
+    } else if ((ventre < 1) || (statut == Pheromone.MORT)) {
       if (ventre == 0) {
         l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
       }
-      statut = Pheromone.MORT
       cnt = zp.limit + 1
+      statut = Pheromone.MORT
       StateMachine.termine
     } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
       // a l'exterieur
@@ -164,7 +165,11 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       traces.foreach((rc: RowCol) => {
         xg = tbx.origin.getWidth.toInt + (horiz * 2 * rc.c)
         yg = tbx.origin.getHeight.toInt + (vert * 2 * rc.r)
-        g.drawOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
+        role match {
+          case Role.OUVRIERE => g.drawOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
+          case Role.SOLDAT => g.drawRect(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
+        }
+
         //g.drawString(""+rc,xg,yg)
       })
       zp.ptype match {
@@ -510,4 +515,11 @@ case class StateMachineJeton private(state: String) {
 object StateMachineJeton {
   val normal = StateMachineJeton("normal")
   val cercleVicieux = StateMachineJeton("cercleVicieux")
+}
+
+
+object Role extends Enumeration {
+  type Role = Value
+  val OUVRIERE, SOLDAT = Value
+  Role.values foreach println
 }

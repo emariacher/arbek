@@ -3,4 +3,6 @@
  */
 package labyrinthe
 
-class Soldat(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Bleu(couleur, rayon, fourmiliere)
+class Soldat(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Bleu(couleur, rayon, fourmiliere) {
+  override val role = Role.SOLDAT
+}
