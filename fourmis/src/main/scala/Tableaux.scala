@@ -36,14 +36,20 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var rnd: Random = _
   var countGenere = 0
   var countAvance = 0
-  var fourmilieres = List(new Fourmiliere(new RowCol(maxRow/2,maxCol/2),"violet"))
-  if(zp.ptype==PanelType.FOURMILIERES) {
-    fourmilieres = fourmilieres :+ new Fourmiliere(new RowCol(maxRow/3,maxCol/3),"pourpre")
+  var fourmilieres = zp.ptype match {
+    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet"),
+      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre"))
+    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet"))
   }
   var lc = List.empty[Carre]
   var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
     new VertFonce("vertFonce", 70, fourmilieres.last), new VertClair("vertClair", 65, fourmilieres.head),
     new Bleu("bleu", 60, fourmilieres.head), new BleuClair("bleuClair", 55, fourmilieres.last))
+
+  zp.ptype match {
+    case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron", 85, fourmilieres.head)
+    case _ =>
+  }
   //lj = List(new Orange("orange", 75))
   val mj = lj.map((j: Jeton) => (j.couleur, j)).toMap
   val mjs = lj.map((j: Jeton) => (j.couleur, new StatJeton(j.couleur))).toMap
@@ -93,6 +99,14 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
           }
           carreLePlusActif.bloque = true
         }
+        lj.filter(_.role == Role.SOLDAT).foreach(soldat => {
+          lj.filter(_.statut != Pheromone.MORT).foreach(j => {
+            if ((j.rc == soldat.rc) && (j.fourmiliere != soldat.fourmiliere)) {
+              j.statut = Pheromone.MORT
+              l.myErrPrintln(MyLog.tagnt(1) + " " + soldat.toString + " a tue " + j.toString)
+            }
+          })
+        })
       case StateMachine.reset => state = reset
       case StateMachine.termine =>
         if (graphic) {
@@ -137,6 +151,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     countAvance = 0
     l.myPrintln(seed)
     lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
+    fourmilieres.foreach(_.cntmp = 0)
     mj.foreach((cj: (Couleur, Jeton)) => {
       // val cnt = cj._2.cnt
       val cnt = zp.ptype match {
