@@ -83,7 +83,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       case _ => label.text = role.toString.substring(0,4) + "("+math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + killed + "/" + miracule + ") "
         ventre -= 1
     }
-    if (cnt > zp.limit) {
+    if ((cnt > zp.limit) || (tbx.lj.count(_.statut == Pheromone.MORT) > 2)) {
       StateMachine.termine
     } else if ((ventre < 1) || (statut == Pheromone.MORT)) {
       if (ventre == 0) {
@@ -117,7 +117,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       fourmiliere.cntall += 1
       fourmiliere.cntmp += 1
       fourmiliere.label.text = "] fml(" + fourmiliere.cntmp + "/" + fourmiliere.cnt + "/" + fourmiliere.cntall + ")[ "
-      ventre = ventrePlein
       if (statut == Pheromone.REVIENS) {
         l.myErrPrintDln("******************************************************")
         l.myErrPrintDln("***************** Miracle! " + toString)
@@ -125,6 +124,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         statut = Pheromone.CHERCHE
         miracule += 1
       }
+      ventre = ventrePlein
       pasFini
     } else {
       pasFini
