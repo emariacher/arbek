@@ -80,7 +80,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   def avance: StateMachine = {
     zp.ptype match {
       case PanelType.LABY =>
-      case _ => label.text = math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + killed  + "/" + miracule + "! "
+      case _ => label.text = role.toString.substring(0,4) + "("+math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + killed + "/" + miracule + ") "
         ventre -= 1
     }
     if (cnt > zp.limit) {
@@ -115,7 +115,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       }
       fourmiliere.cntall += 1
       fourmiliere.cntmp += 1
-      fourmiliere.label.text = " " + fourmiliere.cntmp + "/" + fourmiliere.cnt + "/" + fourmiliere.cntall
+      fourmiliere.label.text = "] fml(" + fourmiliere.cntmp + "/" + fourmiliere.cnt + "/" + fourmiliere.cntall + ")[ "
       ventre = ventrePlein
       if (statut == Pheromone.REVIENS) {
         l.myErrPrintDln("******************************************************")
@@ -268,13 +268,23 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       case Pheromone.CHERCHE =>
         next = firstStep
         // essaye de trouver une case qui a le maximum de Pheromones[RAMENE]
-        var possibles = findPossibles.filter(z => {
-          traces.find(_.equals(z)).isEmpty
-        }).filter(z => {
-          tbx.findCarre(z).calculePheromone(fourmiliere) > 0
-        }).sortWith((a, b) => {
-          tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
-        })
+        var possibles = role match {
+          case Role.OUVRIERE => findPossibles.filter(z => {
+            traces.find(_.equals(z)).isEmpty
+          }).filter(z => {
+            tbx.findCarre(z).calculePheromone(fourmiliere) > 0
+          }).sortWith((a, b) => {
+            tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
+          })
+          case Role.SOLDAT => findPossibles.filter(z => {
+            traces.find(_.equals(z)).isEmpty
+          }).filter(z => {
+            tbx.findCarre(z).calculePheromoneDesEnnemies(fourmiliere) > 0
+          }).sortWith((a, b) => {
+            tbx.findCarre(a).calculePheromoneDesEnnemies(fourmiliere) > tbx.findCarre(b).calculePheromoneDesEnnemies(fourmiliere)
+          })
+        }
+
 
         if (!possibles.isEmpty) {
           //l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
