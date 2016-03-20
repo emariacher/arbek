@@ -111,7 +111,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       // a la maison
       role match {
         case Role.OUVRIERE => fourmiliere.cnt += 1
-        case Role.SOLDAT => fourmiliere.cnt -= 1 // eh oui, il faut entretenir la milice
+        case Role.SOLDAT => fourmiliere.cnt -= zp.limit/1000 // eh oui, il faut entretenir la milice.
+        // l'equilibre entre frais d'entretien et avantage depend du temps et est a peu pres 1 vs 1000
       }
       fourmiliere.cntall += 1
       fourmiliere.cntmp += 1

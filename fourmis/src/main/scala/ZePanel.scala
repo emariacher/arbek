@@ -64,10 +64,11 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
     preferredSize = new Dimension(largeur, hauteur)
     val origin = new Dimension(0, 0)
     newTbx(this, maxRC, preferredSize, origin)
-    if(ptype==PanelType.FOURMI) {
-        limit = 5000
-    } else {
-        limit = 1000
+
+    limit = ptype match {
+        case PanelType.LABY => 1000
+        case PanelType.FOURMI => 5000
+        case PanelType.FOURMILIERES => 1500
     }
 
     override def paint(g: Graphics2D) {
