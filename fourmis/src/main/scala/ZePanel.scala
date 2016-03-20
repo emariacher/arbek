@@ -68,7 +68,7 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
     limit = ptype match {
         case PanelType.LABY => 1000
         case PanelType.FOURMI => 5000
-        case PanelType.FOURMILIERES => 1500
+        case PanelType.FOURMILIERES => 1000
     }
 
     override def paint(g: Graphics2D) {
