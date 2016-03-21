@@ -1,14 +1,10 @@
 package labyrinthe
 
-import labyrinthe.ZePanel._
-
 import scala.util.Random
-import java.awt.Dimension
-import java.io.File
+import java.awt.{Graphics, Graphics2D, Dimension, Color}
 import java.util.Calendar
 import kebra._
 import kebra.MyLog._
-import java.awt.Color
 import labyrinthe.LL._
 import statlaby.AkkaJeton
 import scala.collection.immutable._
@@ -37,9 +33,9 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var countGenere = 0
   var countAvance = 0
   var fourmilieres = zp.ptype match {
-    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet"),
-      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre"))
-    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet"))
+    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet",RaceFourmi.ROND),
+      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre",RaceFourmi.RECTROND))
+    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet",RaceFourmi.ROND))
   }
   var lc = List.empty[Carre]
   var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
@@ -50,6 +46,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron", 85, fourmilieres.head)
     case _ =>
   }
+  lj = lj.sortBy(_.fourmiliere.hashCode)
   //lj = List(new Orange("orange", 75))
   val mj = lj.map((j: Jeton) => (j.couleur, j)).toMap
   val mjs = lj.map((j: Jeton) => (j.couleur, new StatJeton(j.couleur))).toMap
@@ -103,6 +100,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
           lj.filter(_.statut != Pheromone.MORT).foreach(j => {
             if ((j.rc == soldat.rc) && (j.fourmiliere != soldat.fourmiliere)) {
               j.statut = Pheromone.MORT
+              j.killed += 1
               l.myErrPrintln(MyLog.tagnt(1) + " " + soldat.toString + " a tue " + j.toString)
             }
           })

@@ -33,8 +33,12 @@ class UI extends SimpleSwingApplication {
         contents = new BoxPanel(Orientation.Vertical) {
             contents += label
             contents += new BoxPanel(Orientation.Horizontal) {
-                contents ++= tbx.lj.map(_.label)
-                contents ++= tbx.fourmilieres.map(_.label)
+                //contents ++= tbx.lj.map(_.label)
+                //contents ++= tbx.fourmilieres.map(_.label)
+                tbx.fourmilieres.foreach(fml => {
+                    contents += fml.label
+                    contents ++= tbx.lj.filter(_.fourmiliere == fml).map(_.label)
+                })
             }
             contents += ZePanel.zp
             contents += new BoxPanel(Orientation.Horizontal) {
