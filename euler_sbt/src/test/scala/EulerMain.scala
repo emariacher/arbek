@@ -4,88 +4,31 @@ import org.scalatest._
 import Euler._
 
 class EulerMain extends FlatSpec with Matchers {
-  "Euler179" should "be OK" in {
-    println("Euler179")
+  "Euler100" should "be OK" in {
+    println("Euler100")
 
-    val premiers = EulerPrime.premiers100000
-    val limit = 10000000
+    val limit = 200
 
-    val t_ici = timeStamp(t_start, "ici!")
-    /*val z1 = stream_zero_a_linfini.map(b => {
-      (b, new EulerDivisors(new EulerDiv(b).primes).getFullDivisors)
-    }).drop(2).take(limit).toList.sliding(2).toList.filter(c => c.head._2.length == c.last._2.length)
-    timeStamp(t_ici, "la!")*/
-
-    //println(z1.mkString("\n  ", "\n  ", "\n  "), z1.length)
-
-    var zstart = timeStamp(t_ici, "zstart")
-    var cpt = 1
-    var bi: BigInt = 15
-    var prevnumdiv = 2
-
-    /*while (bi < limit) {
-      var cptprimes = new EulerDivisors(new EulerDiv(bi).primes).divisors.length
-
-      if (cptprimes == prevnumdiv) {
-        //println(bi - 1, bi, cptprimes)
-        cpt += 1
-      }
-      //println( bi, cptprimes)
-      prevnumdiv = cptprimes
-      bi += 1
-    }
-    timeStamp(zstart, "zend")
-    cpt should be === z1.length*/
-
-    zstart = timeStamp(t_ici, "zstart2")
-    cpt = 1
-    bi = 15
-    prevnumdiv = 2
-
-    /*while (bi < limit) {
-      if(EulerPrime.isPrime(bi)) {
-        bi +=1
-        prevnumdiv = 0
+    def is50pourcent(total: Double): String = {
+      val divpar7 = total / 7.0
+      val blue = math.floor(divpar7 * 5)
+      val stat = (blue / total) * ((blue - 1) / (total - 1))
+      if(math.abs(stat-0.5)<0.0000000001) {
+        val totalInt = BigDecimal(total).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+        val blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+        val statInt = (blueInt*(blueInt-1))*2==(totalInt*(totalInt-1))
+        (total, blueInt, statInt, "-----------------------------").toString
       } else {
-        var cptprimes = new EulerDivisors(new EulerDiv(bi).primes).divisors.length
-
-        if (cptprimes == prevnumdiv) {
-          //println(bi - 1, bi, cptprimes)
-          cpt += 1
-        }
-        prevnumdiv = cptprimes
-        bi += 1
+        (total, blue, stat).toString
       }
     }
-    timeStamp(zstart, "zend2")
-    cpt should be === z1.length*/
 
-    zstart = timeStamp(t_ici, "zstart3")
-    cpt = 1
-    bi = 15
-    prevnumdiv = 2
+    val z1 = (1 to limit).map(b => (b, is50pourcent(b.toDouble)))
 
-    while (bi < limit) {
-      if(EulerPrime.isPrime(bi)) {
-        bi +=1
-        prevnumdiv = 0
-      } else {
-        var cptprimes = new EulerDivisors(new EulerDiv(bi).primes).divisors.length
+    println(z1.mkString("\n  ", "\n  ", "\n  "))
 
-        if (cptprimes == prevnumdiv) {
-          //println(bi - 1, bi, cptprimes)
-          cpt += 1
-        }
-        prevnumdiv = cptprimes
-        bi += 1
-      }
-    }
-    timeStamp(zstart, "zend3")
-    //cpt should be === z1.length
-
-
-    val result = cpt
-    println("Euler179[" + cpt + "]")
-    result should be === 986262
+    val result = 0
+    println("Euler100[" + 0 + "]")
+    result should be === 0
   }
 }
