@@ -1,7 +1,27 @@
 /**
  * Created by mariachere on 26.05.2015.
  */
+
+import java.util.Calendar
+import java.util.Date
+import java.text.SimpleDateFormat
+
 object Euler {
+  val t_start = Calendar.getInstance()
+  def printZisday(zisday: Calendar, fmt: String): String = printZisday(zisday.getTime(), fmt)
+  def printZisday(date: Date, fmt: String): String = new String(new SimpleDateFormat(fmt).format(date))
+  def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
+    val t_end = Calendar.getInstance()
+    println("t_now: " + printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
+      "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()))
+    t_end
+  }
+  def timeStampS(c_t_start: Calendar, s_title: String): (Calendar, String) = {
+    val t_end = Calendar.getInstance()
+    (t_end, "t_now: " + printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
+      "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()))
+  }
+
   def powl(pn: BigInt, n: Int): BigInt = {
     val div = 40
     val z2 = new Range(1, (n / div) + 1, 1).toList.map((i: Int) => pn).product
@@ -49,4 +69,8 @@ object Euler {
       p
     }
   }
+
+  def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
+
+  def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
 }

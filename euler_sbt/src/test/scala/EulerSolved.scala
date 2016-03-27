@@ -3,6 +3,51 @@ import org.scalatest._
 import scala.collection.immutable.{Range, ListSet}
 
 class EulerSolved extends FlatSpec with Matchers {
+  "Euler27" should "be OK" in {
+    println("Euler27")
+
+    val premiers = EulerPrime.premiers100000
+    val max = 10
+
+    def quadratic(a: Int, b: Int, n: Int) = {
+      ((n + a) * n) + b
+    }
+
+    def rangeFrom(a: Int, b: Int): Stream[Int] = a #:: rangeFrom(b, 1 + b)
+    def getprimesFrom(a: Int, b: Int): List[(Int, Int)] = {
+      val r = rangeFrom(0, 1)
+      val z = r.map(n => (n, quadratic(a, b, n))).takeWhile(q => {
+        premiers.contains(q._2)
+      }).toList
+      //println("     "+a + " " + b + " " + z)
+      z
+    }
+
+    var un_a_linfini = rangeFrom(0, 1).take(7)
+    println(un_a_linfini.toList)
+
+    val z = (-1000 to 1000).map(a => {
+      //EulerPrime.premiers10000.filter(_ < 1602).filter(b => b + a > 0).map(b => {
+      EulerPrime.premiers1000.filter(b => b + a > 0).map(b => {
+        val gp = getprimesFrom(a, b.toInt)
+        //println(a + " " + b + " " + gp)
+        (a, b.toInt, gp.length, gp)
+      })
+    }).flatten.filter(_._3 > 1).sortBy(_._3)
+    println(z.mkString("\n  ", "\n  ", "\n  "))
+    println(EulerPrime.premiers1000)
+    println(EulerPrime.premiers1000.last)
+    println(EulerPrime.premiers10000.filter(_ < 1602).last)
+    val gp = getprimesFrom(-79, 1601)
+    println(-79, 1601, gp.length, gp)
+
+    val y = z.last
+    val result = y._1 * y._2
+    println("Euler27[" + result + "]")
+    result should be === (-61 * 971)
+  }
+
+
   "Euler32" should "be OK" in {
     println("Euler32")
     val result = Range(13 * 245, 9876 + 1).filter(i => {
@@ -225,7 +270,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
     def z = {
       p079_keylogS = p079_keylogS.map(_.replaceAll(first, "")).filter(_.length > 1)
-      if(p079_keylogS.isEmpty) {
+      if (p079_keylogS.isEmpty) {
         first = "0" // Je sais: c'est mal
       } else {
         p079_keylogL = p079_keylogS.map(_.toList)
@@ -276,7 +321,7 @@ class EulerSolved extends FlatSpec with Matchers {
     val romnumListLength = romnumList.mkString("", "", "").length
 
     //println(romnumList)
-    println("******\n******["+(romnumListLength - romnumList.map(rn => {
+    println("******\n******[" + (romnumListLength - romnumList.map(rn => {
       //val nombre2 = roman2arab(romnum)
       //println(romnum, nombre)
       (rn, roman2arab(rn))
@@ -296,7 +341,7 @@ class EulerSolved extends FlatSpec with Matchers {
       rn._2 should be === fra
       println(rn._1, rn._2, frn, fra)
       (rn._1, rn._2, frn, fra)
-    }).map(_._3).mkString("", "", "").length)+"]*******"
+    }).map(_._3).mkString("", "", "").length) + "]*******"
     )
     //println(resultList.mkString("\n","\n","\n"))
 
