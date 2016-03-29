@@ -7,7 +7,7 @@ class EulerMain extends FlatSpec with Matchers {
   "Euler100" should "be OK" in {
     println("Euler100")
 
-    val limit: BigInt = powl(10, 11)
+    val limit: BigInt = powl(10, 13)
 
     def is50pourcent(total: Double): (Boolean, String) = {
       val totcar = math.pow(total - 0.5, 2)
@@ -134,12 +134,12 @@ class EulerMain extends FlatSpec with Matchers {
       }
       bi += 4
     }
-    val t_la2 = timeStamp(t_la, "la2!")
+    val t_la2 = timeStamp(t_la, "la2! ******************************")
 
     bi = 120
     var inc: BigInt = 4
     var prev: List[BigInt] = List(3, 7)
-    while (bi < limit) {
+    while (bi < powl(10, 10)) {
       val z = is50pourcent3(bi.toDouble, prev)
       if (z._1) {
         bi = z._3
@@ -149,27 +149,34 @@ class EulerMain extends FlatSpec with Matchers {
       }
       bi += inc
     }
-    val t_la3 = timeStamp(t_la2, "la3!")
+    val t_la3 = timeStamp(t_la2, "la3! ******************************")
 
     bi = 137904
     inc = 4
     prev = List(3, 3, 11, 239)
-    while (bi < limit) {
+    var blueInt: BigInt = 0
+    var found = false
+    while (bi < limit && !found) {
       val z = is50pourcent4(bi.toDouble, prev)
       if (z._1) {
         bi = z._3
         inc = z._2
         prev = z._4
         println(bi, inc)
+        if (bi > powl(10, 12)) {
+          found = true
+          val totcar = math.pow((bi.toDouble+1) - 0.5, 2)
+          val totsqrt = math.sqrt(totcar / 2)
+          val blue = math.ceil(totsqrt)
+          blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+        }
       }
       bi += inc
     }
-    val t_la4 = timeStamp(t_la3, "la4!")
+    val t_la4 = timeStamp(t_la3, "la4! ******************************")
 
-
-
-    val result = 0
-    println("Euler100[" + 0 + "]")
-    result should be === 0
+    val result = blueInt
+    println("Euler100[" + blueInt + "]")
+    result.toString() should be === "756872327473"
   }
 }
