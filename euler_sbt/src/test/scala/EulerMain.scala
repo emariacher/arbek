@@ -7,7 +7,7 @@ class EulerMain extends FlatSpec with Matchers {
   "Euler100" should "be OK" in {
     println("Euler100")
 
-    val limit: BigInt = 1000000
+    val limit: BigInt = powl(10, 10)
 
     def is50pourcent(total: Double): (Boolean, String) = {
       val totcar = math.pow(total - 0.5, 2)
@@ -60,14 +60,11 @@ class EulerMain extends FlatSpec with Matchers {
         val blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
         val statInt = (blueInt * (blueInt - 1)) * 2 == (totalInt * (totalInt - 1))
         if (statInt) {
-          println("________________")
-          /*println(statInt, (totalInt, blueInt, stat, new EulerDiv(totalInt).primes, new EulerDiv(totalInt - 1).primes,
-            new EulerDiv(blueInt).primes, new EulerDiv(blueInt - 1).primes))*/
-          println(statInt, (totalInt, blueInt, stat, new EulerDiv(totalInt).primes, new EulerDiv(totalInt - 1).primes))
-          new EulerDiv(totalInt).primes.contains(2) match {
-            case true => (true, whichInc(new EulerDiv(totalInt - 1).primes,prev), totalInt - 1, new EulerDiv(totalInt).primes)
-            case _ => (true, whichInc(new EulerDiv(totalInt - 1).primes,prev), totalInt - 1, new EulerDiv(totalInt).primes)
-          }
+          val totprim = new EulerDiv(totalInt).primes
+          val totprim1 = new EulerDiv(totalInt - 1).primes
+          println("________________", totprim.contains(2))
+          println(statInt, (totalInt, blueInt, stat, totprim, totprim1))
+          (true, whichInc(totprim1, prev), totalInt - 1, totprim)
         } else {
           (false, 0, 0, List.empty[BigInt])
         }
@@ -76,10 +73,15 @@ class EulerMain extends FlatSpec with Matchers {
       }
     }
 
-    def whichInc(ll1:List[BigInt],ll2:List[BigInt]) = {
+    def whichInc(ll1: List[BigInt], ll2: List[BigInt]) = {
       val ll3 = ll1.filter(bi => !ll2.contains(bi))
-      println("whichInc",ll1,ll2,ll3.last)
-      ll3.last
+
+      val nextinc = ll1.contains(2) match {
+        case true => ll3.last * 4
+        case _ => ll3.last
+      }
+      println("whichInc", ll1, ll2, ll3.last, nextinc)
+      nextinc
     }
 
     val t_ici = timeStamp(t_start, "ici!")
@@ -88,7 +90,7 @@ class EulerMain extends FlatSpec with Matchers {
     val t_la = timeStamp(t_ici, "la!")
 
     var bi: BigInt = 0
-    while (bi < limit) {
+    while (bi < 100000000) {
       val z = is50pourcent2(bi.toDouble)
       if (z._1) {
         bi += z._2
@@ -99,14 +101,14 @@ class EulerMain extends FlatSpec with Matchers {
 
     bi = 120
     var inc: BigInt = 4
-    var prev: List[BigInt] = List(3,7)
+    var prev: List[BigInt] = List(3, 7)
     while (bi < limit) {
       val z = is50pourcent3(bi.toDouble, prev)
       if (z._1) {
         bi = z._3
         inc = z._2
         prev = z._4
-        println(bi, inc, prev)
+        println(bi, inc)
       }
       bi += inc
     }
