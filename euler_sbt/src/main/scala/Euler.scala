@@ -73,4 +73,6 @@ object Euler {
   def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
 
   def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
+
+  def factorielle(n: BigInt) = BigInt((2 to n.toInt).product)
 }
