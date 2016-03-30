@@ -6,16 +6,22 @@ import java.util.Calendar
 import java.util.Date
 import java.text.SimpleDateFormat
 
+import scala.math.BigInt
+
 object Euler {
   val t_start = Calendar.getInstance()
+
   def printZisday(zisday: Calendar, fmt: String): String = printZisday(zisday.getTime(), fmt)
+
   def printZisday(date: Date, fmt: String): String = new String(new SimpleDateFormat(fmt).format(date))
+
   def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
     val t_end = Calendar.getInstance()
     println("t_now: " + printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
       "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()))
     t_end
   }
+
   def timeStampS(c_t_start: Calendar, s_title: String): (Calendar, String) = {
     val t_end = Calendar.getInstance()
     (t_end, "t_now: " + printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
@@ -74,5 +80,15 @@ object Euler {
 
   def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
 
-  def factorielle(n: BigInt) = BigInt((2 to n.toInt).product)
+  def factorielle(n: BigInt): BigInt = {
+    /*n match {
+      case 1 => BigInt(1)
+      case _ => n * factorielle(n - 1)
+    }*/
+    if (n.toInt <= 1) {
+      BigInt(1)
+    } else {
+      n * factorielle(n - 1)
+    }
+  }
 }
