@@ -2,7 +2,7 @@ name := """euler_sbt"""
 
 version := "1.0"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.7"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
