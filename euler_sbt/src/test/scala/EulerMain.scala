@@ -96,10 +96,29 @@ class EulerMain extends FlatSpec with Matchers {
       z.filter(good(_)).length
     }
 
+    def genere(ls: List[String]): List[String] = ls.map(s => List(s + "L", s + "A", s + "O").filter(good(_))).flatten
+
+    def doZeJob3(e: Int) = {
+      var ls = List("")
+      while (ls.head.length < e) {
+        ls = genere(ls)
+      }
+      ls.length
+    }
+
     doZeJob(3) should be === 19
     doZeJob(4) should be === 43
     doZeJob2(4) should be === 43
+    doZeJob3(4) should be === 43
+    doZeJob3(8) should be === doZeJob(8)
 
+    var t_la0 = timeStamp(t_start, "la0! ")
+    doZeJob(8)
+    var t_la1 = timeStamp(t_la0, "la1! ")
+    doZeJob2(8)
+    var t_la2 = timeStamp(t_la1, "la2! ")
+    doZeJob3(8)
+    var t_la3 = timeStamp(t_la2, "la3! ")
 
     //var x = (4418,156,63,25,10,5)
     var x0: BigInt = 33620
@@ -117,10 +136,19 @@ class EulerMain extends FlatSpec with Matchers {
       /*var z = doZeJob(e)
       println(z, z - (y * 2))
       y = z*/
+      var z2 = 0
       var t_la = timeStamp(t_ici, "la! " + e)
       if (e < 16) {
-        var z2 = doZeJob2(e)
+        z2 = doZeJob2(e)
         var t_la2 = timeStamp(t_la, "la2! " + e + " " + z2)
+      }
+      if (e > 10) {
+        var t_laz = timeStamp(t_la, "laz! " + e)
+        var z3 = doZeJob3(e)
+        var t_la3 = timeStamp(t_laz, "la3! " + e + " " + z3)
+        if(z2!=0) {
+          z3 should be === z2
+        }
       }
       //z2 should be === z
       val L0 = powl(2, e)
