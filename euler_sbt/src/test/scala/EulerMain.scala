@@ -8,7 +8,7 @@ import scala.math.BigInt
 class EulerMain extends FlatSpec with Matchers {
   "Euler191" should "be OK" in {
     println("Euler191")
-    var y = (0, 0, 0, 0, 0, 0, 0)
+    var y = (0, 0, 0, 0, 0, 0, 0, 0)
 
 
     def decode(j: Int) = {
@@ -84,8 +84,13 @@ class EulerMain extends FlatSpec with Matchers {
       (L0 + L1) should be === L
       println("avant", y)
       println(AL, L, L - AL, 2 * (L - AL))
-      println(L - AL - y._3, (L - AL - y._3) - (2 * y._4), (L - AL - y._3) - (2 * y._4) - y._5, (L - AL - y._3) - (2 * y._4) - y._5 - y._6)
-      y = (L, L - AL, 2 * (L - AL), L - AL - y._3, (L - AL - y._3) - (2 * y._4), (L - AL - y._3) - (2 * y._4) - y._5, 0)
+      println(L - AL - y._3, (L - AL - y._3) - (2 * y._4), (L - AL - y._3) - (2 * y._4) - y._5,
+        (L - AL - y._3) - (2 * y._4) - y._5 - y._6,
+        (L - AL - y._3) - (2 * y._4) - y._5 - y._6 - y._7, (L - AL - y._3) - (2 * y._4) - y._5 - y._6 - y._7 - y._8)
+      y = (L, L - AL, 2 * (L - AL), L - AL - y._3, (L - AL - y._3) - (2 * y._4), (L - AL - y._3) - (2 * y._4) - y._5,
+        (L - AL - y._3) - (2 * y._4) - y._5 - y._6,
+        (L - AL - y._3) - (2 * y._4) - y._5 - y._6 - y._7)
+
 
       z.filter(good(_)).length
     }
@@ -95,7 +100,14 @@ class EulerMain extends FlatSpec with Matchers {
     doZeJob2(4) should be === 43
 
 
-    (7 to 15).foreach(e => {
+    //var x = (4418,156,63,25,10,5)
+    var x1 = 4418
+    var x2 = 156
+    var x3 = 63
+    var x4 = 25
+    var x5 = 10
+    var x6 = 5
+    (3 to 15).foreach(e => {
       println("\n")
       var t_ici = timeStamp(t_start, "ici!")
       println(e, powl(3, e).toInt)
@@ -103,9 +115,22 @@ class EulerMain extends FlatSpec with Matchers {
       println(z, z - (y * 2))
       y = z*/
       var t_la = timeStamp(t_ici, "la! " + e)
-      var z2 = doZeJob2(e)
-      var t_la2 = timeStamp(t_la, "la2! " + e)
+      if (e < 16) {
+        var z2 = doZeJob2(e)
+        var t_la2 = timeStamp(t_la, "la2! " + e + " " + z2)
+      }
       //z2 should be === z
+      val L0 = powl(2, e)
+      val L1 = L0 * e / 2
+      if (e > 13) {
+        x6 += 1
+        x5 += x6
+        x4 += x5
+        x3 += x4
+        x2 += x3
+        x1 += x1 + x2
+      }
+      println("x", x1, x2, x3, x4, x5, x6)
     })
 
     val result = 0
