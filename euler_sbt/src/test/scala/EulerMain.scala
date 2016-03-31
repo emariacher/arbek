@@ -90,6 +90,7 @@ class EulerMain extends FlatSpec with Matchers {
       y = (L, L - AL, 2 * (L - AL), L - AL - y._3, (L - AL - y._3) - (2 * y._4), (L - AL - y._3) - (2 * y._4) - y._5,
         (L - AL - y._3) - (2 * y._4) - y._5 - y._6,
         (L - AL - y._3) - (2 * y._4) - y._5 - y._6 - y._7)
+      println("apres", y)
 
 
       z.filter(good(_)).length
@@ -101,16 +102,18 @@ class EulerMain extends FlatSpec with Matchers {
 
 
     //var x = (4418,156,63,25,10,5)
-    var x1 = 4418
-    var x2 = 156
+    var x0: BigInt = 33620
+    var x1: BigInt = 4418
+    var x2: BigInt = 156
     var x3 = 63
     var x4 = 25
     var x5 = 10
     var x6 = 5
-    (3 to 15).foreach(e => {
+    var x: BigInt = 27820
+    (3 to 30).foreach(e => {
       println("\n")
       var t_ici = timeStamp(t_start, "ici!")
-      println(e, powl(3, e).toInt)
+      println(e, powl(3, e))
       /*var z = doZeJob(e)
       println(z, z - (y * 2))
       y = z*/
@@ -129,8 +132,10 @@ class EulerMain extends FlatSpec with Matchers {
         x3 += x4
         x2 += x3
         x1 += x1 + x2
+        x0 += x0 + x1
+        x = L0 + L1 - x0
       }
-      println("x", x1, x2, x3, x4, x5, x6)
+      println("x", x, x0, x1, x2, x3, x4, x5, x6)
     })
 
     val result = 0
