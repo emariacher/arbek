@@ -59,20 +59,24 @@ class EulerMain extends FlatSpec with Matchers {
 
     def genere(ls: List[String]): List[String] = ls.map(s => List(s + "L", s + "A", s + "O").filter(good(_))).flatten
 
+    var prevL1 = 0
     def doZeJob3(e: Int) = {
       var ls = List("")
       while (ls.head.length < e) {
         ls = genere(ls)
       }
-      println(ls.length, ls.filter(countL(_) == 0).length, ls.filter(countL(_) == 1).length)
+      val L0 = ls.filter(countL(_) == 0).length
+      val L1 = ls.filter(countL(_) == 1).length
+      println(ls.length, L0, L1, 1.0 * L1 / prevL1, L1-(2*prevL1), new EulerDiv(L1).primes, new EulerDiv(prevL1).primes)
+      prevL1 = L1
       ls.length
     }
 
-    var l = List(1,1,2)
-    var i=0;
-    while(i<30) {
+    var l = List(1, 1, 2)
+    var i = 0;
+    while (i < 30) {
       l = l :+ l.reverse.take(3).sum
-      i +=1
+      i += 1
     }
     println(l.zipWithIndex)
 
@@ -88,12 +92,7 @@ class EulerMain extends FlatSpec with Matchers {
     doZeJob3(8)
     var t_la3 = timeStamp(t_la2, "la3! **************************************")
 
-    var vL00 = 0
-    var xL00 = 0
-    var yL00 = 1
-    var yL0 = 7
-    //var yL1 = 12
-    (3 to 12).foreach(e => {
+    (3 to 19).foreach(e => {
       println("\n")
       var t_ici = timeStamp(t_start, "ici!")
       println(e, powl(3, e))
@@ -102,25 +101,18 @@ class EulerMain extends FlatSpec with Matchers {
       y = z*/
       var z2 = 0
       var z3 = 0
-      //var t_la = timeStamp(t_ici, "la! " + e)
-      if (e < 16) {
+      var t_la = timeStamp(t_ici, "la! " + e)
+      if (e < 12) {
         z2 = doZeJob(e)
-       //var t_la2 = timeStamp(t_la, "la2! " + e + " " + z2)
+        //var t_la2 = timeStamp(t_la, "la2! " + e + " " + z2)
       }
       //var t_laz = timeStamp(t_la, "laz! " + e)
       z3 = doZeJob3(e)
-      //var t_la3 = timeStamp(t_laz, "la3! " + e + " " + z3)
+      var t_la3 = timeStamp(t_la, "la3! " + e + " " + z3)
       if (z2 != 0) {
         z3 should be === z2
       }
-      if(e>3) {
-        var zL0 = (yL0 * 2) - (xL00 + yL00+vL00)
-        println("z3", z3, zL0,yL0,yL00,xL00,vL00, l.apply(e+1))
-        yL0 = zL0
-        var temp = xL00
-        xL00 = yL00
-        yL00 = (temp + yL00)
-      }
+      println("z3", z3, l.apply(e + 1))
     })
 
     val result = 0
