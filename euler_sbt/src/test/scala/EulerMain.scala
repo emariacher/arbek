@@ -65,10 +65,12 @@ class EulerMain extends FlatSpec with Matchers {
       while (ls.head.length < e) {
         ls = genere(ls)
       }
-      val L0 = ls.filter(countL(_) == 0).length
-      val L1 = ls.filter(countL(_) == 1).length
-      println(ls.length, L0, L1, 1.0 * L1 / prevL1, L1-(2*prevL1), new EulerDiv(L1).primes, new EulerDiv(prevL1).primes)
-      prevL1 = L1
+      val L0 = ls.filter(countL(_) == 0)
+      val L1 = ls.filter(countL(_) == 1)
+      val L1C = (0 to e).map(i => {
+        (i, L1.count(_.indexOf('L') == i))
+      })
+      println(ls.length, L0.length, L1.length, L1C)
       ls.length
     }
 
@@ -85,13 +87,15 @@ class EulerMain extends FlatSpec with Matchers {
     doZeJob3(4) should be === 43
     doZeJob3(8) should be === doZeJob(8)
 
-    var t_la0 = timeStamp(t_start, "la0! ")
+    /*var t_la0 = timeStamp(t_start, "la0! ")
     doZeJob(8)
     var t_la1 = timeStamp(t_la0, "la1! ")
     var t_la2 = timeStamp(t_la1, "la2! ")
     doZeJob3(8)
-    var t_la3 = timeStamp(t_la2, "la3! **************************************")
+    var t_la3 = timeStamp(t_la2, "la3! **************************************")*/
 
+    var z3 = 0
+    var sum = 0
     (3 to 19).foreach(e => {
       println("\n")
       var t_ici = timeStamp(t_start, "ici!")
@@ -100,19 +104,20 @@ class EulerMain extends FlatSpec with Matchers {
       println(z, z - (y * 2))
       y = z*/
       var z2 = 0
-      var z3 = 0
-      var t_la = timeStamp(t_ici, "la! " + e)
+      //var t_la = timeStamp(t_ici, "la! " + e)
       if (e < 12) {
         z2 = doZeJob(e)
         //var t_la2 = timeStamp(t_la, "la2! " + e + " " + z2)
       }
       //var t_laz = timeStamp(t_la, "laz! " + e)
+      sum += z3
       z3 = doZeJob3(e)
-      var t_la3 = timeStamp(t_la, "la3! " + e + " " + z3)
+      var t_la3 = timeStamp(t_ici, "la3! " + e + " " + z3)
       if (z2 != 0) {
         z3 should be === z2
       }
-      println("z3", z3, l.apply(e + 1))
+
+      println("z3", z3, l.apply(e + 1), l.apply(e))
     })
 
     val result = 0
