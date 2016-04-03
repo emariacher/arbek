@@ -80,19 +80,32 @@ class EulerMain extends FlatSpec with Matchers {
       l = l :+ l.reverse.take(3).sum
       i += 1
     }
-    println(l.zipWithIndex)
+    println("l", l.zipWithIndex)
+
+    var l3 = List(0, 2, 1)
+    i = 3;
+    while (i < 30) {
+      l3 = l3 :+ l3.reverse.take(3).sum
+      i += 1
+    }
+    println("l3", l3.zipWithIndex)
+
+    var l4 = List(3, 0, 1)
+    i = 3;
+    while (i < 30) {
+      l4 = l4 :+ l4.reverse.take(3).sum
+      i += 1
+    }
+    println("l4", l4.zipWithIndex)
 
     doZeJob(4) should be === 43
 
     var z3 = 0
     var sum = 0
-    (5 to 18).foreach(e => {
+    (3 to 18).foreach(e => {
       println("\n")
-      var t_ici = timeStamp(t_start, "ici!")
+      //var t_ici = timeStamp(t_start, "ici!")
       println(e, powl(3, e))
-      /*var z = doZeJob(e)
-      println(z, z - (y * 2))
-      y = z*/
       var z2 = 0
       //var t_la = timeStamp(t_ici, "la! " + e)
       if (e < 12) {
@@ -103,18 +116,28 @@ class EulerMain extends FlatSpec with Matchers {
       sum += z3
       val zz = doZeJob3(e)
       z3 = zz._1
-      var t_la3 = timeStamp(t_ici, "la3! " + e + " " + z3)
+      //var t_la3 = timeStamp(t_ici, "la3! " + e + " " + z3)
       if (z2 != 0) {
         z3 should be === z2
       }
 
       println(zz._4.apply(0), zz._4.apply(1), zz._4.apply(2))
       e match {
+        case it if 0 to 4 contains it =>
         case 5 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
         case 6 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
         case 7 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
         case 8 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
         case _ => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8))
+      }
+      if (e > 6) {
+        //println(zz._4.apply(3), zz._4.apply(3)._1 - zz._4.apply(1)._1, l3.apply(e - 5))
+        zz._4.apply(3)._1 should be === zz._4.apply(1)._1 + l3.apply(e - 5)
+
+        if (e > 8) {
+          //println(zz._4.apply(3), zz._4.apply(4), zz._4.apply(4)._1 - zz._4.apply(3)._1)
+          zz._4.apply(4)._1 should be === zz._4.apply(3)._1 + l4.apply(e - 7)
+        }
       }
 
     })
