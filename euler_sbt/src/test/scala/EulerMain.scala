@@ -68,10 +68,10 @@ class EulerMain extends FlatSpec with Matchers {
       val L0 = ls.filter(countL(_) == 0)
       val L1 = ls.filter(countL(_) == 1)
       val L1C = (0 to e).map(i => {
-        (i, L1.count(_.indexOf('L') == i))
+        (L1.count(_.indexOf('L') == i), i)
       })
       println(ls.length, L0.length, L1.length, L1C)
-      ls.length
+      (ls.length, L0.length, L1.length, L1C)
     }
 
     var l = List(1, 1, 2)
@@ -82,21 +82,11 @@ class EulerMain extends FlatSpec with Matchers {
     }
     println(l.zipWithIndex)
 
-    doZeJob(3) should be === 19
     doZeJob(4) should be === 43
-    doZeJob3(4) should be === 43
-    doZeJob3(8) should be === doZeJob(8)
-
-    /*var t_la0 = timeStamp(t_start, "la0! ")
-    doZeJob(8)
-    var t_la1 = timeStamp(t_la0, "la1! ")
-    var t_la2 = timeStamp(t_la1, "la2! ")
-    doZeJob3(8)
-    var t_la3 = timeStamp(t_la2, "la3! **************************************")*/
 
     var z3 = 0
     var sum = 0
-    (3 to 19).foreach(e => {
+    (5 to 18).foreach(e => {
       println("\n")
       var t_ici = timeStamp(t_start, "ici!")
       println(e, powl(3, e))
@@ -111,13 +101,22 @@ class EulerMain extends FlatSpec with Matchers {
       }
       //var t_laz = timeStamp(t_la, "laz! " + e)
       sum += z3
-      z3 = doZeJob3(e)
+      val zz = doZeJob3(e)
+      z3 = zz._1
       var t_la3 = timeStamp(t_ici, "la3! " + e + " " + z3)
       if (z2 != 0) {
         z3 should be === z2
       }
 
-      println("z3", z3, l.apply(e + 1), l.apply(e))
+      println(zz._4.apply(0), zz._4.apply(1), zz._4.apply(2))
+      e match {
+        case 5 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
+        case 6 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
+        case 7 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
+        case 8 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
+        case _ => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8))
+      }
+
     })
 
     val result = 0
