@@ -91,6 +91,14 @@ class EulerMain extends FlatSpec with Matchers {
     }
     println("l5 ", l5.zipWithIndex)
 
+    var l6 = List(0, 8, 12)
+    i = 3;
+    while (i < 30) {
+      l6 = l6 :+ l6.reverse.take(3).sum
+      i += 1
+    }
+    println("l6 ", l6.zipWithIndex)
+
     doZeJob(4) should be === 43
 
     var z3 = 0
@@ -127,19 +135,28 @@ class EulerMain extends FlatSpec with Matchers {
         zz._4.apply(3)._1 should be === zz._4.apply(1)._1 + l3.apply(e - 5)
 
         if (e > 8) {
-          println(l4.apply(e - 8))
-          if (e > 10) {
-            println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
-              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
-              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8),
-              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8) + l5.apply(e - 10)
-            )
-            zz._4.apply(5)._1 should be === zz._4.apply(4)._1 + l5.apply(e - 10)
-          } else {
+          if (e < 10) {
             println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
               l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
               l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8)
             )
+          } else {
+            if (e < 12) {
+              println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
+                l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
+                l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8),
+                l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8) + l5.apply(e - 10)
+              )
+            } else {
+              println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
+                l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
+                l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8),
+                l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8) + l5.apply(e - 10),
+                l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8) + l5.apply(e - 10) - l6.apply(e - 12)
+              )
+              zz._4.apply(6)._1 should be === zz._4.apply(5)._1 - l6.apply(e - 12)
+            }
+            zz._4.apply(5)._1 should be === zz._4.apply(4)._1 + l5.apply(e - 10)
           }
           zz._4.apply(4)._1 should be === zz._4.apply(3)._1 + l4.apply(e - 8)
         }
