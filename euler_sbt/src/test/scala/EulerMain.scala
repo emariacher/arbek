@@ -45,7 +45,7 @@ class EulerMain extends FlatSpec with Matchers {
     def genere(ls: List[String]): List[String] = ls.map(s => List(s + "L", s + "A", s + "O").filter(good(_))).flatten
 
     var prevL1 = 0
-    def doZeJob3(e: Int): (Int, Int, Int, List[(Int, Int)]) = {
+    def doZeJob3(e: Int): (BigInt, BigInt, BigInt, List[(BigInt, Int)]) = {
       var ls = List("")
       while (ls.head.length < e) {
         ls = genere(ls)
@@ -53,13 +53,14 @@ class EulerMain extends FlatSpec with Matchers {
       val L0 = ls.filter(countL(_) == 0)
       val L1 = ls.filter(countL(_) == 1)
       val L1C = (0 to e).map(i => {
-        (L1.count(_.indexOf('L') == i), i)
+        (BigInt(L1.count(_.indexOf('L') == i)), i)
       })
-      println(ls.length, L0.length, L1.length, L1C)
-      (ls.length, L0.length, L1.length, L1C.toList)
+      println("doZeJob3[" + e + "]", ls.length, L0.length, L1.length, L1C)
+      (BigInt(ls.length), BigInt(L0.length), BigInt(L1.length), L1C.toList)
     }
 
-    var l = List(1, 1, 2)
+
+    var l = List(BigInt(1), BigInt(1), BigInt(2))
     var i = 0;
     while (i < 30) {
       l = l :+ l.takeRight(3).sum
@@ -107,12 +108,29 @@ class EulerMain extends FlatSpec with Matchers {
     }
     println("l7 ", l7.zipWithIndex)
 
+    def doZeJob4(e: Int, ul: List[(Int, List[(BigInt, Int)])]): (BigInt, BigInt, BigInt, List[(Int, List[(BigInt, Int)])]) = {
+      var ls = List("")
+      while (ls.head.length < e) {
+        ls = genere(ls)
+      }
+      val L0 = l.apply(e + 1)
+      var L1 = (0 to (e - 4)).map(i => ul.map(_._2.apply(i)._1).sum).zipWithIndex.toList
+      L1 = L1 ++ L1.take(3).reverse
+      val vl = ul.drop(1) :+(e, L1)
+      println("L1",L1)
+      println("doZeJob4[" + e + "]", L0 + L1.map(_._1).sum, L0, L1.map(_._1).sum, vl.mkString("\n  ", "\n  ", "\n  "))
+      (L0 + L1.map(_._1).sum, L0, L1.map(_._1).sum, vl)
+    }
+
+
+
     doZeJob(4) should be === 43
 
-    var z3 = 0
-    var sum = 0
-    var zl = List.empty[(Int, Int, Int, List[(Int, Int)])]
-    (3 to 18).foreach(e => {
+    var z3 = BigInt(0)
+    var sum = BigInt(0)
+    var zl = List.empty[(BigInt, BigInt, BigInt, List[(BigInt, Int)])]
+    val limit = 18
+    (3 to limit).foreach(e => {
       println("\n")
       //var t_ici = timeStamp(t_start, "ici!")
       println(e, powl(3, e))
@@ -193,6 +211,22 @@ class EulerMain extends FlatSpec with Matchers {
     zl.sliding(4).foreach(zk => {
       zk.take(3).map(_._4.apply(2)._1).sum should be === zk.last._4.apply(2)._1
     })
+
+    val zlm1t3 = zl.takeRight(4).dropRight(1)
+    println(zlm1t3.mkString("\n ", "\n ", "\n "))
+    var u = (0 to (limit - 4)).map(i => {
+      zlm1t3.take(3).map(_._4.apply(i)._1).sum
+    }).zipWithIndex.toList
+    u = u ++ u.take(4).reverse
+    println(u)
+    println(zl.last._4)
+
+    //var ul = zl.take(5).drop(2).zipWithIndex.map(c => (c._2 + 5, c._1._4))
+    var ul = zl.take(12).drop(9).zipWithIndex.map(c => (c._2 + 12, c._1._4))
+    println(ul.mkString("\n ul ", "\n ul ", "\n ul "))
+    doZeJob4(15, ul)
+    doZeJob3(15)
+
 
     val result = 0
     println("Euler191[" + 0 + "]")
