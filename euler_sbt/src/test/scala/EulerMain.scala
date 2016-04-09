@@ -23,21 +23,6 @@ class EulerMain extends FlatSpec with Matchers {
     def goodL(s: String) = s.count(_ == 'L') < 2
     def countL(s: String) = s.count(_ == 'L')
 
-    /*val z = (0 until 81).map(i => {
-      var s = ""
-      var j = i
-      s += decode(j)
-      j /= 3
-      s += decode(j)
-      j /= 3
-      s += decode(j)
-      j /= 3
-      s += decode(j)
-      println(i, s)
-      s
-    }).filter(good(_))
-    println(z, z.length)
-    z.length should be === 43*/
 
     def doZeJob(e: Int) = {
       val y = (0 until powl(3, e).toInt).map(i => {
@@ -98,6 +83,14 @@ class EulerMain extends FlatSpec with Matchers {
     }
     println("l4", l4.zipWithIndex)
 
+    var l5 = List(0, 4, 3)
+    i = 3;
+    while (i < 30) {
+      l5 = l5 :+ l5.reverse.take(3).sum
+      i += 1
+    }
+    println("l5", l5.zipWithIndex)
+
     doZeJob(4) should be === 43
 
     var z3 = 0
@@ -131,16 +124,28 @@ class EulerMain extends FlatSpec with Matchers {
         case _ => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8))
       }
       if (e > 6) {
-        //println(zz._4.apply(3), zz._4.apply(3)._1 - zz._4.apply(1)._1, l3.apply(e - 5))
         zz._4.apply(3)._1 should be === zz._4.apply(1)._1 + l3.apply(e - 5)
 
         if (e > 8) {
-          //println(zz._4.apply(3), zz._4.apply(4), zz._4.apply(4)._1 - zz._4.apply(3)._1)
+          if (e > 10) {
+            println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 7),
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 7) + l5.apply(e - 10)
+            )
+            zz._4.apply(5)._1 should be === zz._4.apply(4)._1 + l5.apply(e - 10)
+          } else {
+            println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 7)
+            )
+          }
           zz._4.apply(4)._1 should be === zz._4.apply(3)._1 + l4.apply(e - 7)
         }
       }
 
     })
+
 
     val result = 0
     println("Euler191[" + 0 + "]")
