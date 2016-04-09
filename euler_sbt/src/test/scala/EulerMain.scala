@@ -73,15 +73,15 @@ class EulerMain extends FlatSpec with Matchers {
       l3 = l3 :+ l3.reverse.take(3).sum
       i += 1
     }
-    println("l3", l3.zipWithIndex)
+    println("l3 ", l3.zipWithIndex)
 
-    var l4 = List(3, 0, 1)
+    var l4 = List(0, 1, 4)
     i = 3;
     while (i < 30) {
       l4 = l4 :+ l4.reverse.take(3).sum
       i += 1
     }
-    println("l4", l4.zipWithIndex)
+    println("l4 ", l4.zipWithIndex)
 
     var l5 = List(0, 4, 3)
     i = 3;
@@ -89,7 +89,7 @@ class EulerMain extends FlatSpec with Matchers {
       l5 = l5 :+ l5.reverse.take(3).sum
       i += 1
     }
-    println("l5", l5.zipWithIndex)
+    println("l5 ", l5.zipWithIndex)
 
     doZeJob(4) should be === 43
 
@@ -127,20 +127,21 @@ class EulerMain extends FlatSpec with Matchers {
         zz._4.apply(3)._1 should be === zz._4.apply(1)._1 + l3.apply(e - 5)
 
         if (e > 8) {
+          println(l4.apply(e - 8))
           if (e > 10) {
             println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
               l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
-              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 7),
-              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 7) + l5.apply(e - 10)
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8),
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8) + l5.apply(e - 10)
             )
             zz._4.apply(5)._1 should be === zz._4.apply(4)._1 + l5.apply(e - 10)
           } else {
             println(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8),
               l.apply(e) + l.apply(e - 4) + l3.apply(e - 5),
-              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 7)
+              l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8)
             )
           }
-          zz._4.apply(4)._1 should be === zz._4.apply(3)._1 + l4.apply(e - 7)
+          zz._4.apply(4)._1 should be === zz._4.apply(3)._1 + l4.apply(e - 8)
         }
       }
 
