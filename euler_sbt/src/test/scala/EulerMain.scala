@@ -18,7 +18,7 @@ class EulerMain extends FlatSpec with Matchers {
       val div = new EulerDivisors(primes).getFullDivisors
       val res = div.map(d => d * d)
       val sqrt = BigDecimal(math.sqrt(res.sum.toDouble)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-      (bi, res.sum, sqrt, primes, new EulerDiv(sqrt).primes, div, res)
+      (bi, res.sum, sqrt, sqrt.toDouble / bi.toDouble, primes, sqrt - bi, div, res)
     }
 
     sigma2(10) should be === 130
@@ -35,6 +35,7 @@ class EulerMain extends FlatSpec with Matchers {
     val sqslx = BigDecimal(math.sqrt(sumlx.toDouble)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
     println(sumlx, sqslx)
     sqslx * sqslx should be === sumlx
+
 
     var result = 0
     println("Euler211[" + result + "]")
