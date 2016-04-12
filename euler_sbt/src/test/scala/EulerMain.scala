@@ -7,38 +7,38 @@ import scala.collection.immutable.TreeSet
 import scala.math.BigInt
 
 class EulerMain extends FlatSpec with Matchers {
-  "Euler211" should "be OK" in {
-    println("Euler211")
+  "Euler451" should "be OK" in {
+    println("Euler451")
 
-
-    def sigma2(bi: BigInt): BigInt = new EulerDivisors(new EulerDiv(bi)).getFullDivisors.map(d => d * d).sum
-
-    def sigma2v(bi: BigInt) = {
-      val primes = new EulerDiv(bi).primes
-      val div = new EulerDivisors(primes).getFullDivisors
-      val res = div.map(d => d * d)
-      val sqrt = BigDecimal(math.sqrt(res.sum.toDouble)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-      (bi, res.sum, sqrt, sqrt.toDouble / bi.toDouble, primes, sqrt - bi, div, res)
+    def coprimes(i: Int): (Int, List[BigInt], List[Int]) = {
+      val primesi = new EulerDiv(i).primes
+      (i, primesi, (1 until i).toList.filter(u => {
+        val primesu = new EulerDiv(u).primes
+        primesi.intersect(primesu).length == 0
+      }))
     }
 
-    sigma2(10) should be === 130
-    val z = (2 to 40000).map(sigma2v(_)).toList
-    val max = z.maxBy(_._2)
-    val sqrtmax = BigDecimal(math.sqrt(max._2.toDouble)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-    println("max", max, sqrtmax)
-    val t_ici = timeStamp(t_start, "ici!")
-    val lsq = TreeSet[BigInt]() ++ (0 to sqrtmax.toInt).map(d => BigInt(d * d))
-    val x = z.filter(y => lsq.contains(y._2))
-    println(x.mkString("\n  ", "\n  ", "\n  "))
-    val t_la = timeStamp(t_ici, "la!")
-    val sumlx = x.last._2
-    val sqslx = BigDecimal(math.sqrt(sumlx.toDouble)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-    println(sumlx, sqslx)
-    sqslx * sqslx should be === sumlx
+    def modinv(i: Int, j: Int) = {
+      (j, (1 to i - 1).toList.dropWhile(u => u * j % i != 1).head)
+    }
+
+    def doZeJob(i: Int) = {
+      val cp = coprimes(i)
+      val md = cp._3.dropRight(1).map(j => modinv(i, j))
+      (cp, md.reverse.filter(u => u._1 == u._2).head._1, md)
+    }
+
+    println(doZeJob(15))
+    println(doZeJob(100))
+    println(doZeJob(7))
+
+    doZeJob(15)._2 should be === 11
+    doZeJob(100)._2 should be === 51
+    doZeJob(7)._2 should be === 1
 
 
     var result = 0
-    println("Euler211[" + result + "]")
+    println("Euler451[" + result + "]")
     result should be === 0
 
   }
