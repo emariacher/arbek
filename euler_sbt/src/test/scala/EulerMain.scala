@@ -40,9 +40,11 @@ class EulerMain extends FlatSpec with Matchers {
 
     def doZeJob2(i: Int) = {
       val cp = coprimes(i)
-      val md = cp._3.dropRight(1).map(j => modinv2(i, j))
-      val md1 = md.reverse.filter(u => u._1 == u._2)
-      (i, md1.head._1, md1.filter(_._1 != 1))
+      val md = cp._3.reverse.drop(1).dropWhile(j => {
+        val u = modinv2(i, j)
+        u._1 != u._2
+      })
+      (i, md.head)
     }
 
     println(doZeJob(15))
