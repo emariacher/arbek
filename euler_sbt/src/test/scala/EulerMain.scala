@@ -12,14 +12,10 @@ class EulerMain extends FlatSpec with Matchers {
 
     def coprimes(i: Int): (Int, List[BigInt], List[Int]) = {
       val primesi = new EulerDiv(i).primes
-      if (primesi.length == 1) {
-        (i, primesi, (1 until i).toList)
-      } else {
-        (i, primesi, (1 until i).toList.filter(u => {
-          val primesu = new EulerDiv(u).primes
-          primesi.intersect(primesu).length == 0
-        }))
-      }
+      (i, primesi, (1 until i).toList.filter(u => {
+        val primesu = new EulerDiv(u).primes
+        primesi.intersect(primesu).length == 0
+      }))
     }
 
     def modinv(i: Int, j: Int) = {
@@ -68,20 +64,37 @@ class EulerMain extends FlatSpec with Matchers {
     doZeJob(15)._2 should be === 11
     doZeJob(100)._2 should be === 51
     doZeJob(7)._2 should be === 1
-    val powerlimit = 8
+    val powerlimit = 6
     val pow2 = (2 to powerlimit).map(Euler.powl(2, _).toInt)
     val pow3 = (2 to powerlimit).map(Euler.powl(3, _).toInt)
     val limit = Euler.powl(2, powerlimit).toInt
+    val incs = (1 to limit / 2).toList
+    val primesx2 = EulerPrime.premiers100000.map(_ * 2) ++ EulerPrime.premiers100000
     val t_ici = timeStamp(t_start, "ici!")
     val t_la = timeStamp(t_start, "la!")
     val z2 = (3 to limit).toList.map(doZeJob2(_))
     val t_la2 = timeStamp(t_la, "la2!")
+    var z3 = (3 to limit).toList.filter(!primesx2.contains(_)).map(doZeJob2(_)).map(_._2).sum + primesx2.takeWhile(_ <= limit).toList.length - 1
+    val t_la3 = timeStamp(t_la2, "la3!")
     if (powerlimit < 9) {
       val z = (3 to limit).toList.map(doZeJob(_))
       z2.map(u => (u._1, u._2)) should be === z.map(u => (u._1, u._2))
       println(z.mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => {pow2.contains(u._1)}).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => {pow3.contains(u._1)}).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => pow2.contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => pow2.map(_ * 3).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => pow2.map(_ * 5).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => pow3.contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => incs.map(_ * 2).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => incs.map(_ * 3).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => incs.map(_ * 5).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => incs.map(_ * 7).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => EulerPrime.premiers100000.map(_ * 1).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => EulerPrime.premiers100000.map(_ * 2).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => EulerPrime.premiers100000.map(_ * 3).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => EulerPrime.premiers100000.map(_ * 4).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => EulerPrime.premiers100000.map(_ * 5).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => EulerPrime.premiers100000.map(_ * 6).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => EulerPrime.premiers100000.map(_ * 7).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
     }
 
     //var cpts = (0 to limit).map(i => (i, z2.map(_._2).count(_ == i))).grouped(16)
@@ -100,6 +113,7 @@ class EulerMain extends FlatSpec with Matchers {
         c.last._3.toDouble / c.head._3.toDouble,
         c.last._4.toDouble / c.head._4.toDouble)
     }).mkString("\n  ", "\n  ", "\n  "))
+    r.last._3 should be === z3
 
 
 
