@@ -64,19 +64,23 @@ class EulerMain extends FlatSpec with Matchers {
     doZeJob(15)._2 should be === 11
     doZeJob(100)._2 should be === 51
     doZeJob(7)._2 should be === 1
-    val powerlimit = 6
+    val prems100000 = EulerPrime.premiers100000.tail
+    val prems10000 = EulerPrime.premiers10000.tail
+    val prems1000 = EulerPrime.premiers1000.tail
+    val powerlimit = 10
     val pow2 = (2 to powerlimit).map(Euler.powl(2, _).toInt)
     val pow3 = (2 to powerlimit).map(Euler.powl(3, _).toInt)
     val limit = Euler.powl(2, powerlimit).toInt
     val incs = (1 to limit / 2).toList
-    val primesx2 = EulerPrime.premiers100000.map(_ * 2) ++ EulerPrime.premiers100000
+    val primesx2 = prems100000.map(_ * 2) ++ prems100000 ++ prems10000.map(p => p * p) ++ prems1000.map(p => p * p * p)
     val t_ici = timeStamp(t_start, "ici!")
     val t_la = timeStamp(t_start, "la!")
     val z2 = (3 to limit).toList.map(doZeJob2(_))
     val t_la2 = timeStamp(t_la, "la2!")
-    var z3 = (3 to limit).toList.filter(!primesx2.contains(_)).map(doZeJob2(_)).map(_._2).sum + primesx2.takeWhile(_ <= limit).toList.length - 1
+    var z3 = (3 to limit).toList.filter(!primesx2.contains(_)).map(doZeJob2(_)).map(_._2).sum + primesx2.takeWhile(_ <= limit).toList.length
+    z2.map(_._2).sum should be === z3
     val t_la3 = timeStamp(t_la2, "la3!")
-    if (powerlimit < 9) {
+    if (powerlimit < 11) {
       val z = (3 to limit).toList.map(doZeJob(_))
       z2.map(u => (u._1, u._2)) should be === z.map(u => (u._1, u._2))
       println(z.mkString("\n  ", "\n  ", "\n  "))
@@ -88,13 +92,18 @@ class EulerMain extends FlatSpec with Matchers {
       println(z.filter(u => incs.map(_ * 3).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
       println(z.filter(u => incs.map(_ * 5).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
       println(z.filter(u => incs.map(_ * 7).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => EulerPrime.premiers100000.map(_ * 1).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => EulerPrime.premiers100000.map(_ * 2).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => EulerPrime.premiers100000.map(_ * 3).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => EulerPrime.premiers100000.map(_ * 4).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => EulerPrime.premiers100000.map(_ * 5).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => EulerPrime.premiers100000.map(_ * 6).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
-      println(z.filter(u => EulerPrime.premiers100000.map(_ * 7).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 1).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 2).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 3).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 4).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 5).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 6).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 7).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(_ * 11).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(v => v * v).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(v => v * v * 2).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(v => v * v * v).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
+      println(z.filter(u => prems100000.map(v => v * v * v * 2).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
     }
 
     //var cpts = (0 to limit).map(i => (i, z2.map(_._2).count(_ == i))).grouped(16)
@@ -116,8 +125,7 @@ class EulerMain extends FlatSpec with Matchers {
     r.last._3 should be === z3
 
 
-
-
+println(EulerPrime.premiers1000.take(20))
     var result = 0
     println("Euler451[" + result + "]")
     result should be === 0
