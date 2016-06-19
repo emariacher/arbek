@@ -11,11 +11,14 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import java.util.Base64;
+
 public class CitationLatine {
     static String IV = "AAAAAAAAAAAAAAAA";
     static String plaintext = "test text 123\0\0\0"; /*Note null padding*/
     static String encryptionKey = "0123456789abcdef";
-    public static void main(String [] args) {
+
+    public static void main(String[] args) {
         try {
 
             System.out.println("==Java==");
@@ -24,11 +27,18 @@ public class CitationLatine {
             byte[] cipher = encrypt(plaintext, encryptionKey);
 
             System.out.print("cipher:  ");
-            for (int i=0; i<cipher.length; i++)
-                System.out.print(new Integer(cipher[i])+" ");
+            for (int i = 0; i < cipher.length; i++)
+                System.out.print(new Integer(cipher[i]) + " ");
             System.out.println("");
 
-            String decrypted = decrypt(cipher, encryptionKey);
+            // Encode using basic encoder
+            String base64encodedString = Base64.getEncoder().encodeToString(cipher);
+            System.out.println(base64encodedString);
+
+            // Decode
+            byte[] decipher = Base64.getDecoder().decode(base64encodedString);
+
+            String decrypted = decrypt(decipher, encryptionKey);
 
             System.out.println("decrypt: " + decrypted);
 
@@ -40,14 +50,14 @@ public class CitationLatine {
     public static byte[] encrypt(String plainText, String encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
         SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
-        cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(IV.getBytes("UTF-8")));
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
         return cipher.doFinal(plainText.getBytes("UTF-8"));
     }
 
-    public static String decrypt(byte[] cipherText, String encryptionKey) throws Exception{
+    public static String decrypt(byte[] cipherText, String encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
         SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
-        cipher.init(Cipher.DECRYPT_MODE, key,new IvParameterSpec(IV.getBytes("UTF-8")));
-        return new String(cipher.doFinal(cipherText),"UTF-8");
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
+        return new String(cipher.doFinal(cipherText), "UTF-8");
     }
 }
