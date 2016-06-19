@@ -19,12 +19,20 @@ public class CitationLatine {
     static String encryptionKey = "0123456789abcdef";
 
     public static void main(String[] args) {
+        System.out.println("Citation Latine");
+        String enc = doZeJob(plaintext, encryptionKey);
+        doZeJob(enc, encryptionKey);
+    }
+
+    public static String doZeJob(String text, String clef) {
+        String base64encodedString = new String();
         try {
 
-            System.out.println("==Java==");
-            System.out.println("plain:   " + plaintext);
+            System.out.println("plain:   " + text);
 
-            byte[] cipher = encrypt(plaintext, encryptionKey);
+            String seize = padRight(text, text.length() - (text.length() % 16) + 16);
+            System.out.print("seize[" + seize + "] " + seize.length());
+            byte[] cipher = encrypt(seize, clef);
 
             System.out.print("cipher:  ");
             for (int i = 0; i < cipher.length; i++)
@@ -32,7 +40,7 @@ public class CitationLatine {
             System.out.println("");
 
             // Encode using basic encoder
-            String base64encodedString = Base64.getEncoder().encodeToString(cipher);
+            base64encodedString = Base64.getEncoder().encodeToString(cipher);
             System.out.println(base64encodedString);
 
             // Decode
@@ -41,11 +49,20 @@ public class CitationLatine {
             String decrypted = decrypt(decipher, encryptionKey);
 
             System.out.println("decrypt: " + decrypted);
-
+            if(text.indexOf(" ")<0) {
+                System.out.println("decrypt2: " + decrypt(Base64.getDecoder().decode(text), encryptionKey));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return base64encodedString;
+
     }
+
+    public static String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);
+    }
+
 
     public static byte[] encrypt(String plainText, String encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
