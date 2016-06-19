@@ -16,13 +16,19 @@ class EulerMain extends FlatSpec with Matchers {
       r
     }
 
+    def YesV(a: BigInt, b: BigInt, c: BigInt) = {
+      var r = EulerPrime.isPrime(a) && EulerPrime.isPrime(b) && EulerPrime.isPrime(c) && (b + 1).toDouble / (a + 1).toDouble == (c + 1).toDouble / (b + 1).toDouble
+      println("           ", (a, b, c), (a + 1, b + 1, c + 1), (b + 1).toDouble / (a + 1).toDouble, r)
+      r
+    }
+
     def Yes2(l: List[BigInt]) = Yes(l.sorted.head, l.sorted.apply(1), l.sorted.last)
 
     def S(n: Int) = {
       val t_iciS = timeStamp(t_start, "")
-      val p = EulerPrime.premiers10000.filter(_ < n).toList
-      val z = p.combinations(3).filter(Yes2(_)).toList
-      println("S(" + n + ")", p.length, z.length, z.mkString("\n  ", " - ", "\n  "), z.map(_.sum).sorted, z.flatten.sum)
+      val prems = EulerPrime.premiers10000.filter(_ < n).toList
+      val z = prems.combinations(3).filter(Yes2(_)).toList
+      println("S(" + n + ")", prems.length, z.length, z.mkString("\n  ", " - ", "\n  "), z.map(_.sum).sorted, z.flatten.sum)
       val t_laS = timeStamp(t_iciS, "la! S(" + n + ")")
       z.flatten.sum
     }
@@ -90,8 +96,18 @@ class EulerMain extends FlatSpec with Matchers {
       z
     }
 
+    def S4(n:Int) = {
+      val t_iciS = timeStamp(t_start, "")
+      val prems = EulerPrime.premiers10000.filter(_ < n)
+      val z = prems.map(p => (p,p+1,prems.toList.map(p2 => (p2,(p2+1).toDouble/(p+1).toDouble)))).toList.sortBy(_._1)
+      println(z.mkString("\n  ", "\n  ", "\n  "))
+      //println("S4(" + n + ")", prems.length, z.length, z.mkString("\n  ", " - ", "\n  "), z.map(_.sum).sorted, z.flatten.sum)
+      val t_laS = timeStamp(t_iciS, "la! S4(" + n + ")")
 
-    Yes(37, 151, 607) should be === true
+    }
+
+    YesV(37, 151, 607) should be === true
+    YesV(71, 83, 97) should be === true
     Yes(2, 5, 11) should be === true
     Yes(2, 5, 13) should be === false
     Yes(31, 47, 71) should be === true
@@ -101,14 +117,16 @@ class EulerMain extends FlatSpec with Matchers {
     Yes2(List(5, 2, 11)) should be === true
     println("********************************")
     S(100) should be === 1035
-    S2(100, 19) should be === 1035
+    /*S2(100, 19) should be === 1035
     S(200) should be === S2(200, 43)
     T(100)
     T(200)
     S(60) should be === S3(60)
     S(50) should be === S3(50)
     S(200) should be === S3(200)
-    S(1000) should be === S3(1000)
+    S(1000) should be === S3(1000)*/
+    S3(200)
+    S4(100)
 
     var result = 0
     println("Euler518[" + result + "]")
