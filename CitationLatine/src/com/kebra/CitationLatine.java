@@ -20,8 +20,13 @@ public class CitationLatine {
 
     public static void main(String[] args) {
         System.out.println("Citation Latine");
-        String enc = doZeJob(plaintext, encryptionKey);
-        doZeJob(enc, encryptionKey);
+        if(args.length==0) {
+            String enc = doZeJob(plaintext, encryptionKey);
+            doZeJob(enc, encryptionKey);
+        } else {
+            String enc = doZeJob(args[0], args[1]);
+            doZeJob(enc, args[1]);
+        }
     }
 
     public static String doZeJob(String text, String clef) {
@@ -30,9 +35,11 @@ public class CitationLatine {
 
             System.out.println("plain:   " + text);
 
-            String seize = padRight(text, text.length() - (text.length() % 16) + 16);
-            System.out.print("seize[" + seize + "] " + seize.length());
-            byte[] cipher = encrypt(seize, clef);
+            String seizetext = padRightMod16(text);
+            System.out.println("seizetext[" + seizetext + "] " + seizetext.length());
+            String seizeclef = clef.substring(0,16);
+
+            byte[] cipher = encrypt(seizetext, seizeclef);
 
             System.out.print("cipher:  ");
             for (int i = 0; i < cipher.length; i++)
@@ -46,11 +53,11 @@ public class CitationLatine {
             // Decode
             byte[] decipher = Base64.getDecoder().decode(base64encodedString);
 
-            String decrypted = decrypt(decipher, encryptionKey);
+            String decrypted = decrypt(decipher, seizeclef);
 
             System.out.println("decrypt: " + decrypted);
             if(text.indexOf(" ")<0) {
-                System.out.println("decrypt2: " + decrypt(Base64.getDecoder().decode(text), encryptionKey));
+                System.out.println("decrypt2: " + decrypt(Base64.getDecoder().decode(text), seizeclef));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,6 +68,10 @@ public class CitationLatine {
 
     public static String padRight(String s, int n) {
         return String.format("%1$-" + n + "s", s);
+    }
+
+    public static String padRightMod16(String s) {
+        return padRight(s, s.length() - (s.length() % 16) + 16);
     }
 
 
