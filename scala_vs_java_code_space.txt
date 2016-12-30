@@ -2,3 +2,5 @@
 labyrinthe	25 KO	22 KO
 carte		37 KO	20 KO
 bugstats	65 KO	15 KO	
+
+testing github on linux 30 décembre 2016
