@@ -6,8 +6,27 @@
 #define STRINGIFY2( x) #x
 #define STRINGIFY(x) STRINGIFY2(x)
 #define valueInt( myvar) STRINGIFY(myvar##_), myvar
-#define printInt( myvar) printf("%10s-%3d  %s=%d\n",__FILE__,__LINE__,STRINGIFY(myvar##_), myvar)
 #define my_print(...) Log(__FILE__,__LINE__, __VA_ARGS__)
+#define my_printInt( myvar) my_print("%s=%d",STRINGIFY(myvar##_), myvar)
+
+void Log (char* sourcefile, int line, char * format, ...)
+{
+    char buffer[256];
+    char *lastSlash = strrchr(sourcefile, '/');
+    if(lastSlash!=NULL)   // si on a trouve le dernier slash, enlever ce qu'il y a avant
+    {
+        lastSlash++;
+    }
+    else     // sinon laisser le file path en entier
+    {
+        lastSlash = sourcefile;
+    }
+    va_list args;
+    va_start (args, format);
+    vsnprintf (buffer, 255, format, args);
+    printf("%10s-%3d  %s\n",lastSlash,line,buffer);
+    va_end (args);
+}
 
 typedef struct
 {
@@ -16,17 +35,6 @@ typedef struct
     int Strength;
     int Health;
 } TPlayerState;
-
-
-void Log (char* sourcefile, int line, char * format, ...)
-{
-    char buffer[256];
-    va_list args;
-    va_start (args, format);
-    vsnprintf (buffer, 255, format, args);
-    printf("%10s-%3d  %s\n",sourcefile,line,buffer);
-    va_end (args);
-}
 
 // Save a players state to file
 void SaveState(TPlayerState PlayerState)
@@ -68,9 +76,10 @@ void RestoreState(TPlayerState *pPlayerState)
 int main()
 {
     TPlayerState zob, zub;
+    int vieille_valeur_de_zob_health;
 
     printf("Hello world!\n");
-    my_print("Bonjour monde!\n");
+    my_print("Bonjour monde!");
 
     zob.Health = 1;
     zob.PlayerHealth = 2;
@@ -78,24 +87,34 @@ int main()
     zob.PlayerY = 4;
     zob.Strength = 5;
 
-    my_print("Sauvons zob [%s=%d]\n",valueInt( zob.Health));
+    my_print("Sauvons zob [%s=%d]",valueInt( zob.Health));
     SaveState(zob);
-    printInt(zub.Health);
+
+    my_printInt(zub.Health);
 
     zub.Health = 999;
 
-    my_print("%s valait %d\n",valueInt( zub.Health));
-    printInt(zub.Health);
+
+    my_print("%s valait %d",valueInt( zub.Health));
+    my_printInt(zub.Health);
     assert(zub.Health!=zob.Health); // verifions que zub.Health est different de zob.Health pour que le programme prouve bien quelquechose
 
-    my_print("Recuperons zob et affectons le a zub\n");
+    vieille_valeur_de_zob_health = zob.Health;
+    zob.Health = 777;
+    my_print("Changeons la valeur de %s qui vaut maintenant  %d",valueInt( zob.Health));
+
+
+    my_print("Recuperons zob et affectons le a zub");
     RestoreState(&zub);
-    my_print("maintenant %s vaut %d, la meme valeur que %s qui vaut %d\n",valueInt( zub.Health),valueInt( zob.Health));
+    my_print("Maintenant %s vaut %d, la meme valeur que %s qui vaut %d",
+             valueInt( zub.Health),valueInt( vieille_valeur_de_zob_health));
 
-    printInt(zub.Health);
-    assert(zub.Health==zob.Health); // verifions que zub.Health a bien maintenant la meme valeur que zob.Health
+    my_printInt(zub.Health);
+    my_printInt(zob.Health);
+    my_printInt(vieille_valeur_de_zob_health);
+    assert(zub.Health==vieille_valeur_de_zob_health); // verifions que zub.Health abien maintenant la meme valeur que zob.Health
 
-    assert(1==2); // verifions aussi que la fonction assert remplit son office
+    assert(1==2); // verifions que la fonction assert remplit son office
 
     return 0;
 }
