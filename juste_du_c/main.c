@@ -13,8 +13,14 @@ void Log (char* sourcefile, int line, char * format, ...)
 {
     char buffer[256];
     char *lastSlash = strrchr(sourcefile, '/');
+    char *lastbackSlash = strrchr(sourcefile, '\\');
     if(lastSlash!=NULL)   // si on a trouve le dernier slash, enlever ce qu'il y a avant
     {
+        lastSlash++;
+    }
+    else if(lastbackSlash!=NULL)   // si on a trouve le dernier backslash, enlever ce qu'il y a avant
+    {
+        lastSlash = lastbackSlash; // on dit que le backslash est un slash, comme ca, ca simplifie le code
         lastSlash++;
     }
     else     // sinon laisser le file path en entier
