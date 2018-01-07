@@ -93,14 +93,42 @@ object Elliptique {
   }
 }
 
+object Inverse67 {
+  val li = new getInverse(67).li
+  println("Inverses: ", li)
+
+  def sub(a: BigInt, b: BigInt, modlo: BigInt) = {
+    val diff1 = a - b
+    if (diff1 < 0) diff1 + modlo else diff1
+  }
+
+  def mul(a: BigInt, b: BigInt, modlo: BigInt) = a * b % modlo
+
+  def getLambda(p1: (BigInt, BigInt), p2: (BigInt, BigInt), modlo: BigInt) = {
+    println(p1,p2)
+    println(sub(p1._1, p2._1, modlo),sub(p1._2, p2._2, modlo))
+    println(li.filter(_._1 == sub(p1._1, p2._1, modlo)))
+    (sub(p2._2, p1._2, modlo) * li.filter(_._1 == sub(p2._1, p1._1, modlo)).head._2) % modlo
+  }
+
+  def plus(p1: (BigInt, BigInt), p2: (BigInt, BigInt), modlo: BigInt) = {
+    val lambda = getLambda(p1, p2, modlo)
+    println(p1,p2,lambda)
+    val xr = sub(sub(mul(lambda, lambda, modlo), p1._1, modlo), p2._1, modlo)
+    val yr = sub(mul(lambda, sub(p1._2, xr, modlo), modlo), p1._2, modlo)
+    println(xr, yr)
+    (xr, yr)
+  }
+}
+
 class getCurve(val modlo: BigInt) {
   def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
 
   def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
 
   val l1 = stream_zero_a_linfini take (modlo.toInt + 2) toList
-  val l2 = l1.map( i => (i,(i*i) mod modlo))
-  val l3p7 = l1.map( i => (i,((i*i*i)+7) mod modlo))
+  val l2 = l1.map(i => (i, (i * i) mod modlo))
+  val l3p7 = l1.map(i => (i, ((i * i * i) + 7) mod modlo))
   val lp = l3p7.map(x => {
     l2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
   }).flatten
@@ -108,7 +136,9 @@ class getCurve(val modlo: BigInt) {
 
 class getInverse(val modlo: BigInt) {
   def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
+
   def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
+
   val l1 = stream_zero_a_linfini.take(modlo.toInt).toList
   val li = l1.tail.map(i => {
     (i, l1.filter(u => ((u * i) % modlo) == 1).head)

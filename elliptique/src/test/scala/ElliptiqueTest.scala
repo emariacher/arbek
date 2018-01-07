@@ -25,13 +25,31 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     result should be === 78
   }
 
+  "Sub" should "be OK" in {
+    println("Sub")
+    val result = Inverse67.sub(2,6,67)
+    println("Sub[" + result + "]")
+    result should be === 63
+  }
+
+  "Plus" should "be OK" in {
+    println("Plus")
+
+    val result1 = Inverse67.plus((2,22),(6,25),67)
+    result1._1 should be === 47
+    result1._2 should be === 39
+    val result = 3
+    println("Plus[" + result + "]")
+    result should be === 78
+  }
+
   "TrouveLesInverses" should "be OK" in {
     println("TrouveLesInverses")
     val li = new getInverse(67).li
     println(li)
-    val result = li.length
+    val result = li.filter(_._1 == 63).head._2
     println("TrouveLesInverses[" + result + "]")
-    result should be === 66
+    result should be === 50
   }
   /*
     "Elliptique" should "be OK" in {
