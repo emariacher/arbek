@@ -4,13 +4,6 @@ import org.scalatest._
 import scala.collection.immutable.{Range, ListSet}
 import scala.math.BigInt
 
-class ElliptiqueTest67 extends FlatSpec with Matchers {
-  val lp = new getCurve(67).lp
-  println(lp)
-  lp.filter(d => d._1 == 2 & d._2 == 22).isEmpty should be === false
-  lp.filter(d => d._1 == 2 & d._2 == 23).isEmpty should be === true
-}
-
 class ElliptiqueTest extends FlatSpec with Matchers {
   def rangeStream2(a: BigInt, b: BigInt): Stream[Triplet] = new Triplet(a, a * a) #:: rangeStream2(b, 1 + b)
 
@@ -20,6 +13,16 @@ class ElliptiqueTest extends FlatSpec with Matchers {
 
   def stream_zero_a_linfini3p7: Stream[Triplet] = rangeStream3p7(0, 1)
 
+  " GetCurve" should "be OK" in {
+    println("GetCurve")
+    val lp = new getCurve(67).lp
+    println(lp)
+    lp.filter(d => d._1 == 2 & d._2 == 22).isEmpty should be === false
+    lp.filter(d => d._1 == 2 & d._2 == 23).isEmpty should be === true
+    val result = lp.length
+    println("GetCurve[" + result + "]")
+    result should be === 78
+  }
   "Elliptique" should "be OK" in {
     println("Elliptique")
     val t_ici = timeStamp(t_start, "ici!")
@@ -58,8 +61,8 @@ class ElliptiqueTest extends FlatSpec with Matchers {
 
     val t_la = timeStamp(t_ici, "la! ******************************")
 
-    val result = 0
+    val result = lp.length
     println("Elliptique[" + result + "]")
-    result should be === 0
+    result should be === 78
   }
 }
