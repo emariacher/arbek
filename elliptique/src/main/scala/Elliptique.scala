@@ -92,3 +92,36 @@ object Elliptique {
     }
   }
 }
+
+class getCurve(val modlo: BigInt) {
+  def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
+
+  def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
+
+  val l1 = stream_zero_a_linfini take (modlo.toInt + 2) toList
+  val l2 = l1.map( i => (i,(i*i) mod modlo))
+  val l3p7 = l1.map( i => (i,((i*i*i)+7) mod modlo))
+  val lp = l3p7.map(x => {
+    l2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
+  }).flatten
+}
+
+object modulo {
+  val m = BigInt(67)
+}
+
+class Triplet(val a: BigInt, val b: BigInt) {
+  val d = (a, b, b mod modulo.m)
+
+  override def equals(x: Any): Boolean = d._3.equals(x.asInstanceOf[Triplet].d._3)
+
+  override def toString: String = d.toString
+}
+
+class Doublon(val x: BigInt, val y: BigInt) {
+  def check: Boolean = new Triplet(y, y * y).equals(new Triplet(x, (x * x * x) + 7))
+
+  override def toString: String = (x, y, check).toString
+}
+
+

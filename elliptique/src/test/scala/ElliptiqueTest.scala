@@ -4,25 +4,14 @@ import org.scalatest._
 import scala.collection.immutable.{Range, ListSet}
 import scala.math.BigInt
 
-object modulo {
-  val m = BigInt(67)
-}
-
-class Triplet(val a: BigInt, val b: BigInt) {
-  val d = (a, b, b mod modulo.m)
-
-  override def equals(x: Any): Boolean = d._3.equals(x.asInstanceOf[Triplet].d._3)
-
-  override def toString: String = d.toString
-}
-
-class Doublon(val x: BigInt, val y: BigInt) {
-  def check: Boolean = new Triplet(y, y * y).equals(new Triplet(x, (x * x * x) + 7))
-
-  override def toString: String = (x, y, check).toString
-}
-
 class ElliptiqueTest67 extends FlatSpec with Matchers {
+  val lp = new getCurve(67).lp
+  println(lp)
+  lp.filter(d => d._1 == 2 & d._2 == 22).isEmpty should be === false
+  lp.filter(d => d._1 == 2 & d._2 == 23).isEmpty should be === true
+}
+
+class ElliptiqueTest extends FlatSpec with Matchers {
   def rangeStream2(a: BigInt, b: BigInt): Stream[Triplet] = new Triplet(a, a * a) #:: rangeStream2(b, 1 + b)
 
   def stream_zero_a_linfini2: Stream[Triplet] = rangeStream2(0, 1)
