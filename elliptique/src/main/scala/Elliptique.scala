@@ -106,6 +106,15 @@ class getCurve(val modlo: BigInt) {
   }).flatten
 }
 
+class getInverse(val modlo: BigInt) {
+  def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
+  def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
+  val l1 = stream_zero_a_linfini.take(modlo.toInt).toList
+  val li = l1.tail.map(i => {
+    (i, l1.filter(u => ((u * i) % modlo) == 1).head)
+  })
+}
+
 object modulo {
   val m = BigInt(67)
 }
