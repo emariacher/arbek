@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 
 import scala.math.BigInt
 
-object Euler {
+object Elliptique {
   val t_start = Calendar.getInstance()
 
   def printZisday(zisday: Calendar, fmt: String): String = printZisday(zisday.getTime(), fmt)
