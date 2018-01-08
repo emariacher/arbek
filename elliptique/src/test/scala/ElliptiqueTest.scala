@@ -33,14 +33,12 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   }
 
   "Plus" should "be OK" in {
-    println("Plus")
+    println("Plus",((2,22),(6,25),67))
 
-    val result1 = Inverse67.plus((2,22),(6,25),67)
-    result1._1 should be === 47
-    result1._2 should be === 39
-    val result = 3
+    val result = Inverse67.plus((2,22),(6,25),67)
     println("Plus[" + result + "]")
-    result should be === 78
+    result._1 should be === 47
+    result._2 should be === 28
   }
 
   "TrouveLesInverses" should "be OK" in {

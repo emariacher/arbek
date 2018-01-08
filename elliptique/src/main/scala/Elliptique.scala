@@ -104,19 +104,14 @@ object Inverse67 {
 
   def mul(a: BigInt, b: BigInt, modlo: BigInt) = a * b % modlo
 
-  def getLambda(p1: (BigInt, BigInt), p2: (BigInt, BigInt), modlo: BigInt) = {
-    println(p1,p2)
-    println(sub(p1._1, p2._1, modlo),sub(p1._2, p2._2, modlo))
-    println(li.filter(_._1 == sub(p1._1, p2._1, modlo)))
-    (sub(p2._2, p1._2, modlo) * li.filter(_._1 == sub(p2._1, p1._1, modlo)).head._2) % modlo
+  def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt), modlo: BigInt) = {
+    (sub(q._2, p._2, modlo) * li.filter(_._1 == sub(q._1, p._1, modlo)).head._2) % modlo
   }
 
-  def plus(p1: (BigInt, BigInt), p2: (BigInt, BigInt), modlo: BigInt) = {
-    val lambda = getLambda(p1, p2, modlo)
-    println(p1,p2,lambda)
-    val xr = sub(sub(mul(lambda, lambda, modlo), p1._1, modlo), p2._1, modlo)
-    val yr = sub(mul(lambda, sub(p1._2, xr, modlo), modlo), p1._2, modlo)
-    println(xr, yr)
+  def plus(p: (BigInt, BigInt), q: (BigInt, BigInt), modlo: BigInt) = {
+    val lambda = getLambda(p, q, modlo)
+    val xr = sub(sub(mul(lambda, lambda, modlo), p._1, modlo), q._1, modlo)
+    val yr = sub(mul(lambda, sub(p._1, xr, modlo), modlo), p._2, modlo)
     (xr, yr)
   }
 }
