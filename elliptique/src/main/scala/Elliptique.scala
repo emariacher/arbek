@@ -107,19 +107,28 @@ object Inverse67 {
   def mul(a: BigInt, b: BigInt, modlo: BigInt) = a * b % modlo
 
   def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt), modlo: BigInt) = {
-    ((sub(q._1, p._1, modlo)==0, sub(q._2, p._2, modlo)==0)) match {
-      case (true,true) => (mul(mul(p._1, p._1, modlo), 3, modlo) * li.filter(_._1 == mul(p._2, 2, modlo)).head._2) % modlo
+    (sub(q._1, p._1, modlo) == 0, sub(q._2, p._2, modlo) == 0) match {
+      case (true, true) => (mul(mul(p._1, p._1, modlo), 3, modlo) * li.filter(_._1 == mul(p._2, 2, modlo)).head._2) % modlo
       case _ => (sub(q._2, p._2, modlo) * li.filter(_._1 == sub(q._1, p._1, modlo)).head._2) % modlo
     }
   }
 
   def plus(p: (BigInt, BigInt), q: (BigInt, BigInt), modlo: BigInt) = {
-    val lambda = getLambda(p, q, modlo)
-    val xr = sub(sub(mul(lambda, lambda, modlo), p._1, modlo), q._1, modlo)
-    val yr = sub(mul(lambda, sub(p._1, xr, modlo), modlo), p._2, modlo)
-    (xr, yr)
+    (sub(q._1, p._1, modlo)==0 & sub(q._2, p._2, modlo)!=0) match {
+      case true => (BigInt(0), BigInt(0))
+      case _ => val lambda = getLambda(p, q, modlo)
+        val xr = sub(sub(mul(lambda, lambda, modlo), p._1, modlo), q._1, modlo)
+        val yr = sub(mul(lambda, sub(p._1, xr, modlo), modlo), p._2, modlo)
+        (xr, yr)
+    }
   }
-  def check(p: (BigInt,BigInt), modlo: BigInt) = ((p._1*p._1*p._1) +7) % modlo == (p._2*p._2) % modlo
+
+  def check(p: (BigInt, BigInt), modlo: BigInt): Boolean = {
+    (p._1 == 0, p._2 == 0) match {
+      case (true, true) => true
+      case _ => ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
+    }
+  }
 }
 
 class getCurve(val modlo: BigInt) {
