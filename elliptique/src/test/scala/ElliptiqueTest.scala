@@ -3,6 +3,7 @@ import org.scalatest._
 
 import scala.collection.immutable.{Range, ListSet}
 import scala.math.BigInt
+import scala.util.Random
 
 
 class ElliptiqueTest extends FlatSpec with Matchers {
@@ -105,8 +106,28 @@ class ElliptiqueTest extends FlatSpec with Matchers {
 
   "CheckToutesLesAdditions" should "be OK" in {
     println("CheckToutesLesAdditions")
+    val rnd = new Random(0)
     val lp = new getCurve(67).lp
-    lp.foreach(p => {
+    lp.combinations(2).toList.foreach(d => {
+      if(d.head._1==d.last._1) {
+        println("")
+      }
+      print(", "+d.head+"+"+ d.last)
+      val r = Inverse67.plus(d.head, d.last, 67)
+      print("="+r)
+      Inverse67.check(r, 67) should be === true
+    })
+    println("\n************ Check aussi la multiplication par deux")
+    lp.zip(lp).foreach(d => {
+      print(", "+d._1+"+"+ d._2)
+      val r = Inverse67.plus(d._1, d._2, 67)
+      print("="+r)
+      Inverse67.check(r, 67) should be === true
+      if(rnd.nextInt(10)==0) {
+        println("")
+      }
+    })
+    /*lp.foreach(p => {
       println("["+p+"] ")
       lp.foreach(q => {
         print(", "+p+"+"+ q)
@@ -114,7 +135,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
         print("="+r)
         Inverse67.check(r, 67) should be === true
       })
-    })
+    })*/
 
   }
 
