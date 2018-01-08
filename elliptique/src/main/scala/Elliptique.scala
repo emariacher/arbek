@@ -97,6 +97,8 @@ object Inverse67 {
   val li = new getInverse(67).li
   println("Inverses: ", li)
 
+  def add(a: BigInt, b: BigInt, modlo: BigInt) = a + b % modlo
+
   def sub(a: BigInt, b: BigInt, modlo: BigInt) = {
     val diff1 = a - b
     if (diff1 < 0) diff1 + modlo else diff1
@@ -105,7 +107,10 @@ object Inverse67 {
   def mul(a: BigInt, b: BigInt, modlo: BigInt) = a * b % modlo
 
   def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt), modlo: BigInt) = {
-    (sub(q._2, p._2, modlo) * li.filter(_._1 == sub(q._1, p._1, modlo)).head._2) % modlo
+    ((sub(q._1, p._1, modlo)==0, sub(q._2, p._2, modlo)==0)) match {
+      case (true,true) => (mul(mul(p._1, p._1, modlo), 3, modlo) * li.filter(_._1 == mul(p._2, 2, modlo)).head._2) % modlo
+      case _ => (sub(q._2, p._2, modlo) * li.filter(_._1 == sub(q._1, p._1, modlo)).head._2) % modlo
+    }
   }
 
   def plus(p: (BigInt, BigInt), q: (BigInt, BigInt), modlo: BigInt) = {
@@ -114,6 +119,7 @@ object Inverse67 {
     val yr = sub(mul(lambda, sub(p._1, xr, modlo), modlo), p._2, modlo)
     (xr, yr)
   }
+  def check(p: (BigInt,BigInt), modlo: BigInt) = ((p._1*p._1*p._1) +7) % modlo == (p._2*p._2) % modlo
 }
 
 class getCurve(val modlo: BigInt) {
