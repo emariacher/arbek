@@ -109,35 +109,50 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val rnd = new Random(0)
     val lp = new getCurve(67).lp
     lp.combinations(2).toList.foreach(d => {
-      if(d.head._1==d.last._1) {
+      if (d.head._1 == d.last._1) {
         println("")
       }
-      print(", "+d.head+"+"+ d.last)
+      print(", " + d.head + "+" + d.last)
       val r = Inverse67.plus(d.head, d.last, 67)
-      print("="+r)
+      print("=" + r)
       Inverse67.check(r, 67) should be === true
     })
     println("\n************ Check aussi la multiplication par deux")
     lp.zip(lp).foreach(d => {
-      print(", "+d._1+"+"+ d._2)
+      print(", " + d._1 + "+" + d._2)
       val r = Inverse67.plus(d._1, d._2, 67)
-      print("="+r)
+      print("=" + r)
       Inverse67.check(r, 67) should be === true
-      if(rnd.nextInt(10)==0) {
+      if (rnd.nextInt(10) == 0) {
         println("")
       }
     })
-    /*lp.foreach(p => {
-      println("["+p+"] ")
-      lp.foreach(q => {
-        print(", "+p+"+"+ q)
-        val r = Inverse67.plus(p, q, 67)
-        print("="+r)
-        Inverse67.check(r, 67) should be === true
-      })
-    })*/
-
   }
 
+  "CheckLaBoucle" should "be OK" in {
+    println("CheckLaBoucle: verifie que la multiplication par deux parcourt toute la courbe")
+    val rnd = new Random(0)
+    val lp = new getCurve(67).lp
+    var lr = List((BigInt(0), BigInt(0))).tail
 
+    val first = lp.head
+    var current = first
+    do {
+      print("* " + current + "*2")
+      current = Inverse67.plus(current, current, 67)
+      print("=" + current)
+      Inverse67.check(current, 67) should be === true
+      lr = lr :+ current
+      if (rnd.nextInt(10) == 0) {
+        println("")
+      }
+    } while(current.toString != first.toString())
+    println("")
+
+    println(lr)
+    val nolr =lp.filter(p => !lr.contains(p))
+    println(nolr)
+
+    nolr.isEmpty should be === true
+  }
 }
