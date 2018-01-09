@@ -133,9 +133,48 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val rnd = new Random(0)
     var lr = List((BigInt(0), BigInt(0))).tail
     var current = first
+    println("*2*****************************************2*")
     do {
-      print("* " + current + "*2")
+      print(". " + current + "*2")
       current = Inverse67.plus(current, current, 67)
+      print("=" + current)
+      Inverse67.check(current, 67) should be === true
+      lr = lr :+ current
+      if (rnd.nextInt(10) == 0) {
+        println("")
+      }
+    } while (current.toString != first.toString())
+    println("")
+    lr
+  }
+
+  def loopmul3(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val rnd = new Random(0)
+    var lr = List((BigInt(0), BigInt(0))).tail
+    var current = first
+    println("*3*****************************************3*")
+    do {
+      print("- " + current + "*3")
+      current = Inverse67.plus(Inverse67.plus(current, current, 67), current, 67)
+      print("=" + current)
+      Inverse67.check(current, 67) should be === true
+      lr = lr :+ current
+      if (rnd.nextInt(10) == 0) {
+        println("")
+      }
+    } while (current.toString != first.toString())
+    println("")
+    lr
+  }
+
+  def loopmul4(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val rnd = new Random(0)
+    var lr = List((BigInt(0), BigInt(0))).tail
+    var current = first
+    println("*4*****************************************4*")
+    do {
+      print("_ " + current + "*4")
+      current = Inverse67.plus(Inverse67.plus(current, current, 67), Inverse67.plus(current, current, 67), 67)
       print("=" + current)
       Inverse67.check(current, 67) should be === true
       lr = lr :+ current
@@ -152,10 +191,15 @@ class ElliptiqueTest extends FlatSpec with Matchers {
 
     val lp = new getCurve(67).lp.sortBy(p => (p._1*100)+p._2)
 
-
     val lr1 = loopmul2(lp.head)
     val lr2 = loopmul2(lp.tail.head)
     (lr1++lr2).sortBy(p => (p._1*100)+p._2) should be === lp
 
+    val lr3 = loopmul3(lp.head)
+    lr3.sortBy(p => (p._1*100)+p._2) should be === lp
+
+    val lr4 = loopmul4(lp.head)
+    val lr5 = loopmul4(lp.tail.head)
+    (lr4++lr5).sortBy(p => (p._1*100)+p._2) should be === lp
   }
 }
