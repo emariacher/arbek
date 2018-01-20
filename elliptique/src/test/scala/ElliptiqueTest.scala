@@ -137,6 +137,8 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val e = new Elliptique(67)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(67, lp.size, lp)
+    lp.filter(p => p._1*p._2==0).isEmpty should be === true
+    lp.size should be >= 67
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
@@ -151,16 +153,21 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   }
 
   "CheckLaBoucle71" should "be OK" in {
-    println("CheckLaBoucle71: il semble avoir des boucles infinies")
+    println("CheckLaBoucle71: il semble avoir des boucles infinies et quand x ou y == 0 on ne peut pas addtionner")
     val e = new Elliptique(71)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(71, lp.size, lp)
+    println(lp.filter(p => p._1*p._2==0))
+    lp.filter(p => p._1*p._2==0).isEmpty should be === false
+    lp.size should be <= 71
     lp.head should be ===(BigInt(1), BigInt(24))
     e.check(lp.head) should be === true
     e.plus(lp.head, lp.head) should be ===(BigInt(36), BigInt(67))
     e.check(e.plus(lp.head, lp.head)) should be === true
     e.check((BigInt(33), BigInt(35))) should be === true
     e.check((BigInt(33), BigInt(36))) should be === true
+    e.check((BigInt(4), BigInt(0))) should be === true
+    intercept[Exception] { e.plus((BigInt(4), BigInt(0)),(BigInt(4), BigInt(0))) }
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
@@ -172,5 +179,30 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val lr4 = e.loopmul4(lp.head)
     val lr5 = e.loopmul4(lp.tail.head)
     (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) should not equal lp
+  }
+
+  "CheckLaBoucle73" should "be OK" in {
+    println("CheckLaBoucle73: quand x ou y == 0 on ne peut pas addtionner")
+    val e = new Elliptique(73)
+    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    println(73, lp.size, lp)
+    println(e.li)
+
+    e.check((BigInt(44), BigInt(0))) should be === true
+    println(lp.filter(p => p._1*p._2==0))
+    lp.filter(p => p._1*p._2==0).isEmpty should be === false
+    lp.size should be <= 73
+  }
+
+  "CheckLaBoucle83" should "be OK" in {
+    val modlo = 83
+    println("CheckLaBoucle"+modlo+": il faut que la taille de la courbe soit superieure au modulo")
+    val e = new Elliptique(modlo)
+    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    println(modlo, lp.size, lp)
+    println(lp.filter(p => p._1*p._2==0))
+    lp.filter(p => p._1*p._2==0).isEmpty should be === false
+    e.check((BigInt(0), BigInt(16))) should be === true
+    lp.size should be <= modlo
   }
 }

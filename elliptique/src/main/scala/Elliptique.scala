@@ -139,7 +139,16 @@ class Elliptique(val modlo: BigInt) {
     (p._1 == 0, p._2 == 0) match {
       case (true, true) => true
       case _ => {
-        //println("\n[", modlo, "]", p._1, (p._1 * p._1 * p._1) + 7, ((p._1 * p._1 * p._1) + 7) % modlo, " vs ", p._2, (p._2 * p._2), (p._2 * p._2) % modlo)
+        ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
+      }
+    }
+  }
+
+  def checkVerbose(p: (BigInt, BigInt)): Boolean = {
+    (p._1 == 0, p._2 == 0) match {
+      case (true, true) => true
+      case _ => {
+        println("\n[", modlo, "]", p._1, (p._1 * p._1 * p._1) + 7, ((p._1 * p._1 * p._1) + 7) % modlo, " vs ", p._2, (p._2 * p._2), (p._2 * p._2) % modlo)
         ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
       }
     }
