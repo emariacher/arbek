@@ -142,7 +142,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
-    (lr1 ++ lr2).sortBy(p => (p._1 * 100) + p._2) should be === lp
+    (lr1 ++ lr2).distinct.sortBy(p => (p._1 * 100) + p._2) should be === lp
 
     val lr3 = e.loopmul3(lp.head)
     lr3.sortBy(p => (p._1 * 100) + p._2) should be === lp
@@ -205,4 +205,39 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     e.check((BigInt(0), BigInt(16))) should be === true
     lp.size should be <= modlo
   }
+
+  "Trouve les nombres premiers qui pourraient marcher" should "be OK" in {
+    val premiers = EulerPrime.premiers1000
+    println("Trouve les nombres premiers qui pourraient marcher")
+    println(premiers.take(100).filter(modlo => {
+      val e = new Elliptique(modlo)
+      e.curve.size > modlo & e.curve.filter(p => p._1*p._2==0).isEmpty
+    }))
+  }
+
+  "CheckLaBoucle241" should "be OK" in {
+    val modlo = 241
+    println("CheckLaBoucle"+modlo+": ")
+    val e = new Elliptique(modlo)
+    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    println(modlo, lp.size, lp)
+    println(lp.filter(p => p._1*p._2==0))
+    lp.filter(p => p._1*p._2==0).isEmpty should be === true
+    lp.size should be >= modlo
+
+    val lr1 = e.loopmul2(lp.head)
+    val lr2 = e.loopmul2(lp.tail.head)
+    val lr3 = e.loopmul2(lp.tail.tail.head)
+    val lr4 = e.loopmul2(lp.tail.tail.tail.head)
+    val lr5 = e.loopmul2(lp.tail.tail.tail.tail.head)
+    val lr6 = e.loopmul2(lp.tail.tail.tail.tail.tail.head)
+    val lr7 = e.loopmul2(lp.tail.tail.tail.tail.tail.tail.head)
+    val lr8 = e.loopmul2(lp.tail.tail.tail.tail.tail.tail.tail.head)
+    println(lr1.size, lr2.size,lr3.size, lr4.size, lr5.size, lr6.size,lr7.size, lr8.size)
+    println((lr1 ++ lr2 ++ lr3 ++ lr4 ++ lr5 ++ lr6 ++ lr7 ++ lr8).distinct.size)
+    //(lr1 ++ lr2 ++ lr3 ++ lr4 ++ lr5 ++ lr6 ++ lr7 ++ lr8).distinct.sortBy(p => (p._1 * 100) + p._2) should be === lp
+
+  }
+
+
 }
