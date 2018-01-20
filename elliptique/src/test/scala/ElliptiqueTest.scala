@@ -132,7 +132,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     })
   }
 
-  def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+  /*def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val e = new Elliptique(67)
     val rnd = new Random(0)
     var lr = List((BigInt(0), BigInt(0))).tail
@@ -150,7 +150,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     } while (current.toString != first.toString())
     println("")
     lr
-  }
+  }*/
 
   def loopmul3(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val e = new Elliptique(67)
@@ -194,11 +194,11 @@ class ElliptiqueTest extends FlatSpec with Matchers {
 
   "CheckLaBoucle" should "be OK" in {
     println("CheckLaBoucle: il semble y avoir des sous groupes")
-
+    val e = new Elliptique(67)
     val lp = new getCurve(67).lp.sortBy(p => (p._1*100)+p._2)
 
-    val lr1 = loopmul2(lp.head)
-    val lr2 = loopmul2(lp.tail.head)
+    val lr1 = e.loopmul2(lp.head)
+    val lr2 = e.loopmul2(lp.tail.head)
     (lr1++lr2).sortBy(p => (p._1*100)+p._2) should be === lp
 
     val lr3 = loopmul3(lp.head)

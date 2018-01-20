@@ -7,6 +7,7 @@ import java.util.Date
 import java.text.SimpleDateFormat
 
 import scala.math.BigInt
+import scala.util.Random
 
 object Elliptique {
   val t_start = Calendar.getInstance()
@@ -134,6 +135,24 @@ class Elliptique(val modlo: BigInt) {
       case (true, true) => true
       case _ => ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
     }
+  }
+
+  def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val rnd = new Random(0)
+    var lr = List[(BigInt, BigInt)]()
+    var current = first
+    println("*2*****************************************2*")
+    do {
+      print(". " + current + "*2")
+      current = plus(current, current)
+      print("=" + current)
+      lr = lr :+ current
+      if (rnd.nextInt(10) == 0) {
+        println("")
+      }
+    } while (current.toString != first.toString())
+    println("")
+    lr
   }
 
 }
