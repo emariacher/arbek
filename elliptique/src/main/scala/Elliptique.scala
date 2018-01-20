@@ -93,6 +93,51 @@ object Elliptique {
   }
 }
 
+class Elliptique(val modlo: BigInt) {
+  def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
+
+  def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
+
+  val l1 = stream_zero_a_linfini.take(modlo.toInt).toList
+  val li = l1.tail.map(i => {
+    (i, l1.filter(u => ((u * i) % modlo) == 1).head)
+  })
+
+  def add(a: BigInt, b: BigInt) = a + b % modlo
+
+  def sub(a: BigInt, b: BigInt) = {
+    val diff1 = a - b
+    if (diff1 < 0) diff1 + modlo else diff1
+  }
+
+  def mul(a: BigInt, b: BigInt) = a * b % modlo
+
+  def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
+    (sub(q._1, p._1) == 0, sub(q._2, p._2) == 0) match {
+      case (true, true) => (mul(mul(p._1, p._1), 3) * li.filter(_._1 == mul(p._2, 2)).head._2) % modlo
+      case _ => (sub(q._2, p._2) * li.filter(_._1 == sub(q._1, p._1)).head._2) % modlo
+    }
+  }
+
+  def plus(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
+    (sub(q._1, p._1)==0 & sub(q._2, p._2)!=0) match {
+      case true => (BigInt(0), BigInt(0))
+      case _ => val lambda = getLambda(p, q)
+        val xr = sub(sub(mul(lambda, lambda), p._1), q._1)
+        val yr = sub(mul(lambda, sub(p._1, xr)), p._2)
+        (xr, yr)
+    }
+  }
+
+  def check(p: (BigInt, BigInt)): Boolean = {
+    (p._1 == 0, p._2 == 0) match {
+      case (true, true) => true
+      case _ => ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
+    }
+  }
+
+}
+
 object Inverse67 {
   val li = new getInverse(67).li
   println("Inverses: ", li)
