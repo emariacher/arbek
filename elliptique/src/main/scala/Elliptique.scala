@@ -151,7 +151,6 @@ class Elliptique(val modlo: BigInt) {
     var lr = List[(BigInt, BigInt)]()
     var current = first
     println("*2*****************************************2*")
-    var count = 0
     do {
       print(". " + current + "*2")
       current = plus(current, current)
@@ -160,8 +159,7 @@ class Elliptique(val modlo: BigInt) {
       if (rnd.nextInt(10) == 0) {
         print("\n *2  [", modlo, "]")
       }
-      count += 1
-    } while (current.toString != first.toString() & count < (curve.size + 2))
+    } while (current.toString != first.toString() & lr.distinct.size == lr.size)
     println("")
     lr
   }
@@ -171,7 +169,6 @@ class Elliptique(val modlo: BigInt) {
     var lr = List[(BigInt, BigInt)]()
     var current = first
     println("*3*****************************************3*")
-    var count = 0
     do {
       print("- " + current + "*3")
       current = plus(plus(current, current), current)
@@ -180,8 +177,8 @@ class Elliptique(val modlo: BigInt) {
       if (rnd.nextInt(10) == 0) {
         print("\n *3 [", modlo, "]")
       }
-      count += 1
-    } while (current.toString != first.toString() & count < (curve.size + 2))
+
+    } while (current.toString != first.toString() & lr.distinct.size == lr.size)
     println("")
     lr
   }
@@ -191,7 +188,6 @@ class Elliptique(val modlo: BigInt) {
     var lr = List[(BigInt, BigInt)]()
     var current = first
     println("*4*****************************************4*")
-    var count = 0
     do {
       print("_ " + current + "*4")
       val double = plus(current, current)
@@ -201,9 +197,8 @@ class Elliptique(val modlo: BigInt) {
       if (rnd.nextInt(10) == 0) {
         print("\n *4 [", modlo, "]")
       }
-      count += 1
-    } while (current.toString != first.toString() & count < (curve.size + 2))
-    println("")
+    } while (current.toString != first.toString() & lr.distinct.size == lr.size)
+      println("")
     lr
   }
 
