@@ -138,9 +138,13 @@ class Elliptique(val modlo: BigInt) {
   def check(p: (BigInt, BigInt)): Boolean = {
     (p._1 == 0, p._2 == 0) match {
       case (true, true) => true
-      case _ => ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
+      case _ => {
+        //println("\n[", modlo, "]", p._1, (p._1 * p._1 * p._1) + 7, ((p._1 * p._1 * p._1) + 7) % modlo, " vs ", p._2, (p._2 * p._2), (p._2 * p._2) % modlo)
+        ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
+      }
     }
   }
+
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val rnd = new Random(0)

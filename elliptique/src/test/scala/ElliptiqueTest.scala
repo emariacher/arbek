@@ -151,7 +151,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   }
 
   "CheckLaBoucle71" should "be OK" in {
-    println("CheckLaBoucle71: il semble y avoir des sous groupes")
+    println("CheckLaBoucle71: il semble avoir des boucles infinies")
     val e = new Elliptique(71)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(71, lp.size, lp)
@@ -159,16 +159,18 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     e.check(lp.head) should be === true
     e.plus(lp.head, lp.head) should be ===(BigInt(36), BigInt(67))
     e.check(e.plus(lp.head, lp.head)) should be === true
+    e.check((BigInt(33), BigInt(35))) should be === true
+    e.check((BigInt(33), BigInt(36))) should be === true
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
-    (lr1 ++ lr2).sortBy(p => (p._1 * 100) + p._2) should be === lp
+    (lr1 ++ lr2).sortBy(p => (p._1 * 100) + p._2) should not equal lp
 
     val lr3 = e.loopmul3(lp.head)
-    lr3.sortBy(p => (p._1 * 100) + p._2) should be === lp
+    lr3.sortBy(p => (p._1 * 100) + p._2) should not equal lp
 
     val lr4 = e.loopmul4(lp.head)
     val lr5 = e.loopmul4(lp.tail.head)
-    (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) should be === lp
+    (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) should not equal lp
   }
 }
