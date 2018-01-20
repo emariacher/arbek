@@ -103,6 +103,11 @@ class Elliptique(val modlo: BigInt) {
   val li = l1.tail.map(i => {
     (i, l1.filter(u => ((u * i) % modlo) == 1).head)
   })
+  val l2 = l1.map(i => (i, (i * i) mod modlo))
+  val l3p7 = l1.map(i => (i, ((i * i * i) + 7) mod modlo))
+  val curve = l3p7.map(x => {
+    l2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
+  }).flatten
 
   def add(a: BigInt, b: BigInt) = a + b % modlo
 
@@ -145,6 +150,43 @@ class Elliptique(val modlo: BigInt) {
     do {
       print(". " + current + "*2")
       current = plus(current, current)
+      print("=" + current)
+      lr = lr :+ current
+      if (rnd.nextInt(10) == 0) {
+        println("")
+      }
+    } while (current.toString != first.toString())
+    println("")
+    lr
+  }
+
+  def loopmul3(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val rnd = new Random(0)
+    var lr = List[(BigInt, BigInt)]()
+    var current = first
+    println("*3*****************************************3*")
+    do {
+      print("- " + current + "*3")
+      current = plus(plus(current, current), current)
+      print("=" + current)
+      lr = lr :+ current
+      if (rnd.nextInt(10) == 0) {
+        println("")
+      }
+    } while (current.toString != first.toString())
+    println("")
+    lr
+  }
+
+  def loopmul4(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val rnd = new Random(0)
+    var lr = List[(BigInt, BigInt)]()
+    var current = first
+    println("*4*****************************************4*")
+    do {
+      print("_ " + current + "*4")
+      val double = plus(current, current)
+      current = plus(double, double)
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
