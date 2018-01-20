@@ -135,17 +135,40 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   "CheckLaBoucle67" should "be OK" in {
     println("CheckLaBoucle67: il semble y avoir des sous groupes")
     val e = new Elliptique(67)
-    val lp = e.curve.sortBy(p => (p._1*100)+p._2)
+    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    println(67, lp.size, lp)
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
-    (lr1++lr2).sortBy(p => (p._1*100)+p._2) should be === lp
+    (lr1 ++ lr2).sortBy(p => (p._1 * 100) + p._2) should be === lp
 
     val lr3 = e.loopmul3(lp.head)
-    lr3.sortBy(p => (p._1*100)+p._2) should be === lp
+    lr3.sortBy(p => (p._1 * 100) + p._2) should be === lp
 
     val lr4 = e.loopmul4(lp.head)
     val lr5 = e.loopmul4(lp.tail.head)
-    (lr4++lr5).sortBy(p => (p._1*100)+p._2) should be === lp
+    (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) should be === lp
+  }
+
+  "CheckLaBoucle71" should "be OK" in {
+    println("CheckLaBoucle71: il semble y avoir des sous groupes")
+    val e = new Elliptique(71)
+    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    println(71, lp.size, lp)
+    lp.head should be ===(BigInt(1), BigInt(24))
+    e.check(lp.head) should be === true
+    e.plus(lp.head, lp.head) should be ===(BigInt(36), BigInt(67))
+    e.check(e.plus(lp.head, lp.head)) should be === true
+
+    val lr1 = e.loopmul2(lp.head)
+    val lr2 = e.loopmul2(lp.tail.head)
+    (lr1 ++ lr2).sortBy(p => (p._1 * 100) + p._2) should be === lp
+
+    val lr3 = e.loopmul3(lp.head)
+    lr3.sortBy(p => (p._1 * 100) + p._2) should be === lp
+
+    val lr4 = e.loopmul4(lp.head)
+    val lr5 = e.loopmul4(lp.tail.head)
+    (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) should be === lp
   }
 }

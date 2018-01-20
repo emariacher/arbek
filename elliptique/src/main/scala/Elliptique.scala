@@ -126,7 +126,7 @@ class Elliptique(val modlo: BigInt) {
   }
 
   def plus(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
-    (sub(q._1, p._1)==0 & sub(q._2, p._2)!=0) match {
+    (sub(q._1, p._1) == 0 & sub(q._2, p._2) != 0) match {
       case true => (BigInt(0), BigInt(0))
       case _ => val lambda = getLambda(p, q)
         val xr = sub(sub(mul(lambda, lambda), p._1), q._1)
@@ -147,15 +147,17 @@ class Elliptique(val modlo: BigInt) {
     var lr = List[(BigInt, BigInt)]()
     var current = first
     println("*2*****************************************2*")
+    var count = 0
     do {
       print(". " + current + "*2")
       current = plus(current, current)
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
-        println("")
+        print("\n *2  [", modlo, "]")
       }
-    } while (current.toString != first.toString())
+      count += 1
+    } while (current.toString != first.toString() & count < (curve.size + 2))
     println("")
     lr
   }
@@ -165,15 +167,17 @@ class Elliptique(val modlo: BigInt) {
     var lr = List[(BigInt, BigInt)]()
     var current = first
     println("*3*****************************************3*")
+    var count = 0
     do {
       print("- " + current + "*3")
       current = plus(plus(current, current), current)
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
-        println("")
+        print("\n *3 [", modlo, "]")
       }
-    } while (current.toString != first.toString())
+      count += 1
+    } while (current.toString != first.toString() & count < (curve.size + 2))
     println("")
     lr
   }
@@ -183,6 +187,7 @@ class Elliptique(val modlo: BigInt) {
     var lr = List[(BigInt, BigInt)]()
     var current = first
     println("*4*****************************************4*")
+    var count = 0
     do {
       print("_ " + current + "*4")
       val double = plus(current, current)
@@ -190,9 +195,10 @@ class Elliptique(val modlo: BigInt) {
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
-        println("")
+        print("\n *4 [", modlo, "]")
       }
-    } while (current.toString != first.toString())
+      count += 1
+    } while (current.toString != first.toString() & count < (curve.size + 2))
     println("")
     lr
   }
