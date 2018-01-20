@@ -28,8 +28,8 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     println("Elliptique")
     val t_ici = timeStamp(t_start, "ici!")
 
-    val l2 = stream_zero_a_linfini2 take (modulo.m.toInt + 2) toList
-    val l3p7 = stream_zero_a_linfini3p7 take (modulo.m.toInt + 2) toList
+    val l2 = stream_zero_a_linfini2 take (67 + 2) toList
+    val l3p7 = stream_zero_a_linfini3p7 take (67 + 2) toList
 
     l2.apply(22).d._3 should be === l3p7.apply(2).d._3
     l2.apply(28).d._3 should be === l3p7.apply(47).d._3
@@ -42,11 +42,11 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     })*/
 
     val lp = l3p7.map(x => {
-      val lz = l2.filter(y => y.d._3 == x.d._3).map(y => new Doublon(x.d._1 % modulo.m, y.d._1 % modulo.m))
+      val lz = l2.filter(y => y.d._3 == x.d._3).map(y => new Doublon(x.d._1 % 67, y.d._1 % 67))
       lz.length % 2 should be <= 2
       lz.length % 2 should be === 0
       if (lz.length == 2) {
-        lz.head.y + lz.last.y should be === modulo.m
+        lz.head.y + lz.last.y should be === 67
       }
       lz
     }).flatten
@@ -76,35 +76,38 @@ class ElliptiqueTest extends FlatSpec with Matchers {
 
   "Sub" should "be OK" in {
     println("Sub")
-    val result = Inverse67.sub(2, 6, 67)
+    val result = new Elliptique(67).sub(2, 6)
     println("Sub[" + result + "]")
     result should be === 63
   }
 
   "Plus" should "be OK" in {
+    val e = new Elliptique(67)
     println("Plus", ((2, 22), (6, 25), 67))
-    Inverse67.check((2, 22), 67) should be === true
-    Inverse67.check((6, 25), 67) should be === true
+    e.check((2, 22)) should be === true
+    e.check((6, 25)) should be === true
 
-    val result = Inverse67.plus((2, 22), (6, 25), 67)
+    val result = e.plus((2, 22), (6, 25))
     println("Plus[" + result + "]")
     result._1 should be === 47
     result._2 should be === 28
-    Inverse67.check(result, 67) should be === true
+    e.check(result) should be === true
   }
 
   "Doubling" should "be OK" in {
+    val e = new Elliptique(67)
     println("Doubling", ((2, 22), (2, 22), 67))
-    Inverse67.check((2, 22), 67) should be === true
+    e.check((2, 22)) should be === true
 
-    val result = Inverse67.plus((2, 22), (2, 22), 67)
+    val result = e.plus((2, 22), (2, 22))
     println("Doubling[" + result + "]")
     result._1 should be === 52
     result._2 should be === 7
-    Inverse67.check(result, 67) should be === true
+    e.check(result) should be === true
   }
 
   "CheckToutesLesAdditions" should "be OK" in {
+    val e = new Elliptique(67)
     println("CheckToutesLesAdditions")
     val rnd = new Random(0)
     val lp = new getCurve(67).lp
@@ -113,16 +116,16 @@ class ElliptiqueTest extends FlatSpec with Matchers {
         println("")
       }
       print(", " + d.head + "+" + d.last)
-      val r = Inverse67.plus(d.head, d.last, 67)
+      val r = e.plus(d.head, d.last)
       print("=" + r)
-      Inverse67.check(r, 67) should be === true
+      e.check(r) should be === true
     })
     println("\n************ Check aussi la multiplication par deux")
     lp.zip(lp).foreach(d => {
       print(", " + d._1 + "+" + d._2)
-      val r = Inverse67.plus(d._1, d._2, 67)
+      val r = e.plus(d._1, d._2)
       print("=" + r)
-      Inverse67.check(r, 67) should be === true
+      e.check(r) should be === true
       if (rnd.nextInt(10) == 0) {
         println("")
       }
@@ -130,15 +133,16 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   }
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val e = new Elliptique(67)
     val rnd = new Random(0)
     var lr = List((BigInt(0), BigInt(0))).tail
     var current = first
     println("*2*****************************************2*")
     do {
       print(". " + current + "*2")
-      current = Inverse67.plus(current, current, 67)
+      current = e.plus(current, current)
       print("=" + current)
-      Inverse67.check(current, 67) should be === true
+      e.check(current) should be === true
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
         println("")
@@ -149,15 +153,16 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   }
 
   def loopmul3(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val e = new Elliptique(67)
     val rnd = new Random(0)
     var lr = List((BigInt(0), BigInt(0))).tail
     var current = first
     println("*3*****************************************3*")
     do {
       print("- " + current + "*3")
-      current = Inverse67.plus(Inverse67.plus(current, current, 67), current, 67)
+      current = e.plus(e.plus(current, current), current)
       print("=" + current)
-      Inverse67.check(current, 67) should be === true
+      e.check(current) should be === true
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
         println("")
@@ -168,15 +173,16 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   }
 
   def loopmul4(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
+    val e = new Elliptique(67)
     val rnd = new Random(0)
     var lr = List((BigInt(0), BigInt(0))).tail
     var current = first
     println("*4*****************************************4*")
     do {
       print("_ " + current + "*4")
-      current = Inverse67.plus(Inverse67.plus(current, current, 67), Inverse67.plus(current, current, 67), 67)
+      current = e.plus(e.plus(current, current), e.plus(current, current))
       print("=" + current)
-      Inverse67.check(current, 67) should be === true
+      e.check(current) should be === true
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
         println("")
