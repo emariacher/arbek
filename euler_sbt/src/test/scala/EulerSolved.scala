@@ -46,7 +46,7 @@ class EulerSolved extends FlatSpec with Matchers {
     val y = z.last
     val result = y._1 * y._2
     println("Euler27[" + result + "]")
-    result should be === (-61 * 971)
+    result shouldEqual (-61 * 971)
   }
 
 
@@ -98,7 +98,7 @@ class EulerSolved extends FlatSpec with Matchers {
       c._1
     }).sum
     println("Euler32[" + result + "]")
-    result should be === 45228
+    result shouldEqual 45228
   }
 
   "Euler38" should "be OK" in {
@@ -140,7 +140,7 @@ class EulerSolved extends FlatSpec with Matchers {
     }).maxBy(_._2)._2
 
     println("Euler38[" + result + "]")
-    result should be === "932718654"
+    result shouldEqual "932718654"
 
   }
 
@@ -172,7 +172,7 @@ class EulerSolved extends FlatSpec with Matchers {
     }
 
     println("Euler46[" + result + "]")
-    result should be === 5777
+    result shouldEqual 5777
   }
 
   "Euler65" should "be OK" in {
@@ -217,11 +217,11 @@ class EulerSolved extends FlatSpec with Matchers {
       num.toString().toList.map(_.toString.toInt).sum
     })
     println(math.E)
-    z.apply(10 - 1) should be === 17
+    z.apply(10 - 1) shouldEqual 17
 
     val result = z.apply(100 - 1)
     println("Euler65[" + result + "]")
-    result should be === 272
+    result shouldEqual 272
 
   }
 
@@ -268,7 +268,7 @@ class EulerSolved extends FlatSpec with Matchers {
     println("eighth[" + first + "]" + result + "\n*********************")
 
     println("Euler79[" + result.mkString("", "", "") + "]")
-    result.mkString("", "", "") should be === "73162890"
+    result.mkString("", "", "") shouldEqual "73162890"
 
     def z = {
       p079_keylogS = p079_keylogS.map(_.replaceAll(first, "")).filter(_.length > 1)
@@ -340,7 +340,7 @@ class EulerSolved extends FlatSpec with Matchers {
       frn = frn + List("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC").apply(rn._5)
       frn = frn + List("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX").apply(rn._6)
       val fra = roman2arab(frn)
-      rn._2 should be === fra
+      rn._2 shouldEqual fra
       println(rn._1, rn._2, frn, fra)
       (rn._1, rn._2, frn, fra)
     }).map(_._3).mkString("", "", "").length) + "]*******"
@@ -389,7 +389,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
     val result = 743
     println("Euler89[" + result + "]")
-    result should be === 743
+    result shouldEqual 743
 
 
   }
@@ -567,7 +567,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
     val result = blueInt
     println("Euler100[" + blueInt + "]")
-    result.toString() should be === "756872327473"
+    result.toString() shouldEqual "756872327473"
   }
 
   "Euler158" should "be OK" in {
@@ -619,20 +619,20 @@ class EulerSolved extends FlatSpec with Matchers {
       getpermlleft(n) * factorielle(m) / (factorielle(n) * factorielle(m - n))
     }
 
-    factorielle(5) should be === 120
-    factorielle(26).toString() should be === "403291461126605635584000000"
+    factorielle(5) shouldEqual 120
+    factorielle(26).toString() shouldEqual "403291461126605635584000000"
     println(tableau.zipWithIndex.map(z => (z._2, z._1, new EulerDiv(z._1).primes)).mkString("\n  ", "\n  ", "\n  "))
     println((3 to 27).map(z => (z, getpermlleft(z))).mkString("\n  ", "\n  ", "\n  "))
     println(List("abc", "hat", "zyx").map(lexleft(_)))
-    calcule1(5, 4) should be === calcule2(5, 4)
-    calcule1(7, 4) should be === calcule2(7, 4)
-    calcule1(3, 3) should be === calcule2(3, 3)
-    calcule1(8, 8) should be === calcule2(8, 8)
-    calcule1(4, 3) should be === calcule2(4, 3)
-    calcule1(6, 5) should be === calcule2(6, 5)
-    calcule1(7, 6) should be === calcule2(7, 6)
-    calcule1(8, 7) should be === calcule2(8, 7)
-    calcule2(26, 3) should be === 10400
+    calcule1(5, 4) shouldEqual calcule2(5, 4)
+    calcule1(7, 4) shouldEqual calcule2(7, 4)
+    calcule1(3, 3) shouldEqual calcule2(3, 3)
+    calcule1(8, 8) shouldEqual calcule2(8, 8)
+    calcule1(4, 3) shouldEqual calcule2(4, 3)
+    calcule1(6, 5) shouldEqual calcule2(6, 5)
+    calcule1(7, 6) shouldEqual calcule2(7, 6)
+    calcule1(8, 7) shouldEqual calcule2(8, 7)
+    calcule2(26, 3) shouldEqual 10400
 
     val t_ici = timeStamp(t_start, "ici!")
     (3 to 7).map(m => {
@@ -656,7 +656,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
     val result = z4.maxBy(_._3)._3
     println("Euler158[" + result + "]")
-    result.toString should be === "409511334375"
+    result.toString shouldEqual "409511334375"
   }
 
 
@@ -691,7 +691,7 @@ class EulerSolved extends FlatSpec with Matchers {
       bi += 1
     }
     timeStamp(zstart, "zend")
-    cpt should be === z1.length*/
+    cpt shouldEqual z1.length*/
 
     zstart = timeStamp(t_ici, "zstart2")
     cpt = 1
@@ -714,7 +714,7 @@ class EulerSolved extends FlatSpec with Matchers {
       }
     }
     timeStamp(zstart, "zend2")
-    cpt should be === z1.length*/
+    cpt shouldEqual z1.length*/
 
     zstart = timeStamp(t_ici, "zstart3")
     cpt = 1
@@ -737,12 +737,12 @@ class EulerSolved extends FlatSpec with Matchers {
       }
     }
     timeStamp(zstart, "zend3")
-    //cpt should be === z1.length
+    //cpt shouldEqual z1.length
 
 
     val result = cpt
     println("Euler179[" + cpt + "]")
-    result should be === 986262
+    result shouldEqual 986262
   }
 
   "Euler191" should "be OK" in {
@@ -859,7 +859,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
 
 
-    doZeJob(4) should be === 43
+    doZeJob(4) shouldEqual 43
 
     var z3 = BigInt(0)
     var sum = BigInt(0)
@@ -882,20 +882,20 @@ class EulerSolved extends FlatSpec with Matchers {
       z3 = zz._1
       //var t_la3 = timeStamp(t_ici, "la3! " + e + " " + z3)
       if (z2 != 0) {
-        z3 should be === z2
+        z3 shouldEqual z2
       }
 
       println(zz._4.apply(0), zz._4.apply(1), zz._4.apply(2))
       e match {
         case it if 0 to 4 contains it =>
-        case 5 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
-        case 6 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
-        case 7 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
-        case 8 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
-        case _ => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) should be ===(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8))
+        case 5 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) shouldEqual(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
+        case 6 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) shouldEqual(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
+        case 7 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) shouldEqual(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2))
+        case 8 => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) shouldEqual(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + 1)
+        case _ => (zz._4.apply(0)._1, zz._4.apply(1)._1, zz._4.apply(2)._1) shouldEqual(l.apply(e), l.apply(e) + l.apply(e - 4), l.apply(e) + (l.apply(e - 4) * 2) + l.apply(e - 8))
       }
       if (e > 6) {
-        zz._4.apply(3)._1 should be === zz._4.apply(1)._1 + l3.apply(e - 5)
+        zz._4.apply(3)._1 shouldEqual zz._4.apply(1)._1 + l3.apply(e - 5)
 
         if (e > 8) {
           if (e < 10) {
@@ -926,13 +926,13 @@ class EulerSolved extends FlatSpec with Matchers {
                   l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8) + l5.apply(e - 10) - l6.apply(e - 12),
                   l.apply(e) + l.apply(e - 4) + l3.apply(e - 5) + l4.apply(e - 8) + l5.apply(e - 10) - l6.apply(e - 12) + l7.apply(e - 14)
                 )
-                zz._4.apply(7)._1 should be === zz._4.apply(6)._1 + l7.apply(e - 14)
+                zz._4.apply(7)._1 shouldEqual zz._4.apply(6)._1 + l7.apply(e - 14)
               }
-              zz._4.apply(6)._1 should be === zz._4.apply(5)._1 - l6.apply(e - 12)
+              zz._4.apply(6)._1 shouldEqual zz._4.apply(5)._1 - l6.apply(e - 12)
             }
-            zz._4.apply(5)._1 should be === zz._4.apply(4)._1 + l5.apply(e - 10)
+            zz._4.apply(5)._1 shouldEqual zz._4.apply(4)._1 + l5.apply(e - 10)
           }
-          zz._4.apply(4)._1 should be === zz._4.apply(3)._1 + l4.apply(e - 8)
+          zz._4.apply(4)._1 shouldEqual zz._4.apply(3)._1 + l4.apply(e - 8)
         }
       }
 
@@ -940,11 +940,11 @@ class EulerSolved extends FlatSpec with Matchers {
 
     println(zl.mkString("\n"))
     val zl3 = zl.takeRight(4)
-    zl3.take(3).map(_._4.head._1).sum should be === zl3.last._4.head._1
-    zl3.take(3).map(_._4.apply(3)._1).sum should be === zl3.last._4.apply(3)._1
+    zl3.take(3).map(_._4.head._1).sum shouldEqual zl3.last._4.head._1
+    zl3.take(3).map(_._4.apply(3)._1).sum shouldEqual zl3.last._4.apply(3)._1
 
     zl.sliding(4).foreach(zk => {
-      zk.take(3).map(_._4.apply(2)._1).sum should be === zk.last._4.apply(2)._1
+      zk.take(3).map(_._4.apply(2)._1).sum shouldEqual zk.last._4.apply(2)._1
     })
 
     val zlm1t3 = zl.takeRight(4).dropRight(1)
@@ -962,7 +962,7 @@ class EulerSolved extends FlatSpec with Matchers {
     var cpt = 15
     var result = doZeJob4(cpt, ul)
     var x3 = doZeJob3(cpt)
-    result._1 should be === x3._1
+    result._1 shouldEqual x3._1
 
     println("result", result)
     println("x3", x3)
@@ -972,7 +972,7 @@ class EulerSolved extends FlatSpec with Matchers {
     }
 
     println("Euler191[" + result._1 + "]")
-    result._1 should be === 1918080160
+    result._1 shouldEqual 1918080160
 
   }
 }

@@ -96,7 +96,7 @@ class EulerMain extends FlatSpec with Matchers {
       z
     }
 
-    def S4(n:Int) = {
+    /*def S4(n:Int) = {
       val t_iciS = timeStamp(t_start, "")
       val prems = EulerPrime.premiers10000.filter(_ < n)
       val z = prems.map(p => (p,p+1,prems.toList.map(p2 => (p2,(p2+1).toDouble/(p+1).toDouble)))).toList.sortBy(_._1)
@@ -104,7 +104,7 @@ class EulerMain extends FlatSpec with Matchers {
       //println("S4(" + n + ")", prems.length, z.length, z.mkString("\n  ", " - ", "\n  "), z.map(_.sum).sorted, z.flatten.sum)
       val t_laS = timeStamp(t_iciS, "la! S4(" + n + ")")
 
-    }
+    }*/
 
     YesV(37, 151, 607) should be === true
     YesV(71, 83, 97) should be === true
@@ -126,7 +126,7 @@ class EulerMain extends FlatSpec with Matchers {
     S(200) should be === S3(200)
     S(1000) should be === S3(1000)*/
     S3(200)
-    S4(100)
+    //S4(100)
 
     var result = 0
     println("Euler518[" + result + "]")
