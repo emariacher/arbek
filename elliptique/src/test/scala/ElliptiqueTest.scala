@@ -259,6 +259,21 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     lgroupsmul3.flatten.size should be === lgroupsmul3.flatten.distinct.size
     lgroupsmul3.flatten.size should be === lp.size
     lgroupsmul3.size should be === 15
+
+    println("\n***4*** " + modlo + " ***** 16 groupes pour les multiplications par 4")
+    var lgroupsmul4 = List[List[(BigInt, BigInt)]]()
+
+    lpm = lp
+    while (!lpm.isEmpty) {
+      val lmul = e.loopmul4(lpm.head)
+      println("    " + lmul.size, lmul)
+      lgroupsmul4 = lgroupsmul4 :+ lmul
+      lpm = lpm.filter(p => !lmul.contains(p))
+    }
+    println(modlo, lgroupsmul4.size, lgroupsmul4.mkString("\n  ", "\n  ", "\n  "))
+    lgroupsmul4.flatten.size should be === lgroupsmul4.flatten.distinct.size
+    lgroupsmul4.flatten.size should be === lp.size
+    lgroupsmul4.size should be === 16
   }
 
 
