@@ -1,7 +1,6 @@
 import Elliptique._
 import org.scalatest._
 
-import scala.collection.immutable.{Range, ListSet}
 import scala.math.BigInt
 import scala.util.Random
 
@@ -34,8 +33,8 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     println("Elliptique")
     val t_ici = timeStamp(t_start, "ici!")
 
-    val l2 = stream_zero_a_linfini2 take (67 + 2) toList
-    val l3p7 = stream_zero_a_linfini3p7 take (67 + 2) toList
+    val l2 = stream_zero_a_linfini2.take(67 + 2).toList
+    val l3p7 = stream_zero_a_linfini3p7.take(67 + 2).toList
 
     l2.apply(22).d._3 shouldEqual l3p7.apply(2).d._3
     l2.apply(28).d._3 shouldEqual l3p7.apply(47).d._3

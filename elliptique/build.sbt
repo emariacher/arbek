@@ -1,4 +1,4 @@
-name := """euler_sbt"""
+name := """elliptique_sbt"""
 
 version := "1.0"
 

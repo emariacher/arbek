@@ -5,7 +5,7 @@
 import java.util.Calendar
 import java.util.Date
 import java.text.SimpleDateFormat
-
+import scala.language.postfixOps
 import scala.math.BigInt
 import scala.util.Random
 
