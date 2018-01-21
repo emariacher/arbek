@@ -159,14 +159,14 @@ class Elliptique(val modlo: BigInt) {
     val rnd = new Random(0)
     var lr = List[(BigInt, BigInt)]()
     var current = first
-    println("*2*****************************************2*")
+    println("  *2*****************************************2*")
     do {
       print(". " + current + "*2")
       current = plus(current, current)
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
-        print("\n *2  [", modlo, "]")
+        print("\n  *2  [", modlo, "]")
       }
     } while (current.toString != first.toString() & lr.distinct.size == lr.size)
     println("")
@@ -177,14 +177,14 @@ class Elliptique(val modlo: BigInt) {
     val rnd = new Random(0)
     var lr = List[(BigInt, BigInt)]()
     var current = first
-    println("*3*****************************************3*")
+    println("  *3*****************************************3*")
     do {
       print("- " + current + "*3")
       current = plus(plus(current, current), current)
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
-        print("\n *3 [", modlo, "]")
+        print("\n  *3 [", modlo, "]")
       }
 
     } while (current.toString != first.toString() & lr.distinct.size == lr.size)
@@ -196,7 +196,7 @@ class Elliptique(val modlo: BigInt) {
     val rnd = new Random(0)
     var lr = List[(BigInt, BigInt)]()
     var current = first
-    println("*4*****************************************4*")
+    println("  *4*****************************************4*")
     do {
       print("_ " + current + "*4")
       val double = plus(current, current)
@@ -204,7 +204,7 @@ class Elliptique(val modlo: BigInt) {
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
-        print("\n *4 [", modlo, "]")
+        print("\n  *4 [", modlo, "]")
       }
     } while (current.toString != first.toString() & lr.distinct.size == lr.size)
       println("")

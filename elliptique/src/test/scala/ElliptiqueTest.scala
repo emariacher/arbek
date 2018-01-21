@@ -137,7 +137,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val e = new Elliptique(67)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(67, lp.size, lp)
-    lp.filter(p => p._1*p._2==0).isEmpty should be === true
+    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === true
     lp.size should be >= 67
 
     val lr1 = e.loopmul2(lp.head)
@@ -157,8 +157,8 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val e = new Elliptique(71)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(71, lp.size, lp)
-    println(lp.filter(p => p._1*p._2==0))
-    lp.filter(p => p._1*p._2==0).isEmpty should be === false
+    println(lp.filter(p => p._1 * p._2 == 0))
+    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === false
     lp.size should be <= 71
     lp.head should be ===(BigInt(1), BigInt(24))
     e.check(lp.head) should be === true
@@ -167,7 +167,9 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     e.check((BigInt(33), BigInt(35))) should be === true
     e.check((BigInt(33), BigInt(36))) should be === true
     e.check((BigInt(4), BigInt(0))) should be === true
-    intercept[Exception] { e.plus((BigInt(4), BigInt(0)),(BigInt(4), BigInt(0))) }
+    intercept[Exception] {
+      e.plus((BigInt(4), BigInt(0)), (BigInt(4), BigInt(0)))
+    }
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
@@ -189,19 +191,19 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     println(e.li)
 
     e.check((BigInt(44), BigInt(0))) should be === true
-    println(lp.filter(p => p._1*p._2==0))
-    lp.filter(p => p._1*p._2==0).isEmpty should be === false
+    println(lp.filter(p => p._1 * p._2 == 0))
+    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === false
     lp.size should be <= 73
   }
 
   "CheckLaBoucle83" should "be OK" in {
     val modlo = 83
-    println("CheckLaBoucle"+modlo+": il faut que la taille de la courbe soit superieure au modulo")
+    println("CheckLaBoucle" + modlo + ": il faut que la taille de la courbe soit superieure au modulo")
     val e = new Elliptique(modlo)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(modlo, lp.size, lp)
-    println(lp.filter(p => p._1*p._2==0))
-    lp.filter(p => p._1*p._2==0).isEmpty should be === false
+    println(lp.filter(p => p._1 * p._2 == 0))
+    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === false
     e.check((BigInt(0), BigInt(16))) should be === true
     lp.size should be <= modlo
   }
@@ -211,32 +213,37 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     println("Trouve les nombres premiers qui pourraient marcher")
     println(premiers.take(100).filter(modlo => {
       val e = new Elliptique(modlo)
-      e.curve.size > modlo & e.curve.filter(p => p._1*p._2==0).isEmpty
+      e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty
     }))
   }
 
   "CheckLaBoucle241" should "be OK" in {
     val modlo = 241
-    println("CheckLaBoucle"+modlo+": ")
+    println("CheckLaBoucle" + modlo + ": ")
     val e = new Elliptique(modlo)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(modlo, lp.size, lp)
-    println(lp.filter(p => p._1*p._2==0))
-    lp.filter(p => p._1*p._2==0).isEmpty should be === true
+    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === true
     lp.size should be >= modlo
 
-    val lr1 = e.loopmul2(lp.head)
-    val lr2 = e.loopmul2(lp.tail.head)
-    val lr3 = e.loopmul2(lp.tail.tail.head)
-    val lr4 = e.loopmul2(lp.tail.tail.tail.head)
-    val lr5 = e.loopmul2(lp.tail.tail.tail.tail.head)
-    val lr6 = e.loopmul2(lp.tail.tail.tail.tail.tail.head)
-    val lr7 = e.loopmul2(lp.tail.tail.tail.tail.tail.tail.head)
-    val lr8 = e.loopmul2(lp.tail.tail.tail.tail.tail.tail.tail.head)
-    println(lr1.size, lr2.size,lr3.size, lr4.size, lr5.size, lr6.size,lr7.size, lr8.size)
-    println((lr1 ++ lr2 ++ lr3 ++ lr4 ++ lr5 ++ lr6 ++ lr7 ++ lr8).distinct.size)
-    //(lr1 ++ lr2 ++ lr3 ++ lr4 ++ lr5 ++ lr6 ++ lr7 ++ lr8).distinct.sortBy(p => (p._1 * 100) + p._2) should be === lp
+    println("\n***2*** " + modlo + " ***** 9 groupes pour les puissances de 2")
+    var lgroupsmul2 = List[List[(BigInt, BigInt)]]()
 
+    var lpm = lp
+    while (!lpm.isEmpty) {
+      val lmul = e.loopmul2(lpm.head)
+      println("    " + lmul.size, lmul)
+      lgroupsmul2 = lgroupsmul2 :+ lmul
+      lpm = lpm.filter(p => !lmul.contains(p))
+    }
+    println(modlo, lgroupsmul2.size, lgroupsmul2.mkString("\n  ", "\n  ", "\n  "))
+    e.checkVerbose((BigInt(70), BigInt(233))) should be === true
+    e.checkVerbose((BigInt(85), BigInt(233))) should be === true
+    e.checkVerbose((BigInt(86), BigInt(233))) should be === true
+    e.plus((BigInt(70), BigInt(233)), (BigInt(70), BigInt(233))) should be ===(BigInt(85), BigInt(233))
+    lgroupsmul2.flatten.size should be === lgroupsmul2.flatten.distinct.size
+    lgroupsmul2.flatten.size should be === lp.size
+    lgroupsmul2.size should be === 9
   }
 
 
