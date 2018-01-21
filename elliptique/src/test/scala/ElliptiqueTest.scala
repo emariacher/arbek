@@ -6,6 +6,12 @@ import scala.math.BigInt
 import scala.util.Random
 
 
+/*
+https://www.coindesk.com/math-behind-bitcoin/
+https://crypto.stackexchange.com/questions/44304/understanding-elliptic-curve-point-addition-over-a-finite-field
+https://fr.wikipedia.org/wiki/Courbe_elliptique
+ */
+
 class ElliptiqueTest extends FlatSpec with Matchers {
   def rangeStream2(a: BigInt, b: BigInt): Stream[Triplet] = new Triplet(a, a * a) #:: rangeStream2(b, 1 + b)
 
