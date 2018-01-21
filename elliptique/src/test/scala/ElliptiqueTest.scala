@@ -27,7 +27,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     println(li)
     val result = li.filter(_._1 == 63).head._2
     println("TrouveLesInverses[" + result + "]")
-    result should be === 50
+    result shouldEqual 50
   }
 
   "Elliptique" should "be OK" in {
@@ -37,11 +37,11 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val l2 = stream_zero_a_linfini2 take (67 + 2) toList
     val l3p7 = stream_zero_a_linfini3p7 take (67 + 2) toList
 
-    l2.apply(22).d._3 should be === l3p7.apply(2).d._3
-    l2.apply(28).d._3 should be === l3p7.apply(47).d._3
-    l2.apply(39).d._3 should be === l3p7.apply(47).d._3
-    (new Doublon(2, 22)).check should be === true
-    (new Doublon(2, 23)).check should be === false
+    l2.apply(22).d._3 shouldEqual l3p7.apply(2).d._3
+    l2.apply(28).d._3 shouldEqual l3p7.apply(47).d._3
+    l2.apply(39).d._3 shouldEqual l3p7.apply(47).d._3
+    (new Doublon(2, 22)).check shouldEqual true
+    (new Doublon(2, 23)).check shouldEqual false
 
     /*l3p7.foreach(t => {
       println(t, l2.filter(u => u.d._3 == t.d._3))
@@ -50,66 +50,66 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val lp = l3p7.map(x => {
       val lz = l2.filter(y => y.d._3 == x.d._3).map(y => new Doublon(x.d._1 % 67, y.d._1 % 67))
       lz.length % 2 should be <= 2
-      lz.length % 2 should be === 0
+      lz.length % 2 shouldEqual 0
       if (lz.length == 2) {
-        lz.head.y + lz.last.y should be === 67
+        lz.head.y + lz.last.y shouldEqual 67
       }
       lz
     }).flatten
 
     //println(lp)
 
-    lp.filter(d => d.x == 2 & d.y == 22).isEmpty should be === false
-    lp.filter(d => d.x == 2 & d.y == 23).isEmpty should be === true
+    lp.filter(d => d.x == 2 & d.y == 22).isEmpty shouldEqual false
+    lp.filter(d => d.x == 2 & d.y == 23).isEmpty shouldEqual true
 
     val t_la = timeStamp(t_ici, "la! ******************************")
 
     val result = lp.length
     println("Elliptique[" + result + "]")
-    result should be === 78
+    result shouldEqual 78
   }
 
   " GetCurve" should "be OK" in {
     println("GetCurve")
     val lp = new getCurve(67).lp
     println(lp)
-    lp.filter(d => d._1 == 2 & d._2 == 22).isEmpty should be === false
-    lp.filter(d => d._1 == 2 & d._2 == 23).isEmpty should be === true
+    lp.filter(d => d._1 == 2 & d._2 == 22).isEmpty shouldEqual false
+    lp.filter(d => d._1 == 2 & d._2 == 23).isEmpty shouldEqual true
     val result = lp.length
     println("GetCurve[" + result + "]")
-    result should be === 78
+    result shouldEqual 78
   }
 
   "Sub" should "be OK" in {
     println("Sub")
     val result = new Elliptique(67).sub(2, 6)
     println("Sub[" + result + "]")
-    result should be === 63
+    result shouldEqual 63
   }
 
   "Plus" should "be OK" in {
     val e = new Elliptique(67)
     println("Plus", ((2, 22), (6, 25), 67))
-    e.check((2, 22)) should be === true
-    e.check((6, 25)) should be === true
+    e.check((2, 22)) shouldEqual true
+    e.check((6, 25)) shouldEqual true
 
     val result = e.plus((2, 22), (6, 25))
     println("Plus[" + result + "]")
-    result._1 should be === 47
-    result._2 should be === 28
-    e.check(result) should be === true
+    result._1 shouldEqual 47
+    result._2 shouldEqual 28
+    e.check(result) shouldEqual true
   }
 
   "Doubling" should "be OK" in {
     val e = new Elliptique(67)
     println("Doubling", ((2, 22), (2, 22), 67))
-    e.check((2, 22)) should be === true
+    e.check((2, 22)) shouldEqual true
 
     val result = e.plus((2, 22), (2, 22))
     println("Doubling[" + result + "]")
-    result._1 should be === 52
-    result._2 should be === 7
-    e.check(result) should be === true
+    result._1 shouldEqual 52
+    result._2 shouldEqual 7
+    e.check(result) shouldEqual true
   }
 
   "CheckToutesLesAdditions" should "be OK" in {
@@ -124,14 +124,14 @@ class ElliptiqueTest extends FlatSpec with Matchers {
       print(", " + d.head + "+" + d.last)
       val r = e.plus(d.head, d.last)
       print("=" + r)
-      e.check(r) should be === true
+      e.check(r) shouldEqual true
     })
     println("\n************ Check aussi la multiplication par deux")
     lp.zip(lp).foreach(d => {
       print(", " + d._1 + "+" + d._2)
       val r = e.plus(d._1, d._2)
       print("=" + r)
-      e.check(r) should be === true
+      e.check(r) shouldEqual true
       if (rnd.nextInt(10) == 0) {
         println("")
       }
@@ -143,19 +143,19 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val e = new Elliptique(67)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(67, lp.size, lp)
-    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === true
+    lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual true
     lp.size should be >= 67
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
-    (lr1 ++ lr2).distinct.sortBy(p => (p._1 * 100) + p._2) should be === lp
+    (lr1 ++ lr2).distinct.sortBy(p => (p._1 * 100) + p._2) shouldEqual lp
 
     val lr3 = e.loopmul3(lp.head)
-    lr3.sortBy(p => (p._1 * 100) + p._2) should be === lp
+    lr3.sortBy(p => (p._1 * 100) + p._2) shouldEqual lp
 
     val lr4 = e.loopmul4(lp.head)
     val lr5 = e.loopmul4(lp.tail.head)
-    (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) should be === lp
+    (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) shouldEqual lp
   }
 
   "CheckLaBoucle71" should "be OK" in {
@@ -164,15 +164,15 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(71, lp.size, lp)
     println(lp.filter(p => p._1 * p._2 == 0))
-    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === false
+    lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual false
     lp.size should be <= 71
-    lp.head should be ===(BigInt(1), BigInt(24))
-    e.check(lp.head) should be === true
-    e.plus(lp.head, lp.head) should be ===(BigInt(36), BigInt(67))
-    e.check(e.plus(lp.head, lp.head)) should be === true
-    e.check((BigInt(33), BigInt(35))) should be === true
-    e.check((BigInt(33), BigInt(36))) should be === true
-    e.check((BigInt(4), BigInt(0))) should be === true
+    lp.head shouldEqual(BigInt(1), BigInt(24))
+    e.check(lp.head) shouldEqual true
+    e.plus(lp.head, lp.head) shouldEqual(BigInt(36), BigInt(67))
+    e.check(e.plus(lp.head, lp.head)) shouldEqual true
+    e.check((BigInt(33), BigInt(35))) shouldEqual true
+    e.check((BigInt(33), BigInt(36))) shouldEqual true
+    e.check((BigInt(4), BigInt(0))) shouldEqual true
     intercept[Exception] {
       e.plus((BigInt(4), BigInt(0)), (BigInt(4), BigInt(0)))
     }
@@ -196,9 +196,9 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     println(73, lp.size, lp)
     println(e.li)
 
-    e.check((BigInt(44), BigInt(0))) should be === true
+    e.check((BigInt(44), BigInt(0))) shouldEqual true
     println(lp.filter(p => p._1 * p._2 == 0))
-    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === false
+    lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual false
     lp.size should be <= 73
   }
 
@@ -209,8 +209,8 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(modlo, lp.size, lp)
     println(lp.filter(p => p._1 * p._2 == 0))
-    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === false
-    e.check((BigInt(0), BigInt(16))) should be === true
+    lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual false
+    e.check((BigInt(0), BigInt(16))) shouldEqual true
     lp.size should be <= modlo
   }
 
@@ -229,7 +229,7 @@ class ElliptiqueTest extends FlatSpec with Matchers {
     val e = new Elliptique(modlo)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(modlo, lp.size, lp)
-    lp.filter(p => p._1 * p._2 == 0).isEmpty should be === true
+    lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual true
     lp.size should be >= modlo
 
     println("\n***2*** " + modlo + " ***** 9 groupes pour les puissances de 2")
@@ -243,13 +243,13 @@ class ElliptiqueTest extends FlatSpec with Matchers {
       lpm = lpm.filter(p => !lmul.contains(p))
     }
     println(modlo, lgroupsmul2.size, lgroupsmul2.mkString("\n  ", "\n  ", "\n  "))
-    e.checkVerbose((BigInt(70), BigInt(233))) should be === true
-    e.checkVerbose((BigInt(85), BigInt(233))) should be === true
-    e.checkVerbose((BigInt(86), BigInt(233))) should be === true
-    e.plus((BigInt(70), BigInt(233)), (BigInt(70), BigInt(233))) should be ===(BigInt(85), BigInt(233))
-    lgroupsmul2.flatten.size should be === lgroupsmul2.flatten.distinct.size
-    lgroupsmul2.flatten.size should be === lp.size
-    lgroupsmul2.size should be === 9
+    e.checkVerbose((BigInt(70), BigInt(233))) shouldEqual true
+    e.checkVerbose((BigInt(85), BigInt(233))) shouldEqual true
+    e.checkVerbose((BigInt(86), BigInt(233))) shouldEqual true
+    e.plus((BigInt(70), BigInt(233)), (BigInt(70), BigInt(233))) shouldEqual(BigInt(85), BigInt(233))
+    lgroupsmul2.flatten.size shouldEqual lgroupsmul2.flatten.distinct.size
+    lgroupsmul2.flatten.size shouldEqual lp.size
+    lgroupsmul2.size shouldEqual 9
 
     println("\n***3*** " + modlo + " ***** 15 groupes pour les multiplications par 3")
     var lgroupsmul3 = List[List[(BigInt, BigInt)]]()
@@ -262,9 +262,9 @@ class ElliptiqueTest extends FlatSpec with Matchers {
       lpm = lpm.filter(p => !lmul.contains(p))
     }
     println(modlo, lgroupsmul3.size, lgroupsmul3.mkString("\n  ", "\n  ", "\n  "))
-    lgroupsmul3.flatten.size should be === lgroupsmul3.flatten.distinct.size
-    lgroupsmul3.flatten.size should be === lp.size
-    lgroupsmul3.size should be === 15
+    lgroupsmul3.flatten.size shouldEqual lgroupsmul3.flatten.distinct.size
+    lgroupsmul3.flatten.size shouldEqual lp.size
+    lgroupsmul3.size shouldEqual 15
 
     println("\n***4*** " + modlo + " ***** 16 groupes pour les multiplications par 4")
     var lgroupsmul4 = List[List[(BigInt, BigInt)]]()
@@ -277,9 +277,9 @@ class ElliptiqueTest extends FlatSpec with Matchers {
       lpm = lpm.filter(p => !lmul.contains(p))
     }
     println(modlo, lgroupsmul4.size, lgroupsmul4.mkString("\n  ", "\n  ", "\n  "))
-    lgroupsmul4.flatten.size should be === lgroupsmul4.flatten.distinct.size
-    lgroupsmul4.flatten.size should be === lp.size
-    lgroupsmul4.size should be === 16
+    lgroupsmul4.flatten.size shouldEqual lgroupsmul4.flatten.distinct.size
+    lgroupsmul4.flatten.size shouldEqual lp.size
+    lgroupsmul4.size shouldEqual 16
   }
 
 
