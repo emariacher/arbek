@@ -282,31 +282,20 @@ class ElliptiqueTest extends FlatSpec with Matchers {
   }
 
   "Ordre67" should "be OK" in {
-    println("Ordre67: calcule l'ordre de chaque point")
+    println("Ordre67: ils ont tous le meme ordre!")
     val e = new Elliptique(67)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(67, lp.size, lp)
     lp.foreach(p => {
-      print(p + " ")
       var somme = e.plus(p, p)
-
-      var lsum = List[(BigInt, BigInt)]()
-      (1 to 300).map(i => {
+      (1 to 300).toList.find(i => {
         somme = e.plus(somme, p)
-        print(i, somme)
-        if((somme._1-p._1==0)&(somme._2-p._2==0)) {
-          print("\n    ---",p,i,somme,"----")
-        }
-        if(lsum.contains(somme)) {
-          println("\n    +++",p,i,somme,"+++",lsum)
-        }
+        //print(i, somme)
         if(somme._1*somme._2==0) {
-          println("\n    ===",p,i,somme,"===",lsum)
+          println("===",p,i,somme,"===")
         }
-        lsum = lsum :+ somme
-        somme
+        somme._1*somme._2==0
       })
-      println("")
     })
     16 shouldEqual 16
   }
