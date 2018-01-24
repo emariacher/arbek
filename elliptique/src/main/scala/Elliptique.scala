@@ -94,7 +94,7 @@ object Elliptique {
   }
 }
 
-class Elliptique(val modlo: BigInt) {
+class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
   def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
 
   def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
@@ -104,7 +104,7 @@ class Elliptique(val modlo: BigInt) {
     (i, l1.filter(u => ((u * i) % modlo) == 1).head)
   })
   val l2 = l1.map(i => (i, (i * i) mod modlo))
-  val l3p7 = l1.map(i => (i, ((i * i * i) + 7) mod modlo))
+  val l3p7 = l1.map(i => (i, ((i * i * i) + (a * i) + b) mod modlo))
   val curve = l3p7.map(x => {
     l2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
   }).flatten
@@ -139,7 +139,7 @@ class Elliptique(val modlo: BigInt) {
     (p._1 == 0, p._2 == 0) match {
       case (true, true) => true
       case _ => {
-        ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
+        ((p._1 * p._1 * p._1) + (a * p._1) + b) % modlo == (p._2 * p._2) % modlo
       }
     }
   }
