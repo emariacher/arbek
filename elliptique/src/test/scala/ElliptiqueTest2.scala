@@ -16,7 +16,7 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
     val premiers = EulerPrime.premiers1000
     println("Trouve les nombres premiers qui pourraient marcher")
     println(premiers.take(100).filter(modlo => {
-      val e = new Elliptique(modlo,0,7)
+      val e = new Elliptique(modlo, 0, 7)
       e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty
     }))
   }
@@ -24,7 +24,7 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
   "CheckLaBoucle241" should "be OK" in {
     val modlo = 241
     println("CheckLaBoucle" + modlo + ": ")
-    val e = new Elliptique(modlo,0,7)
+    val e = new Elliptique(modlo, 0, 7)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(modlo, lp.size, lp)
     lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual true
@@ -82,7 +82,7 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
 
   "Ordre67" should "be OK" in {
     println("Ordre67: ils ont tous le meme ordre!")
-    val e = new Elliptique(67,0,7)
+    val e = new Elliptique(67, 0, 7)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(67, lp.size, lp)
 
@@ -91,13 +91,39 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
       var somme = e.plus(p, p)
       (1 to 300).toList.find(i => {
         somme = e.plus(somme, p)
-        if(somme._1*somme._2==0) {
-          println("===",p,i,somme,"===")
-          ordre=i+1
+        if (somme._1 * somme._2 == 0) {
+          println("===", p, i, somme, "===")
+          ordre = i + 1
+          ordre shouldEqual e.curve.size
         }
-        somme._1*somme._2==0
+        somme._1 * somme._2 == 0
       })
     })
-    ordre shouldEqual e.curve.size
+  }
+
+  "Ordre241" should "be OK" in {
+    println("Ordre241: ils n\'ont tous le meme ordre!")
+    val e = new Elliptique(241, 0, 7)
+    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    println(241, lp.size, lp)
+    e.checkVerbose((BigInt(16), BigInt(214))) shouldEqual true
+    e.checkVerbose((BigInt(16), BigInt(27))) shouldEqual true
+    e.plus((BigInt(16), BigInt(214)), (BigInt(16), BigInt(27))) shouldEqual(BigInt(0), BigInt(0))
+    var ordre = 0
+    println(e.curve.size, lp.map(p => {
+      var somme = e.plus(p, p)
+      var lsum = List[(BigInt, BigInt)]()
+      (1 to e.curve.size).toList.find(i => {
+        somme = e.plus(somme, p)
+        lsum = lsum :+ somme
+        if (somme._1 * somme._2 == 0) {
+          //println("===", p, i, somme, "===",lsum)
+          ordre = i + 1
+          //ordre shouldEqual e.curve.size
+        }
+        somme._1 * somme._2 == 0
+      })
+      (p, ordre)
+    }).filter(_._2 != e.curve.size))
   }
 }
