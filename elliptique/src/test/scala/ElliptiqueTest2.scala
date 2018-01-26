@@ -12,8 +12,9 @@ https://fr.wikipedia.org/wiki/Courbe_elliptique
  */
 
 class ElliptiqueTest2 extends FlatSpec with Matchers {
-  "Trouve les nombres premiers qui pourraient marcher" should "be OK" in {
-    val premiers = EulerPrime.premiers1000
+  val premiers = EulerPrime.premiers1000
+
+  "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 7" should "be OK" in {
     println("Trouve les nombres premiers qui pourraient marcher")
     println(premiers.take(100).filter(modlo => {
       val e = new Elliptique(modlo, 0, 7)
@@ -25,6 +26,7 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
     val modlo = 241
     println("CheckLaBoucle" + modlo + ": ")
     val e = new Elliptique(modlo, 0, 7)
+    e.getDelta should not equal 0
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(modlo, lp.size, lp)
     lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual true
@@ -126,4 +128,41 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
       (p, ordre)
     }).filter(_._2 != e.curve.size))
   }
+
+  "Trouve les nombres premiers qui pourraient marcher pour une autre courbe" should "be OK" in {
+    println("Trouve les nombres premiers qui pourraient marcher")
+    println(premiers.take(100).filter(modlo => {
+      val e = new Elliptique(modlo, 3, 5)
+      e.getDelta should not equal 0
+      e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty
+    }))
+  }
+
+  "Ordre223" should "be OK" in {
+    val modlo = 223
+    println("Ordre"+modlo+": ils n\'ont tous le meme ordre!")
+    val e = new Elliptique(223, 3, 5)
+    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    println(223, lp.size, lp)
+    var ordre = 0
+    println(modlo, e.curve.size, lp.map(p => {
+      var somme = e.plus(p, p)
+      var lsum = List[(BigInt, BigInt)]()
+      (1 to e.curve.size).toList.find(i => {
+        somme = e.plus(somme, p)
+        lsum = lsum :+ somme
+        if (somme._1 * somme._2 == 0) {
+          //println("===", p, i, somme, "===",lsum)
+          ordre = i + 1
+          //ordre shouldEqual e.curve.size
+        }
+        somme._1 * somme._2 == 0
+      })
+      (p, ordre)
+    }).filter(_._2 != e.curve.size))
+    e.checkVerbose((BigInt(4), BigInt(9))) shouldEqual true
+    e.plus((BigInt(4), BigInt(9)), (BigInt(4), BigInt(9))) shouldEqual(BigInt(0), BigInt(0))
+  }
+
+
 }

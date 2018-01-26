@@ -154,6 +154,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     }
   }
 
+  def getDelta = -16*((4*a*a*a)+(27*b*b))
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val rnd = new Random(0)
