@@ -103,10 +103,10 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
   val li = l1.tail.map(i => {
     (i, l1.filter(u => ((u * i) % modlo) == 1).head)
   })
-  val l2 = l1.map(i => (i, (i * i) mod modlo))
-  val l3p7 = l1.map(i => (i, ((i * i * i) + (a * i) + b) mod modlo))
-  val curve = l3p7.map(x => {
-    l2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
+  val ly2 = l1.map(i => (i, (i * i) mod modlo))
+  val lx3paxpb = l1.map(i => (i, ((i * i * i) + (a * i) + b) mod modlo))
+  val curve = lx3paxpb.map(x => {
+    ly2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
   }).flatten
 
   def add(a: BigInt, b: BigInt) = a + b % modlo
