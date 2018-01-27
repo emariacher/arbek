@@ -14,12 +14,18 @@ https://fr.wikipedia.org/wiki/Courbe_elliptique
 class ElliptiqueTest2 extends FlatSpec with Matchers {
   val premiers = EulerPrime.premiers1000
 
-  "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 7" should "be OK" in {
-    println("Trouve les nombres premiers qui pourraient marcher")
-    println(premiers.take(100).filter(modlo => {
-      val e = new Elliptique(modlo, 0, 7)
+  def Trouve_les_nombres_premiers_qui_pourraient_marcher(a: BigInt, b: BigInt) = {
+    println("Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + "+a+"x + "+b)
+    println("y2 = x3 + "+a+"x + "+b,premiers.take(100).filter(modlo => {
+      val e = new Elliptique(modlo, a, b)
+      e.getDelta should not equal 0
       e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty
     }))
+
+  }
+
+  "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 7" should "be OK" in {
+    Trouve_les_nombres_premiers_qui_pourraient_marcher(0,7)
   }
 
   "CheckLaBoucle241" should "be OK" in {
@@ -117,13 +123,8 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
     e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual false
   }
 
-  "Trouve les nombres premiers qui pourraient marcher pour une autre courbe" should "be OK" in {
-    println("Trouve les nombres premiers qui pourraient marcher")
-    println(premiers.take(100).filter(modlo => {
-      val e = new Elliptique(modlo, 3, 5)
-      e.getDelta should not equal 0
-      e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty
-    }))
+  "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 3x + 5" should "be OK" in {
+    Trouve_les_nombres_premiers_qui_pourraient_marcher(3,5)
   }
 
   "Ordre223" should "be OK" in {
