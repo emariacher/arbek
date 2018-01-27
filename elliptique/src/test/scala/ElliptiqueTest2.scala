@@ -106,7 +106,7 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
   "Ordre241" should "be OK" in {
     println("Ordre241: ils n\'ont tous le meme ordre!")
     val e = new Elliptique(241, 0, 7)
-    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    val lp = e.curve.sortBy(p => (p._1 * 241) + p._2)
     println(241, lp.size, lp)
     e.checkVerbose((BigInt(16), BigInt(214))) shouldEqual true
     e.checkVerbose((BigInt(16), BigInt(27))) shouldEqual true
@@ -140,9 +140,9 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
 
   "Ordre223" should "be OK" in {
     val modlo = 223
-    println("Ordre"+modlo+": ils n\'ont tous le meme ordre!")
+    println("Ordre" + modlo + ": ils n\'ont tous le meme ordre!")
     val e = new Elliptique(223, 3, 5)
-    val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
+    val lp = e.curve.sortBy(p => (p._1 * modlo) + p._2)
     println(223, lp.size, lp)
     var ordre = 0
     println(modlo, e.curve.size, lp.map(p => {
@@ -154,14 +154,28 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
         if (somme._1 * somme._2 == 0) {
           //println("===", p, i, somme, "===",lsum)
           ordre = i + 1
-          //ordre shouldEqual e.curve.size
         }
         somme._1 * somme._2 == 0
       })
       (p, ordre)
     }).filter(_._2 != e.curve.size))
+
+
     e.checkVerbose((BigInt(4), BigInt(9))) shouldEqual true
-    e.plus((BigInt(4), BigInt(9)), (BigInt(4), BigInt(9))) shouldEqual(BigInt(0), BigInt(0))
+    val p = (BigInt(4), BigInt(9))
+    var somme = e.plus(p, p)
+    var lsum = List[(BigInt, BigInt)]()
+    (1 to e.curve.size).toList.find(i => {
+      somme = e.plus(somme, p)
+      lsum = lsum :+ somme
+      if (somme._1 * somme._2 == 0) {
+        println("===", p, i, somme, "===", lsum)
+        ordre = i + 1
+      }
+      somme._1 * somme._2 == 0
+    })
+    e.plus((BigInt(4), BigInt(9)), e.plus((BigInt(4), BigInt(9)), (BigInt(4), BigInt(9))))._2 shouldEqual BigInt(0)
+    e.checkVerbose((BigInt(85), BigInt(0))) shouldEqual true
   }
 
 

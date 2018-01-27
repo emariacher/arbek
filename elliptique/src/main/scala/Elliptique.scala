@@ -148,8 +148,8 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     (p._1 == 0, p._2 == 0) match {
       case (true, true) => true
       case _ => {
-        println("\n[", modlo, "]", p._1, (p._1 * p._1 * p._1) + 7, ((p._1 * p._1 * p._1) + 7) % modlo, " vs ", p._2, (p._2 * p._2), (p._2 * p._2) % modlo)
-        ((p._1 * p._1 * p._1) + 7) % modlo == (p._2 * p._2) % modlo
+        println("\n[", modlo, "]", p._1, (p._1 * p._1 * p._1),(a * p._1),b,"-->", (p._1 * p._1 * p._1)  + (a * p._1) + b, ((p._1 * p._1 * p._1)  + (a * p._1) + b) % modlo, " vs ", p._2, (p._2 * p._2), (p._2 * p._2) % modlo)
+        ((p._1 * p._1 * p._1) + (a * p._1) + b) % modlo == (p._2 * p._2) % modlo
       }
     }
   }
