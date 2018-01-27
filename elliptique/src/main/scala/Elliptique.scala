@@ -9,6 +9,13 @@ import scala.language.postfixOps
 import scala.math.BigInt
 import scala.util.Random
 
+/*
+https://www.coindesk.com/math-behind-bitcoin/
+https://crypto.stackexchange.com/questions/44304/understanding-elliptic-curve-point-addition-over-a-finite-field
+https://fr.wikipedia.org/wiki/Courbe_elliptique
+https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Point_addition
+ */
+
 object Elliptique {
   val t_start = Calendar.getInstance()
 
@@ -120,7 +127,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
     (sub(q._1, p._1) == 0, sub(q._2, p._2) == 0) match {
-      case (true, true) => (mul(mul(p._1, p._1), 3) * li.filter(_._1 == mul(p._2, 2)).head._2) % modlo
+      case (true, true) => ((mul(mul(p._1, p._1), 3) + a) * li.filter(_._1 == mul(p._2, 2)).head._2) % modlo
       case _ => (sub(q._2, p._2) * li.filter(_._1 == sub(q._1, p._1)).head._2) % modlo
     }
   }
