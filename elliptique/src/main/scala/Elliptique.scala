@@ -163,6 +163,22 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def getDelta = -16*((4*a*a*a)+(27*b*b))
 
+  def liste_des_ordres_non_egaux_a_la_taille_de_la_courbe = curve.map(p => {
+    var ordre = 0
+    var somme = plus(p, p)
+    var lsum = List[(BigInt, BigInt)]()
+    (1 to curve.size).toList.find(i => {
+      somme = plus(somme, p)
+      lsum = lsum :+ somme
+      if (somme._1 * somme._2 == 0) {
+        //println("===", p, i, somme, "===",lsum)
+        ordre = i + 1
+      }
+      somme._1 * somme._2 == 0
+    })
+    (p, ordre)
+  }).filter(_._2 != curve.size)
+
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val rnd = new Random(0)
     var lr = List[(BigInt, BigInt)]()
