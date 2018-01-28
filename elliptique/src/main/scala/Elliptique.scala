@@ -256,7 +256,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     println("  *3*****************************************3*")
     do {
       print("- " + current + "*3")
-      current = plus(plus(current, current), current)
+      current = mul(current,3)._3
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
@@ -275,8 +275,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     println("  *4*****************************************4*")
     do {
       print("_ " + current + "*4")
-      val double = plus(current, current)
-      current = plus(double, double)
+      current = mul(current,4)._3
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
