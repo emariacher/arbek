@@ -106,6 +106,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
 
+  val lpow = (0 to 10).map(i => BigInt(Math.pow(2, i).toInt))
   val l1 = stream_zero_a_linfini.take(modlo.toInt).toList
   val li = l1.tail.map(i => {
     (i, l1.filter(u => ((u * i) % modlo) == 1).head)
@@ -133,9 +134,9 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
   }
 
   def plus(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
-    (q._1== p._1 , q._2== p._2, q._2==0) match {
-      case (true,false,_) => (BigInt(0), BigInt(0))
-      case (true,true,true) => (BigInt(0), BigInt(0))
+    (q._1 == p._1, q._2 == p._2, q._2 == 0) match {
+      case (true, false, _) => (BigInt(0), BigInt(0))
+      case (true, true, true) => (BigInt(0), BigInt(0))
       case _ => val lambda = getLambda(p, q)
         val xr = sub(sub(mul(lambda, lambda), p._1), q._1)
         val yr = sub(mul(lambda, sub(p._1, xr)), p._2)
@@ -144,7 +145,17 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
   }
 
   def mul(p: (BigInt, BigInt), q: BigInt) = {
-    p
+    var ql = q
+    var lpowl = lpow
+    var lpowneeded = List[BigInt]()
+    do {
+      lpowl = lpowl.takeWhile(pow => pow > ql)
+      val biggestpow = lpowl.last
+      lpowneeded = lpowneeded :+ biggestpow
+      ql -= biggestpow
+    } while (!lpowl.isEmpty)
+    println(q, lpowneeded.sum)
+    (p, lpowneeded.sum)
   }
 
   def check(p: (BigInt, BigInt)): Boolean = {
