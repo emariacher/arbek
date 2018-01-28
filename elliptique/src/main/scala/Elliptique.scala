@@ -124,40 +124,74 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     if (diff1 < 0) diff1 + modlo else diff1
   }
 
-  def mul(a: BigInt, b: BigInt) = (a * b) % modlo
+  def mul(a: BigInt, b: BigInt): BigInt = (a * b) % modlo
 
-  def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
+  def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt)): BigInt = {
     (sub(q._1, p._1) == 0, sub(q._2, p._2) == 0) match {
       case (true, true) => ((mul(mul(p._1, p._1), 3) + a) * li.filter(_._1 == mul(p._2, 2)).head._2) % modlo
       case _ => (sub(q._2, p._2) * li.filter(_._1 == sub(q._1, p._1)).head._2) % modlo
     }
   }
 
-  def plus(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
-    (q._1 == p._1, q._2 == p._2, q._2 == 0) match {
-      case (true, false, _) => (BigInt(0), BigInt(0))
-      case (true, true, true) => (BigInt(0), BigInt(0))
-      case _ => val lambda = getLambda(p, q)
-        val xr = sub(sub(mul(lambda, lambda), p._1), q._1)
-        val yr = sub(mul(lambda, sub(p._1, xr)), p._2)
-        (xr, yr)
+  def plus(p: (BigInt, BigInt), q: (BigInt, BigInt)): (BigInt, BigInt) = {
+    (p == (BigInt(0), BigInt(0)), q == (BigInt(0), BigInt(0))) match {
+      case (true, _) => q
+      case (_, true) => p
+      case _ => {
+        (q._1 == p._1, q._2 == p._2, q._2 == 0) match {
+          case (true, false, _) => (BigInt(0), BigInt(0))
+          case (true, true, true) => (BigInt(0), BigInt(0))
+          case _ => val lambda = getLambda(p, q)
+            val xr = sub(sub(mul(lambda, lambda), p._1), q._1)
+            val yr = sub(mul(lambda, sub(p._1, xr)), p._2)
+            (xr, yr)
+        }
+      }
     }
   }
 
-  def mul(p: (BigInt, BigInt), q: BigInt) = {
+  def mul(p: (BigInt, BigInt), q: BigInt): ((BigInt, BigInt), BigInt, (BigInt, BigInt)) = {
     var ql = q
     var lpowl = lpow
     var lpowneeded = List(BigInt(0))
     do {
       lpowl = lpowl.takeWhile(pow => pow <= ql)
-      if(!lpowl.isEmpty) {
+      if (!lpowl.isEmpty) {
         val biggestpow = lpowl.last
         lpowneeded = lpowneeded :+ biggestpow
         ql -= biggestpow
       }
     } while (!lpowl.isEmpty)
-    println(q,lpowneeded.sortBy(i => i))
-    (p, lpowneeded.sum)
+
+    lpowneeded = lpowneeded.sortBy(i => i)
+    println(q, lpowneeded)
+
+    var result = (BigInt(0), BigInt(0))
+    if (q > 0) {
+      val lpowneeded2compute = lpow.takeWhile(pow => pow <= lpowneeded.last).toList.tail
+      println("+++", lpowneeded.last, lpowneeded2compute)
+      var doubling = p
+      var lpowneededComputed = lpowneeded2compute.map(i => {
+        doubling = plus(doubling, doubling)
+        println("    ", i, doubling)
+        if (lpowneeded.contains(i)) {
+          println("    ---", i, doubling)
+          doubling
+        } else {
+          (BigInt(0), BigInt(0))
+        }
+      }).filter(u => u != (BigInt(0), BigInt(0)))
+      if (lpowneeded.contains(1)) {
+        lpowneededComputed = lpowneededComputed :+ p
+      }
+      println(lpowneededComputed)
+      lpowneededComputed.foreach(u => {
+        print(result, u, "=")
+        result = plus(result, u)
+        println(result)
+      })
+    }
+    (p, lpowneeded.sum, result)
   }
 
   def check(p: (BigInt, BigInt)): Boolean = {
