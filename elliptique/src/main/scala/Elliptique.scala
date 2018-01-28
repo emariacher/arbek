@@ -156,7 +156,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
         ql -= biggestpow
       }
     } while (!lpowl.isEmpty)
-    //println(q,lpowneeded)
+    println(q,lpowneeded.sortBy(i => i))
     (p, lpowneeded.sum)
   }
 
