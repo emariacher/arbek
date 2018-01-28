@@ -143,6 +143,10 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     }
   }
 
+  def mul(p: (BigInt, BigInt), q: BigInt) = {
+    p
+  }
+
   def check(p: (BigInt, BigInt)): Boolean = {
     (p._1 == 0, p._2 == 0) match {
       case (true, true) => true

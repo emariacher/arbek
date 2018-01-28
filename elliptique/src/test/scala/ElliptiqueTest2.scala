@@ -145,7 +145,7 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
     val a = 0
     val b = 7
     val modlo = 73
-    println("y2 = x3 + "+a+"x + "+b+"  Ordre" + modlo + ": ils ont tous le meme ordre!")
+    println("y2 = x3 + "+a+"x + "+b+"  Ordre" + modlo + ": ils n\'ont pas tous le meme ordre!")
     val e = new Elliptique(modlo, a, b)
     e.getDelta should not equal 0
     val lp = e.curve.sortBy(p => (p._1 * modlo) + p._2)
