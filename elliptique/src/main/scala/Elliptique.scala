@@ -126,10 +126,12 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def mul(a: BigInt, b: BigInt): BigInt = (a * b) % modlo
 
+  def inverse(a:BigInt) = li.filter(_._1 == a).head._2
+
   def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt)): BigInt = {
     (sub(q._1, p._1) == 0, sub(q._2, p._2) == 0) match {
-      case (true, true) => ((mul(mul(p._1, p._1), 3) + a) * li.filter(_._1 == mul(p._2, 2)).head._2) % modlo
-      case _ => (sub(q._2, p._2) * li.filter(_._1 == sub(q._1, p._1)).head._2) % modlo
+      case (true, true) => ((mul(mul(p._1, p._1), 3) + a) * inverse(mul(p._2, 2))) % modlo
+      case _ => (sub(q._2, p._2) * inverse(sub(q._1, p._1))) % modlo
     }
   }
 
