@@ -101,8 +101,8 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
         somme = e.plus(somme, p)
         if (somme._1 * somme._2 == 0) {
           println("===", p, i, somme, "===")
-          ordre = i + 1
-          ordre shouldEqual e.curve.size
+          ordre = i + 2
+          ordre shouldEqual 79
         }
         somme._1 * somme._2 == 0
       })

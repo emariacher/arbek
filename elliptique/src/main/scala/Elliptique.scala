@@ -224,12 +224,12 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
       lsum = lsum :+ somme
       if (somme._1 == 0 & somme._2 == 0) {
         //println("===", p, i, somme, "===",lsum)
-        ordre = i + 1
+        ordre = i + 2
       }
       somme._1 == 0 & somme._2 == 0
     })
     (p, ordre)
-  }).filter(_._2 != curve.size)
+  }).filter(_._2 != curve.size + 1)
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val rnd = new Random(0)
@@ -256,7 +256,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     println("  *3*****************************************3*")
     do {
       print("- " + current + "*3")
-      current = mul(current,3)._3
+      current = mul(current, 3)._3
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
@@ -275,7 +275,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     println("  *4*****************************************4*")
     do {
       print("_ " + current + "*4")
-      current = mul(current,4)._3
+      current = mul(current, 4)._3
       print("=" + current)
       lr = lr :+ current
       if (rnd.nextInt(10) == 0) {
