@@ -1,6 +1,6 @@
 /**
- * Created by mariachere on 26.05.2015.
- */
+  * Created by mariachere on 26.05.2015.
+  */
 
 import java.util.Calendar
 import java.util.Date
@@ -155,19 +155,19 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     (p._1 == 0, p._2 == 0) match {
       case (true, true) => true
       case _ => {
-        println("\n[", modlo, "]", p._1, (p._1 * p._1 * p._1),(a * p._1),b,"-->", (p._1 * p._1 * p._1)  + (a * p._1) + b, ((p._1 * p._1 * p._1)  + (a * p._1) + b) % modlo, " vs ", p._2, (p._2 * p._2), (p._2 * p._2) % modlo)
+        println("\n[", modlo, "]", p._1, (p._1 * p._1 * p._1), (a * p._1), b, "-->", (p._1 * p._1 * p._1) + (a * p._1) + b, ((p._1 * p._1 * p._1) + (a * p._1) + b) % modlo, " vs ", p._2, (p._2 * p._2), (p._2 * p._2) % modlo)
         ((p._1 * p._1 * p._1) + (a * p._1) + b) % modlo == (p._2 * p._2) % modlo
       }
     }
   }
 
-  def getDelta = -16*((4*a*a*a)+(27*b*b))
+  def getDelta = -16 * ((4 * a * a * a) + (27 * b * b))
 
   def liste_des_ordres_non_egaux_a_la_taille_de_la_courbe = curve.map(p => {
     var ordre = 0
     var somme = plus(p, p)
     var lsum = List[(BigInt, BigInt)]()
-    (1 to curve.size).toList.find(i => {
+    (1 to curve.size + 4).toList.find(i => {
       somme = plus(somme, p)
       lsum = lsum :+ somme
       if (somme._1 * somme._2 == 0) {
@@ -231,7 +231,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
         print("\n  *4 [", modlo, "]")
       }
     } while (current.toString != first.toString() & lr.distinct.size == lr.size)
-      println("")
+    println("")
     lr
   }
 

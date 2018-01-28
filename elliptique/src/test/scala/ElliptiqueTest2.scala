@@ -141,5 +141,19 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
     e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual true
   }
 
+  "Ordre73" should "be OK" in {
+    val a = 0
+    val b = 7
+    val modlo = 73
+    println("y2 = x3 + "+a+"x + "+b+"  Ordre" + modlo + ": ils ont tous le meme ordre!")
+    val e = new Elliptique(modlo, a, b)
+    e.getDelta should not equal 0
+    val lp = e.curve.sortBy(p => (p._1 * modlo) + p._2)
+    println(modlo, lp.size, lp)
+
+    println(modlo, e.curve.size, e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
+    e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual false
+  }
+
 
 }
