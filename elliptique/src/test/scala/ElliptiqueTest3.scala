@@ -38,4 +38,15 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
     e.mul(p, 4)._3 shouldEqual (BigInt(0), BigInt(0))
     e.mul(p, 5)._3 shouldEqual p
   }
+
+  "Teste la multiplication part III" should "be OK" in {
+    println("Teste la multiplication part III")
+    val a = 0
+    val b = 7
+    val modlo = 67
+    println("y2 = x3 + " + a + "x + " + b + " modulo " + modlo + ": teste la multiplication part III")
+    val e = new Elliptique(modlo, a, b)
+    val p = e.curve.head
+    e.mul(p, e.curve.size+2)._3 shouldEqual p
+  }
 }

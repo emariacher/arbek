@@ -164,18 +164,18 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     } while (!lpowl.isEmpty)
 
     lpowneeded = lpowneeded.sortBy(i => i)
-    println(q, lpowneeded)
+    //println(q, lpowneeded)
 
     var result = (BigInt(0), BigInt(0))
     if (q > 0) {
       val lpowneeded2compute = lpow.takeWhile(pow => pow <= lpowneeded.last).toList.tail
-      println("+++", lpowneeded.last, lpowneeded2compute)
+      //println("+++", lpowneeded.last, lpowneeded2compute)
       var doubling = p
       var lpowneededComputed = lpowneeded2compute.map(i => {
         doubling = plus(doubling, doubling)
-        println("    ", i, doubling)
+        //println("    ", i, doubling)
         if (lpowneeded.contains(i)) {
-          println("    ---", i, doubling)
+          //println("    ---", i, doubling)
           doubling
         } else {
           (BigInt(0), BigInt(0))
@@ -184,11 +184,11 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
       if (lpowneeded.contains(1)) {
         lpowneededComputed = lpowneededComputed :+ p
       }
-      println(lpowneededComputed)
+      //println(lpowneededComputed)
       lpowneededComputed.foreach(u => {
-        print(result, u, "=")
+        //print(result, u, "=")
         result = plus(result, u)
-        println(result)
+        //println(result)
       })
     }
     (p, lpowneeded.sum, result)
