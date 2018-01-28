@@ -147,14 +147,16 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
   def mul(p: (BigInt, BigInt), q: BigInt) = {
     var ql = q
     var lpowl = lpow
-    var lpowneeded = List[BigInt]()
+    var lpowneeded = List(BigInt(0))
     do {
-      lpowl = lpowl.takeWhile(pow => pow > ql)
-      val biggestpow = lpowl.last
-      lpowneeded = lpowneeded :+ biggestpow
-      ql -= biggestpow
+      lpowl = lpowl.takeWhile(pow => pow <= ql)
+      if(!lpowl.isEmpty) {
+        val biggestpow = lpowl.last
+        lpowneeded = lpowneeded :+ biggestpow
+        ql -= biggestpow
+      }
     } while (!lpowl.isEmpty)
-    println(q, lpowneeded.sum)
+    //println(q,lpowneeded)
     (p, lpowneeded.sum)
   }
 

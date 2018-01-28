@@ -11,8 +11,9 @@ https://fr.wikipedia.org/wiki/Courbe_elliptique
 
 class ElliptiqueTest3 extends FlatSpec with Matchers {
   "Teste la multiplication" should "be OK" in {
+    println("Teste la multiplication")
     val e = new Elliptique(67, 0, 7)
-    (500 to 0).foreach(q => {
+    (0 to 500).foreach(q => {
       e.mul((BigInt(0), BigInt(0)), q)._2 shouldEqual q
     })
   }
