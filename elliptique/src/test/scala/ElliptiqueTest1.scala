@@ -81,13 +81,13 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
 
   "Sub" should "be OK" in {
     println("Sub")
-    val result = new Elliptique(67,0,7).sub(2, 6)
+    val result = new Elliptique(67, 0, 7).sub(2, 6)
     println("Sub[" + result + "]")
     result shouldEqual 63
   }
 
   "Plus" should "be OK" in {
-    val e = new Elliptique(67,0,7)
+    val e = new Elliptique(67, 0, 7)
     println("Plus", ((2, 22), (6, 25), 67))
     e.check((2, 22)) shouldEqual true
     e.check((6, 25)) shouldEqual true
@@ -100,7 +100,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
   }
 
   "Doubling" should "be OK" in {
-    val e = new Elliptique(67,0,7)
+    val e = new Elliptique(67, 0, 7)
     println("Doubling", ((2, 22), (2, 22), 67))
     e.check((2, 22)) shouldEqual true
 
@@ -112,7 +112,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
   }
 
   "CheckToutesLesAdditions" should "be OK" in {
-    val e = new Elliptique(67,0,7)
+    val e = new Elliptique(67, 0, 7)
     println("CheckToutesLesAdditions")
     val rnd = new Random(0)
     val lp = new getCurve(67).lp
@@ -139,7 +139,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
 
   "CheckLaBoucle67" should "be OK" in {
     println("CheckLaBoucle67: il semble y avoir des sous groupes")
-    val e = new Elliptique(67,0,7)
+    val e = new Elliptique(67, 0, 7)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(67, lp.size, lp)
     lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual true
@@ -159,7 +159,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
 
   "CheckLaBoucle71" should "be OK" in {
     println("CheckLaBoucle71: il semble avoir des boucles infinies et quand x ou y == 0 on ne peut pas addtionner")
-    val e = new Elliptique(71,0,7)
+    val e = new Elliptique(71, 0, 7)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(71, lp.size, lp)
     println(lp.filter(p => p._1 * p._2 == 0))
@@ -172,9 +172,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
     e.check((BigInt(33), BigInt(35))) shouldEqual true
     e.check((BigInt(33), BigInt(36))) shouldEqual true
     e.check((BigInt(4), BigInt(0))) shouldEqual true
-    intercept[Exception] {
-      e.plus((BigInt(4), BigInt(0)), (BigInt(4), BigInt(0)))
-    }
+    e.plus((BigInt(4), BigInt(0)), (BigInt(4), BigInt(0))) shouldEqual(BigInt(0), BigInt(0))
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
@@ -190,7 +188,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
 
   "CheckLaBoucle73" should "be OK" in {
     println("CheckLaBoucle73: quand x ou y == 0 on ne peut pas addtionner")
-    val e = new Elliptique(73,0,7)
+    val e = new Elliptique(73, 0, 7)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(73, lp.size, lp)
     println(e.li)
@@ -204,7 +202,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
   "CheckLaBoucle83" should "be OK" in {
     val modlo = 83
     println("CheckLaBoucle" + modlo + ": il faut que la taille de la courbe soit superieure au modulo")
-    val e = new Elliptique(modlo,0,7)
+    val e = new Elliptique(modlo, 0, 7)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(modlo, lp.size, lp)
     println(lp.filter(p => p._1 * p._2 == 0))

@@ -116,14 +116,14 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     ly2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
   }).flatten
 
-  def add(a: BigInt, b: BigInt) = a + b % modlo
+  def add(a: BigInt, b: BigInt) = (a + b) % modlo
 
   def sub(a: BigInt, b: BigInt) = {
     val diff1 = a - b
     if (diff1 < 0) diff1 + modlo else diff1
   }
 
-  def mul(a: BigInt, b: BigInt) = a * b % modlo
+  def mul(a: BigInt, b: BigInt) = (a * b) % modlo
 
   def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
     (sub(q._1, p._1) == 0, sub(q._2, p._2) == 0) match {
@@ -133,8 +133,9 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
   }
 
   def plus(p: (BigInt, BigInt), q: (BigInt, BigInt)) = {
-    (sub(q._1, p._1) == 0 & sub(q._2, p._2) != 0) match {
-      case true => (BigInt(0), BigInt(0))
+    (q._1== p._1 , q._2== p._2, q._2==0) match {
+      case (true,false,_) => (BigInt(0), BigInt(0))
+      case (true,true,true) => (BigInt(0), BigInt(0))
       case _ => val lambda = getLambda(p, q)
         val xr = sub(sub(mul(lambda, lambda), p._1), q._1)
         val yr = sub(mul(lambda, sub(p._1, xr)), p._2)
@@ -170,11 +171,11 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     (1 to curve.size + 4).toList.find(i => {
       somme = plus(somme, p)
       lsum = lsum :+ somme
-      if (somme._1 * somme._2 == 0) {
+      if (somme._1 == 0 & somme._2 == 0) {
         //println("===", p, i, somme, "===",lsum)
         ordre = i + 1
       }
-      somme._1 * somme._2 == 0
+      somme._1 == 0 & somme._2 == 0
     })
     (p, ordre)
   }).filter(_._2 != curve.size)

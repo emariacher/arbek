@@ -153,6 +153,25 @@ class ElliptiqueTest2 extends FlatSpec with Matchers {
 
     println(modlo, e.curve.size, e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
     e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual false
+    /*val p=(BigInt(6), BigInt(2))
+    var ordre = 0
+    var somme = e.plus(p, p)
+    var lsum = List[(BigInt, BigInt)]()
+    (1 to e.curve.size + 4).toList.find(i => {
+      somme = e.plus(somme, p)
+      lsum = lsum :+ somme
+      if (somme._1 == 0 & somme._2 == 0) {
+        println("===", p, i, somme, "===",lsum)
+        ordre = i + 1
+      }
+      somme._1 == 0 & somme._2 == 0
+    })
+    println(p, ordre)*/
+    println((BigInt(6), BigInt(2)),
+      e.plus((BigInt(6), BigInt(2)), (BigInt(6), BigInt(2))),
+      e.plus((BigInt(6), BigInt(2)), (BigInt(60), BigInt(0))),
+      e.plus((BigInt(6), BigInt(71)), (BigInt(6), BigInt(2)))
+    )
   }
 
 
