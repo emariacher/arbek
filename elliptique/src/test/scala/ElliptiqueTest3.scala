@@ -84,8 +84,19 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
     r >= 1 & r < order shouldBe true
     s >= 1 & s < order shouldBe true
     val w = Elliptique.inverse(order, s) % order
-    println("  step 2: Calculate w = 1/s mod order "+ w)
+    println("  step 2: Calculate w = 1/s mod order = " + w)
     w shouldEqual 37
+    val u = w * data % order
+    println("  step 3: Calculate u = data * w mod order = " + u)
+    u shouldEqual 76
+    val v = r * w % order
+    println("  step 4: Calculate v = r * w mod order = " + v)
+    v shouldEqual 3
+    val uG = e.mul(thePoint,u)._3
+    val vQ = e.mul(publicKey,v)._3
+    val x_y = e.plus(uG,vQ)
+    println("  step 5: Calculate uG["+uG+"] + vQ["+vQ+"] = " + x_y)
+    x_y shouldEqual (BigInt(62),BigInt(63))
   }
 
 
