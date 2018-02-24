@@ -99,6 +99,18 @@ object Elliptique {
       n * factorielle(n - 1)
     }
   }
+
+  def inverse(modlo: BigInt, a: BigInt): BigInt = {
+    def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
+
+    def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
+
+    val l1 = stream_zero_a_linfini.take(modlo.toInt).toList
+    val li = stream_zero_a_linfini.take(modlo.toInt).toList.tail.map(i => {
+      (i, l1.filter(u => ((u * i) % modlo) == 1).head)
+    })
+    li.filter(_._1 == a).head._2
+  }
 }
 
 class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {

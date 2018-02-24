@@ -17,7 +17,7 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
   val li79 = stream_zero_a_linfini.take(79).toList.tail.map(i => {
     (i, l1.filter(u => ((u * i) % 79) == 1).head)
   })
-  def inverse79(a:BigInt) = li79.filter(_._1 == a).head._2
+  def inverse79(a:BigInt) = Elliptique.inverse(79,a)
 
   "Teste la multiplication part I" should "be OK" in {
     println("Teste la multiplication part I")
