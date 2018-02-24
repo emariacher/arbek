@@ -10,7 +10,6 @@ https://fr.wikipedia.org/wiki/Courbe_elliptique
  */
 
 class ElliptiqueTest3 extends FlatSpec with Matchers {
-  def inverse79(a:BigInt) = Elliptique.inverse(79,a)
 
   "Teste la multiplication part I" should "be OK" in {
     println("Teste la multiplication part I")
@@ -53,10 +52,10 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
   }
 
   "Fais de l encryption" should "be OK" in {
-    println("Fais de l encryption https://www.coindesk.com/math-behind-bitcoin/")
     val a = 0
     val b = 7
     val modlo = 67
+    val order = 79
     println("y2 = x3 + " + a + "x + " + b + " modulo " + modlo + ": Fais de l encryption https://www.coindesk.com/math-behind-bitcoin/")
     val e = new Elliptique(modlo, a, b)
     val basepoint = (BigInt(2), BigInt(22))
@@ -65,20 +64,28 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
     val publicKey = e.mul(basepoint, privateKey)._3
     publicKey shouldEqual(BigInt(52), BigInt(7))
     val data = 17
-    println("step 0: basepoint ["+basepoint+"], privateKey ["+privateKey+"], data ["+data+"]")
+    println("Compute signature")
+    println("  step 0: basepoint [" + basepoint + "], privateKey [" + privateKey + "], publicKey [" + publicKey + "], data [" + data + "]")
     val randomNumber_k = 3
-    println("step 1: pick random number "+randomNumber_k)
+    println("  step 1: pick random number " + randomNumber_k)
     val thePoint = e.mul(basepoint, 3)._3
-    println("step 2: compute the Point "+thePoint)
+    println("  step 2: compute the Point " + thePoint)
     val r = thePoint._1
     r should not equal BigInt(0)
-    println("step 3: find r "+r)
-    inverse79(randomNumber_k) shouldEqual 53
-    val s = ((data + (r * privateKey)) * inverse79(randomNumber_k)) % 79
-    println("step 4: find s "+s)
+    println("  step 3: find r " + r)
+    Elliptique.inverse(order, randomNumber_k) shouldEqual 53
+    val s = ((data + (r * privateKey)) * Elliptique.inverse(order, randomNumber_k)) % order
+    println("  step 4: find s " + s)
     val signature = (r, s)
-    println("step 5: siganture "+signature)
+    println("  step 5: signature " + signature)
     signature shouldEqual(62, 47)
+    println("Verify signature")
+    println("  step 1: Verify that r and s are between 1 and order-1")
+    r >= 1 & r < order shouldBe true
+    s >= 1 & s < order shouldBe true
+    val w = Elliptique.inverse(order, s) % order
+    println("  step 2: Calculate w = 1/s mod order "+ w)
+    w shouldEqual 37
   }
 
 
