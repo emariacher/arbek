@@ -32,7 +32,7 @@ class ElliptiqueTest1 extends FlatSpec with Matchers {
   "TrouveLesInverses_2" should "be OK" in {
     println("TrouveLesInverses_2")
     val result = Elliptique.inverse(67,63)
-    println("TrouveLesInverses[" + result + "]")
+    println("TrouveLesInverses_2[" + result + "]")
     result shouldEqual 50
   }
 
