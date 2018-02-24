@@ -51,7 +51,7 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
     e.mul(p, e.curve.size + 2)._3 shouldEqual p
   }
 
-  "Fais de l encryption" should "be OK" in {
+  "Fais de l encryption 67" should "be OK" in {
     val a = 0
     val b = 7
     val modlo = 67
@@ -65,7 +65,7 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
     publicKey shouldEqual(BigInt(52), BigInt(7))
     val data = 17
     println("Compute signature")
-    println("  step 0: basepoint [" + basepoint + "], privateKey [" + privateKey + "], publicKey [" + publicKey + "], data [" + data + "]")
+    println("  step 0: basepointG [" + basepoint + "], privateKey [" + privateKey + "], publicKeyQ [" + publicKey + "], data [" + data + "]")
     val randomNumber_k = 3
     println("  step 1: pick random number " + randomNumber_k)
     val thePoint = e.mul(basepoint, 3)._3
@@ -92,11 +92,14 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
     val v = r * w % order
     println("  step 4: Calculate v = r * w mod order = " + v)
     v shouldEqual 3
-    val uG = e.mul(thePoint,u)._3
+    val uG = e.mul(basepoint,u)._3
+    uG shouldEqual (62,4)
     val vQ = e.mul(publicKey,v)._3
     val x_y = e.plus(uG,vQ)
     println("  step 5: Calculate uG["+uG+"] + vQ["+vQ+"] = " + x_y)
     x_y shouldEqual (BigInt(62),BigInt(63))
+    println("  step 6: Verify that r["+r+"] == x mod order [" + x_y._1+"]. The signature is invalid if it is not.")
+    x_y._1 shouldEqual r
   }
 
 
