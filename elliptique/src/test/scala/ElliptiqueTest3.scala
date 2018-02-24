@@ -10,13 +10,6 @@ https://fr.wikipedia.org/wiki/Courbe_elliptique
  */
 
 class ElliptiqueTest3 extends FlatSpec with Matchers {
-  def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
-
-  def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
-  val l1 = stream_zero_a_linfini.take(79).toList
-  val li79 = stream_zero_a_linfini.take(79).toList.tail.map(i => {
-    (i, l1.filter(u => ((u * i) % 79) == 1).head)
-  })
   def inverse79(a:BigInt) = Elliptique.inverse(79,a)
 
   "Teste la multiplication part I" should "be OK" in {
