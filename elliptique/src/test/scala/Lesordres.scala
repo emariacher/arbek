@@ -11,7 +11,7 @@ https://crypto.stackexchange.com/questions/44304/understanding-elliptic-curve-po
 https://fr.wikipedia.org/wiki/Courbe_elliptique
  */
 
-class ElliptiqueTest2 extends FlatSpec with Matchers {
+class Lesordres extends FlatSpec with Matchers {
   val premiers = EulerPrime.premiers1000
 
   def Trouve_les_nombres_premiers_qui_pourraient_marcher(a: BigInt, b: BigInt) = {

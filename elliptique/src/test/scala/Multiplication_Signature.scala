@@ -9,7 +9,7 @@ https://crypto.stackexchange.com/questions/44304/understanding-elliptic-curve-po
 https://fr.wikipedia.org/wiki/Courbe_elliptique
  */
 
-class ElliptiqueTest3 extends FlatSpec with Matchers {
+class Multiplication_Signature extends FlatSpec with Matchers {
 
   "Teste la multiplication part I" should "be OK" in {
     println("Teste la multiplication part I")
@@ -51,7 +51,7 @@ class ElliptiqueTest3 extends FlatSpec with Matchers {
     e.mul(p, e.curve.size + 2)._3 shouldEqual p
   }
 
-  "Fais de l encryption 67" should "be OK" in {
+  "Signature 67" should "be OK" in {
     val a = 0
     val b = 7
     val modlo = 67

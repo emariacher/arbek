@@ -11,7 +11,7 @@ https://crypto.stackexchange.com/questions/44304/understanding-elliptic-curve-po
 https://fr.wikipedia.org/wiki/Courbe_elliptique
  */
 
-class ElliptiqueTest1 extends FlatSpec with Matchers {
+class Labase extends FlatSpec with Matchers {
   def rangeStream2(a: BigInt, b: BigInt): Stream[Triplet] = new Triplet(a, a * a) #:: rangeStream2(b, 1 + b)
 
   def stream_zero_a_linfini2: Stream[Triplet] = rangeStream2(0, 1)
