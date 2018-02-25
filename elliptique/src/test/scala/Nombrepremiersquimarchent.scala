@@ -22,17 +22,13 @@ class Nombrepremiersquimarchent extends FlatSpec with Matchers {
     }))
   }
 
-  /*"Trouve les nombres premiers 0" should "be OK" in {
-    (1 to 26).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(0,b))
+  "Trouve les nombres premiers 0" should "be OK" in {
+    (1 to 30).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(0,b))
   }
 
   "Trouve les nombres premiers 1" should "be OK" in {
-    (1 to 26).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(1,b))
+    (1 to 30).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(1,b))
   }
-
-  "Trouve les nombres premiers 2" should "be OK" in {
-    (1 to 26).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(2,b))
-  }*/
 
   "Trouve les nombres premiers" should "be OK" in {
     val prems = premiers.take(70).toList.map(p => (p, ListBuffer[(BigInt, BigInt)]()))
