@@ -19,16 +19,17 @@ class Nombrepremiersquimarchent extends FlatSpec with Matchers {
       e.getDelta should not equal 0
       e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty
     }))
-
   }
 
-  "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 7" should "be OK" in {
-    Trouve_les_nombres_premiers_qui_pourraient_marcher(0,7)
+  "Trouve les nombres premiers 0" should "be OK" in {
+    (1 to 26).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(0,b))
   }
 
-
-  "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 3x + 5" should "be OK" in {
-    Trouve_les_nombres_premiers_qui_pourraient_marcher(3,5)
+  "Trouve les nombres premiers 1" should "be OK" in {
+    (1 to 26).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(1,b))
   }
 
+  "Trouve les nombres premiers 2" should "be OK" in {
+    (1 to 26).foreach(b => Trouve_les_nombres_premiers_qui_pourraient_marcher(2,b))
+  }
 }
