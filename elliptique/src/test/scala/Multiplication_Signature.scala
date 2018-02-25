@@ -56,7 +56,7 @@ class Multiplication_Signature extends FlatSpec with Matchers {
     val b = 7
     val modlo = 67
     val order = 79
-    println("y2 = x3 + " + a + "x + " + b + " modulo " + modlo + ": Fais de l encryption https://www.coindesk.com/math-behind-bitcoin/")
+    println("y2 = x3 + " + a + "x + " + b + " modulo " + modlo + ": Fais de la signature https://www.coindesk.com/math-behind-bitcoin/")
     val e = new Elliptique(modlo, a, b)
     val basepoint = (BigInt(2), BigInt(22))
     e.check(basepoint)
@@ -68,7 +68,7 @@ class Multiplication_Signature extends FlatSpec with Matchers {
     println("  step 0: basepointG [" + basepoint + "], privateKey [" + privateKey + "], publicKeyQ [" + publicKey + "], data [" + data + "]")
     val randomNumber_k = 3
     println("  step 1: pick random number " + randomNumber_k)
-    val thePoint = e.mul(basepoint, 3)._3
+    val thePoint = e.mul(basepoint, randomNumber_k)._3
     println("  step 2: compute the Point " + thePoint)
     val r = thePoint._1
     r should not equal BigInt(0)
