@@ -50,11 +50,11 @@ class Nombrepremiersquimarchent extends FlatSpec with Matchers {
     println(prems.mkString("\n", "\n  ", "\n"))
     prems.find(_._1 == 67) match {
       case Some(pr) => pr._2.contains((BigInt(0),BigInt(7))) shouldEqual true
-      case None =>
+      case None => false shouldEqual true
     }
     prems.find(_._1 == 241) match {
       case Some(pr) => pr._2.contains((BigInt(0),BigInt(7))) shouldEqual true
-      case None =>
+      case None => false shouldEqual true
     }
   }
 }
