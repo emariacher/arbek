@@ -1,0 +1,69 @@
+<html>
+<head>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="Eric Mariacher" name=Author>
+<META content="home page of Eric Mariacher" name=Description>
+<meta name=Originator content="Microsoft Word 11">
+		<META content="Eric Mariacher, LinkedIn, OpenBC, Viaduc, javascript, greasemonkey" name=KeyWords>
+<title>Eric Mariacher: GreaseMonkey javascripts for online business tools (LinkedIn, OpenBC, Viaduc...)</title>
+</head><body>
+<h1 align="center">Eric Mariacher: GreaseMonkey javascripts for online business tools (LinkedIn, OpenBC, Viaduc...)</h1>
+<table border="1"><tr>
+<td>
+Pour utiliser ces scripts il faut:<ol>
+<li>D'abord installer <a href="http://firefox.fr/">firefox</a> et ... utilisez le &agrave; la place d'Internet Explorer
+</li>
+<li>Puis installer l'extension <A href="https://addons.mozilla.org/firefox/748">greasemonkey</A> pour FireFox</li>
+<li>Et enfin clicquer sur les scripts du tableau ci-dessous</li>
+</ol></td>
+<td>
+To use these scripts:<ol>
+<li>Install <a href="http://firefox.com/">firefox</a> and ... use it instead of Internet Explorer
+</li>
+<li>Install FireFox extension <A href="https://addons.mozilla.org/firefox/748">greasemonkey</A></li>
+<li>Click on user's scripts in table below</li>
+</ol></td></tr></table>
+<table border="1">
+
+<tr><th>Greasemonkey javascript</th><th>Description</th><th>User's guide</th></tr>
+<tr><th><A href="http://www.multimania.com/mariacr/scripts/searchloz.user.js" target="new">searchloz.user.js</A></th>
+<td><tt>
+<br/> <h3>Search Online Business Networking sites</h3>
+<br/> <h2>Aggregate Searches sur LinkedIn, OpenBC and ZoomInfo</h2>
+<br/> @include       http://search.live.com/*
+<br/> @namespace     <A href="http://mariacr.multimania.com/scripts">http://mariacr.multimania.com/scripts</A>
+</tt></td><td>Type your search in <A href="http://search.live.com/macros/biznet1/biznet1">search.live.com/macros/biznet1/biznet1</A> search page. A new tab will be opened with search results in:
+<ul><li>LinkedIn</li><li>OpenBC</li><li>Zoominfo</li></ul></td></tr>
+
+<tr><th><A href="http://www.multimania.com/mariacr/scripts/searchobn.user.js" target="new">searchobn.user.js</A></th>
+<td><tt>
+<br/> <h3>Recherche dans les sites de r&eacute;seautage en ligne</h3>
+<br/> <h2>Faites des recherches en parallèle sur LinkedIn, OpenBC, Viaduc et ZoomInfo</h2>
+<br/> @include       http://search.live.com/*
+<br/> @namespace     <A href="http://mariacr.multimania.com/scripts">http://mariacr.multimania.com/scripts</A>
+</tt></td><td>Tapez votre recherche sur <A href="http://search.live.com/macros/biznet1/biznet1">search.live.com/macros/biznet1/biznet1</A>. Les résultats seront affichés dans un nouvel onglet:
+<ul><li>LinkedIn</li><li>OpenBC</li><li>Viaduc</li><li>Zoominfo</li></ul></td></tr>
+
+<tr><th><A href="http://www.multimania.com/mariacr/scripts/contactsviaduc.user.js" target="new">contactsviaduc.user.js</A></th>
+<td><tt>
+<br/> <h3>Contacts Viaduc</h3>
+<br/> <h2>Affiche sur une seule page tous mes contacts Viaduc</h2>
+<br/> @include       http://www.viaduc.com/contacts/contactsdirects/*
+<br/> @namespace     <A href="http://mariacr.multimania.com/scripts">http://mariacr.multimania.com/scripts</A>
+
+</tt></td><td><ol><li>Allez à <A href="http://www.viaduc.com/contacts/contactsdirects/">http://www.viaduc.com/contacts/contactsdirects/</A>.</li>
+<li>Un bouton vert apparaitra en surimpression en haut à droite de la page Viaduc. Cliquez le.</li>
+<li>Vous verrez les numéros de page de vos contacts défiler dans le bouton vert</li>
+<li>Quand le compte se stabilise, Cliquez une 2ème fois sur le bouton. (<u>En général</u> il doit se stabiliser au numéro de votre dernière page de contacts.)</li>
+<li>Cela devrait déclencher l'ouverture d'un ou plusieurs onglets contenant un tableau simplifié de vos contacts.</li>
+<li>Vous pouvez faire un copier/coller de l'ensemble de la page dans Excel.</li>
+</ol>
+</td></tr>
+</table>
+<p>my profiles...<ul>
+<li><a href="http://www.linkedin.com/in/mariacher">http://www.linkedin.com/in/mariacher</a></li>
+<li><a href="http://www.viaduc.com/public/profil/?memberId=002rw1qp9bm4c75">http://www.viaduc.com/public/profil/?memberId=002rw1qp9bm4c75</a></li>
+<li><a href="https://www.openbc.com/hp/eric_mariacher">https://www.openbc.com/hp/eric_mariacher</a></li>
+<li><a href="http://eric-mariacher.blogspot.com/">http://eric-mariacher.blogspot.com/</a></li></ul></p>
+<p><a href="http://mariacr.multimania.com/">Back to home page</a></p>
+</body></html>
