@@ -1,0 +1,37 @@
+Type of alternate key,Key in Main Matrix,Key in alternate Matrix
+kbdm_FKEY,1101,459
+," ""HID Button 257: AVR power on/off"""," ""Media Select VCR"""
+kbdm_FKEY,1102,464
+," ""HID Button 258: STB power on/off"""," ""Media Select Cable"""
+kbdm_FKEY,1103,450
+," ""HID Button 259: TV power on/off"""," ""Media Select TV"""
+kbdm_FKEY,2,1104
+," ""1!"""," ""HID Button 260: Menu Dialog"""
+kbdm_FKEY,3,1105
+," ""2@"""," ""HID Button 261: Info Dialog"""
+kbdm_FKEY,4,1106
+," ""3/"""," ""HID Button 262: List Dialog"""
+kbdm_FKEY,5,1107
+," ""4$"""," ""HID Button 263: User Dialog"""
+kbdm_FKEY,6,116
+," ""5%"""," ""F5"""
+kbdm_FKEY,7,117
+," ""6^"""," ""F6"""
+kbdm_FKEY,8,118
+," ""7&"""," ""F7"""
+kbdm_FKEY,9,119
+," ""8*"""," ""F8"""
+kbdm_FKEY,10,120
+," ""9("""," ""F9"""
+kbdm_FKEY,11,121
+," ""0)"""," ""F10"""
+kbdm_FKEY,12,122
+," ""-_"""," ""F11"""
+kbdm_FKEY,13,123
+," ""=+"""," ""F12"""
+kbdm_FKEY,15,76
+," ""Bkspace"""," ""Delete"""
+kbdm_TILDA,28,
+," ""]}""",
+kbdm_GRAVE,27,
+," ""[{""",
