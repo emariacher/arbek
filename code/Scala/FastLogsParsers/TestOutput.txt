@@ -1,0 +1,10 @@
+C:\Users\11emariacher\workspace\ControllerTestsTraces\out
+highlight PowerMan #e0e0ff
+highlight BOOT: #f0e0f0
+highlight GFT_EnterState #f1d0d0
+highlight OS_GetTime_Ms #f1f1d0
+highlight UnitTest #f1d0f1
+highlight test level #f1d0f1
+highlight DynTest #f0f0f0
+
+
