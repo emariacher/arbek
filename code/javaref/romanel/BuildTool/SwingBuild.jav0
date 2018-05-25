@@ -1,0 +1,222 @@
+
+import java.applet.*;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import javax.accessibility.*;
+/*
+  * @(#)SwingBuild.java	1.9 04/07/26
+  *
+  * Copyright (c) 2004 Sun Microsystems, Inc. All Rights Reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *
+  * -Redistribution of source code must retain the above copyright notice, this
+  *  list of conditions and the following disclaimer.
+  *
+  * -Redistribution in binary form must reproduce the above copyright notice,
+  *  this list of conditions and the following disclaimer in the documentation
+  *  and/or other materials provided with the distribution.
+  *
+  * Neither the name of Sun Microsystems, Inc. or the names of contributors may
+  * be used to endorse or promote products derived from this software without
+  * specific prior written permission.
+  *
+  * This software is provided "AS IS," without a warranty of any kind. ALL
+  * EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
+  * ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+  * OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. SUN MIDROSYSTEMS, INC. ("SUN")
+  * AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE
+  * AS A RESULT OF USING, MODIFYING OR DISTRIBUTING THIS SOFTWARE OR ITS
+  * DERIVATIVES. IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
+  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
+  * INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY
+  * OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE,
+  * EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  *
+  * You acknowledge that this software is not designed, licensed or intended
+  * for use in the design, construction, operation or maintenance of any
+  * nuclear facility.
+  */
+/*
+  * @(#)SwingBuild.java	1.9 04/07/26
+  */
+
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.colorchooser.*;
+import javax.swing.event.*;
+import javax.swing.filechooser.*;
+import javax.swing.text.*;
+
+/**
+ *  JSwingBuild
+ *
+ *@author     Jeff Dinkins
+ *@created    February 14, 2005
+ *@version    1.9 07/26/04
+ */
+public class SwingBuild extends DemoModule {
+
+  /**
+   *  SwingBuild Constructor
+   *
+   *@param  swingset  Description of the Parameter
+   */
+  public SwingBuild(SwingSet2 swingset) {
+          // Set the title for this demo, and an icon used to represent this
+          // demo inside the SwingSet2 app.
+    super(swingset, "SwingBuild", "toolbar/JOptionPane.gif");
+
+    JPanel demo  = getDemoPanel();
+
+    demo.setLayout(new BoxLayout(demo, BoxLayout.X_AXIS));
+
+    JPanel bp    =
+      new JPanel() {
+        public Dimension getMaximumSize() {
+          return new Dimension(getPreferredSize().width, super.getMaximumSize().height);
+        }
+      };
+    bp.setLayout(new BoxLayout(bp, BoxLayout.Y_AXIS));
+
+    bp.add(Box.createRigidArea(VGAP30));
+    bp.add(Box.createRigidArea(VGAP30));
+
+    bp.add(createInputDialogButton());
+    bp.add(Box.createRigidArea(VGAP15));
+    bp.add(createComponentDialogButton());
+    bp.add(Box.createRigidArea(VGAP15));
+
+    demo.add(Box.createHorizontalGlue());
+    demo.add(bp);
+    demo.add(Box.createHorizontalGlue());
+  }
+
+
+  /**
+   *  main method allows us to run as a standalone demo.
+   *
+   *@param  args  The command line arguments
+   */
+  public static void main(String[] args) {
+    SwingBuild demo  = new SwingBuild(null);
+    demo.mainImpl();
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public JButton createInputDialogButton() {
+    Action a  =
+      new AbstractAction(getString("SwingBuild.inputbutton")) {
+        public void actionPerformed(ActionEvent e) {
+          String result  = JOptionPane.showInputDialog(getDemoPanel(), getString("SwingBuild.inputquestion"));
+          JOptionPane.showMessageDialog(getDemoPanel(), getString("SwingBuild.inputresponse"));
+        }
+      };
+    return createButton(a);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public JButton createComponentDialogButton() {
+    Action a  =
+      new AbstractAction(getString("SwingBuild.componentbutton")) {
+        public void actionPerformed(ActionEvent e) {
+          // In a ComponentDialog, you can show as many message components and
+          // as many options as you want:
+
+          // Messages
+          Object[] message  = new Object[4];
+          message[0] = getString("SwingBuild.componentmessage");
+          message[1] = new JTextField(getString("SwingBuild.componenttextfield"));
+
+          JComboBox cb      = new JComboBox();
+          cb.addItem(getString("SwingBuild.component_cb1"));
+          cb.addItem(getString("SwingBuild.component_cb2"));
+          cb.addItem(getString("SwingBuild.component_cb3"));
+          message[2] = cb;
+
+          message[3] = getString("SwingBuild.componentmessage2");
+
+          // Options
+          String[] options  = {
+              getString("SwingBuild.component_op1"),
+              getString("SwingBuild.component_op2"),
+              getString("SwingBuild.component_op3"),
+              getString("SwingBuild.component_op4"),
+              getString("SwingBuild.component_op5")
+              };
+          int result        = JOptionPane.showOptionDialog(
+              getDemoPanel(),  // the parent that the dialog blocks
+          message,  // the dialog message array
+          getString("SwingBuild.componenttitle"),  // the title of the dialog window
+          JOptionPane.DEFAULT_OPTION,  // option type
+          JOptionPane.INFORMATION_MESSAGE,  // message type
+          null,  // optional icon, use null to use the default icon
+          options,  // options string array, will be made into buttons
+          options[3] // option that should be made into a default button
+          );
+          switch (result) {
+            case 0: // yes
+              JOptionPane.showMessageDialog(getDemoPanel(), getString("SwingBuild.component_r1"));
+              break;
+            case 1: // no
+              JOptionPane.showMessageDialog(getDemoPanel(), getString("SwingBuild.component_r2"));
+              break;
+            case 2: // maybe
+              JOptionPane.showMessageDialog(getDemoPanel(), getString("SwingBuild.component_r3"));
+              break;
+            case 3: // probably
+              JOptionPane.showMessageDialog(getDemoPanel(), getString("SwingBuild.component_r4"));
+              break;
+            default:
+              break;
+          }
+
+        }
+      };
+    return createButton(a);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  a  Description of the Parameter
+   *@return    Description of the Return Value
+   */
+  public JButton createButton(Action a) {
+    JButton b  =
+      new JButton() {
+        public Dimension getMaximumSize() {
+          int width   = Short.MAX_VALUE;
+          int height  = super.getMaximumSize().height;
+          return new Dimension(width, height);
+        }
+      };
+          // setting the following client property informs the button to show
+          // the action text as it's name. The default is to not show the
+          // action text.
+    b.putClientProperty("displayActionText", Boolean.TRUE);
+    b.setAction(a);
+          // b.setAlignmentX(JButton.CENTER_ALIGNMENT);
+    return b;
+  }
+
+}
+

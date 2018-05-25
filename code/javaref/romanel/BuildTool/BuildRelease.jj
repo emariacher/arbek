@@ -1,0 +1,292 @@
+options {
+  CHOICE_AMBIGUITY_CHECK = 10;
+  /*STATIC = false;
+  LOOKAHEAD = 2;
+  FORCE_LA_CHECK = true;
+  DEBUG_PARSER = true;
+  DEBUG_LOOKAHEAD = true;
+  DEBUG_TOKEN_MANAGER = true; */
+}
+
+PARSER_BEGIN(BuildRelease)
+
+import java.util.*;
+import java.io.*;
+import java.io.Reader.*;
+import javax.swing.*;
+
+public class BuildRelease extends Thread implements DefVar {
+  SeapineReleaseNote x;
+  String file;
+  String mainline;
+  String ttprocfgname;
+  String serveripport;
+  String userid;
+  String pwd;
+  JTextArea err;
+  SeapineBuildReleaseTool zt;
+  
+  public void run() {
+    try {
+      // ANALYZE
+      x.seapine.knowPath(file);
+      x.initLogFiles();
+      x.buildChildListsXmltag();
+      x.getLabelName(mainline);
+      x.buildListsV1Files();
+      x.buildSeapineScript(zt.branch.getText());
+      x.buildReleaseNote();
+      x.seapine.buildFiles4Bat(ttprocfgname, serveripport, false);
+            zt.enableBuildButton();
+      zt.AnalyzeLabel.setText("Analyzed!");
+      
+      while(!zt.goBuild) sleep(1000);
+      myPrintln("Building");
+
+      // BUILD
+      x.seapine.buildFiles4Bat(ttprocfgname, serveripport, true);
+      x.seapine.executeBat(userid, pwd);
+      zt.BuildLabel.setText("Built!");     
+      x.closeLogFiles();
+    } catch (Exception e) {
+      zt.BuildLabel.setText("*******Errors: not Built!********");
+          try {
+      PipedInputStream piErr = new PipedInputStream();
+      PipedOutputStream poErr = new PipedOutputStream(piErr);
+      System.setErr(new PrintStream(poErr, true));
+        e.printStackTrace();
+      myErrPrintln(e.toString());
+        int len=0;
+        byte[] buf  = new byte[1024];
+        while (true) {
+            len = piErr.read(buf);
+          if (len == -1) {
+            break;
+          }
+          err.append(new String(buf, 0, len));
+        }
+        
+           } catch (Exception ze) {}
+   } finally {
+
+    }
+  }
+
+  public BuildRelease(SeapineBuildReleaseTool zt) throws ParseException {
+    this.zt=zt;
+    x = new SeapineReleaseNote(zt);
+    this.mainline=zt.mainline.getText();
+    this.ttprocfgname=zt.TTProDBName.getText();
+    this.serveripport=zt.server;
+    this.userid=zt.username.getText();
+    this.pwd=zt.pwd.getText();
+    this.err=zt.err;
+    try {      
+      this.file=zt.file.getCanonicalPath();
+      BuildRelease parser1 = new BuildRelease(new FileInputStream(new File(file))); // old javacc
+
+      // PARSE...
+      parser1.zinput(x);
+     } catch (Exception e) {
+       e.printStackTrace();
+       throw new ParseException();
+    }
+    start();
+  }
+    
+  void myPrint(String s) throws Exception {
+    x.seapine.f.writeFile(x.logfile, s);
+    System.out.print(s);
+  }
+  void myPrintln(String s) throws Exception {
+    myPrint(s + "\n");
+  }
+
+  void myErrPrint(String s) throws Exception {
+    x.seapine.f.writeFile(x.errfile, s);
+    err.append(s);
+    System.out.print(s);
+  }
+  void myErrPrintln(String s) throws Exception {
+    myErrPrint(s + "\n");
+  }
+
+}
+
+PARSER_END(BuildRelease)
+
+SKIP :
+{ " " | "\t" | "\r" | "\n" | "\r\n" }
+
+
+<*> TOKEN :
+{
+  <#ALPHA_CHAR: ["a"-"z", "A"-"Z"] >
+| <#NUM_CHAR:   ["0"-"9"] >
+| <#ALPHANUM_CHAR: [ "a"-"z", "A"-"Z", "0"-"9" ] >
+| <#IDENTIFIER_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "_", "-", ".", ":" ] >
+| <#IDENTIFIER: <ALPHA_CHAR> (<IDENTIFIER_CHAR>)* >
+| <#QUOTED_STRING_NB: ( "\"" ( ~["\"", "\r", "\n"] )* "\"" ) >
+| <#QUOTED_STRING: ( "\"" ( ~["\""] )* "\"" ) >
+| <#WHITESPACE: ( " " | "\t" | "\n" | "\r" ) >
+| <#NEWLINE:    ( "\r\n" | "\r" | "\n" ) >
+| <#QUOTE:      ( "\"" )>
+}
+
+<DEFAULT> TOKEN : 
+{
+  <EOL:            ( " " | "\t" )* <NEWLINE> >
+| <TAG_START:      "<"          > : LexStartTag
+| <ENDTAG_START:   "</"         > : LexStartTag
+| <COMMENT_START:  "<!--"       > : LexComment
+| <DOCTYPE_START:  "<!"         > : LexDocType
+| <DECL_START:     "<?"         > : LexDocType
+| <CDATA_START:     "<![CDATA[" > : LexCdata
+| <PCDATA:         ( ~["\"", "<", "\r", "\n"] )+ >
+| <PCDATA_QS:      <QUOTED_STRING_NB> >
+| <PCDATA_Q:       <QUOTE> >
+}
+
+<DEFAULT> SPECIAL_TOKEN :
+{
+  < (<WHITESPACE>)+ >
+}
+
+
+<LexStartTag> TOKEN :
+{
+  <TAG_NAME: <IDENTIFIER> >               : LexInTag
+| <LST_ERROR: ~[]>                        : DEFAULT
+}
+
+<LexInTag> SPECIAL_TOKEN :
+{
+  < (<WHITESPACE>)+ >
+}
+
+<LexInTag> TOKEN :
+{
+  <ATTR_NAME: <IDENTIFIER> >
+| <TAG_END: ">" >                       : DEFAULT
+| <TAG_SLASHEND: "/>" >                 : DEFAULT
+| <ATTR_EQ: "=" >                       : LexAttrVal
+| <LIT_ERROR: ~[]>
+}
+  
+<LexAttrVal> SPECIAL_TOKEN :
+{
+  < <WHITESPACE> >
+}
+
+<LexAttrVal> TOKEN :
+{
+  <ATTR_VAL: <QUOTED_STRING> 
+| ( ~[">", "\"", " ", "\t", "\n", "\r"] )+ > : LexInTag
+| <LAV_ERROR: ~[]>
+}
+
+<LexComment> TOKEN : 
+{
+  < COMMENT_END:  ("--" (" ")* ">" | "->") > : DEFAULT 
+| < DASH:         "-" >
+| < COMMENT_EOL:  <NEWLINE> >
+| < COMMENT_WORD: ( (~[ "\n", "\r", "\"", "-" ])+ 
+                    | <QUOTED_STRING_NB> 
+                    | <QUOTE> ) >
+}
+
+<LexDocType> TOKEN : 
+{
+  < DOCTYPE_END:  ">" > : DEFAULT 
+| < DECL_END: "?>" >    : DEFAULT
+| < DOCTYPE_WORD: ( (~[ "\n", "\r", "\"", "?" ])+ 
+                    | <QUOTED_STRING_NB> 
+                    | <QUOTE> ) >
+}
+
+<LexCdata> TOKEN : 
+{
+  <CDATA_END: "]]>" >                     : DEFAULT
+| < CLOSING:         "]" >
+| < CDATA_EOL:  <NEWLINE> >
+| < CDATA_WORD: ( (~[ "\n", "\r", "\"", "]" ])+ 
+                    | <QUOTED_STRING_NB> 
+                    | <QUOTE> ) >
+}
+
+
+void xmlItem(XmlTag xt) : { XmlTag xt2 = new XmlTag(xt); } {
+  LOOKAHEAD(2)                     
+  cdata(xt) |
+  LOOKAHEAD(2)
+  notag(xt) |
+  LOOKAHEAD(20)
+  ( 
+    btag(xt)
+    ( xmlItem(xt2) {xt.addChild(xt2); xt2 = new XmlTag(xt); } )*
+    etag()
+  ) 
+  | bstag(xt)
+}
+
+void cdata(XmlTag xt) : { Token t; StringBuffer sb = new StringBuffer(); } {
+  <CDATA_START>
+  ( ( t=<CDATA_WORD> | t=<CDATA_EOL> | t=<CLOSING> ) { sb.append(t.toString()); } )*
+  <CDATA_END> { xt.addCdata(sb.toString()); }
+}
+
+String tag_name() : { Token t; } {
+  t=<TAG_NAME> { return t.toString().trim(); }
+}
+
+XmlAttribute attribute() : { Token t; XmlAttribute a = new XmlAttribute(); } {
+  t=<ATTR_NAME> { a.name = new String(t.toString()); }
+  <ATTR_EQ>
+  t=<ATTR_VAL> { a.value = new String(a.unquote(t.toString())); return a; }
+}
+
+
+void btag(XmlTag xt) : { XmlAttribute a; String tn; } {
+  <TAG_START> 
+  tn=tag_name() { xt.name(tn); }
+  ( a=attribute() { xt.addAttribute(a); } )* 
+  <TAG_END> 
+}
+
+
+void bstag(XmlTag xt) : { XmlAttribute a; String tn; } {
+  ( <TAG_START> ) 
+  tn=tag_name() { xt.name(tn); }
+  ( a=attribute() { xt.addAttribute(a); } )* 
+  ( <TAG_SLASHEND> ) 
+}
+
+void etag() : { } {
+  <ENDTAG_START> <TAG_NAME> <TAG_END>
+}
+
+void notag(XmlTag xt) : { Token t; } {
+  (( t=<PCDATA> | t=<PCDATA_QS> | t=<EOL> ) { xt.parent.addNoTag(t.toString()); } )
+}  
+
+void xmlcom(XmlTag xt) : { Token t; StringBuffer sb = new StringBuffer(); } {
+  <COMMENT_START>
+  ( ( t=<COMMENT_WORD> | t=<COMMENT_EOL> | t=<DASH> ) { sb.append(t.toString()); } )+
+  <COMMENT_END> { xt.addXmlCom(sb.toString()); }
+}
+
+void doctype(XmlTag xt) : { Token t; StringBuffer sb = new StringBuffer(); } {
+  ( <DOCTYPE_START> | <DECL_START> )
+  ( ( t=<DOCTYPE_WORD> ) { sb.append(t.toString()); } )+
+  ( <DOCTYPE_END> | <DECL_END> ) { xt.addDocType(sb.toString()); }
+}
+
+
+void zinput(XmlTag xt) : { XmlTag xt2 = new XmlTag(xt); } {
+   
+  ( LOOKAHEAD(2)  xmlcom(xt) | 
+    LOOKAHEAD(2) doctype(xt) |
+    ( xmlItem(xt2) { xt.addChild(xt2); xt2 = new XmlTag(xt); } )
+  )+
+  <EOF>
+}
