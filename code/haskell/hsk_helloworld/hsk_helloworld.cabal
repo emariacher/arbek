@@ -1,0 +1,7 @@
+name:     hsk_helloworld
+version:  0.1
+
+executable hsk_helloworld
+  hs-source-dirs:  src
+  main-is:         Main.hs
+

@@ -1,0 +1,7 @@
+name:     hsk_xmlparsing1
+version:  0.1
+
+executable hsk_xmlparsing1
+  hs-source-dirs:  src
+  main-is:         Main.hs
+
