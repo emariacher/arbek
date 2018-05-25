@@ -1,0 +1,676 @@
+# Generated from [BIC keymatrix-Ver2-fromSZ.xml] 07nov.12_14_56
+#type: Main
+# --------------- Row 1------------------
+"Key[Row1][Col0].Type" = "Standard"
+"Key[Row1][Col0].TranslationCode" = 0x002 # L-Shift
+
+"Key[Row1][Col1].Type" = "None"
+"Key[Row1][Col1].TranslationCode" = 0 # empty
+
+"Key[Row1][Col2].Type" = "None"
+"Key[Row1][Col2].TranslationCode" = 0 # empty
+
+"Key[Row1][Col3].Type" = "None"
+"Key[Row1][Col3].TranslationCode" = 0 # empty
+
+"Key[Row1][Col4].Type" = "Standard"
+"Key[Row1][Col4].TranslationCode" = 0x08A # Henkan
+
+"Key[Row1][Col5].Type" = "Standard"
+"Key[Row1][Col5].TranslationCode" = 0x00D # J
+
+"Key[Row1][Col6].Type" = "Standard"
+"Key[Row1][Col6].TranslationCode" = 0x036 # ,&lt;
+
+"Key[Row1][Col7].Type" = "Standard"
+"Key[Row1][Col7].TranslationCode" = 0x00E # K
+
+"Key[Row1][Col8].Type" = "Standard"
+"Key[Row1][Col8].TranslationCode" = 0x02E # =+
+
+"Key[Row1][Col9].Type" = "Standard"
+"Key[Row1][Col9].TranslationCode" = 0x009 # F
+
+"Key[Row1][Col10].Type" = "Standard"
+"Key[Row1][Col10].TranslationCode" = 0x00A # G
+
+
+# --------------- Row 2------------------
+"Key[Row2][Col0].Type" = "Standard"
+"Key[Row2][Col0].TranslationCode" = 0x020 # R-Shift
+
+"Key[Row2][Col1].Type" = "None"
+"Key[Row2][Col1].TranslationCode" = 0 # empty
+
+"Key[Row2][Col2].Type" = "None"
+"Key[Row2][Col2].TranslationCode" = 0 # empty
+
+"Key[Row2][Col3].Type" = "None"
+"Key[Row2][Col3].TranslationCode" = 0 # empty
+
+"Key[Row2][Col4].Type" = "Standard"
+"Key[Row2][Col4].TranslationCode" = 0x00C # I
+
+"Key[Row2][Col5].Type" = "Standard"
+"Key[Row2][Col5].TranslationCode" = 0x033 # ;:
+
+"Key[Row2][Col6].Type" = "Standard"
+"Key[Row2][Col6].TranslationCode" = 0x02F # [{
+
+"Key[Row2][Col7].Type" = "Standard"
+"Key[Row2][Col7].TranslationCode" = 0x037 # .>
+
+"Key[Row2][Col8].Type" = "Standard"
+"Key[Row2][Col8].TranslationCode" = 0x016 # S
+
+"Key[Row2][Col9].Type" = "Standard"
+"Key[Row2][Col9].TranslationCode" = 0x090 # Hanguel
+
+"Key[Row2][Col10].Type" = "Standard"
+"Key[Row2][Col10].TranslationCode" = 0x01D # Z
+
+
+# --------------- Row 3------------------
+"Key[Row3][Col0].Type" = "None"
+"Key[Row3][Col0].TranslationCode" = 0 # empty
+
+"Key[Row3][Col1].Type" = "Standard"
+"Key[Row3][Col1].TranslationCode" = 0x004 # L-Alt
+
+"Key[Row3][Col2].Type" = "None"
+"Key[Row3][Col2].TranslationCode" = 0 # empty
+
+"Key[Row3][Col3].Type" = "None"
+"Key[Row3][Col3].TranslationCode" = 0 # empty
+
+"Key[Row3][Col4].Type" = "Standard"
+"Key[Row3][Col4].TranslationCode" = 0x03A # F1
+
+"Key[Row3][Col5].Type" = "Standard"
+"Key[Row3][Col5].TranslationCode" = 0x013 # P
+
+"Key[Row3][Col6].Type" = "Standard"
+"Key[Row3][Col6].TranslationCode" = 0x025 # 8*
+
+"Key[Row3][Col7].Type" = "Standard"
+"Key[Row3][Col7].TranslationCode" = 0x004 # A
+
+"Key[Row3][Col8].Type" = "Standard"
+"Key[Row3][Col8].TranslationCode" = 0x018 # U
+
+"Key[Row3][Col9].Type" = "Standard"
+"Key[Row3][Col9].TranslationCode" = 0x08B # Muhenkan
+
+"Key[Row3][Col10].Type" = "Standard"
+"Key[Row3][Col10].TranslationCode" = 0x00F # L
+
+
+# --------------- Row 4------------------
+"Key[Row4][Col0].Type" = "None"
+"Key[Row4][Col0].TranslationCode" = 0 # empty
+
+"Key[Row4][Col1].Type" = "Standard"
+"Key[Row4][Col1].TranslationCode" = 0x0E6 # R-Alt
+
+"Key[Row4][Col2].Type" = "None"
+"Key[Row4][Col2].TranslationCode" = 0 # empty
+
+"Key[Row4][Col3].Type" = "None"
+"Key[Row4][Col3].TranslationCode" = 0 # empty
+
+"Key[Row4][Col4].Type" = "Standard"
+"Key[Row4][Col4].TranslationCode" = 0x03B # F2
+
+"Key[Row4][Col5].Type" = "Function Lock Dependent"
+"Key[Row4][Col5].TranslationCode" = 0x045 # F12 Fn-> PauseBrk
+
+"Key[Row4][Col6].Type" = "Standard"
+"Key[Row4][Col6].TranslationCode" = 0x007 # D
+
+"Key[Row4][Col7].Type" = "Standard"
+"Key[Row4][Col7].TranslationCode" = 0x088 # KataHira
+
+"Key[Row4][Col8].Type" = "Standard"
+"Key[Row4][Col8].TranslationCode" = 0x091 # Hanja
+
+"Key[Row4][Col9].Type" = "Function Lock Dependent"
+"Key[Row4][Col9].TranslationCode" = 0x050 # L-Arrow Fn-> Home
+
+"Key[Row4][Col10].Type" = "Standard"
+"Key[Row4][Col10].TranslationCode" = 0x01E # 1!
+
+
+# --------------- Row 5------------------
+"Key[Row5][Col0].Type" = "None"
+"Key[Row5][Col0].TranslationCode" = 0 # empty
+
+"Key[Row5][Col1].Type" = "None"
+"Key[Row5][Col1].TranslationCode" = 0 # empty
+
+"Key[Row5][Col2].Type" = "Standard"
+"Key[Row5][Col2].TranslationCode" = 0x001 # L-Ctrl
+
+"Key[Row5][Col3].Type" = "None"
+"Key[Row5][Col3].TranslationCode" = 0 # empty
+
+"Key[Row5][Col4].Type" = "Standard"
+"Key[Row5][Col4].TranslationCode" = 0x023 # 6^
+
+"Key[Row5][Col5].Type" = "Standard"
+"Key[Row5][Col5].TranslationCode" = 0x01C # Y
+
+"Key[Row5][Col6].Type" = "Standard"
+"Key[Row5][Col6].TranslationCode" = 0x039 # CapsLck
+
+"Key[Row5][Col7].Type" = "Standard"
+"Key[Row5][Col7].TranslationCode" = 0x014 # Q
+
+"Key[Row5][Col8].Type" = "Standard"
+"Key[Row5][Col8].TranslationCode" = 0x032 # $£
+
+"Key[Row5][Col9].Type" = "Standard"
+"Key[Row5][Col9].TranslationCode" = 0x064 # &lt;>
+
+"Key[Row5][Col10].Type" = "Standard"
+"Key[Row5][Col10].TranslationCode" = 0x030 # ]}
+
+
+# --------------- Row 6------------------
+"Key[Row6][Col0].Type" = "None"
+"Key[Row6][Col0].TranslationCode" = 0 # empty
+
+"Key[Row6][Col1].Type" = "None"
+"Key[Row6][Col1].TranslationCode" = 0 # empty
+
+"Key[Row6][Col2].Type" = "Function Lock Dependent"
+"Key[Row6][Col2].TranslationCode" = 0x0E4 # R-Ctrl Fn-> App
+
+"Key[Row6][Col3].Type" = "None"
+"Key[Row6][Col3].TranslationCode" = 0 # empty
+
+"Key[Row6][Col4].Type" = "Standard"
+"Key[Row6][Col4].TranslationCode" = 0x01A # W
+
+"Key[Row6][Col5].Type" = "Standard"
+"Key[Row6][Col5].TranslationCode" = 0x041 # F8
+
+"Key[Row6][Col6].Type" = "Standard"
+"Key[Row6][Col6].TranslationCode" = 0x042 # F9
+
+"Key[Row6][Col7].Type" = "Standard"
+"Key[Row6][Col7].TranslationCode" = 0x040 # F7
+
+"Key[Row6][Col8].Type" = "Function Lock Dependent"
+"Key[Row6][Col8].TranslationCode" = 0x051 # DnArrow Fn-> PageDn
+
+"Key[Row6][Col9].Type" = "None"
+"Key[Row6][Col9].TranslationCode" = 0 # empty
+
+"Key[Row6][Col10].Type" = "Standard"
+"Key[Row6][Col10].TranslationCode" = 0x035 # ~
+
+
+# --------------- Row 7------------------
+"Key[Row7][Col0].Type" = "None"
+"Key[Row7][Col0].TranslationCode" = 0 # empty
+
+"Key[Row7][Col1].Type" = "None"
+"Key[Row7][Col1].TranslationCode" = 0 # empty
+
+"Key[Row7][Col2].Type" = "None"
+"Key[Row7][Col2].TranslationCode" = 0 # empty
+
+"Key[Row7][Col3].Type" = "Standard"
+"Key[Row7][Col3].TranslationCode" = 0x008 # L-GUI
+
+"Key[Row7][Col4].Type" = "Standard"
+"Key[Row7][Col4].TranslationCode" = 0x02B # Tab
+
+"Key[Row7][Col5].Type" = "Standard"
+"Key[Row7][Col5].TranslationCode" = 0x01B # X
+
+"Key[Row7][Col6].Type" = "Standard"
+"Key[Row7][Col6].TranslationCode" = 0x017 # T
+
+"Key[Row7][Col7].Type" = "Standard"
+"Key[Row7][Col7].TranslationCode" = 0x031 # Bkslash|
+
+"Key[Row7][Col8].Type" = "Standard"
+"Key[Row7][Col8].TranslationCode" = 0x02D # -_
+
+"Key[Row7][Col9].Type" = "Standard"
+"Key[Row7][Col9].TranslationCode" = 0x01F # 2@
+
+"Key[Row7][Col10].Type" = "Standard"
+"Key[Row7][Col10].TranslationCode" = 0x021 # 4$
+
+
+# --------------- Row 8------------------
+"Key[Row8][Col0].Type" = "Standard"
+"Key[Row8][Col0].TranslationCode" = 0x03C # F3
+
+"Key[Row8][Col1].Type" = "Standard"
+"Key[Row8][Col1].TranslationCode" = 0x03D # F4
+
+"Key[Row8][Col2].Type" = "Standard"
+"Key[Row8][Col2].TranslationCode" = 0x03E # F5
+
+"Key[Row8][Col3].Type" = "Standard"
+"Key[Row8][Col3].TranslationCode" = 0x03F # F6
+
+"Key[Row8][Col4].Type" = "Standard"
+"Key[Row8][Col4].TranslationCode" =  # L-Fn
+
+"Key[Row8][Col5].Type" = "Standard"
+"Key[Row8][Col5].TranslationCode" = 0x028 # Enter
+
+"Key[Row8][Col6].Type" = "Standard"
+"Key[Row8][Col6].TranslationCode" = 0x019 # V
+
+"Key[Row8][Col7].Type" = "Standard"
+"Key[Row8][Col7].TranslationCode" = 0x026 # 9(
+
+"Key[Row8][Col8].Type" = "Standard"
+"Key[Row8][Col8].TranslationCode" = 0x020 # 3/
+
+"Key[Row8][Col9].Type" = "Standard"
+"Key[Row8][Col9].TranslationCode" = 0x024 # 7&
+
+"Key[Row8][Col10].Type" = "Standard"
+"Key[Row8][Col10].TranslationCode" = 0x015 # R
+
+
+# --------------- Row 9------------------
+"Key[Row9][Col0].Type" = "Standard"
+"Key[Row9][Col0].TranslationCode" = 0x034 # 'dblquot
+
+"Key[Row9][Col1].Type" = "Standard"
+"Key[Row9][Col1].TranslationCode" = 0x043 # F10
+
+"Key[Row9][Col2].Type" = "Standard"
+"Key[Row9][Col2].TranslationCode" = 0x087 # Ro
+
+"Key[Row9][Col3].Type" = "Function Lock Dependent"
+"Key[Row9][Col3].TranslationCode" = 0x049 # Insert Fn-> ScrLck
+
+"Key[Row9][Col4].Type" = "Standard"
+"Key[Row9][Col4].TranslationCode" = 0x006 # C
+
+"Key[Row9][Col5].Type" = "Function Lock Dependent"
+"Key[Row9][Col5].TranslationCode" = 0x052 # UpArrow Fn-> PageUp
+
+"Key[Row9][Col6].Type" = "Standard"
+"Key[Row9][Col6].TranslationCode" = 0x00B # H
+
+"Key[Row9][Col7].Type" = "Standard"
+"Key[Row9][Col7].TranslationCode" = 0x022 # 5%
+
+"Key[Row9][Col8].Type" = "Standard"
+"Key[Row9][Col8].TranslationCode" = 0x011 # N
+
+"Key[Row9][Col9].Type" = "Standard"
+"Key[Row9][Col9].TranslationCode" = 0x027 # 0)
+
+"Key[Row9][Col10].Type" = "Standard"
+"Key[Row9][Col10].TranslationCode" = 0x005 # B
+
+
+# --------------- Row 10------------------
+"Key[Row10][Col0].Type" = "Function Lock Dependent"
+"Key[Row10][Col0].TranslationCode" = 0x04F # R-Arrow Fn-> End
+
+"Key[Row10][Col1].Type" = "Standard"
+"Key[Row10][Col1].TranslationCode" = 0x02C # Space
+
+"Key[Row10][Col2].Type" = "Standard"
+"Key[Row10][Col2].TranslationCode" = 0x012 # O
+
+"Key[Row10][Col3].Type" = "Standard"
+"Key[Row10][Col3].TranslationCode" = 0x04C # Delete
+
+"Key[Row10][Col4].Type" = "Standard"
+"Key[Row10][Col4].TranslationCode" = 0x038 # / ?
+
+"Key[Row10][Col5].Type" = "Standard"
+"Key[Row10][Col5].TranslationCode" = 0x008 # E
+
+"Key[Row10][Col6].Type" = "Standard"
+"Key[Row10][Col6].TranslationCode" = 0x089 # ¥|
+
+"Key[Row10][Col7].Type" = "Function Lock Dependent"
+"Key[Row10][Col7].TranslationCode" = 0x044 # F11 Fn-> PrntScrn
+
+"Key[Row10][Col8].Type" = "Standard"
+"Key[Row10][Col8].TranslationCode" = 0x029 # Esc
+
+"Key[Row10][Col9].Type" = "Standard"
+"Key[Row10][Col9].TranslationCode" = 0x010 # M
+
+"Key[Row10][Col10].Type" = "Standard"
+"Key[Row10][Col10].TranslationCode" = 0x02A # Bkspace
+
+
+#type: Fn
+# --------------- Row 1------------------
+"Key[Row1][Col0].Type" = "None"
+"Key[Row1][Col0].TranslationCode" = 0 # empty
+
+"Key[Row1][Col1].Type" = "None"
+"Key[Row1][Col1].TranslationCode" = 0 # empty
+
+"Key[Row1][Col2].Type" = "None"
+"Key[Row1][Col2].TranslationCode" = 0 # empty
+
+"Key[Row1][Col3].Type" = "None"
+"Key[Row1][Col3].TranslationCode" = 0 # empty
+
+"Key[Row1][Col4].Type" = "None"
+"Key[Row1][Col4].TranslationCode" = 0 # empty
+
+"Key[Row1][Col5].Type" = "None"
+"Key[Row1][Col5].TranslationCode" = 0 # empty
+
+"Key[Row1][Col6].Type" = "None"
+"Key[Row1][Col6].TranslationCode" = 0 # empty
+
+"Key[Row1][Col7].Type" = "None"
+"Key[Row1][Col7].TranslationCode" = 0 # empty
+
+"Key[Row1][Col8].Type" = "None"
+"Key[Row1][Col8].TranslationCode" = 0 # empty
+
+"Key[Row1][Col9].Type" = "None"
+"Key[Row1][Col9].TranslationCode" = 0 # empty
+
+"Key[Row1][Col10].Type" = "None"
+"Key[Row1][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 2------------------
+"Key[Row2][Col0].Type" = "None"
+"Key[Row2][Col0].TranslationCode" = 0 # empty
+
+"Key[Row2][Col1].Type" = "None"
+"Key[Row2][Col1].TranslationCode" = 0 # empty
+
+"Key[Row2][Col2].Type" = "None"
+"Key[Row2][Col2].TranslationCode" = 0 # empty
+
+"Key[Row2][Col3].Type" = "None"
+"Key[Row2][Col3].TranslationCode" = 0 # empty
+
+"Key[Row2][Col4].Type" = "None"
+"Key[Row2][Col4].TranslationCode" = 0 # empty
+
+"Key[Row2][Col5].Type" = "None"
+"Key[Row2][Col5].TranslationCode" = 0 # empty
+
+"Key[Row2][Col6].Type" = "None"
+"Key[Row2][Col6].TranslationCode" = 0 # empty
+
+"Key[Row2][Col7].Type" = "None"
+"Key[Row2][Col7].TranslationCode" = 0 # empty
+
+"Key[Row2][Col8].Type" = "None"
+"Key[Row2][Col8].TranslationCode" = 0 # empty
+
+"Key[Row2][Col9].Type" = "None"
+"Key[Row2][Col9].TranslationCode" = 0 # empty
+
+"Key[Row2][Col10].Type" = "None"
+"Key[Row2][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 3------------------
+"Key[Row3][Col0].Type" = "None"
+"Key[Row3][Col0].TranslationCode" = 0 # empty
+
+"Key[Row3][Col1].Type" = "None"
+"Key[Row3][Col1].TranslationCode" = 0 # empty
+
+"Key[Row3][Col2].Type" = "None"
+"Key[Row3][Col2].TranslationCode" = 0 # empty
+
+"Key[Row3][Col3].Type" = "None"
+"Key[Row3][Col3].TranslationCode" = 0 # empty
+
+"Key[Row3][Col4].Type" = "None"
+"Key[Row3][Col4].TranslationCode" = 0 # empty
+
+"Key[Row3][Col5].Type" = "None"
+"Key[Row3][Col5].TranslationCode" = 0 # empty
+
+"Key[Row3][Col6].Type" = "None"
+"Key[Row3][Col6].TranslationCode" = 0 # empty
+
+"Key[Row3][Col7].Type" = "None"
+"Key[Row3][Col7].TranslationCode" = 0 # empty
+
+"Key[Row3][Col8].Type" = "None"
+"Key[Row3][Col8].TranslationCode" = 0 # empty
+
+"Key[Row3][Col9].Type" = "None"
+"Key[Row3][Col9].TranslationCode" = 0 # empty
+
+"Key[Row3][Col10].Type" = "None"
+"Key[Row3][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 4------------------
+"Key[Row4][Col0].Type" = "None"
+"Key[Row4][Col0].TranslationCode" = 0 # empty
+
+"Key[Row4][Col1].Type" = "None"
+"Key[Row4][Col1].TranslationCode" = 0 # empty
+
+"Key[Row4][Col2].Type" = "None"
+"Key[Row4][Col2].TranslationCode" = 0 # empty
+
+"Key[Row4][Col3].Type" = "None"
+"Key[Row4][Col3].TranslationCode" = 0 # empty
+
+"Key[Row4][Col4].Type" = "None"
+"Key[Row4][Col4].TranslationCode" = 0 # empty
+
+"Key[Row4][Col5].Type" = "Function Lock Dependent"
+"Key[Row4][Col5].TranslationCode" = 0x048 # PauseBrk Fn-> PauseBrk
+
+"Key[Row4][Col6].Type" = "None"
+"Key[Row4][Col6].TranslationCode" = 0 # empty
+
+"Key[Row4][Col7].Type" = "None"
+"Key[Row4][Col7].TranslationCode" = 0 # empty
+
+"Key[Row4][Col8].Type" = "None"
+"Key[Row4][Col8].TranslationCode" = 0 # empty
+
+"Key[Row4][Col9].Type" = "Function Lock Dependent"
+"Key[Row4][Col9].TranslationCode" = 0x04A # Home Fn-> Home
+
+"Key[Row4][Col10].Type" = "None"
+"Key[Row4][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 5------------------
+"Key[Row5][Col0].Type" = "None"
+"Key[Row5][Col0].TranslationCode" = 0 # empty
+
+"Key[Row5][Col1].Type" = "None"
+"Key[Row5][Col1].TranslationCode" = 0 # empty
+
+"Key[Row5][Col2].Type" = "None"
+"Key[Row5][Col2].TranslationCode" = 0 # empty
+
+"Key[Row5][Col3].Type" = "None"
+"Key[Row5][Col3].TranslationCode" = 0 # empty
+
+"Key[Row5][Col4].Type" = "None"
+"Key[Row5][Col4].TranslationCode" = 0 # empty
+
+"Key[Row5][Col5].Type" = "None"
+"Key[Row5][Col5].TranslationCode" = 0 # empty
+
+"Key[Row5][Col6].Type" = "None"
+"Key[Row5][Col6].TranslationCode" = 0 # empty
+
+"Key[Row5][Col7].Type" = "None"
+"Key[Row5][Col7].TranslationCode" = 0 # empty
+
+"Key[Row5][Col8].Type" = "None"
+"Key[Row5][Col8].TranslationCode" = 0 # empty
+
+"Key[Row5][Col9].Type" = "None"
+"Key[Row5][Col9].TranslationCode" = 0 # empty
+
+"Key[Row5][Col10].Type" = "None"
+"Key[Row5][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 6------------------
+"Key[Row6][Col0].Type" = "None"
+"Key[Row6][Col0].TranslationCode" = 0 # empty
+
+"Key[Row6][Col1].Type" = "None"
+"Key[Row6][Col1].TranslationCode" = 0 # empty
+
+"Key[Row6][Col2].Type" = "Function Lock Dependent"
+"Key[Row6][Col2].TranslationCode" = 0x065 # App Fn-> App
+
+"Key[Row6][Col3].Type" = "None"
+"Key[Row6][Col3].TranslationCode" = 0 # empty
+
+"Key[Row6][Col4].Type" = "None"
+"Key[Row6][Col4].TranslationCode" = 0 # empty
+
+"Key[Row6][Col5].Type" = "None"
+"Key[Row6][Col5].TranslationCode" = 0 # empty
+
+"Key[Row6][Col6].Type" = "None"
+"Key[Row6][Col6].TranslationCode" = 0 # empty
+
+"Key[Row6][Col7].Type" = "None"
+"Key[Row6][Col7].TranslationCode" = 0 # empty
+
+"Key[Row6][Col8].Type" = "Function Lock Dependent"
+"Key[Row6][Col8].TranslationCode" = 0x04E # PageDn Fn-> PageDn
+
+"Key[Row6][Col9].Type" = "None"
+"Key[Row6][Col9].TranslationCode" = 0 # empty
+
+"Key[Row6][Col10].Type" = "None"
+"Key[Row6][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 7------------------
+"Key[Row7][Col0].Type" = "None"
+"Key[Row7][Col0].TranslationCode" = 0 # empty
+
+"Key[Row7][Col1].Type" = "None"
+"Key[Row7][Col1].TranslationCode" = 0 # empty
+
+"Key[Row7][Col2].Type" = "None"
+"Key[Row7][Col2].TranslationCode" = 0 # empty
+
+"Key[Row7][Col3].Type" = "None"
+"Key[Row7][Col3].TranslationCode" = 0 # empty
+
+"Key[Row7][Col4].Type" = "None"
+"Key[Row7][Col4].TranslationCode" = 0 # empty
+
+"Key[Row7][Col5].Type" = "None"
+"Key[Row7][Col5].TranslationCode" = 0 # empty
+
+"Key[Row7][Col6].Type" = "None"
+"Key[Row7][Col6].TranslationCode" = 0 # empty
+
+"Key[Row7][Col7].Type" = "None"
+"Key[Row7][Col7].TranslationCode" = 0 # empty
+
+"Key[Row7][Col8].Type" = "None"
+"Key[Row7][Col8].TranslationCode" = 0 # empty
+
+"Key[Row7][Col9].Type" = "None"
+"Key[Row7][Col9].TranslationCode" = 0 # empty
+
+"Key[Row7][Col10].Type" = "None"
+"Key[Row7][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 8------------------
+"Key[Row8][Col0].Type" = "None"
+"Key[Row8][Col0].TranslationCode" = 0 # empty
+
+"Key[Row8][Col1].Type" = "None"
+"Key[Row8][Col1].TranslationCode" = 0 # empty
+
+"Key[Row8][Col2].Type" = "None"
+"Key[Row8][Col2].TranslationCode" = 0 # empty
+
+"Key[Row8][Col3].Type" = "None"
+"Key[Row8][Col3].TranslationCode" = 0 # empty
+
+"Key[Row8][Col4].Type" = "None"
+"Key[Row8][Col4].TranslationCode" = 0 # empty
+
+"Key[Row8][Col5].Type" = "None"
+"Key[Row8][Col5].TranslationCode" = 0 # empty
+
+"Key[Row8][Col6].Type" = "None"
+"Key[Row8][Col6].TranslationCode" = 0 # empty
+
+"Key[Row8][Col7].Type" = "None"
+"Key[Row8][Col7].TranslationCode" = 0 # empty
+
+"Key[Row8][Col8].Type" = "None"
+"Key[Row8][Col8].TranslationCode" = 0 # empty
+
+"Key[Row8][Col9].Type" = "None"
+"Key[Row8][Col9].TranslationCode" = 0 # empty
+
+"Key[Row8][Col10].Type" = "None"
+"Key[Row8][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 9------------------
+"Key[Row9][Col0].Type" = "None"
+"Key[Row9][Col0].TranslationCode" = 0 # empty
+
+"Key[Row9][Col1].Type" = "None"
+"Key[Row9][Col1].TranslationCode" = 0 # empty
+
+"Key[Row9][Col2].Type" = "None"
+"Key[Row9][Col2].TranslationCode" = 0 # empty
+
+"Key[Row9][Col3].Type" = "Function Lock Dependent"
+"Key[Row9][Col3].TranslationCode" = 0x047 # ScrLck Fn-> ScrLck
+
+"Key[Row9][Col4].Type" = "None"
+"Key[Row9][Col4].TranslationCode" = 0 # empty
+
+"Key[Row9][Col5].Type" = "Function Lock Dependent"
+"Key[Row9][Col5].TranslationCode" = 0x04B # PageUp Fn-> PageUp
+
+"Key[Row9][Col6].Type" = "None"
+"Key[Row9][Col6].TranslationCode" = 0 # empty
+
+"Key[Row9][Col7].Type" = "None"
+"Key[Row9][Col7].TranslationCode" = 0 # empty
+
+"Key[Row9][Col8].Type" = "None"
+"Key[Row9][Col8].TranslationCode" = 0 # empty
+
+"Key[Row9][Col9].Type" = "None"
+"Key[Row9][Col9].TranslationCode" = 0 # empty
+
+"Key[Row9][Col10].Type" = "None"
+"Key[Row9][Col10].TranslationCode" = 0 # empty
+
+
+# --------------- Row 10------------------
+"Key[Row10][Col0].Type" = "Function Lock Dependent"
+"Key[Row10][Col0].TranslationCode" = 0x04D # End Fn-> End
+
+"Key[Row10][Col7].Type" = "Function Lock Dependent"
+"Key[Row10][Col7].TranslationCode" = 0x046 # PrntScrn Fn-> PrntScrn
+
+
