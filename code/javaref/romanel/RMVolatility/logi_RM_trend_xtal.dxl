@@ -1,0 +1,815 @@
+// Export all OPEN modules of a project in XML format for Xtallization analysis
+// 1 open project
+// 2 open all modules to be tracked
+// 3 run the dxl script in one module
+
+// %full_filespec: %
+
+// Copyright  2008 Logitech SA. All rights reserved.
+// Eric Mariacher 2008-02-11
+
+
+/*
+
+Export all OPEN modules of a project in XML format for Xtallization analysis
+1 open project
+2 open all modules to be tracked
+3 run the dxl script in one module
+
+*/
+
+pragma runLim,0
+#include <utils/doctools/itfutil.inc>
+#include <utils/doctools/codepages.inc>
+
+//--------------------------------------------------------------------
+
+const string plainTitle         = "Export DOORS->Xtal"
+const string plainProgressTitle = "Export Xtal Progress"
+const string plainLineBreakOpts[] = {"Add line breaks"}
+const string plainTabOpts[] = {"Tab separated columns"}
+const string plainProgressStep    = "Exporting Object "
+const string plainTableOnly       = "Table format only: "
+const string plainBookOnly        = "Book format only: "
+const string plainWidthLabel      = "Line width: "
+
+//-------------------------------Forward Declarations---------------------------
+bool userExportCode(string, int, bool, DB)
+
+//------------------------------- Options --------------------------------------
+
+
+DBE advancedLineBreak, advancedLineWidth, advancedUseTabs
+
+//Declaration of DBE(Dialog Box Elements).
+DBE impEncodeOptions
+
+// Constants defining key values for the user dialog defaults
+const string expPlainTxtEncoding_default             = "exportPlainTxtDefaultCodepage"
+
+
+int plainLineWidth = 80
+bool plainLineBreak = false
+bool lastLineBreak = plainLineBreak
+bool plainUseTabs   = false
+bool plainUseHeadingNumbers = true
+int currentLayout = layoutTypeBook
+
+//-------------------------- Global variables ----------------------------------
+
+Skip    expTabAsciiWidths = null
+
+int     expTabColumns
+int     expTabHorizSpace
+int     expTabVertSpace
+
+int     expTabIndentSpace = 4
+
+Array   expTabTable = create(80, 10)
+
+//Variable which stores whether checkbox is ticked or not
+bool includeEmptyAttributes = true
+
+
+string printTag(Object o, string attrName) {
+	if(existsObjectReadAttr(o,attrName)) {
+		string s = o.attrName
+		l = length s
+		if (l > 0) return "<" attrName ">" s "</" attrName ">"
+
+	}
+	return ""
+}
+
+//-------------------------- Book Format Functions -----------------------------
+// expTxtAsciiOut
+
+bool expTxtAsciiOut(Stream aout, string s, bool linebreak, int width) {
+    int len
+
+    if (null s)
+        return true
+
+    if (linebreak) {
+        format(aout, s, width)    // outputs s in ragged right justification
+    } else {
+        aout << s
+    }
+
+    len = length s
+
+    if (s[len-1] != '\n')
+        aout << "\n"
+        
+    return true
+
+} // expTxtAsciiOut
+
+// expTxtAsciiOutObj
+bool expTxtAsciiOutObj(Stream aout, Object o, Module m, bool linebreak, int width) {
+History h 
+    if (null o || (!canRead o))  
+    {
+        return true  
+    }
+    //Get the Main column attribute
+    string attributeName = o.(reserved AMainColumnAttribute)
+	//If not a main column attribute...
+    if(null attributeName)
+    {
+
+        if (table o) {
+            if (!expTxtAsciiOut(aout, cTableMarkerString, linebreak, width))
+                return false
+        } else {
+			if (!expTxtAsciiOut(aout, "<req><type>" (name m) "</type><id>" (identifier o) "</id><history>", linebreak, width))
+                return false
+			for h in (Object o) do if (!expTxtAsciiOut(aout, "<date type=\"" (h.type) "\">" (h.date) "</date>", linebreak, width))
+                return false
+			aout << "</history>" printTag(o,"Priority") printTag(o,"Finality")
+			Buffer b_change = create
+			b_change = probeAttr_(o,"TrackChanges")
+			if(contains(b_change,"Changed!",0)>=0) {
+				aout << "<changed/>"
+			} else if(contains(b_change,"Dropped",0)>=0) {
+				aout << "<dropped/>"
+			}
+			Buffer b_nud = create
+			b_nud = probeAttr_(o,"NUD")
+			if(contains(b_nud,"YES",0)>=0) {
+				aout << "<nud/>"
+			}
+			aout << printTag(o,"Risk") printTag(o,"Proto_NeedTest") 
+			aout << "</req>\n"
+        }
+    }
+
+    
+
+    exportStepProgress
+    return !exportCheckProgress
+} // expTxtAsciiOutObj
+
+
+//  expTxtExportModule
+
+
+void expTxtExportModule(string file, bool linebreak, int width) {
+    Object o
+    Stream aout
+	Project p = current Project
+	Module mOldCurrent = current
+	Baseline b 
+	string buildinfo
+
+    //Modified to write the file with the code page specified by the user.
+    aout = write(file,selectedCodePage)
+    if (selectedCodePage == CP_UTF8 || 
+        selectedCodePage == CP_UTF16_LE || 
+        selectedCodePage == CP_UTF16_BE)
+    {
+        // puts the BOM to specify that the file is in UTF8/UTF16 encoding 
+        aout << wcharOf(unicodeBOM)
+    }
+   
+    aout << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
+    aout << "<project name=\""(name p)"\">\n"
+	Module m,n
+	for m in current Project do {
+		if(type(m)!="Formal") {
+			continue
+		}
+		if(isBaseline(m)){
+			continue
+		}
+		print "**********" m."Name" "*********\n"
+		aout << "<module name=\"" (name m) "\">\n"
+		
+		// check if GoGate and PQPentry info available
+		if(existsModuleReadAttr(m,"PlannedGoGate")) {
+			Date tmpDate = m."PlannedGoGate"
+			if(tmpDate != null) {
+				aout << "<plannedgogate>" dateAndTime(tmpDate) "</plannedgogate>"
+				print "plannedgogate=\"" dateAndTime(tmpDate) "\"\n"
+			}
+		}
+		if(existsModuleReadAttr(m,"PlannedPQPEntry")) {
+			Date tmpDate = m."PlannedPQPEntry"
+			if(tmpDate != null) {
+				aout << "<plannedpqpentry>" dateAndTime(tmpDate) "</plannedpqpentry>"
+				print "plannedPQPEntry=\"" dateAndTime(tmpDate) "\"\n"
+			}
+		}
+		aout << ""
+
+		// handle all baselines
+		for b in m do { 
+			buildinfo = (major b)"."(minor b) " " (suffix b) " " (annotation b)
+			aout << "<baseline name=\""buildinfo"\" date=\"" dateAndTime(dateOf(b)) "\">\n"
+			current = load(m, b, false)		
+			print "    " (name m) "[" buildinfo ": " dateAndTime(dateOf(b)) "]\n"
+			for o in current do {
+				if (!expTxtAsciiOutObj(aout, o, m, linebreak, width)) {
+					exportEndProgress
+					break
+				}
+			}
+			aout << "</baseline>\n"
+		}
+		
+		// handle current module i.e. not a baseline
+		aout << "<baseline name=\"current\" date=\"" dateAndTime(today) "\">\n"
+		print "    " (name m) "[current: " dateAndTime(today) "]\n"
+		current = m
+		for o in current do {
+			if (!expTxtAsciiOutObj(aout, o, m, linebreak, width)) {
+				exportEndProgress
+				break
+			}
+		}
+		
+		aout << "</baseline>\n"
+
+
+		aout << "</module>\n"
+	}
+    aout << "</project>\n"
+    close aout
+	current = mOldCurrent
+	warningBox "Terminé!"
+	print "Terminé!"
+
+} // expTxtExportModule
+
+//-------------------------- Table Format Functions -----------------------------
+//***********************************************************
+// * expTabExtractLine
+// *
+// * return a string up to the first newline character and modify
+// * the string argument to be the rest
+// */
+
+string expTabExtractLine(string& s) {
+    int     i       = 0
+    int     max     = length s
+    string  result
+ 
+    while (i < max && s[i] != '\n') i++
+ 
+    result = s[0:i-1]
+
+    if (i < max-2)
+    {
+        s = s[i+1:]
+    }
+    else
+    {
+        s = ""
+    }
+ 
+    return result
+
+} // expTabExtractLine
+
+ 
+//***********************************************************
+// * expTabBuildText
+// *
+// * returns a string corresponding to a concatenation of an
+// * objects attributes
+// */
+
+string expTabBuildText(Object o, Column c, int &x, &width) {
+    string head = ""
+    string result = ""
+    string txt = ""
+
+    if (null o)
+        return title c
+
+    if (!main c)
+    {
+	    return text(c,o)
+    }
+    string attributeName = o.(reserved AMainColumnAttribute) 
+	
+    if(null attributeName)
+    {
+
+        if (table o) {
+            result = cTableMarkerString
+        } else {
+        if (hasCopyableHeading o) {
+            if (plainUseHeadingNumbers && (!cell o)) {
+                head = (number o) " " o.AHeading ""
+            } else {
+                head = o.AHeading ""
+            }
+        }
+		
+        if (hasCopyableText o) {
+            txt = o.ALongText ""
+        }
+
+        if ((null head) && (null txt) && (!cell o) && (!oleIsObject o) && (!hasPicture o)) {
+            // if totally empty object, override non-showing of number for objects
+            // with no heading
+            if (plainUseHeadingNumbers) {
+                result = (number o)
+            }
+        }
+		
+        if (null head) {
+            if (!null txt) {
+                result = txt
+                if (width > 6) {
+                    width -= expTabIndentSpace
+                    x += expTabIndentSpace 
+                }
+            }
+        } else {
+            if (null txt) {
+                result = head
+            } else {
+                result = head "\n\n" txt
+            }
+        }
+      }
+    }
+    else
+    {
+        if(!hasCopyableTableAttributes(o))
+        {
+            result = ""
+        }
+        else
+        {
+            result = probeAttr_(o,attributeName)
+        }
+    }
+
+    result = result "\n\n"
+
+    return result
+} // expTabBuildText
+
+
+//***********************************************************
+// * expTabJustify
+// *
+// * return number of spaces needed to justify a column
+// */
+
+int expTabJustify(Object o, Column c, int width, l) {
+    string  j = justify c
+    int     space_needed
+  
+    if (j == "Right")
+        space_needed = width-l
+    else if (j == "Center" || null o)
+        space_needed = (width-l)/2
+    else
+        space_needed = 0
+
+    return space_needed
+
+} // expTabJustify
+
+       
+//***********************************************************
+// * expTabFitTextInCol
+// *
+// * Squeezes the passed string into a field <width> characters
+// * long. Returns true when the string is processed
+// */
+
+bool expTabFitTextInCol(string &str, int width, x, y, &l) {
+    bool    done = false
+    int     j, k
+ 
+    /* need to break at whitespace
+     */
+     if (l >= width && isalnum str[width-1] && isalnum str[width]) {
+        j = width-2
+
+        while (j >= 0 && !isspace str[j]) j--
+
+        if (j >= 0) {
+            putString(expTabTable, str[0:j], x, y)
+            str = str[j+1:]
+            done = true
+        }
+    }
+
+    if (!done) {
+        putString(expTabTable, str[0:width-1], x, y)
+        str = str[width:]
+    }
+
+    if (str == "") return true
+
+    k = 0
+    l = length str
+
+    while (k < l && isspace str[k]) k++
+
+    if (k > 0) {
+        str = str[k:]
+        l = length str
+    }
+
+    return false
+
+} // expTabFitTextInCol
+
+
+//***********************************************************
+// * expTabBuildEntry
+// *
+// * puts a formatted string for an object's attributes into
+// * the expTabTable array
+// * returns the column height of the entry
+// * returning -1 indicates an error has occurred
+// */
+
+int expTabBuildEntry(Object o, Column c, int i, x, y, width) {
+    string  txt, str
+    int        l
+ 
+    if (width < 2) {
+        warningBox (title c) " column is not wide enough (" width ")"
+        return -1
+    }
+
+    txt = expTabBuildText(o, c, x, width)
+	while (!null txt and txt != "") {
+         str = expTabExtractLine(txt)
+
+        l = length str
+        if (l <= width) {
+            putString(expTabTable, str, x+expTabJustify(o, c, width, l), y)
+          } else {
+            while (!expTabFitTextInCol(str, width, x, y, l))
+                y++
+        }
+        y++
+    }
+
+    return y
+
+} // ExpTabBuildEntry
+
+ 
+//***********************************************************
+// * expTabExportObject
+// *
+// * Print out the formatted attributes of an object
+// */
+
+bool expTabExportObject(Stream aout, Object o, bool tabbing) {
+    int     x    = 0
+    int     maxy = 0
+    int     i, j, height, width, tabx, colWidth
+    Column  c
+
+    if (!null o && !canRead o)
+        return
+
+    zeroArray expTabTable
+
+    i = 0
+    for c in current Module do {
+        if (!find(expTabAsciiWidths, i, width))
+            return false
+
+        height = expTabBuildEntry(o, c, i++, x, 0, width)
+        if (height == -1)
+            return false
+
+        maxy = maxy >? height
+        x += width + expTabHorizSpace
+    }
+
+    if (tabbing) {
+        for (j = 0; j < maxy; j++) { 
+            find(expTabAsciiWidths, 0, tabx)
+            for (i = 1; i < expTabColumns; i++) {
+                putString(expTabTable, "\t", tabx, j)
+                find(expTabAsciiWidths, i, colWidth)
+                tabx += colWidth + expTabHorizSpace
+            }
+        }
+    }
+
+    width = x-expTabHorizSpace
+
+    printCharArray(expTabTable, aout, 0, 0, width, maxy+expTabVertSpace)
+    exportStepProgress
+    return !exportCheckProgress
+
+} // expTabExportObject
+
+ 
+//***********************************************************
+// * expTabExportModule
+// *
+// * Print out the formatted attributes of an object
+// */
+
+bool expTabExportModule(string file, int w, bool tabbing) {
+    Stream  aout
+    Object  o
+    Column  c
+    int     i
+    int     total_width = 0
+    bool    success
+
+    expTabColumns = 0
+    for c in current Module do
+        expTabColumns++
+
+    int widths[expTabColumns]
+
+    expTabHorizSpace = 1
+    expTabVertSpace = (tabbing == true) ? 0 : 1
+
+    aout = write(file,selectedCodePage)
+    if (selectedCodePage == CP_UTF8 || 
+        selectedCodePage == CP_UTF16_LE || 
+        selectedCodePage == CP_UTF16_BE)
+    {
+        // puts the BOM to specify that the file is in UTF8/UTF16 encoding 
+        aout << wcharOf(unicodeBOM)
+    }
+
+    i = 0
+    for c in current Module do
+        total_width += widths[i++] = width c
+
+    if (!null expTabAsciiWidths)
+        delete expTabAsciiWidths
+    expTabAsciiWidths = create
+
+    i=0
+    for c in current Module do
+        put(expTabAsciiWidths, i, (widths[i++]*(w-expTabColumns*expTabHorizSpace+1))/total_width)
+
+    success = expTabExportObject(aout, null, tabbing)
+    if (success) {
+        for o in current Module do {
+            if (!expTabExportObject(aout, o, tabbing)) {
+                exportEndProgress
+                success = false
+                break
+            }
+        }
+    }
+
+    close aout
+
+    delete expTabAsciiWidths
+    expTabAsciiWidths = null
+
+    return success
+
+} // expTabExportModule
+
+
+//------------------------------- Utilities ---------------------------
+
+void plainInitProgress(DB forWin, Module m) {
+    Object o
+    int noPoints = 0
+    for o in document m do {
+	noPoints++
+    }
+    exportInitProgress(forWin,plainProgressTitle,plainProgressStep, noPoints)
+}
+
+
+//------------------------------------------------------------------------
+
+
+void exportLayoutChanged(DBE xx) {
+    currentLayout = get xx
+    if (currentLayout == layoutTypeTable) {
+	// table layout
+	lastLineBreak = plainLineBreak
+	plainLineBreak = true
+    } else {
+	plainLineBreak = lastLineBreak
+    }
+}
+
+void exportHeadingsChanged(DBE xx) {
+}
+
+void advancedLineBreakChanged(DBE xx) {
+    int i = get xx
+    lastLineBreak = (i == 1)
+    if (i == 1) {
+	active(advancedLineWidth)
+    } else if (currentLayout == layoutTypeBook) {
+	inactive(advancedLineWidth)
+    }
+}
+
+void userAdvancedUIRefresh(DB theBox) {
+
+    int i
+    if (plainLineBreak)
+        i = 1
+    else
+        i = 0
+    set(advancedLineBreak,i)
+
+    if (plainUseTabs)
+    	i = 1
+    else
+	    i = 0
+    set(advancedUseTabs,i)
+
+    if (currentLayout == layoutTypeBook) {
+	    // book layout
+	    active(advancedLineBreak)
+	    inactive(advancedUseTabs)
+        if (plainLineBreak){
+            active(advancedLineWidth)
+        } else {
+            inactive(advancedLineWidth)
+        }
+    } else {
+        // table layout
+       	inactive(advancedLineBreak)
+       	active(advancedUseTabs)
+       	active(advancedLineWidth)
+    }
+}
+
+void setList()
+//
+// DESCRIPTION : Initalizes default setting of the Encoding drop down combo-box.
+// RETURNS     : None
+//
+{
+    if(null expPlainTxtEncodingDefaults)
+    {
+        expPlainTxtEncodingDefaults = loadDefaults(expPlainTxtEncodingDefaultsFile)
+    }
+    int storedDefault =  get(expPlainTxtEncodingDefaults,expPlainTxtEncoding_default,selectedCodePage)
+    int i
+    for (i = 0; i < encodingCount; i++)
+    {
+        if (intOf(encodeOptions[i]) == storedDefault)
+        {
+            selectedCodePage = storedDefault
+            defaultSelec = i
+            break
+        }
+    }
+    
+} // setList
+
+void selChange(
+               DBE impEncodeOptions) // IN : Encoding list option object
+//
+// DESCRIPTION : Handles the refreshing of display on the
+//               change in selection of encoding list option.
+// RETURNS     : None
+//
+{
+    defaultSelec = get impEncodeOptions
+    selectedCodePage = intOf(encodeOptions[defaultSelec])
+    set(expPlainTxtEncodingDefaults, expPlainTxtEncoding_default,selectedCodePage)
+} // selChange
+
+void userAdvancedUISetup(DB exportBox, DBE theTab, Skip s) {
+
+    advancedLineBreak = checkBox(exportBox, "", plainLineBreakOpts, 0)
+    advancedLineBreak->"left"->"inside"->theTab
+    advancedLineBreak->"right"->"unattached"
+    advancedLineBreak->"top"->"inside"->theTab
+    advancedLineBreak->"bottom"->"unattached"
+    put(s,0,advancedLineBreak)
+
+    advancedUseTabs = checkBox(exportBox, "", plainTabOpts, 0)
+    advancedUseTabs->"left"->"inside"->theTab
+    advancedUseTabs->"right"->"unattached"
+    advancedUseTabs->"top"->"spaced"->advancedLineBreak
+    advancedUseTabs->"bottom"->"unattached"
+    put(s,1,advancedUseTabs)
+
+
+    advancedLineWidth = field(exportBox, plainWidthLabel, plainLineWidth "", 10, false)
+    advancedLineWidth->"left"->"inside"->theTab
+    advancedLineWidth->"right"->"unattached"
+    advancedLineWidth->"top"->"spaced"->advancedUseTabs
+    advancedLineWidth->"bottom"->"unattached"
+    put(s,2,advancedLineWidth)
+
+    setList
+    int optCount
+
+    impEncodeOptions = choice(exportBox, "Encoding: ", encodeOptions, encodingCount,0,40,false)
+    set (impEncodeOptions, defaultSelec)
+    set(impEncodeOptions, selChange)
+    selectedCodePage = intOf(encodeOptions[defaultSelec])
+    
+    impEncodeOptions->"left"->"inside"->theTab
+    impEncodeOptions->"right"->"unattached"
+    impEncodeOptions->"top"->"spaced"->advancedLineWidth
+    impEncodeOptions->"bottom"->"unattached"
+    put(s,3,impEncodeOptions)
+
+    if (currentLayout == layoutTypeBook) {
+    	inactive(advancedUseTabs)
+    	inactive(advancedLineWidth)
+    }
+    set(advancedLineBreak, advancedLineBreakChanged)
+}
+
+bool userExportOnClose(DB exportBox) 
+{
+    return true
+}
+//Included the file here as the fn userExportCode needs to retrieve the value of the attribute Toggle
+#include <utils/doctools/itfui.inc> 
+
+bool userExportCode(string fname, int layout, bool includeHeadings, DB plainExportBox)
+//DESCRIPTION: This funtion is responsible for the actual exporting of data.A new parameter 
+//              'bool emptyAttributes' is added to this function.
+//RETURNS    : Returns TRUE if the export is successfull, else returns FALSE.
+{
+
+    //attr stores whether the checkbox is ticked or not
+    includeEmptyAttributes = get exportAttributeToggle      
+    plainLineWidth = intOf get advancedLineWidth
+    if (get advancedLineBreak == 1){
+        plainLineBreak = true
+        if (plainLineWidth <= 0) {
+            warningBox "The line width must contain a value greater than 0"
+            return false
+        }
+    } else {
+        plainLineBreak = false
+    }
+    plainUseTabs = ((get advancedUseTabs) == 1)
+
+    plainInitProgress(plainExportBox, current Module)
+    plainUseHeadingNumbers = includeHeadings
+
+    if (layout == layoutTypeBook) {
+    	expTxtExportModule(fname, plainLineBreak, plainLineWidth)
+    } else {
+    	expTabExportModule(fname, plainLineWidth, plainUseTabs)
+    }
+
+    setenv("EXPORTDIRECTORY", getDirOfNoSlash(fname))
+
+    exportEndProgress
+
+    /*******************
+    The following code has been added to extract those characters which will not be exported properly
+    in the selected encoding selected by the user.The characters are put into a buffer and then the 
+    string value of the buffer is passed to the window to display the characters as the ones which could
+    not be exported properly
+    ***/
+    
+    bool bookFormat = (layout == layoutTypeBook)
+    int  exportOption = 1 // Only used in commas.dxl
+
+    DisplayInvalidChars(plainExportBox, selectedCodePage, bookFormat, exportOption)
+
+    return true
+}
+
+
+
+//--------------------------------------------------------------------
+
+
+// check status
+if ((current Module) != null)
+{
+    // check status
+    if ((current Object) != null)
+    {
+        //New inc file which contains the implementation for the callback associated with the Tab
+        #include <utils/doctools/itfui3.inc> 
+        makeExporterUI(plainTitle, helpExportPlainText, true, false, "xml", "XML file")
+        //Since the plain exporters Genral Tab should show a special toggle box change
+        //the default callback association and associate a new one
+        set(exportTab, exportTabSelectedForSpecial)
+        exportTabSelectedForSpecial exportTab
+        block exportBox
+    }
+    else
+    {
+	    warningBox "There are no objects in the current view."
+    }                                                                                   
+}
+else
+{
+    warningBox "There is no current module to export."
+}
+
