@@ -1,0 +1,9 @@
+have the caliber table exported to excel
+
+1 export caliber table to xml
+2 run xsltproc with calibertable.xsl (use dozejob)
+3 change all ss_ by ss:
+4 delete all xmlns=""
+5 open the file with excel
+
+if you use calibertable3.xsl (dozejob3.bat) you can directly open the file with excel i.e. no steps 3 and 4 needed anymore.

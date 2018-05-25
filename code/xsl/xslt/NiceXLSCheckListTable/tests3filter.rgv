@@ -1,0 +1,98 @@
+
+Project_ID		117
+Frame_x1				-4
+Frame_y1				-4
+Frame_x2				1284
+Frame_y2				998
+
+Grid		0
+Items				40
+ColumnName_0				Hierarchy #
+ColumnWidth_0				100
+ColumnName_1				Requirement
+ColumnWidth_1				189
+ColumnName_2				Priority
+ColumnWidth_2				100
+ColumnName_3				Owner
+ColumnWidth_3				100
+ColumnName_4				PQAStatus
+ColumnWidth_4				100
+ColumnName_5				Number of Days (Days)
+ColumnWidth_5				100
+ColumnName_6				numofdays
+ColumnWidth_6				100
+ColumnName_7				PQAExecutionPriority
+ColumnWidth_7				100
+ColumnName_8				PQATestTool
+ColumnWidth_8				100
+ColumnName_9				ID
+ColumnWidth_9				42
+ColumnName_10				Tested by Whom
+ColumnWidth_10				100
+ColumnName_11				PQACriteria
+ColumnWidth_11				100
+ColumnName_12				PQAFWBuild
+ColumnWidth_12				100
+ColumnName_13				Reviewed By
+ColumnWidth_13				100
+ColumnName_14				Target Version
+ColumnWidth_14				100
+ColumnName_15				Comments
+ColumnWidth_15				100
+ColumnName_16				Revised Description
+ColumnWidth_16				100
+ColumnName_17				Notes
+ColumnWidth_17				100
+ColumnName_18				Predecessors
+ColumnWidth_18				100
+ColumnName_19				Successors
+ColumnWidth_19				100
+ColumnName_20				Risks Description
+ColumnWidth_20				100
+ColumnName_21				Start Date
+ColumnWidth_21				100
+ColumnName_22				Milestone
+ColumnWidth_22				100
+ColumnName_23				UC_PC_Dongle_State
+ColumnWidth_23				100
+ColumnName_24				UC_MediaRemote_State
+ColumnWidth_24				100
+ColumnName_25				UC_AudioGateway_State
+ColumnWidth_25				100
+ColumnName_26				% Complete
+ColumnWidth_26				100
+ColumnName_27				Number of Ambiguities Found
+ColumnWidth_27				100
+ColumnName_28				User Group Rating
+ColumnWidth_28				100
+ColumnName_29				High Effort
+ColumnWidth_29				100
+ColumnName_30				Expected Effort
+ColumnWidth_30				100
+ColumnName_31				Low Effort
+ColumnWidth_31				100
+ColumnName_32				Risk Occurance
+ColumnWidth_32				100
+ColumnName_33				Risk Impact
+ColumnWidth_33				100
+ColumnName_34				Affecting Cost ?
+ColumnWidth_34				100
+ColumnName_35				Affecting Schedule ?
+ColumnWidth_35				100
+ColumnName_36				Affecting Performance ?
+ColumnWidth_36				100
+ColumnName_37				Resource Names
+ColumnWidth_37				100
+ColumnName_38				UC_Type
+ColumnWidth_38				100
+ColumnName_39				Audience
+ColumnWidth_39				100
+SortColumn				0
+SortOrder					1
+Filters				1
+Filter_0_ColName				Type
+Filter_0_Cond1				1
+Filter_0_Cond2				0
+Filter_0_bAnd				1
+Filter_0_str1				6. Test Scenarios (TEST)
+Filter_0_str2				
