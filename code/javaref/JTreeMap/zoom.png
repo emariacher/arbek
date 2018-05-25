@@ -1,0 +1,441 @@
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- ViewVC - http://viewvc.org/
+by Greg Stein - mailto:gstein@lyra.org -->
+<head>
+<title>SourceForge.net Repository - [jtreemap] Log of /trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png</title>
+<meta name="generator" content="ViewVC 1.0.3" />
+<link rel="stylesheet" href="/viewvc/*docroot*/styles.css" type="text/css" />
+</head>
+<body>
+<table style="padding:0.1em;">
+<tr>
+<td>
+<strong>
+
+<a href="/viewvc/jtreemap/?sortdir=down">
+
+[jtreemap]</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/?sortdir=down">
+
+trunk</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/?sortdir=down">
+
+JTreeMap</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/?sortdir=down">
+
+src</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/?sortdir=down">
+
+main</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/?sortdir=down">
+
+java</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/?sortdir=down">
+
+net</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/?sortdir=down">
+
+sf</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/?sortdir=down">
+
+jtreemap</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/?sortdir=down">
+
+swing</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/?sortdir=down">
+
+provider</a>
+/
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/?sortdir=down">
+
+icons</a>
+/
+
+
+
+zoom.png
+
+
+</strong>
+
+</td>
+</tr>
+</table>
+
+
+<div style="float: right; padding: 5px;"><a href="http://sourceforge.net"><img src="/viewvc/*docroot*/images/sflogo-210pxtrans.png" alt="(logo)" border=0 width=210 height=62></a></div>
+<h1>Log of /trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png</h1>
+
+<p style="margin:0;">
+
+<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/?sortdir=down"><img src="/viewvc/*docroot*/images/back_small.png" width="16" height="16" alt="Parent Directory" /> Parent Directory</a>
+
+
+
+
+</p>
+
+<hr />
+<table class="auto">
+
+
+
+<tr>
+<td>Links to HEAD:</td>
+<td>
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?view=markup&amp;sortdir=down">view</a>)
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png">download</a>)
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?content-type=text%2Fplain">as text</a>)
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?view=annotate&amp;sortdir=down">annotate</a>)
+</td>
+</tr>
+
+
+
+<tr>
+<td>Sticky Revision:</td>
+<td><form method="get" action="/viewvc/jtreemap" style="display: inline">
+<input type="hidden" name="orig_pathtype" value="FILE" /><input type="hidden" name="orig_view" value="log" /><input type="hidden" name="orig_path" value="trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png" /><input type="hidden" name="view" value="redirect_pathrev" /><input type="hidden" name="sortdir" value="down" />
+
+<input type="text" name="pathrev" value="" size="6"/>
+
+<input type="submit" value="Set" />
+</form>
+
+</td>
+</tr>
+</table>
+ 
+
+
+
+
+
+
+
+
+<div>
+<hr />
+
+<a name="rev71"></a>
+
+
+Revision <a href="/viewvc/jtreemap?view=rev&amp;sortdir=down&amp;revision=71"><strong>71</strong></a> -
+
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=71&amp;view=markup&amp;sortdir=down">view</a>)
+
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=71">download</a>)
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=71&amp;content-type=text%2Fplain">as text</a>)
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?annotate=71&amp;sortdir=down">annotate</a>)
+
+
+
+- <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?r1=71&amp;sortdir=down&amp;view=log">[select for diffs]</a>
+
+
+
+
+<br />
+
+Modified
+
+<em>Tue Oct 24 16:41:47 2006 UTC</em> (20 months, 3 weeks ago) by <em>benoitx</em>
+
+
+
+
+
+
+
+
+
+<br />File length: 671 byte(s)
+
+
+
+
+
+
+<br />Diff to <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?sortdir=down&amp;r1=40&amp;r2=71">previous 40</a>
+
+
+
+
+
+
+
+<pre class="vc_log">Moved remotely</pre>
+</div>
+
+
+
+<div>
+<hr />
+
+<a name="rev40"></a>
+
+
+Revision <a href="/viewvc/jtreemap?view=rev&amp;sortdir=down&amp;revision=40"><strong>40</strong></a> -
+
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=40&amp;view=markup&amp;sortdir=down">view</a>)
+
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=40">download</a>)
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=40&amp;content-type=text%2Fplain">as text</a>)
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?annotate=40&amp;sortdir=down">annotate</a>)
+
+
+
+- <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?r1=40&amp;sortdir=down&amp;view=log">[select for diffs]</a>
+
+
+
+
+<br />
+
+Modified
+
+<em>Mon Oct 23 20:53:08 2006 UTC</em> (20 months, 3 weeks ago) by <em>benoitx</em>
+
+<br />Original Path: <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/example/icons/zoom.png?view=log&amp;sortdir=down&amp;pathrev=40"><em>trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/example/icons/zoom.png</em></a>
+
+
+
+
+
+
+
+
+
+<br />File length: 671 byte(s)
+
+
+
+
+
+
+<br />Diff to <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?sortdir=down&amp;r1=16&amp;r2=40">previous 16</a>
+
+
+
+
+
+
+
+<pre class="vc_log">Moved remotely</pre>
+</div>
+
+
+
+<div>
+<hr />
+
+<a name="rev16"></a>
+
+
+Revision <a href="/viewvc/jtreemap?view=rev&amp;sortdir=down&amp;revision=16"><strong>16</strong></a> -
+
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=16&amp;view=markup&amp;sortdir=down">view</a>)
+
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=16">download</a>)
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=16&amp;content-type=text%2Fplain">as text</a>)
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?annotate=16&amp;sortdir=down">annotate</a>)
+
+
+
+- <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?r1=16&amp;sortdir=down&amp;view=log">[select for diffs]</a>
+
+
+
+
+<br />
+
+Modified
+
+<em>Tue Oct 17 15:21:35 2006 UTC</em> (20 months, 4 weeks ago) by <em>benoitx</em>
+
+<br />Original Path: <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/org/jense/swing/jtreemap/example/icons/zoom.png?view=log&amp;sortdir=down&amp;pathrev=16"><em>trunk/JTreeMap/src/main/java/org/jense/swing/jtreemap/example/icons/zoom.png</em></a>
+
+
+
+
+
+
+
+
+
+<br />File length: 671 byte(s)
+
+
+
+
+
+
+<br />Diff to <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?sortdir=down&amp;r1=9&amp;r2=16">previous 9</a>
+
+
+
+
+
+
+
+<pre class="vc_log">Moved remotely</pre>
+</div>
+
+
+
+<div>
+<hr />
+
+<a name="rev9"></a>
+
+
+Revision <a href="/viewvc/jtreemap?view=rev&amp;sortdir=down&amp;revision=9"><strong>9</strong></a> -
+
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=9&amp;view=markup&amp;sortdir=down">view</a>)
+
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=9">download</a>)
+(<a href="/viewvc/*checkout*/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?revision=9&amp;content-type=text%2Fplain">as text</a>)
+(<a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?annotate=9&amp;sortdir=down">annotate</a>)
+
+
+
+- <a href="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png?r1=9&amp;sortdir=down&amp;view=log">[select for diffs]</a>
+
+
+
+
+<br />
+
+Added
+
+<em>Sun Sep  3 18:39:44 2006 UTC</em> (22 months, 1 week ago) by <em>jense128</em>
+
+<br />Original Path: <a href="/viewvc/jtreemap/trunk/JTreeMap/src/org/jense/swing/jtreemap/example/icons/zoom.png?view=log&amp;sortdir=down&amp;pathrev=9"><em>trunk/JTreeMap/src/org/jense/swing/jtreemap/example/icons/zoom.png</em></a>
+
+
+
+
+
+
+
+<br />File length: 671 byte(s)
+
+
+
+
+
+
+
+
+
+
+<pre class="vc_log">JTreeMap 1.0
+</pre>
+</div>
+
+ 
+
+
+
+ <hr />
+<p><a name="diff"></a>
+This form allows you to request diffs between any two revisions of this file.
+For each of the two "sides" of the diff,
+
+enter a numeric revision.
+
+</p>
+<form method="get" action="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png" name="diff_select">
+<table cellpadding="2" cellspacing="0" class="auto">
+<tr>
+<td>&nbsp;</td>
+<td>
+<input type="hidden" name="sortdir" value="down" /><input type="hidden" name="view" value="diff" />
+Diffs between
+
+<input type="text" size="12" name="r1"
+value="71" />
+
+and
+
+<input type="text" size="12" name="r2" value="9" />
+
+</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>
+Type of Diff should be a
+<select name="diff_format" onchange="submit()">
+<option value="h" selected="selected">Colored Diff</option>
+<option value="l" >Long Colored Diff</option>
+<option value="u" >Unidiff</option>
+<option value="c" >Context Diff</option>
+<option value="s" >Side by Side</option>
+</select>
+<input type="submit" value=" Get Diffs " />
+</td>
+</tr>
+</table>
+</form>
+
+
+<form method="get" action="/viewvc/jtreemap/trunk/JTreeMap/src/main/java/net/sf/jtreemap/swing/provider/icons/zoom.png">
+<div>
+<hr />
+<a name="logsort"></a>
+<input type="hidden" name="sortdir" value="down" /><input type="hidden" name="view" value="log" />
+Sort log by:
+<select name="logsort" onchange="submit()">
+<option value="cvs" >Not sorted</option>
+<option value="date" selected="selected">Commit date</option>
+<option value="rev" >Revision</option>
+</select>
+<input type="submit" value=" Sort " />
+</div>
+</form>
+
+
+<hr />
+<table>
+<tr>
+<td>
+<address><a href="http://sourceforge.net/">Back to SourceForge.net</a></address><br />
+Powered by <a href="http://viewvc.tigris.org/">ViewVC 1.0.3</a>
+</td>
+<td style="text-align:right;">
+<h3><a href="/viewvc/*docroot*/help_log.html">ViewVC and Help</a></h3>
+</td>
+</tr>
+</table>
+</body>
+</html>
+
+
