@@ -1,0 +1,29 @@
+import java.awt.*;
+import java.awt.event.*;
+import com.sun.java.swing.*;
+import com.sun.java.swing.text.*;
+
+import java.net.URL;
+
+public class ScrolledText extends JFrame {
+
+    private Font demoFont = new Font("Serif", Font.PLAIN, 14);
+    private boolean DEBUG = true;
+    JTextArea toWeb, toBrowser;
+
+    public ScrolledText(String titre) {
+        super(titre);
+
+        // Get ContentPane & set its layout
+        Container cp = getContentPane();
+        cp.setLayout(new GridLayout(1,3));
+
+        // Setup Text Areas
+        toWeb     = new JTextArea();     toWeb.setEditable(true);     toWeb.setFont(demoFont);
+        toBrowser = new JTextArea(); toBrowser.setEditable(true); toBrowser.setFont(demoFont);
+
+        // Place in JScrollPane
+        cp.add(new JScrollPane(toWeb),     BorderLayout.EAST);
+        cp.add(new JScrollPane(toBrowser), BorderLayout.WEST);
+    }
+}

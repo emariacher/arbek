@@ -1,0 +1,109 @@
+SIGQUIT received.
+java full version "JDK 1.1.6 IBM build a116-19980529" (JIT: jitc)
+args: /afs/lagaude/tools/Java/J1.1.6/bin/aix/native_threads/java Proxy
+
+Full thread dump:
+    "Screen Updater" (TID:0x30029708, sys_thread_t:0x20974f78)
+    Native Thread State: ThreadID: 2001bb98 Reuse: 1 USER  MONITOR WAIT
+    Native Stack Data  : base: 20a032ac pointer 20a0273c used(2928) free(255120)
+	----- Monitors held -----
+	----- Native stack -----
+	------ Java stack ------        () prio=4
+	java.lang.Object.wait(Compiled Code)
+	sun.awt.ScreenUpdater.nextEntry(Compiled Code)
+	sun.awt.ScreenUpdater.run(Compiled Code)
+    "TimerQueue" (TID:0x30095cb0, sys_thread_t:0x2075f6a8)
+    Native Thread State: ThreadID: 2001bd98 Reuse: 1 DAEMON  MONITOR WAIT
+    Native Stack Data  : base: 207c7a2c pointer 207c6edc used(2896) free(255152)
+	----- Monitors held -----
+	----- Native stack -----
+	------ Java stack ------        () prio=5
+	com.sun.java.swing.TimerQueue.run(Compiled Code)
+	java.lang.Thread.run(Compiled Code)
+    "AWT-Motif" (TID:0x30042fa0, sys_thread_t:0x204bad18)
+    Native Thread State: ThreadID: 2001be98 Reuse: 1 USER  MONITOR WAIT
+    Native Stack Data  : base: 20652f5c pointer 206523ec used(2928) free(255120)
+	----- Monitors held -----
+	----- Native stack -----
+	------ Java stack ------        () prio=5
+	java.lang.Thread.run(Compiled Code)
+    "AWT-Input" (TID:0x30042ff8, sys_thread_t:0x204b1618)
+    Native Thread State: ThreadID: 2001bf98 Reuse: 1 USER  SUSPENDED
+    Native Stack Data  : base: 20601f4c pointer 206010c0 used(3724) free(254324)
+	----- Monitors held -----
+	----- Native stack -----
+	???(00000000)
+	usleep(d0c39ce8)
+	sun_awt_motif_InputThread_run(d0e457ac)
+	FrameIntf(203c2e44)
+	unloadFunc(0d030000)
+	unloadFunc(0d030000)
+	[sigsegv]...
+	------ Java stack ------        () prio=5
+    "AWT-EventQueue-0" (TID:0x30043060, sys_thread_t:0x2047b5d8)
+    Native Thread State: ThreadID: 2001c098 Reuse: 1 USER  MONITOR WAIT
+    Native Stack Data  : base: 2059ff4c pointer 2059f3e4 used(2920) free(255128)
+	----- Monitors held -----
+	----- Native stack -----
+	------ Java stack ------        () prio=5
+	java.lang.Object.wait(Compiled Code)
+	java.awt.EventQueue.getNextEvent(Compiled Code)
+	java.awt.EventDispatchThread.run(Compiled Code)
+    "Async Garbage Collector" (TID:0x30029780, sys_thread_t:0x202a84b8)
+    Native Thread State: ThreadID: 2001c198 Reuse: 1 DAEMON  MONITOR WAIT
+    Native Stack Data  : base: 2035f0bc pointer 2035ed2c used(912) free(257136)
+	----- Monitors held -----
+	----- Native stack -----
+	------ Java stack ------        () prio=1
+    "Finalizer thread" (TID:0x300297b8, sys_thread_t:0x202a8248)
+    Native Thread State: ThreadID: 2001c298 Reuse: 1 DAEMON  RUNNING
+    Native Stack Data  : base: 2030e0ac pointer 2030d338 used(3444) free(254604)
+	----- Monitors held -----
+	----- Native stack -----
+	_XmStrings(007fffff)
+	sysThreadDumpInfo(d0d06c78)
+	threadDumpInfo(d0d3c7e0)
+	DumpThreadsHelper(d0d3c5b8)
+	sysThreadEnumerateOver(d0d06f3c)
+	DumpThreads(d0d3ca14)
+	_doSuspendLoop(d0d04c48)
+	sysThreadIDump(d0d05de4)
+	maxDivisible(00003cc4)
+	------ Java stack ------        () prio=1 *current thread*
+    "main" (TID:0x300297f0, sys_thread_t:0x202108f8)
+    Native Thread State: ThreadID: 2001c398 Reuse: 1 USER PRIMORDIAL SUSPENDED
+    Native Stack Data  : base: 2ff220cc pointer 2ff21040 used(4236) free(253812)
+	----- Monitors held -----
+	java.net.PlainSocketImpl@30047248
+	----- Native stack -----
+	_XmMsgScale_0008(2ff21594)
+	java_net_PlainSocketImpl_socketAccept(d022ac10)
+	inflate_copyright(20922cb0)
+	unloadFunc(0d030000)
+	unloadFunc(0d030000)
+	[sigsegv]...
+	------ Java stack ------        () prio=5
+	java.net.PlainSocketImpl.accept(Compiled Code)
+	java.net.ServerSocket.implAccept(Compiled Code)
+	java.net.ServerSocket.accept(Compiled Code)
+	Proxy.main(Compiled Code)
+Monitor Cache Dump:
+Registered Monitor Dump:
+    CompiledCodeList lock:     unowned.
+    MbReferCbList lock:     unowned.
+    ClassInfoInline lock:     unowned.
+    Thread Sleep lock 0x202a84b8:     unowned.
+    Thread queue lock:     unowned.
+    Name and type hash table lock:     unowned.
+    String intern lock:     unowned.
+    JNI pinning lock:     unowned.
+    JNI global reference lock:     unowned.
+    BinClass lock:     unowned.
+    Class loading lock:     unowned.
+    Java stack lock:     unowned.
+    Code rewrite lock:     unowned.
+    Has finalization queue lock:     unowned.
+    Finalize me queue lock:     unowned.
+    Integer lock access-lock:     unowned.
+    Monitor cache lock:     monitor owner: "Finalizer thread".
+    Monitor registry:     unowned.
