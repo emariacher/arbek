@@ -138,10 +138,12 @@ public class GameModel implements Iterable<CardPile> {
             _undoStack.pop();
             CardPile target = _undoStack.getFirst();
             _undoStack.pop();
-            Card crd = target.peekTop();
+            Card crd = source.peekTop();
             System.out.println("  There1[" + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
-            source.push(crd);
-            target.pop();
+            //target.push(crd);
+            target.pushIgnoreRules(crd);
+            source.pop();
+            _notifyEveryoneOfChanges();
 
             System.out.println("  There2[" + source + ", " + source.size() + " -> " + target + ", " + target.size() + "]");
             result = true;
