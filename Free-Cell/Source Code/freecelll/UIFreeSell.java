@@ -33,14 +33,17 @@ public class UIFreeSell extends JFrame
     {
         _boardDisplay = new UICardPanel(_model);
         
-        //... Create button and check box.
+        //... Create buttons and check box.
         JButton newGameBtn = new JButton("New Game");
         newGameBtn.addActionListener(new ActionNewGame());
-        
+        JButton undoBtn = new JButton("Undo");
+        undoBtn.addActionListener(new ActionUndo());
+
         //... Do layout
         JPanel controlPanel = new JPanel(new FlowLayout());
         controlPanel.add(newGameBtn);
-        
+        controlPanel.add(undoBtn);
+
         //... Create content pane with graphics area in center (so it expands)
         JPanel content = new JPanel();
         content.setLayout(new BorderLayout());
@@ -57,11 +60,18 @@ public class UIFreeSell extends JFrame
         setVisible(true);
     }   
     ////////////////////////////////////////////////////////////// ActionNewGame
-    class ActionNewGame implements ActionListener 
+    class ActionNewGame implements ActionListener
     {
-        public void actionPerformed(ActionEvent evt) 
+        public void actionPerformed(ActionEvent evt)
         {
             _model.reset();
         }
-    }  
+    }
+    class ActionUndo implements ActionListener
+    {
+        public void actionPerformed(ActionEvent evt)
+        {
+            _model.reset();
+        }
+    }
 }
