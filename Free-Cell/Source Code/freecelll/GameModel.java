@@ -129,6 +129,7 @@ public class GameModel implements Iterable<CardPile>
                 //... Record on undo stack.
                 _undoStack.push(source);
                 _undoStack.push(target);
+                System.out.println("Here1["+source+","+target+"]");
                 result = true;
             }
         }
