@@ -71,7 +71,7 @@ public class UIFreeSell extends JFrame
     {
         public void actionPerformed(ActionEvent evt)
         {
-            _model.reset();
+            _model.undo();
         }
     }
 }
