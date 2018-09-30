@@ -45,9 +45,9 @@ public class CardPile implements Iterable<Card>
     //====================================================================== pop
     public Card pop() 
     {
-        if (!isRemovable()) {
+        /*if (!isRemovable()) {
             throw new UnsupportedOperationException("Illegal attempt to remove.");
-        }
+        }*/
         return popIgnoreRules();
     }
     //================================================================== shuffles the cards

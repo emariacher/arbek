@@ -122,8 +122,6 @@ public class GameModel implements Iterable<CardPile> {
                 _undoStack.push(source);
                 _undoStack.push(target);
 
-                System.out.println("  Here1[" + _undoStack.toArray()[1] + ", " + _undoStack.getFirst() + ", " + _undoStack.getLast() + "]");
-                System.out.println("  Here2[" + source + ", " + source.size() + " -> " + target + ", " + target.size() + "]");
                 result = true;
             }
         }
@@ -140,12 +138,10 @@ public class GameModel implements Iterable<CardPile> {
             _undoStack.pop();
             Card crd = source.peekTop();
             System.out.println("  There1[" + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
-            //target.push(crd);
             target.pushIgnoreRules(crd);
             source.pop();
             _notifyEveryoneOfChanges();
 
-            System.out.println("  There2[" + source + ", " + source.size() + " -> " + target + ", " + target.size() + "]");
             result = true;
         }
         return result;
