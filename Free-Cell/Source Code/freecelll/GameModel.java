@@ -113,8 +113,7 @@ public class GameModel implements Iterable<CardPile> {
         if (source.size() > 0) {
             Card crd = source.peekTop();
             if (target.rulesAllowAddingThisCard(crd)) {
-                System.out.println("Here[" + _undoStack.size() + "]");
-                System.out.println("  Here0[" + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
+                System.out.println("  Here0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
                 target.push(crd);
                 source.pop();
                 _notifyEveryoneOfChanges();
@@ -131,13 +130,12 @@ public class GameModel implements Iterable<CardPile> {
     public boolean undo() {
         boolean result = false;
         if (_undoStack.size() >= 2) {
-            System.out.println("There[" + _undoStack.size() + "]");
             CardPile source = _undoStack.getFirst();
             _undoStack.pop();
             CardPile target = _undoStack.getFirst();
             _undoStack.pop();
             Card crd = source.peekTop();
-            System.out.println("  There1[" + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
+            System.out.println("  There1[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
             target.pushIgnoreRules(crd);
             source.pop();
             _notifyEveryoneOfChanges();

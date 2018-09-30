@@ -189,17 +189,20 @@ class UICardPanel extends JComponent implements
         
         //... Find card image this is in.  Check top of every pile.
         _draggedCard = null;  // Assume not in any image.
+        System.out.println("\nx" + x + ",y" + y);
         for (CardPile pile : _model) 
         {
             if (pile.isRemovable() && pile.size() > 0) 
             {
                 Card testCard = pile.peekTop();
+                System.out.print("ici1[" + testCard + "], ");
                 if (testCard.isInside(x, y)) 
                 {
                     _dragFromX = x - testCard.getX();  // how far from left
                     _dragFromY = y - testCard.getY();  // how far from top
                     _draggedCard = testCard;  // Remember what we're dragging.
                     _draggedFromPile = pile;
+                    System.out.println("\nici2[" + _draggedFromPile + ", "+ _draggedCard + "]");
                     break;   // Stop when we find the first match.
                 }
             }
