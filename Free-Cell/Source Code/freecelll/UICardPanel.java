@@ -198,8 +198,8 @@ class UICardPanel extends JComponent implements
                         _draggedFromPile = pile;*/
                         System.out.println("\nici02[" + pile + ", " + crd + "]");
                         //break;   // Stop when we find the first match.
+                        pile.isMovable(crd);
                     }
-
                 }
                 // move only card by card
                 Card testCard = pile.peekTop();

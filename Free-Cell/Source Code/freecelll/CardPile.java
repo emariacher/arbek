@@ -74,10 +74,23 @@ public class CardPile implements Iterable<Card>
     public void clear() 
     {
         _cards.clear();
-    } 
+    }
     //============================================================== isRemovable
-    public boolean isRemovable() 
+    public boolean isRemovable()
     {
+        return true;
+    }
+    //============================================================== isRemovable
+    // check that the cards below make a stack
+    public boolean isMovable(Card card)
+    {
+        System.out.print("la00[" + card + "], ");
+        for (Card crd : this) {
+            System.out.print("  la01[" + crd + "],");
+            if (crd.equals(card)) {
+                System.out.println("\nla02[" + crd + "]");
+            }
+        }
         return true;
     }
 }
