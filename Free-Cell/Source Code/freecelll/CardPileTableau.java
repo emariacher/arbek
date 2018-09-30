@@ -12,9 +12,13 @@ public class CardPileTableau extends CardPile {
     //    if face value is one lower and it's the opposite color.
     @Override public boolean rulesAllowAddingThisCard(Card card) 
     {
+        return rulesIsStack(this.peekTop(),card);
+    }
+
+    @Override public boolean rulesIsStack(Card cardtop, Card cardbelow) {
         if ((this.size() == 0) ||
-                (this.peekTop().getFace().ordinal() - 1 == card.getFace().ordinal() &&
-                this.peekTop().getSuit().getColor() != card.getSuit().getColor())) {
+                (cardtop.getFace().ordinal() - 1 == cardbelow.getFace().ordinal() &&
+                        cardtop.getSuit().getColor() != cardbelow.getSuit().getColor())) {
             return true;
         }
         return false;
