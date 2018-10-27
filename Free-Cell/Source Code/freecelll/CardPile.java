@@ -96,18 +96,14 @@ public class CardPile implements Iterable<Card> {
         State_find_Stack state = State_find_Stack.CARD_NOT_YET_FOUND;
         int stack_size = 0;
         Card nextcard = card;
-        System.out.print("la00[" + card + "], ");
         for (Card crd : this) {
-            System.out.print("  la01[" + crd + "],");
             switch (state) {
                 case CARD_NOT_YET_FOUND:
                     if (crd.equals(card)) {
                         state = State_find_Stack.CARD_FOUND;
-                        System.out.println("\n  la02[" + crd + "]");
                     }
                     break;
                 case CARD_FOUND:
-                    System.out.println("\n  la03[" + nextcard + ", " + crd + "]");
                     if (!this.rulesIsStack(nextcard, crd)) {
                         return false;
                     }

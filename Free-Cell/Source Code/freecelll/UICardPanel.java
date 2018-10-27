@@ -190,13 +190,12 @@ class UICardPanel extends JComponent implements
             if (pile.isRemovable() && pile.size() > 0) {
                 // move a stack of cards if enough empty spaces
                 for (Card crd : pile) {
-                    System.out.print("ici01[" + crd + "], ");
                     if (crd.isInside(x, y)) {
                         /*_dragFromX = x - testCard.getX();  // how far from left
                         _dragFromY = y - testCard.getY();  // how far from top
                         _draggedCard = testCard;  // Remember what we're dragging.
                         _draggedFromPile = pile;*/
-                        System.out.println("\nici02[" + pile + ", " + crd + "]");
+                        System.out.println("ici02[" + pile + ", " + crd + "]");
                         //break;   // Stop when we find the first match.
                         pile.isMovable(crd);
                     }
