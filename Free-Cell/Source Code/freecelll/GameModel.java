@@ -112,6 +112,7 @@ public class GameModel implements Iterable<CardPile> {
         boolean result = false;
         if (source.size() > 0) {
             Card crd = source.peekTop();
+            System.out.println("  Here9[" + crd + "]");
             if (target.rulesAllowAddingThisCard(crd)) {
                 System.out.println("  Here0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
                 target.push(crd);
