@@ -216,7 +216,7 @@ class UICardPanel extends JComponent implements
                     System.out.println("ici11[" + lastCardInside + "]");
                 }
                 CardPile zeStack = pile.isMovable(lastCardInside);
-                if ((zeStack.size() > 1) && (getFreespaces() >= zeStack.size())) {
+                if ((zeStack.size() > 1) && (getFreespaces() >= (zeStack.size()-1))) {
                     System.out.print("  Movable Stack: ");
                     for (Card crd2 : zeStack) {
                         System.out.print(", " + crd2);
