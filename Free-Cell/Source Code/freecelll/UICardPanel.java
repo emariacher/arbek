@@ -202,29 +202,37 @@ class UICardPanel extends JComponent implements
         //... Find card image this is in.  Check top of every pile.
         _draggedCard = null;  // Assume not in any image.
         System.out.println("\n\nx" + x + ",y" + y);
+        Card lastCardInside = null;
         for (CardPile pile : _model) {
+            lastCardInside = null;
             if (pile.isRemovable() && pile.size() > 0) {
                 // move a stack of cards if enough empty spaces
                 for (Card crd : pile) {
                     if (crd.isInside(x, y)) {
-                        /*_dragFromX = x - testCard.getX();  // how far from left
-                        _dragFromY = y - testCard.getY();  // how far from top
-                        _draggedCard = testCard;  // Remember what we're dragging.
-                        _draggedFromPile = pile;*/
-                        System.out.println("ici02[" + pile + ", " + crd + "]");
-                        //break;   // Stop when we find the first match.
-                        pile.isMovable(crd, getFreespaces());
+                        lastCardInside = crd;
                     }
                 }
+                if (lastCardInside != null) {
+                    System.out.println("ici11[" + lastCardInside + "]");
+                }
+                CardPile zeStack = pile.isMovable(lastCardInside);
+                if ((zeStack.size() > 1) && (getFreespaces() >= zeStack.size())) {
+                    System.out.print("  Movable Stack: ");
+                    for (Card crd2 : zeStack) {
+                        System.out.print(", " + crd2);
+                    }
+                    System.out.println("");
+                }
+
                 // move only card by card
                 Card testCard = pile.peekTop();
-                System.out.print("ici11[" + testCard + "], ");
+                //System.out.print("ici11[" + testCard + "], ");
                 if (testCard.isInside(x, y)) {
                     _dragFromX = x - testCard.getX();  // how far from left
                     _dragFromY = y - testCard.getY();  // how far from top
                     _draggedCard = testCard;  // Remember what we're dragging.
                     _draggedFromPile = pile;
-                    System.out.println("\nici12[" + _draggedFromPile + ", " + _draggedCard + "]");
+                    System.out.println("ici12[" + _draggedFromPile + ", " + _draggedCard + "]");
                     break;   // Stop when we find the first match.
                 }
             }
