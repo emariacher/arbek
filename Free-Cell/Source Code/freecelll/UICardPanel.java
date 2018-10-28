@@ -178,6 +178,22 @@ class UICardPanel extends JComponent implements
         }
     }
 
+    // get free spaces where cards could be freely moved i.e. not foundation piles
+    public int getFreespaces() {
+        int freespaces = 0;
+        for (CardPile pile : _model.getFreeCellPiles()) {
+            if (pile.size() == 0) {
+                freespaces++;
+            }
+        }
+        for (CardPile pile : _model.getTableauPiles()) {
+            if (pile.size() == 0) {
+                freespaces++;
+            }
+        }
+        return freespaces;
+    }
+
     //============================================================= mousePressed
     public void mousePressed(MouseEvent e) {
         int x = e.getX();   // Save the x coord of the click
@@ -197,7 +213,7 @@ class UICardPanel extends JComponent implements
                         _draggedFromPile = pile;*/
                         System.out.println("ici02[" + pile + ", " + crd + "]");
                         //break;   // Stop when we find the first match.
-                        pile.isMovable(crd);
+                        pile.isMovable(crd, getFreespaces());
                     }
                 }
                 // move only card by card
