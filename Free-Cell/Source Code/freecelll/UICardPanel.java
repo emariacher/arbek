@@ -213,7 +213,7 @@ class UICardPanel extends JComponent implements
                     }
                 }
                 if (lastCardInside != null) {
-                    System.out.println("UICardPanel11[" + lastCardInside + "]");
+                    System.out.println("UICardPanel 11[" + lastCardInside + "]");
                 }
                 CardPile zeStack = pile.isMovable(lastCardInside);
                 if ((zeStack.size() > 1) && (getFreespaces() >= (zeStack.size()-1))) {
@@ -232,14 +232,14 @@ class UICardPanel extends JComponent implements
                     _dragFromY = y - testCard.getY();  // how far from top
                     _draggedCard = testCard;  // Remember what we're dragging.
                     _draggedFromPile = pile;
-                    System.out.println("UICardPanel12[" + _draggedFromPile + ", " + _draggedCard + "]");
+                    System.out.println("UICardPanel 12[" + _draggedFromPile + ", " + _draggedCard + "]");
                     break;   // Stop when we find the first match.
                 } else if (lastCardInside != null) {
                     _dragFromX = x - lastCardInside.getX();  // how far from left
                     _dragFromY = y - lastCardInside.getY();  // how far from top
                     _draggedCard = lastCardInside;  // Remember what we're dragging.
                     _draggedFromPile = pile;
-                    System.out.println("UICardPanel13[" + _draggedFromPile + ", " + _draggedCard + "]");
+                    System.out.println("UICardPanel 13[" + _draggedFromPile + ", " + _draggedCard + "]");
                     break;   // Stop when we find the first match.
                 }
             }
@@ -290,6 +290,23 @@ class UICardPanel extends JComponent implements
         if (_draggedFromPile != null) {
             int x = e.getX();
             int y = e.getY();
+
+            //System.out.println("\n\nx" + x + ",y" + y);
+            Card lastCardInside = null;
+            for (CardPile pile : _model) {
+                lastCardInside = null;
+                if (pile.isRemovable() && pile.size() > 0) {
+                    // move a stack of cards if enough empty spaces
+                    for (Card crd : pile) {
+                        if (crd.isInside(x, y)) {
+                            lastCardInside = crd;
+                        }
+                    }
+                    if (lastCardInside != null) {
+                        System.out.println("                                mouseReleased 11[" + lastCardInside + "]");
+                    }
+                }
+            }
             CardPile targetPile = _findPileAt(x, y);
             if (targetPile != null) {
                 //... Move card.  This may not move if illegal.
