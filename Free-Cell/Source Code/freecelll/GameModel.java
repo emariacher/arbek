@@ -122,6 +122,10 @@ public class GameModel implements Iterable<CardPile> {
                     System.out.print("  moveFromPileToPile Movable Stack: ");
                     for (Card crd2 : zeStack) {
                         System.out.print(", " + crd2);
+                        target.push(crd2);
+                        source.pop();
+                        _notifyEveryoneOfChanges();
+                        //... Record on undo stack.
                     }
                     System.out.println("");
                 } else {
@@ -134,7 +138,7 @@ public class GameModel implements Iterable<CardPile> {
                 }
                 result = true;
             } else {
-                System.out.println("  moveFromPileToPile 2[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
+                System.out.println("  moveFromPileToPile 2[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + " - " + target.rulesAllowAddingThisCard(crd) + "]");
             }
         }
         return result;
