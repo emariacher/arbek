@@ -13,6 +13,7 @@ public class GameModel implements Iterable<CardPile> {
     private CardPile[] _tableau;
     private CardPile[] _foundation;
     Card card2move;
+    CardPile zeStack;
 
     private ArrayList<CardPile> _allPiles;
 
@@ -113,17 +114,24 @@ public class GameModel implements Iterable<CardPile> {
     public boolean moveFromPileToPile(CardPile source, CardPile target) {
         boolean result = false;
         if (source.size() > 0) {
-            Card crd = source.peekTop();
+            Card crd = card2move;
             System.out.println("  moveFromPileToPile 0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + " - (" + card2move + ")]");
             if (target.rulesAllowAddingThisCard(crd)) {
                 System.out.println("  moveFromPileToPile 1[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
-                target.push(crd);
-                source.pop();
-                _notifyEveryoneOfChanges();
-                //... Record on undo stack.
-                _undoStack.push(source);
-                _undoStack.push(target);
-
+                if (zeStack != null) {
+                    System.out.print("  moveFromPileToPile Movable Stack: ");
+                    for (Card crd2 : zeStack) {
+                        System.out.print(", " + crd2);
+                    }
+                    System.out.println("");
+                } else {
+                    target.push(crd);
+                    source.pop();
+                    _notifyEveryoneOfChanges();
+                    //... Record on undo stack.
+                    _undoStack.push(source);
+                    _undoStack.push(target);
+                }
                 result = true;
             } else {
                 System.out.println("  moveFromPileToPile 2[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
@@ -149,6 +157,24 @@ public class GameModel implements Iterable<CardPile> {
         }
         return result;
     }
+
+
+    // get free spaces where cards could be freely moved i.e. not foundation piles
+    public int getFreespaces() {
+        int freespaces = 0;
+        for (CardPile pile : getFreeCellPiles()) {
+            if (pile.size() == 0) {
+                freespaces++;
+            }
+        }
+        for (CardPile pile : getTableauPiles()) {
+            if (pile.size() == 0) {
+                freespaces++;
+            }
+        }
+        return freespaces;
+    }
+
 
     //======================================================== addChangeListener
     public void addChangeListener(ChangeListener someoneWhoWantsToKnow) {

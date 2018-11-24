@@ -178,22 +178,6 @@ class UICardPanel extends JComponent implements
         }
     }
 
-    // get free spaces where cards could be freely moved i.e. not foundation piles
-    public int getFreespaces() {
-        int freespaces = 0;
-        for (CardPile pile : _model.getFreeCellPiles()) {
-            if (pile.size() == 0) {
-                freespaces++;
-            }
-        }
-        for (CardPile pile : _model.getTableauPiles()) {
-            if (pile.size() == 0) {
-                freespaces++;
-            }
-        }
-        return freespaces;
-    }
-
     //============================================================= mousePressed
     public void mousePressed(MouseEvent e) {
         int x = e.getX();   // Save the x coord of the click
@@ -216,13 +200,15 @@ class UICardPanel extends JComponent implements
                     System.out.println("UICardPanel 11[" + lastCardInside + "]");
                     _model.card2move = lastCardInside;
                 }
-                CardPile zeStack = pile.isMovable(lastCardInside);
-                if ((zeStack.size() > 1) && (getFreespaces() >= (zeStack.size()-1))) {
+                _model.zeStack = pile.isMovable(lastCardInside);
+                if ((_model.zeStack.size() > 1) && (_model.getFreespaces() >= (_model.zeStack.size()-1))) {
                     System.out.print("  UICardPanel Movable Stack: ");
-                    for (Card crd2 : zeStack) {
+                    for (Card crd2 : _model.zeStack) {
                         System.out.print(", " + crd2);
                     }
                     System.out.println("");
+                } else {
+                    _model.zeStack = null;
                 }
 
                 // move only card by card
