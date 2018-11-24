@@ -214,6 +214,7 @@ class UICardPanel extends JComponent implements
                 }
                 if (lastCardInside != null) {
                     System.out.println("UICardPanel 11[" + lastCardInside + "]");
+                    _model.card2move = lastCardInside;
                 }
                 CardPile zeStack = pile.isMovable(lastCardInside);
                 if ((zeStack.size() > 1) && (getFreespaces() >= (zeStack.size()-1))) {
@@ -291,22 +292,6 @@ class UICardPanel extends JComponent implements
             int x = e.getX();
             int y = e.getY();
 
-            //System.out.println("\n\nx" + x + ",y" + y);
-            Card lastCardInside = null;
-            for (CardPile pile : _model) {
-                lastCardInside = null;
-                if (pile.isRemovable() && pile.size() > 0) {
-                    // move a stack of cards if enough empty spaces
-                    for (Card crd : pile) {
-                        if (crd.isInside(x, y)) {
-                            lastCardInside = crd;
-                        }
-                    }
-                    if (lastCardInside != null) {
-                        System.out.println("                                mouseReleased 11[" + lastCardInside + "]");
-                    }
-                }
-            }
             CardPile targetPile = _findPileAt(x, y);
             if (targetPile != null) {
                 //... Move card.  This may not move if illegal.

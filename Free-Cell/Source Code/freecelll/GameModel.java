@@ -12,6 +12,7 @@ public class GameModel implements Iterable<CardPile> {
     private CardPile[] _freeCells;
     private CardPile[] _tableau;
     private CardPile[] _foundation;
+    Card card2move;
 
     private ArrayList<CardPile> _allPiles;
 
@@ -29,6 +30,7 @@ public class GameModel implements Iterable<CardPile> {
         _freeCells = new CardPile[4];
         _tableau = new CardPileTableau[8];
         _foundation = new CardPile[4];
+
 
         //... Create empty piles to hold "foundation"
         for (int pile = 0; pile < _foundation.length; pile++) {
@@ -112,8 +114,9 @@ public class GameModel implements Iterable<CardPile> {
         boolean result = false;
         if (source.size() > 0) {
             Card crd = source.peekTop();
+            System.out.println("  moveFromPileToPile 0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + " - (" + card2move + ")]");
             if (target.rulesAllowAddingThisCard(crd)) {
-                System.out.println("  moveFromPileToPile 0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
+                System.out.println("  moveFromPileToPile 1[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
                 target.push(crd);
                 source.pop();
                 _notifyEveryoneOfChanges();
@@ -123,7 +126,7 @@ public class GameModel implements Iterable<CardPile> {
 
                 result = true;
             } else {
-                System.out.println("  moveFromPileToPile 1[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
+                System.out.println("  moveFromPileToPile 2[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
             }
         }
         return result;
