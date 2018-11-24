@@ -213,11 +213,11 @@ class UICardPanel extends JComponent implements
                     }
                 }
                 if (lastCardInside != null) {
-                    System.out.println("ici11[" + lastCardInside + "]");
+                    System.out.println("UICardPanel11[" + lastCardInside + "]");
                 }
                 CardPile zeStack = pile.isMovable(lastCardInside);
                 if ((zeStack.size() > 1) && (getFreespaces() >= (zeStack.size()-1))) {
-                    System.out.print("  Movable Stack: ");
+                    System.out.print("  UICardPanel Movable Stack: ");
                     for (Card crd2 : zeStack) {
                         System.out.print(", " + crd2);
                     }
@@ -232,7 +232,14 @@ class UICardPanel extends JComponent implements
                     _dragFromY = y - testCard.getY();  // how far from top
                     _draggedCard = testCard;  // Remember what we're dragging.
                     _draggedFromPile = pile;
-                    System.out.println("ici12[" + _draggedFromPile + ", " + _draggedCard + "]");
+                    System.out.println("UICardPanel12[" + _draggedFromPile + ", " + _draggedCard + "]");
+                    break;   // Stop when we find the first match.
+                } else if (lastCardInside != null) {
+                    _dragFromX = x - lastCardInside.getX();  // how far from left
+                    _dragFromY = y - lastCardInside.getY();  // how far from top
+                    _draggedCard = lastCardInside;  // Remember what we're dragging.
+                    _draggedFromPile = pile;
+                    System.out.println("UICardPanel13[" + _draggedFromPile + ", " + _draggedCard + "]");
                     break;   // Stop when we find the first match.
                 }
             }

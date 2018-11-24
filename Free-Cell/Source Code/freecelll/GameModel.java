@@ -113,7 +113,7 @@ public class GameModel implements Iterable<CardPile> {
         if (source.size() > 0) {
             Card crd = source.peekTop();
             if (target.rulesAllowAddingThisCard(crd)) {
-                System.out.println("  Here0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
+                System.out.println("  moveFromPileToPile 0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
                 target.push(crd);
                 source.pop();
                 _notifyEveryoneOfChanges();
@@ -122,6 +122,8 @@ public class GameModel implements Iterable<CardPile> {
                 _undoStack.push(target);
 
                 result = true;
+            } else {
+                System.out.println("  moveFromPileToPile 1[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
             }
         }
         return result;
@@ -135,7 +137,7 @@ public class GameModel implements Iterable<CardPile> {
             CardPile target = _undoStack.getFirst();
             _undoStack.pop();
             Card crd = source.peekTop();
-            System.out.println("  There1[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
+            System.out.println("**** UNDO[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]****");
             target.pushIgnoreRules(crd);
             source.pop();
             _notifyEveryoneOfChanges();
