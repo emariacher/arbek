@@ -125,7 +125,26 @@ public class GameModel implements Iterable<CardPile> {
                         target.push(crd2);
                         source.pop();
                         _notifyEveryoneOfChanges();
+                    }
+                    System.out.println("");
+                    ArrayDeque<CardPile> stackFreeSpaces = new ArrayDeque<CardPile>();
+                    System.out.print("  moveFromPileToPile Undo 1: ");
+                    for (int i = zeStack.size() - 1; i >= 0; i--) {
+                        Card crd3 = zeStack.getCard(i);
+                        System.out.print(", " + crd3);
                         //... Record on undo stack.
+                        _undoStack.push(source);
+                        CardPile freeSpace = getFirstFreespace();
+                        _undoStack.push(freeSpace);
+                        stackFreeSpaces.push(freeSpace);
+                    }
+                    System.out.println("");
+                    System.out.print("  moveFromPileToPile Undo 2: ");
+                    for (CardPile fscrdp2 : stackFreeSpaces) {
+                        System.out.print(", " + fscrdp2);
+                        //... Record on undo stack.
+                        _undoStack.push(fscrdp2);
+                        _undoStack.push(target);
                     }
                     System.out.println("");
                 } else {
@@ -177,6 +196,21 @@ public class GameModel implements Iterable<CardPile> {
             }
         }
         return freespaces;
+    }
+
+    // get first free space where card could be freely moved i.e. not foundation piles
+    public CardPile getFirstFreespace() {
+        for (CardPile pile : getFreeCellPiles()) {
+            if (pile.size() == 0) {
+                return pile;
+            }
+        }
+        for (CardPile pile : getTableauPiles()) {
+            if (pile.size() == 0) {
+                return pile;
+            }
+        }
+        return null;
     }
 
 

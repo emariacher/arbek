@@ -65,6 +65,12 @@ public class CardPile implements Iterable<Card> {
         return _cards.get(_cards.size() - 1);
     }
 
+    //================================================================== getCard
+    public Card getCard(int i) //gets the top card of the pile
+    {
+        return _cards.get(i);
+    }
+
     //================================================================= iterator
     public Iterator<Card> iterator() {
         return _cards.iterator();
