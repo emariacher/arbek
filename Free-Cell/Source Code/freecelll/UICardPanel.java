@@ -185,7 +185,7 @@ class UICardPanel extends JComponent implements
 
         //... Find card image this is in.  Check top of every pile.
         _draggedCard = null;  // Assume not in any image.
-        System.out.println("\n\nx" + x + ",y" + y);
+        System.out.println("\nx" + x + ",y" + y);
         Card lastCardInside = null;
         for (CardPile pile : _model) {
             lastCardInside = null;
@@ -197,7 +197,6 @@ class UICardPanel extends JComponent implements
                     }
                 }
                 if (lastCardInside != null) {
-                    System.out.println("UICardPanel 11[" + lastCardInside + "]");
                     _model.card2move = lastCardInside;
                 }
                 _model.zeStack = pile.isMovable(lastCardInside);
@@ -219,14 +218,12 @@ class UICardPanel extends JComponent implements
                     _dragFromY = y - testCard.getY();  // how far from top
                     _draggedCard = testCard;  // Remember what we're dragging.
                     _draggedFromPile = pile;
-                    System.out.println("UICardPanel 12[" + _draggedFromPile + ", " + _draggedCard + "]");
                     break;   // Stop when we find the first match.
                 } else if (lastCardInside != null) {
                     _dragFromX = x - lastCardInside.getX();  // how far from left
                     _dragFromY = y - lastCardInside.getY();  // how far from top
                     _draggedCard = lastCardInside;  // Remember what we're dragging.
                     _draggedFromPile = pile;
-                    System.out.println("UICardPanel 13[" + _draggedFromPile + ", " + _draggedCard + "]");
                     break;   // Stop when we find the first match.
                 }
             }

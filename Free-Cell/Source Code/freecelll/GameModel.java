@@ -115,9 +115,7 @@ public class GameModel implements Iterable<CardPile> {
         boolean result = false;
         if (source.size() > 0) {
             Card crd = card2move;
-            System.out.println("  moveFromPileToPile 0[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + " - (" + card2move + ")]");
             if (target.rulesAllowAddingThisCard(crd)) {
-                System.out.println("  moveFromPileToPile 1[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]");
                 if (zeStack != null) {
                     System.out.print("  moveFromPileToPile Movable Stack: ");
                     for (Card crd2 : zeStack) {
@@ -128,25 +126,19 @@ public class GameModel implements Iterable<CardPile> {
                     }
                     System.out.println("");
                     ArrayDeque<CardPile> stackFreeSpaces = new ArrayDeque<CardPile>();
-                    System.out.print("  moveFromPileToPile Undo 1: ");
                     for (int i = zeStack.size() - 1; i >= 0; i--) {
                         Card crd3 = zeStack.getCard(i);
-                        System.out.print(", " + crd3);
                         //... Record on undo stack.
                         _undoStack.push(source);
                         CardPile freeSpace = getFirstFreespace();
                         _undoStack.push(freeSpace);
                         stackFreeSpaces.push(freeSpace);
                     }
-                    System.out.println("");
-                    System.out.print("  moveFromPileToPile Undo 2: ");
                     for (CardPile fscrdp2 : stackFreeSpaces) {
-                        System.out.print(", " + fscrdp2);
                         //... Record on undo stack.
                         _undoStack.push(fscrdp2);
                         _undoStack.push(target);
                     }
-                    System.out.println("");
                 } else {
                     target.push(crd);
                     source.pop();
@@ -156,8 +148,6 @@ public class GameModel implements Iterable<CardPile> {
                     _undoStack.push(target);
                 }
                 result = true;
-            } else {
-                System.out.println("  moveFromPileToPile 2[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + " - " + target.rulesAllowAddingThisCard(crd) + "]");
             }
         }
         return result;

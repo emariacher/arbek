@@ -99,14 +99,14 @@ public class CardPile implements Iterable<Card> {
 
 
     public CardPile isMovable(Card card) {
-        CardPile zeStack = new CardPile(); // using CardPile to store potential stack
+        CardPile zelStack = new CardPile(); // using CardPile to store potential stack
         State_find_Stack state = State_find_Stack.CARD_NOT_YET_FOUND;
         Card nextcard = card;
         for (Card crd : this) {
             switch (state) {
                 case CARD_NOT_YET_FOUND:
                     if (crd.equals(card)) {
-                        zeStack.push(crd);
+                        zelStack.push(crd);
                         state = State_find_Stack.CARD_FOUND;
                     }
                     break;
@@ -115,12 +115,12 @@ public class CardPile implements Iterable<Card> {
                         state = State_find_Stack.CARD_NOT_YET_FOUND;
                         return new CardPile();
                     }
-                    zeStack.push(crd);
+                    zelStack.push(crd);
             }
             nextcard = crd;
         }
-        if ((state == State_find_Stack.CARD_FOUND) & (zeStack.size() > 1)) {
-            return zeStack;
+        if ((state == State_find_Stack.CARD_FOUND) & (zelStack.size() > 1)) {
+            return zelStack;
         } else {
             return new CardPile();
         }
