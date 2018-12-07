@@ -71,6 +71,8 @@ class UICardPanel extends JComponent implements
     //... Selected card and its pile for dragging purposes.
     private Card _draggedCard = null;  // Current draggable card
     private CardPile _draggedFromPile = null;  // Which pile it came from
+    private CardPile zeStack = null;  // a movable stack
+
 
     //... Remember where each pile is located.
     private IdentityHashMap<CardPile, Rectangle> _whereIs =
@@ -199,15 +201,15 @@ class UICardPanel extends JComponent implements
                 if (lastCardInside != null) {
                     _model.card2move = lastCardInside;
                 }
-                _model.zeStack = pile.isMovable(lastCardInside);
-                if ((_model.zeStack.size() > 1) && (_model.getFreespaces() >= (_model.zeStack.size()-1))) {
+                zeStack = pile.isMovable(lastCardInside);
+                if ((zeStack.size() > 1) && (_model.getFreespaces() >= (zeStack.size()-1))) {
                     System.out.print("  UICardPanel Movable Stack: ");
-                    for (Card crd2 : _model.zeStack) {
+                    for (Card crd2 : zeStack) {
                         System.out.print(", " + crd2);
                     }
                     System.out.println("");
                 } else {
-                    _model.zeStack = null;
+                    zeStack = null;
                 }
 
                 // move only card by card
@@ -278,7 +280,7 @@ class UICardPanel extends JComponent implements
             CardPile targetPile = _findPileAt(x, y);
             if (targetPile != null) {
                 //... Move card.  This may not move if illegal.
-                _model.moveFromPileToPile(_draggedFromPile, targetPile);
+                _model.moveFromPileToPile(_draggedFromPile, targetPile, zeStack);
             }
             _clearDrag();
             this.repaint();

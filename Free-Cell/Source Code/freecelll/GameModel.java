@@ -13,7 +13,6 @@ public class GameModel implements Iterable<CardPile> {
     private CardPile[] _tableau;
     private CardPile[] _foundation;
     Card card2move;
-    CardPile zeStack;
 
     private ArrayList<CardPile> _allPiles;
 
@@ -111,7 +110,7 @@ public class GameModel implements Iterable<CardPile> {
     }
 
     //======================================================= moveFromPileToPile
-    public boolean moveFromPileToPile(CardPile source, CardPile target) {
+    public boolean moveFromPileToPile(CardPile source, CardPile target, CardPile zeStack) {
         boolean result = false;
         if (source.size() > 0) {
             Card crd = card2move;
