@@ -72,6 +72,7 @@ class UICardPanel extends JComponent implements
     private Card _draggedCard = null;  // Current draggable card
     private CardPile _draggedFromPile = null;  // Which pile it came from
     private CardPile zeStack = null;  // a movable stack
+    private Card card2move; // to detect either the 1st or last card of the movable stack "yeah, I agree I should know whether it's the 1st or the last"
 
 
     //... Remember where each pile is located.
@@ -199,7 +200,7 @@ class UICardPanel extends JComponent implements
                     }
                 }
                 if (lastCardInside != null) {
-                    _model.card2move = lastCardInside;
+                    card2move = lastCardInside;
                 }
                 zeStack = pile.isMovable(lastCardInside);
                 if ((zeStack.size() > 1) && (_model.getFreespaces() >= (zeStack.size()-1))) {
@@ -280,7 +281,7 @@ class UICardPanel extends JComponent implements
             CardPile targetPile = _findPileAt(x, y);
             if (targetPile != null) {
                 //... Move card.  This may not move if illegal.
-                _model.moveFromPileToPile(_draggedFromPile, targetPile, zeStack);
+                _model.moveFromPileToPile(_draggedFromPile, targetPile, zeStack, card2move);
             }
             _clearDrag();
             this.repaint();

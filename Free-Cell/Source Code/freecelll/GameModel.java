@@ -12,7 +12,6 @@ public class GameModel implements Iterable<CardPile> {
     private CardPile[] _freeCells;
     private CardPile[] _tableau;
     private CardPile[] _foundation;
-    Card card2move;
 
     private ArrayList<CardPile> _allPiles;
 
@@ -110,14 +109,13 @@ public class GameModel implements Iterable<CardPile> {
     }
 
     //======================================================= moveFromPileToPile
-    public boolean moveFromPileToPile(CardPile source, CardPile target, CardPile zeStack) {
+    public boolean moveFromPileToPile(CardPile source, CardPile target, CardPile zeStack2move, Card crd2move) {
         boolean result = false;
         if (source.size() > 0) {
-            Card crd = card2move;
-            if (target.rulesAllowAddingThisCard(crd)) {
-                if (zeStack != null) {
+            if (target.rulesAllowAddingThisCard(crd2move)) {
+                if (zeStack2move != null) {
                     System.out.print("  moveFromPileToPile Movable Stack: ");
-                    for (Card crd2 : zeStack) {
+                    for (Card crd2 : zeStack2move) {
                         System.out.print(", " + crd2);
                         target.push(crd2);
                         source.pop();
@@ -125,8 +123,8 @@ public class GameModel implements Iterable<CardPile> {
                     }
                     System.out.println("");
                     ArrayDeque<CardPile> stackFreeSpaces = new ArrayDeque<CardPile>();
-                    for (int i = zeStack.size() - 1; i >= 0; i--) {
-                        Card crd3 = zeStack.getCard(i);
+                    for (int i = zeStack2move.size() - 1; i >= 0; i--) {
+                        Card crd3 = zeStack2move.getCard(i);
                         //... Record on undo stack.
                         _undoStack.push(source);
                         CardPile freeSpace = getFirstFreespace();
@@ -139,7 +137,7 @@ public class GameModel implements Iterable<CardPile> {
                         _undoStack.push(target);
                     }
                 } else {
-                    target.push(crd);
+                    target.push(crd2move);
                     source.pop();
                     _notifyEveryoneOfChanges();
                     //... Record on undo stack.
