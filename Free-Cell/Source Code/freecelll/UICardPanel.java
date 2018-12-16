@@ -203,12 +203,15 @@ class UICardPanel extends JComponent implements
                     card2move = lastCardInside;
                 }
                 zeStack = pile.isMovable(lastCardInside);
-                if ((zeStack.size() > 1) && (_model.getFreespaces() >= (zeStack.size()-1))) {
+                if ((zeStack.size() > 1) && (_model.getFreespaces() > (zeStack.size() - 1))) {
                     System.out.print("  UICardPanel Movable Stack: ");
                     for (Card crd2 : zeStack) {
                         System.out.print(", " + crd2);
                     }
-                    System.out.println("");
+                    System.out.println("              " + zeStack.size() + " > " + _model.getFreespaces());
+                } else if (zeStack.size() > 1){
+                    zeStack = null;
+                    return;
                 } else {
                     zeStack = null;
                 }
