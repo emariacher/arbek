@@ -160,18 +160,25 @@ public class GameModel implements Iterable<CardPile> {
     public boolean undo() {
         boolean result = false;
         if (_undoStack.size() >= 2) {
-            CardPile source = _undoStack.getFirst();
-            Boolean sourceB = _undoOfStack.getFirst();
-            _undoStack.pop();
-            _undoOfStack.pop();
-            CardPile target = _undoStack.getFirst();
-            Boolean sourceT = _undoOfStack.getFirst();
-            _undoStack.pop();
-            _undoOfStack.pop();
-            Card crd = source.peekTop();
-            System.out.println("**** UNDO[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]**** "+sourceB+" -> "+ sourceT);
-            target.pushIgnoreRules(crd);
-            source.pop();
+            Boolean isAStack = false;
+            System.out.println("**** UNDO **** ");
+            do {
+                CardPile source = _undoStack.getFirst();
+                Boolean sourceB = _undoOfStack.getFirst();
+                _undoStack.pop();
+                _undoOfStack.pop();
+                CardPile target = _undoStack.getFirst();
+                Boolean sourceT = _undoOfStack.getFirst();
+                _undoStack.pop();
+                _undoOfStack.pop();
+                Card crd = source.peekTop();
+                System.out.println("  **** UNDO[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]**** " + sourceB + " -> " + sourceT);
+                target.pushIgnoreRules(crd);
+                source.pop();
+                if(!_undoOfStack.isEmpty()) {
+                    isAStack = _undoOfStack.getFirst() & sourceB;
+                }
+            } while (isAStack);
             _notifyEveryoneOfChanges();
 
             result = true;
