@@ -36,13 +36,13 @@ object MyBuild extends Build {
             libraryDependencies.value ++ Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.5.19",
   "com.typesafe.akka" %% "akka-testkit" % "2.5.19",
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+  "org.scalatest" %% "scalatest" % "2.2.4" % "test",
   "junit" % "junit" % "4.12" % "test",
   "com.novocode" % "junit-interface" % "0.11" % "test"
 )  ++ Seq(
-              "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
-              "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
-              "org.scala-lang.modules" %% "scala-swing" % "2.0.3")
+              "org.scala-lang.modules" %% "scala-xml" % "1.0.3",
+              "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3",
+              "org.scala-lang.modules" %% "scala-swing" % "1.0.1")
           // in Scala 2.10, quasiquotes are provided by macro paradise
           case Some((2, 10)) =>
             libraryDependencies.value ++ Seq(
