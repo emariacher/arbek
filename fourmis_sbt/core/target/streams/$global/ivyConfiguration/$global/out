@@ -11,3 +11,4 @@
 [debug] 	sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots
 [debug] 	sonatype-releases: https://oss.sonatype.org/content/repositories/releases
 [debug] Using inline dependencies specified in Scala.
+[debug] Using inline dependencies specified in Scala.
