@@ -4,6 +4,7 @@ package statlaby
  * libraries needed: akka.actor and config-0.4.0.jar from typesafe
  */
 import akka.actor._
+import akka.routing.RoundRobinPool
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
