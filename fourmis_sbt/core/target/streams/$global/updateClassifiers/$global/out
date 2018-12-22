@@ -6,7 +6,7 @@
 [debug] == resolving dependencies for org.scalamacros#core$sources_2.11;1.0.0 [compile]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang#scala-library;2.11.6 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.11.6 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@18c906d1
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4d83dd7b
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.6
 [debug] 	local: revision in cache: org.scala-lang#scala-library;2.11.6
 [debug] 	found org.scala-lang#scala-library;2.11.6 in sbt-chain
@@ -16,11 +16,11 @@
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang#scala-library;2.11.6 [compile->master]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scalamacros#macros_2.11;1.0.0 [compile->default(compile)]
 [info] Resolving org.scalamacros#macros_2.11;1.0.0 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7fd76909
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7863a3cb
 [debug] 	found org.scalamacros#macros_2.11;1.0.0 in inter-project
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang#scala-reflect;2.11.6 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-reflect;2.11.6 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@540d1519
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@13ca3c9f
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-reflect;2.11.6
 [debug] 	local: revision in cache: org.scala-lang#scala-reflect;2.11.6
 [debug] 	found org.scala-lang#scala-reflect;2.11.6 in sbt-chain
@@ -30,7 +30,7 @@
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang#scala-reflect;2.11.6 [compile->master]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->com.typesafe.akka#akka-actor_2.11;2.3.9 [compile->default(compile)]
 [info] Resolving com.typesafe.akka#akka-actor_2.11;2.3.9 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7f3f7a18
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5ea5fbfd
 [debug] sbt-chain: module revision found in cache: com.typesafe.akka#akka-actor_2.11;2.3.9
 [debug] 	local: revision in cache: com.typesafe.akka#akka-actor_2.11;2.3.9
 [debug] 	found com.typesafe.akka#akka-actor_2.11;2.3.9 in sbt-chain
@@ -39,7 +39,7 @@
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->com.typesafe.akka#akka-actor_2.11;2.3.9 [compile->master]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->com.typesafe#config;1.2.1 [compile->default(compile)]
 [info] Resolving com.typesafe#config;1.2.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@491e80e3
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@67bf1725
 [debug] sbt-chain: module revision found in cache: com.typesafe#config;1.2.1
 [debug] 	local: revision in cache: com.typesafe#config;1.2.1
 [debug] 	found com.typesafe#config;1.2.1 in sbt-chain
@@ -48,7 +48,7 @@
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->com.typesafe#config;1.2.1 [compile->master]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->com.typesafe.akka#akka-testkit_2.11;2.3.9 [compile->default(compile)]
 [info] Resolving com.typesafe.akka#akka-testkit_2.11;2.3.9 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@50968b92
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7a06a9b2
 [debug] sbt-chain: module revision found in cache: com.typesafe.akka#akka-testkit_2.11;2.3.9
 [debug] 	local: revision in cache: com.typesafe.akka#akka-testkit_2.11;2.3.9
 [debug] 	found com.typesafe.akka#akka-testkit_2.11;2.3.9 in sbt-chain
@@ -57,7 +57,7 @@
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->com.typesafe.akka#akka-testkit_2.11;2.3.9 [compile->master]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang.modules#scala-xml_2.11;1.0.3 [compile->default(compile)]
 [info] Resolving org.scala-lang.modules#scala-xml_2.11;1.0.3 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@27cbfe6f
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@721e8022
 [debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-xml_2.11;1.0.3
 [debug] 	local: revision in cache: org.scala-lang.modules#scala-xml_2.11;1.0.3
 [debug] 	found org.scala-lang.modules#scala-xml_2.11;1.0.3 in sbt-chain
@@ -66,7 +66,7 @@
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang.modules#scala-xml_2.11;1.0.3 [compile->master]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [compile->default(compile)]
 [info] Resolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@79074c29
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5ea0a21b
 [debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3
 [debug] 	local: revision in cache: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3
 [debug] 	found org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 in sbt-chain
@@ -75,7 +75,7 @@
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 [compile->master]
 [debug] == resolving dependencies org.scalamacros#core$sources_2.11;1.0.0->org.scala-lang.modules#scala-swing_2.11;1.0.1 [compile->default(compile)]
 [info] Resolving org.scala-lang.modules#scala-swing_2.11;1.0.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@602bc790
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@35d1343a
 [debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-swing_2.11;1.0.1
 [debug] 	local: revision in cache: org.scala-lang.modules#scala-swing_2.11;1.0.1
 [debug] 	found org.scala-lang.modules#scala-swing_2.11;1.0.1 in sbt-chain
@@ -636,7 +636,7 @@
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-swing_2.11;1.0.1!scala-swing_2.11.jar
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.6!scala-compiler.jar(src)
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar(src)
-[debug] :: resolution report :: resolve 123ms :: artifacts dl 34ms
+[debug] :: resolution report :: resolve 182ms :: artifacts dl 31ms
 [debug] 	report for org.scalamacros#core$sources_2.11;1.0.0 compile produced in C:\Users\ericm_000\Documents\GitHub\kebra\fourmis_sbt\core\target\resolution-cache\reports\org.scalamacros-core$sources_2.11-compile.xml
 [debug] 	report for org.scalamacros#core$sources_2.11;1.0.0 runtime produced in C:\Users\ericm_000\Documents\GitHub\kebra\fourmis_sbt\core\target\resolution-cache\reports\org.scalamacros-core$sources_2.11-runtime.xml
 [debug] 	report for org.scalamacros#core$sources_2.11;1.0.0 test produced in C:\Users\ericm_000\Documents\GitHub\kebra\fourmis_sbt\core\target\resolution-cache\reports\org.scalamacros-core$sources_2.11-test.xml
@@ -650,4 +650,4 @@
 [debug] 	report for org.scalamacros#core$sources_2.11;1.0.0 docs produced in C:\Users\ericm_000\Documents\GitHub\kebra\fourmis_sbt\core\target\resolution-cache\reports\org.scalamacros-core$sources_2.11-docs.xml
 [debug] 	report for org.scalamacros#core$sources_2.11;1.0.0 pom produced in C:\Users\ericm_000\Documents\GitHub\kebra\fourmis_sbt\core\target\resolution-cache\reports\org.scalamacros-core$sources_2.11-pom.xml
 [debug] 	report for org.scalamacros#core$sources_2.11;1.0.0 scala-tool produced in C:\Users\ericm_000\Documents\GitHub\kebra\fourmis_sbt\core\target\resolution-cache\reports\org.scalamacros-core$sources_2.11-scala-tool.xml
-[debug] 	resolve done (123ms resolve - 34ms download)
+[debug] 	resolve done (182ms resolve - 31ms download)
