@@ -4,7 +4,7 @@ package statlaby
  * libraries needed: akka.actor and config-0.4.0.jar from typesafe
  */
 import akka.actor._
-import akka.routing.RoundRobinRouter
+
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 import kebra.MyLog._
@@ -41,7 +41,7 @@ object AkkaJeton {
         var lrjc = List.empty[(Couleur, Int, Int)]
 
         val workerRouter = context.actorOf(
-            Props[Worker].withRouter(RoundRobinRouter(nrOfWorkers)), name = "workerRouter")
+            Props[Worker].withRouter(RoundRobinPool(nrOfWorkers)), name = "workerRouter")
 
         def receive = {
             case Demarre =>
