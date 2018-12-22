@@ -21,6 +21,7 @@ public class GameModel implements Iterable<CardPile> {
     //    Push the source and destination piles on, every time a move is made.
     //    Pop them off to do the undo.   ...must suppress checking....
     private ArrayDeque<CardPile> _undoStack = new ArrayDeque<CardPile>();
+    private ArrayDeque<Boolean> _undoOfStack = new ArrayDeque<Boolean>(); // undoing a whole stack
 
     //============================================================== constructor
     public GameModel() {
@@ -127,14 +128,18 @@ public class GameModel implements Iterable<CardPile> {
                         Card crd3 = zeStack2move.getCard(i);
                         //... Record on undo stack.
                         _undoStack.push(source);
+                        _undoOfStack.push(true);
                         CardPile freeSpace = getFirstFreespace();
                         _undoStack.push(freeSpace);
+                        _undoOfStack.push(true);
                         stackFreeSpaces.push(freeSpace);
                     }
                     for (CardPile fscrdp2 : stackFreeSpaces) {
                         //... Record on undo stack.
                         _undoStack.push(fscrdp2);
+                        _undoOfStack.push(true);
                         _undoStack.push(target);
+                        _undoOfStack.push(true);
                     }
                 } else {
                     target.push(crd2move);
@@ -142,7 +147,9 @@ public class GameModel implements Iterable<CardPile> {
                     _notifyEveryoneOfChanges();
                     //... Record on undo stack.
                     _undoStack.push(source);
+                    _undoOfStack.push(false);
                     _undoStack.push(target);
+                    _undoOfStack.push(false);
                 }
                 result = true;
             }
@@ -154,11 +161,15 @@ public class GameModel implements Iterable<CardPile> {
         boolean result = false;
         if (_undoStack.size() >= 2) {
             CardPile source = _undoStack.getFirst();
+            Boolean sourceB = _undoOfStack.getFirst();
             _undoStack.pop();
+            _undoOfStack.pop();
             CardPile target = _undoStack.getFirst();
+            Boolean sourceT = _undoOfStack.getFirst();
             _undoStack.pop();
+            _undoOfStack.pop();
             Card crd = source.peekTop();
-            System.out.println("**** UNDO[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]****");
+            System.out.println("**** UNDO[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]**** "+sourceB+" -> "+ sourceT);
             target.pushIgnoreRules(crd);
             source.pop();
             _notifyEveryoneOfChanges();
