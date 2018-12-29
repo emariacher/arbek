@@ -6,7 +6,7 @@ object BuildSettings {
     organization := "org.scalamacros",
     version := "1.0.0",
     scalaVersion := "2.11.6",
-    crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5", "2.11.0", "2.11.1", "2.11.2", "2.11.3", "2.11.4", "2.11.5", "2.11.6", "2.11.8"),
+    crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5", "2.11.0", "2.11.1", "2.11.2", "2.11.3", "2.11.4", "2.11.5", "2.11.6", "2.11.8", "2.12.6"),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
     scalacOptions ++= Seq()
@@ -28,18 +28,30 @@ object MyBuild extends Build {
     "macros",
     file("macros"),
     settings = buildSettings ++ Seq(
-      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
+      libraryDependencies <+= (scalaVersion) ("org.scala-lang" % "scala-reflect" % _),
       libraryDependencies := {
         CrossVersion.partialVersion(scalaVersion.value) match {
           // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
+          case Some((2, scalaMajor)) if scalaMajor >= 12 =>
+            libraryDependencies.value ++ Seq(
+              "com.typesafe.akka" %% "akka-actor" % "2.5.19",
+              "com.typesafe.akka" %% "akka-testkit" % "2.5.19",
+              "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+              "junit" % "junit" % "4.12" % "test",
+              "com.novocode" % "junit-interface" % "0.11" % "test"
+            ) ++ Seq(
+              "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
+              "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
+              "org.scala-lang.modules" %% "scala-swing" % "2.1.0")
+          // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
           case Some((2, scalaMajor)) if scalaMajor >= 11 =>
             libraryDependencies.value ++ Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.3.9",
-  "com.typesafe.akka" %% "akka-testkit" % "2.3.9",
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test",
-  "junit" % "junit" % "4.12" % "test",
-  "com.novocode" % "junit-interface" % "0.11" % "test"
-)  ++ Seq(
+              "com.typesafe.akka" %% "akka-actor" % "2.3.9",
+              "com.typesafe.akka" %% "akka-testkit" % "2.3.9",
+              "org.scalatest" %% "scalatest" % "2.2.4" % "test",
+              "junit" % "junit" % "4.12" % "test",
+              "com.novocode" % "junit-interface" % "0.11" % "test"
+            ) ++ Seq(
               "org.scala-lang.modules" %% "scala-xml" % "1.0.3",
               "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3",
               "org.scala-lang.modules" %% "scala-swing" % "1.0.1")
@@ -67,6 +79,6 @@ object MyBuild extends Build {
             libraryDependencies.value :+ "org.scala-lang" % "scala-swing" % scalaVersion.value
         }
       }
-  )
-  ) dependsOn(macros)
+    )
+  ) dependsOn (macros)
 }
