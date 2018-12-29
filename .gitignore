@@ -10,9 +10,8 @@
 *.class
 */project/project/
 */project/target/
-*/target/*
+*/target/
 */.idea
-
 *.exe
 *.o
 *.bin
@@ -21,4 +20,5 @@
 *.PNG
 *.db
 *.properties
-*/target/*
+
+fourmis_sbt/*/target/*
