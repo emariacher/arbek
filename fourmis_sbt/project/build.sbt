@@ -3,8 +3,7 @@
 val buildSettings = Seq(
   organization := "org.scalamacros",
   version := "1.0.0",
-  scalaVersion := "2.11.6",
-  crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5", "2.11.0", "2.11.1", "2.11.2", "2.11.3", "2.11.4", "2.11.5", "2.11.6", "2.11.8"),
+  scalaVersion := "2.12.0",
   resolvers += Resolver.sonatypeRepo("snapshots"),
   resolvers += Resolver.sonatypeRepo("releases"),
   scalacOptions ++= Seq()
