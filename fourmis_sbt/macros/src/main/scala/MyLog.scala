@@ -1,10 +1,11 @@
-package kebra 
+package kebra
 
 import java.io._
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date}
+
 import scala.language.experimental.macros
-import scala.reflect.macros.Context
+import scala.reflect.macros.{Context, whitebox}
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 import java.text.ParsePosition
@@ -47,7 +48,7 @@ object MyLog {
     val t_end = Calendar.getInstance()
     myPrintln("    t_now: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
       "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()))
-    timeStampsList = timeStampsList :+((t_end.getTimeInMillis() - c_t_start.getTimeInMillis()), s_title);
+    timeStampsList = timeStampsList :+ ((t_end.getTimeInMillis() - c_t_start.getTimeInMillis()), s_title);
     t_end
   }
 
@@ -168,20 +169,21 @@ object MyLog {
   def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
 
 
-  def printx(c: Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
+  def printx(c: whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
     val msg = linecode.tree.toString
-    reify(println(c.Expr[String](Literal(Constant(msg))).splice+" ---> "+linecode.splice))
+    reify(println(c.Expr[String](Literal(Constant(msg))).splice + " ---> " + linecode.splice))
   }
-  def printIt(linecode: Any) = macro printx
+
+  def printIt(linecode: Any): Unit = macro printx
 
   def mprintx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
 
     val namez = (c.enclosingClass match {
-      case clazz @ ClassDef(_, _, _, _) => clazz.symbol.asClass.name
-      case module @ ModuleDef(_, _, _)  => module.symbol.asModule.name
-      case _                            => "" // not inside a class or a module. package object, REPL, somewhere else weird
+      case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
+      case module@ModuleDef(_, _, _) => module.symbol.asModule.name
+      case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
     }).toString
 
     //val paramRep = show(s.tree)
@@ -191,15 +193,16 @@ object MyLog {
     if (f1rst.indexOf("scala") == 0) {
       f1rst = ""
     } else {
-      f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez+"\\.this\\.", "").replaceAll("List", "")
+      f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
     }
-    val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez+"\\.this\\.", "").replaceAll("List", "")
-    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice+" "+c.Expr[String](Literal(Constant(s2cond))).splice+" ---> "+linecode.splice+" ---> "+c.Expr[String](Literal(Constant(namez))).splice))
+    val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
+    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice + " ---> " + c.Expr[String](Literal(Constant(namez))).splice))
     //reify(println(c.Expr[String](Literal(Constant(f1rst))).splice+" "+c.Expr[String](Literal(Constant(s2cond))).splice+" ---> "+linecode.splice))
   }
+
   def myPrintIt(linecode: Any): Any = macro mprintx
 
-  def assert2(c: Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
+  def assert2(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
 
     val namez = (c.enclosingImpl match {
@@ -210,26 +213,28 @@ object MyLog {
       case _ => c.abort(c.enclosingPosition, "NoEnclosingClass")
     }).toString match {
       case r_name(n) => n
-      case _         => "Unknown?"
+      case _ => "Unknown?"
     }
 
-    val actm = act.tree.toString.replaceAll(namez+"\\.this\\.", "")
-    val expm = exp.tree.toString.replaceAll(namez+"\\.this\\.", "")
+    val actm = act.tree.toString.replaceAll(namez + "\\.this\\.", "")
+    val expm = exp.tree.toString.replaceAll(namez + "\\.this\\.", "")
     reify({
       if (act.splice != exp.splice) {
         try {
-          throw new Exception("AssertionError: "+c.Expr[String](Literal(Constant(actm))).splice+"["+act.splice+"]==["+exp.splice+"]"+c.Expr[String](Literal(Constant(expm))).splice)
+          throw new Exception("AssertionError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
         } catch {
-          case unknown: Throwable => System.err.println(""+unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
+          case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
         }
       }
     })
   }
-  def myAssert2(act: Any, exp: Any) = macro assert2
+
+  def myAssert2(act: Any, exp: Any): Unit = macro assert2
 
   // get current line in source code
   def L_ : Int = macro lineImpl
-  def lineImpl(c: Context): c.Expr[Int] = {
+
+  def lineImpl(c: whitebox.Context): c.Expr[Int] = {
     import c.universe._
     val line = Literal(Constant(c.enclosingPosition.line))
     c.Expr[Int](line)
@@ -237,7 +242,8 @@ object MyLog {
 
   // get current file from source code (relative path)
   def F_ : String = macro fileImpl
-  def fileImpl(c: Context): c.Expr[String] = {
+
+  def fileImpl(c: whitebox.Context): c.Expr[String] = {
     import c.universe._
     val absolute = c.enclosingPosition.source.file.file.toURI
     val base = new File(".").toURI
@@ -247,7 +253,8 @@ object MyLog {
 
   // get current class/object (a bit sketchy)
   def C_ : String = macro classImpl
-  def classImpl(c: Context): c.Expr[String] = {
+
+  def classImpl(c: whitebox.Context): c.Expr[String] = {
     import c.universe._
 
     val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
@@ -255,13 +262,15 @@ object MyLog {
   }
 
   def myPrintDln(msg: Any)(implicit logFunc: LogFunction): Unit = macro logImpl
-  def logImpl(c: Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunction]): c.Expr[Unit] = {
+
+  def logImpl(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunction]): c.Expr[Unit] = {
     import c.universe._
     reify(logFunc.splice.log(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
   }
 
   def myErrPrintDln(msg: Any)(implicit logFunc: LogFunctionE): Unit = macro logImplE
-  def logImplE(c: Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunctionE]): c.Expr[Unit] = {
+
+  def logImplE(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunctionE]): c.Expr[Unit] = {
     import c.universe._
     reify(logFunc.splice.logE(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
   }
@@ -287,7 +296,7 @@ object MyLog {
 
   def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
-  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1+" ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
+  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
   def toFileAndDisplay(fileName: String, htmlString: String) {
     val filo = new File(fileName)
@@ -296,10 +305,13 @@ object MyLog {
   }
 
   def display(filo: File) {
-    java.awt.Desktop.getDesktop().browse(new java.net.URI("file:///"+filo.getCanonicalPath().replaceAll("\\\\", "/")))
+    java.awt.Desktop.getDesktop().browse(new java.net.URI("file:///" + filo.getCanonicalPath().replaceAll("\\\\", "/")))
   }
 
-  def copyFromFile(fileName: String): String = Some(scala.io.Source.fromFile(fileName)).map(p => { val s = p.mkString; p.close; s }).mkString
+  def copyFromFile(fileName: String): String = Some(scala.io.Source.fromFile(fileName)).map(p => {
+    val s = p.mkString; p.close; s
+  }).mkString
+
   def copy2File(fileName: String, s: String) = Some(new PrintWriter(fileName)).foreach { p => p.write(s); p.close }
 
   def copy(from: String, to: String) {
@@ -308,7 +320,9 @@ object MyLog {
         val buffer = new Array[Byte](1024)
         Iterator.continually(in.read(buffer))
           .takeWhile(_ != -1)
-          .foreach { out.write(buffer, 0, _) }
+          .foreach {
+            out.write(buffer, 0, _)
+          }
       }
     }
   }
@@ -318,7 +332,9 @@ object MyLog {
       val buffer = new Array[Byte](1024)
       Iterator.continually(in.read(buffer))
         .takeWhile(_ != -1)
-        .foreach { to.fos.write(buffer, 0, _) }
+        .foreach {
+          to.fos.write(buffer, 0, _)
+        }
     }
   }
 
@@ -333,7 +349,7 @@ object MyLog {
     to
   }
 
-  def use[T <: { def close(): Unit }](closable: T)(block: T => Unit) {
+  def use[T <: {def close() : Unit}](closable: T)(block: T => Unit) {
     try {
       block(closable)
     } finally {
@@ -344,7 +360,7 @@ object MyLog {
   def inverseMatrix(lin: List[List[Any]]): List[List[Any]] = {
     val size = lin.map(_.size).min
     if (lin.map(_.size).indexWhere(_ != size) >= 0) {
-      myErrPrintln(MyLog.tag(3)+" Truncating size! "+lin.map(_.size))
+      myErrPrintln(MyLog.tag(3) + " Truncating size! " + lin.map(_.size))
     }
     lin.head.take(size).zipWithIndex.map(rangee => lin.map(_.apply(rangee._2)))
   }
