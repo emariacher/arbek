@@ -17,7 +17,9 @@
 *.o
 *.bin
 *.layout
-*.bat~
-*.txt~
+*.*~
 *.PNG
 *.db
+*.properties
+*/target/streams/*
+

@@ -16,19 +16,14 @@ lazy val fourmis_sbt_root = (project in file("."))
   .settings(
     buildSettings,
     name := "fourmis_sbt_root",
-    run <<= run in Compile in core
+    run := run in Compile in core
   )
 
 lazy val macros = (project in file("macros"))
   .settings(
     buildSettings,
     name := "macros",
-  )
-    
-  "macros",
-  file("macros"),
-  settings = buildSettings ++ Seq(
-    libraryDependencies <+= (scalaVersion) ("org.scala-lang" % "scala-reflect" % _),
+    libraryDependencies += (scalaVersion) ("org.scala-lang" % "scala-reflect" % _).value,
     libraryDependencies := {
       CrossVersion.partialVersion(scalaVersion.value) match {
         // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
@@ -51,12 +46,12 @@ lazy val macros = (project in file("macros"))
       }
     }
   )
-)
 
-lazy val core: Project = Project(
-  "core",
-  file("core"),
-  settings = buildSettings ++ Seq(
+
+lazy val core = (project in file("core"))
+  .settings(
+    buildSettings,
+    name := "core",
     libraryDependencies := {
       CrossVersion.partialVersion(scalaVersion.value) match {
         // if scala 2.11+ is used, add dependency on scala-xml module
@@ -67,6 +62,5 @@ lazy val core: Project = Project(
           libraryDependencies.value :+ "org.scala-lang" % "scala-swing" % scalaVersion.value
       }
     }
-  )
-) dependsOn (macros)
-}
+  ).dependsOn(macros)
+ 
