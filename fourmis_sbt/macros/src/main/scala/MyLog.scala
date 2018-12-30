@@ -11,6 +11,7 @@ import scala.concurrent.duration._
 import java.text.ParsePosition
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import scala.language.reflectiveCalls
 
 trait LogFunction {
   def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "")

@@ -15,6 +15,7 @@ import scala.swing._
 import scala.swing.event._
 import java.awt.Color
 import akka.actor.{ ActorRef, ActorSystem, Props, Actor, Inbox }
+import scala.language.reflectiveCalls
 
 trait LogFunction {
     def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "")
