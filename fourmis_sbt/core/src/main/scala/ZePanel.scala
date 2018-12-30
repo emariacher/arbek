@@ -27,7 +27,7 @@ class ZeActor extends Actor {
                 context.setReceiveTimeout(1 millisecond)
                 ZePanel.zp.run = true
             } else {
-                val slider_timeout = min(max(1, (slider._2 * slider._2) / 10),5000)
+                val slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100),5000)
                 MyLog.myPrintIt(slider._2,slider_timeout)
                 context.setReceiveTimeout(slider_timeout millisecond)
             }
