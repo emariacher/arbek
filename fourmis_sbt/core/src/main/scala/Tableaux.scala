@@ -4,8 +4,6 @@ import scala.util.Random
 import java.awt.{Graphics, Graphics2D, Dimension, Color}
 import java.util.Calendar
 import kebra._
-import kebra.MyLog._
-import labyrinthe.LL._
 import statlaby.AkkaJeton
 import scala.collection.immutable._
 
@@ -69,10 +67,10 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         countAvance += 1
         if (command == "bloque") {
           var rayonBloqueDiv = 5
-          l.myErrPrintD("trouve le carre le plus actif")
+          LL.l.myErrPrintD("trouve le carre le plus actif")
           val carreLePlusActif = lc.filter(c => (math.abs(c.row - (maxRC.r / 2)) > (maxRC.r / rayonBloqueDiv)) ||
             (math.abs(c.col - (maxRC.c / 2)) > (maxRC.c / rayonBloqueDiv))).filter(!_.bloque).maxBy(_.calculePheromoneAll)
-          l.myErrPrintln(" et bloque le [" + carreLePlusActif + "]")
+          LL.l.myErrPrintln(" et bloque le [" + carreLePlusActif + "]")
           carreLePlusActif.frontieres = List(FrontiereV.nord, FrontiereV.est, FrontiereV.sud, FrontiereV.ouest)
           carreLePlusActif.getUpCarre match {
             case Some(c) => c.frontieres = c.frontieres :+ FrontiereV.sud
@@ -101,14 +99,14 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
             if ((j.rc == soldat.rc) && (j.fourmiliere != soldat.fourmiliere)) {
               j.statut = Pheromone.MORT
               j.killed += 1
-              l.myErrPrintln(MyLog.tagnt(1) + " " + soldat.toString + " a tue " + j.toString)
+              LL.l.myErrPrintln(MyLog.tagnt(1) + " " + soldat.toString + " a tue " + j.toString)
             }
           })
         })
       case StateMachine.reset => state = reset
       case StateMachine.termine =>
         if (graphic) {
-          l.myErrPrintln(zp.lbl.text)
+          LL.l.myErrPrintln(zp.lbl.text)
           if ((command == "step") || zp.run) {
             zp.pause = false
           } else {
@@ -147,7 +145,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     rnd = new Random(seed)
     countGenere = 0
     countAvance = 0
-    l.myPrintln(seed)
+    LL.l.myPrintln(seed)
     lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
     fourmilieres.foreach(_.cntmp = 0)
     mj.foreach((cj: (Couleur, Jeton)) => {
@@ -188,7 +186,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
                                                                     myAssert(ljs.apply(2)._2.cnt==10)
                                                                     //exit
                                                         } */
-    L.myPrint(".")
+    LL.l.myPrint(".")
   }
 
   def doZeJob2 {
@@ -221,7 +219,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     rnd = new Random(seed)
     countGenere = 0
     countAvance = 0
-    l.myPrintln(seed)
+    LL.l.myPrintln(seed)
     lc = (0 until maxRow).map((row: Int) => (0 until maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
     lj.foreach(_.resetLocal)
     QA

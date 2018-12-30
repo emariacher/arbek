@@ -1,7 +1,7 @@
 package labyrinthe
 import java.io.File
 
-import labyrinthe.LL._
+import kebra.LL._
 import labyrinthe.Tableaux._
 
 import scala.swing._

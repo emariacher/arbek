@@ -4,19 +4,16 @@ import labyrinthe.ZePanel._
 
 import scala.swing.Panel
 import akka.actor._
-import akka.actor.ActorDSL._
 import java.awt.Graphics2D
 import java.awt.Dimension
 import java.awt.Color
 import scala.math._
-import java.io.File
 import scala.swing.Label
 import labyrinthe.Tableaux._
-import kebra.MyLog
-import kebra.MyLog._
+//import kebra.LL._
+import kebra._
 import scala.concurrent.duration._
-import labyrinthe.LL._
-import scala.language.postfixOps 
+import scala.language.postfixOps
 
 class ZeActor extends Actor {
     context.setReceiveTimeout(1 second)
@@ -34,7 +31,7 @@ class ZeActor extends Actor {
             }
             ZePanel.zp.step = false
         case "step" =>
-            l.myErrPrintDln("step")
+            LL.l.myErrPrintDln("step")
             ZePanel.zp.repaint
             tbx.doZeJob("step", true)
             ZePanel.zp.step = true

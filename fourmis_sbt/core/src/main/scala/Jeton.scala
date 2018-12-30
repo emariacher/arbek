@@ -8,8 +8,6 @@ import labyrinthe.FrontiereV._
 import kebra._
 import scala.swing.Label
 import scala.collection.mutable.Queue
-import scala.collection.immutable.ListSet
-import labyrinthe.LL._
 
 abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Fourmiliere) {
   val label = new Label {
@@ -87,7 +85,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       StateMachine.termine
     } else if ((ventre < 1) || (statut == Pheromone.MORT)) {
       if (ventre == 0) {
-        l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
+        LL.l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
       }
       cnt = zp.limit + 1
       statut = Pheromone.MORT
@@ -118,9 +116,9 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       fourmiliere.cntmp += 1
       fourmiliere.label.text = "] fml(" + fourmiliere.cntmp + "/" + fourmiliere.cnt + "/" + fourmiliere.cntall + ")[ "
       if (statut == Pheromone.REVIENS) {
-        l.myErrPrintDln("******************************************************")
-        l.myErrPrintDln("***************** Miracle! " + toString)
-        l.myErrPrintDln("******************************************************")
+        LL.l.myErrPrintDln("******************************************************")
+        LL.l.myErrPrintDln("***************** Miracle! " + toString)
+        LL.l.myErrPrintDln("******************************************************")
         statut = Pheromone.CHERCHE
         miracule += 1
       }
@@ -311,7 +309,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       case Pheromone.MORT => {
         // rien
       }
-      case _ => l.myErrPrintDln(toString)
+      case _ => LL.l.myErrPrintDln(toString)
     }
 
     //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
@@ -412,7 +410,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       traces = traces.dropRight(1)
     } else {
       // bah maintenant il y a une barriere qui a ete creee
-      l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur ses traces car une barriere vient d etre installee ")
+      LL.l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur ses traces car une barriere vient d etre installee ")
       statut = Pheromone.REVIENS
       indexBlocage = traces.length - 1
       //traces = List.empty[RowCol]

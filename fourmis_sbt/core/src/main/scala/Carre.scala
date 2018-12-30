@@ -7,7 +7,6 @@ import java.awt.Color
 import labyrinthe.FrontiereV._
 import labyrinthe.Tableaux._
 import kebra._
-import labyrinthe.LL._
 
 class Carre(val rc: RowCol) {
   def this(r: Int, c: Int) = this(new RowCol(r, c))

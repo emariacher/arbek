@@ -2,7 +2,8 @@ package labyrinthe
 
 import labyrinthe.FrontiereV._
 import kebra._
-import labyrinthe.LL._
+import kebra.LL._
+import kebra.MyLog._
 
 class Rouge(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Jeton(couleur, rayon, fourmiliere) {
   val ordreChoix = new Circular(List(nord, ouest, sud, est), nextf, prevf)
