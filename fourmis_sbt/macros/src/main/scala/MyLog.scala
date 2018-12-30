@@ -181,11 +181,12 @@ object MyLog {
   def mprintx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
 
-    val namez = (c.enclosingClass match {
+    val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
+    /*val namez = (c.enclosingClass match {
       case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
       case module@ModuleDef(_, _, _) => module.symbol.asModule.name
       case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
-    }).toString
+    }).toString*/
 
     //val paramRep = show(s.tree)
     //c.Expr(q"""println($paramRep + " = " + $s)""")
@@ -206,16 +207,7 @@ object MyLog {
   def assert2(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
 
-    val namez = (c.enclosingImpl match {
-      case ClassDef(mods, name, tparams, impl) =>
-        c.universe.reify(c.literal(name.toString).splice)
-      case ModuleDef(mods, name, impl) =>
-        c.universe.reify(c.literal(name.toString).splice)
-      case _ => c.abort(c.enclosingPosition, "NoEnclosingClass")
-    }).toString match {
-      case r_name(n) => n
-      case _ => "Unknown?"
-    }
+    val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
 
     val actm = act.tree.toString.replaceAll(namez + "\\.this\\.", "")
     val expm = exp.tree.toString.replaceAll(namez + "\\.this\\.", "")
