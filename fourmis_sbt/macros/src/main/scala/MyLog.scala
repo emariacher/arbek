@@ -186,7 +186,7 @@ object MyLog {
     //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
     //val namez = implicitly[sourcecode.Enclosing].value
     //val namez = sourcecode.Enclosing()
-    val namez = enclosingImpl(c).toString
+    val namez = enclosingImpl(c).toString.split("\"").tail.head.split(" ").head
     //val namez = "deprecated"
     /*val namez = (c.enclosingClass match {
       case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
