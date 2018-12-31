@@ -11,6 +11,8 @@ import scala.concurrent.duration._
 import java.text.ParsePosition
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import sourcecode.Enclosing
+
 import scala.language.reflectiveCalls
 
 trait LogFunction {
@@ -183,7 +185,8 @@ object MyLog {
 
     //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
     //val namez = implicitly[sourcecode.Enclosing].value
-    val namez = sourcecode.Enclosing()
+    //val namez = sourcecode.Enclosing()
+    val namez = "deprecated"
     /*val namez = (c.enclosingClass match {
       case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
       case module@ModuleDef(_, _, _) => module.symbol.asModule.name
@@ -206,170 +209,294 @@ object MyLog {
 
   def myPrintIt(linecode: Any): Any = macro mprintx
 
-  def assert2(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
+
+  //***********https://github.com/lihaoyi/sourcecode******
+  object Util {
+    def isSynthetic(c: Compat.Context)(s: c.Symbol) = isSyntheticName(getName(c)(s))
+
+    def isSyntheticName(name: String) = {
+      name == "<init>" || (name.startsWith("<local ") && name.endsWith(">"))
+    }
+
+    def getName(c: Compat.Context)(s: c.Symbol) = s.name.decodedName.toString.trim
+  }
+
+  object Compat {
+    type Context = scala.reflect.macros.blackbox.Context
+
+    def enclosingOwner(c: Context) = c.internal.enclosingOwner
+
+    def enclosingParamList(c: Context): List[List[c.Symbol]] = {
+      def nearestEnclosingMethod(owner: c.Symbol): c.Symbol =
+        if (owner.isMethod) owner
+        else if (owner.isClass) owner.asClass.primaryConstructor
+        else nearestEnclosingMethod(owner.owner)
+
+      nearestEnclosingMethod(enclosingOwner(c)).asMethod.paramLists
+    }
+  }
+
+  sealed trait Chunk
+
+  object Chunk {
+
+    case class Pkg(name: String) extends Chunk
+
+    case class Obj(name: String) extends Chunk
+
+    case class Cls(name: String) extends Chunk
+
+    case class Trt(name: String) extends Chunk
+
+    case class Val(name: String) extends Chunk
+
+    case class Var(name: String) extends Chunk
+
+    case class Lzy(name: String) extends Chunk
+
+    case class Def(name: String) extends Chunk
+
+  }
+
+
+  def enclosing[T](c: Compat.Context)(filter: c.Symbol => Boolean): c.Expr[T] = {
+
     import c.universe._
+    var current = Compat.enclosingOwner(c)
+    var path = List.empty[Chunk]
+    while (current != NoSymbol && current.toString != "package <root>") {
+      if (filter(current)) {
 
-    //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
-    val namez = "deprecated"
-    /*val namez = (c.enclosingClass match {
-      case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
-      case module@ModuleDef(_, _, _) => module.symbol.asModule.name
-      case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
-    }).toString*/
-
-    //val paramRep = show(s.tree)
-    //c.Expr(q"""println($paramRep + " = " + $s)""")
-
-
-    val actm = act.tree.toString.replaceAll(namez + "\\.this\\.", "")
-    val expm = exp.tree.toString.replaceAll(namez + "\\.this\\.", "")
-    reify({
-      if (act.splice != exp.splice) {
-        try {
-          throw new Exception("AssertionError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
-        } catch {
-          case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  ")); sys.exit
+        val chunk = current match {
+          case x if x.isPackage => Chunk.Pkg
+          case x if x.isModuleClass => Chunk.Obj
+          case x if x.isClass && x.asClass.isTrait => Chunk.Trt
+          case x if x.isClass => Chunk.Cls
+          case x if x.isMethod => Chunk.Def
+          case x if x.isTerm && x.asTerm.isVar => Chunk.Var
+          case x if x.isTerm && x.asTerm.isLazy => Chunk.Lzy
+          case x if x.isTerm && x.asTerm.isVal => Chunk.Val
         }
+
+        path = chunk(Util.getName(c)(current)) :: path
       }
-    })
-  }
-
-  def myAssert2(act: Any, exp: Any): Unit = macro assert2
-
-  // get current line in source code
-  def L_ : Int = macro lineImpl
-
-  def lineImpl(c: whitebox.Context): c.Expr[Int] = {
-    import c.universe._
-    val line = Literal(Constant(c.enclosingPosition.line))
-    c.Expr[Int](line)
-  }
-
-  // get current file from source code (relative path)
-  def F_ : String = macro fileImpl
-
-  def fileImpl(c: whitebox.Context): c.Expr[String] = {
-    import c.universe._
-    val absolute = c.enclosingPosition.source.file.file.toURI
-    val base = new File(".").toURI
-    val path = Literal(Constant(c.enclosingPosition.source.file.file.getName()))
-    c.Expr[String](path)
-  }
-
-  // get current class/object (a bit sketchy)
-  def C_ : String = macro classImpl
-
-  def classImpl(c: whitebox.Context): c.Expr[String] = {
-    import c.universe._
-
-    //val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
-    val class_ = Literal(Constant("Deprecated"))
-    c.Expr[String](class_)
-  }
-
-  def myPrintDln(msg: Any)(implicit logFunc: LogFunction): Unit = macro logImpl
-
-  def logImpl(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunction]): c.Expr[Unit] = {
-    import c.universe._
-    reify(logFunc.splice.log(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
-  }
-
-  def myErrPrintDln(msg: Any)(implicit logFunc: LogFunctionE): Unit = macro logImplE
-
-  def logImplE(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunctionE]): c.Expr[Unit] = {
-    import c.universe._
-    reify(logFunc.splice.logE(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
-  }
-
-  def waiting(d: Duration) {
-    val t0 = System.currentTimeMillis()
-    var t1 = t0
-    do {
-      t1 = System.currentTimeMillis()
-    } while (t1 - t0 < d.toMillis)
-  }
-
-  def mtimeStampx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
-    import c.universe._
-    val msg = linecode.tree.toString
-    reify({
-      g_t_start = timeStamp(g_t_start, "---");
-      linecode.splice;
-      g_t_end = timeStamp(g_t_start, c.Expr[String](Literal(Constant(msg))).splice);
-      timeStampsList = timeStampsList :+ ((g_t_end.getTimeInMillis() - g_t_start.getTimeInMillis()), c.Expr[String](Literal(Constant(msg))).splice);
-    })
-  }
-
-  def timeStampIt(linecode: Any): Any = macro mtimeStampx
-
-  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
-
-  def toFileAndDisplay(fileName: String, htmlString: String) {
-    val filo = new File(fileName)
-    Some(new PrintWriter(filo)).foreach { p => p.write(htmlString); p.close }
-    display(filo)
-  }
-
-  def display(filo: File) {
-    java.awt.Desktop.getDesktop().browse(new java.net.URI("file:///" + filo.getCanonicalPath().replaceAll("\\\\", "/")))
-  }
-
-  def copyFromFile(fileName: String): String = Some(scala.io.Source.fromFile(fileName)).map(p => {
-    val s = p.mkString; p.close; s
-  }).mkString
-
-  def copy2File(fileName: String, s: String) = Some(new PrintWriter(fileName)).foreach { p => p.write(s); p.close }
-
-  def copy(from: String, to: String) {
-    use(new FileInputStream(from)) { in =>
-      use(new FileOutputStream(to)) { out =>
-        val buffer = new Array[Byte](1024)
-        Iterator.continually(in.read(buffer))
-          .takeWhile(_ != -1)
-          .foreach {
-            out.write(buffer, 0, _)
-          }
-      }
+      current = current.owner
     }
+    val renderedPath = path.map {
+      case Chunk.Pkg(s) => s + "."
+      case Chunk.Obj(s) => s + "."
+      case Chunk.Cls(s) => s + "#"
+      case Chunk.Trt(s) => s + "#"
+      case Chunk.Val(s) => s + " "
+      case Chunk.Var(s) => s + " "
+      case Chunk.Lzy(s) => s + " "
+      case Chunk.Def(s) => s + " "
+    }.mkString.dropRight(1)
+    c.Expr[T](q"""${c.prefix}($renderedPath)""")
   }
 
-  def copy(from: String, to: MyFile) {
-    use(new FileInputStream(from)) { in =>
-      val buffer = new Array[Byte](1024)
-      Iterator.continually(in.read(buffer))
-        .takeWhile(_ != -1)
-        .foreach {
-          to.fos.write(buffer, 0, _)
-        }
-    }
-  }
 
-  def copy(from: String): String = {
-    var to = ""
-    use(new FileReader(from)) { in =>
-      val buffer = new Array[Char](1024)
-      Iterator.continually(in.read(buffer))
-        .takeWhile(_ != -1)
-        .foreach { (i: Int) => to += buffer.toList.take(i).mkString("") }
-    }
-    to
-  }
+def enclosingImpl (c: scala.reflect.macros.blackbox.Context): c.Expr[Enclosing] = enclosing[Enclosing] (c) (
+! Util.isSynthetic (c) (_)
+)
 
-  def use[T <: {def close() : Unit}](closable: T)(block: T => Unit) {
-    try {
-      block(closable)
-    } finally {
-      closable.close()
-    }
-  }
+  implicit def generate: Enclosing = macro enclosingImpl
 
-  def inverseMatrix(lin: List[List[Any]]): List[List[Any]] = {
-    val size = lin.map(_.size).min
-    if (lin.map(_.size).indexWhere(_ != size) >= 0) {
-      myErrPrintln(MyLog.tag(3) + " Truncating size! " + lin.map(_.size))
-    }
-    lin.head.take(size).zipWithIndex.map(rangee => lin.map(_.apply(rangee._2)))
-  }
+//*****************************************************************************************
+
+def assert2 (c: whitebox.Context) (act: c.Expr[Any], exp: c.Expr[Any] ): c.Expr[Unit] = {
+
+import c.universe._
+
+//val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
+val namez = "deprecated"
+/*val namez = (c.enclosingClass match {
+  case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
+  case module@ModuleDef(_, _, _) => module.symbol.asModule.name
+  case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
+}).toString*/
+
+//val paramRep = show(s.tree)
+//c.Expr(q"""println($paramRep + " = " + $s)""")
+
+
+val actm = act.tree.toString.replaceAll (namez + "\\.this\\.", "")
+val expm = exp.tree.toString.replaceAll (namez + "\\.this\\.", "")
+reify ( {
+if (act.splice != exp.splice) {
+try {
+throw new Exception ("AssertionError: " + c.Expr[String] (Literal (Constant (actm) ) ).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String] (Literal (Constant (expm) ) ).splice)
+} catch {
+case unknown: Throwable => System.err.println ("" + unknown + unknown.getStackTrace.toList.filter (_.toString.indexOf ("scala.") != 0).mkString ("\n  ", "\n  ", "\n  ") );
+sys.exit
+}
+}
+})
+}
+
+def myAssert2 (act: Any, exp: Any): Unit = macro assert2
+
+// get current line in source code
+def L_ : Int = macro lineImpl
+
+def lineImpl (c: whitebox.Context): c.Expr[Int] = {
+
+import c.universe._
+
+val line = Literal (Constant (c.enclosingPosition.line) )
+c.Expr[Int] (line)
+}
+
+// get current file from source code (relative path)
+def F_ : String = macro fileImpl
+
+def fileImpl (c: whitebox.Context): c.Expr[String] = {
+
+import c.universe._
+
+val absolute = c.enclosingPosition.source.file.file.toURI
+val base = new File (".").toURI
+val path = Literal (Constant (c.enclosingPosition.source.file.file.getName () ) )
+c.Expr[String] (path)
+}
+
+// get current class/object (a bit sketchy)
+def C_ : String = macro classImpl
+
+def classImpl (c: whitebox.Context): c.Expr[String] = {
+
+import c.universe._
+
+//val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
+val class_ = Literal (Constant ("Deprecated") )
+c.Expr[String] (class_)
+}
+
+def myPrintDln (msg: Any) (implicit logFunc: LogFunction): Unit = macro logImpl
+
+def logImpl (c: whitebox.Context) (msg: c.Expr[Any] ) (logFunc: c.Expr[LogFunction] ): c.Expr[Unit] = {
+
+import c.universe._
+
+reify (logFunc.splice.log (msg.splice, srcFile = fileImpl (c).splice, srcLine = lineImpl (c).splice, srcClass = classImpl (c).splice) )
+}
+
+def myErrPrintDln (msg: Any) (implicit logFunc: LogFunctionE): Unit = macro logImplE
+
+def logImplE (c: whitebox.Context) (msg: c.Expr[Any] ) (logFunc: c.Expr[LogFunctionE] ): c.Expr[Unit] = {
+
+import c.universe._
+
+reify (logFunc.splice.logE (msg.splice, srcFile = fileImpl (c).splice, srcLine = lineImpl (c).splice, srcClass = classImpl (c).splice) )
+}
+
+def waiting (d: Duration) {
+val t0 = System.currentTimeMillis ()
+var t1 = t0
+do {
+t1 = System.currentTimeMillis ()
+} while (t1 - t0 < d.toMillis)
+}
+
+def mtimeStampx (c: scala.reflect.macros.whitebox.Context) (linecode: c.Expr[Any] ): c.Expr[Unit] = {
+
+import c.universe._
+
+val msg = linecode.tree.toString
+reify ( {
+g_t_start = timeStamp (g_t_start, "---");
+linecode.splice;
+g_t_end = timeStamp (g_t_start, c.Expr[String] (Literal (Constant (msg) ) ).splice);
+timeStampsList = timeStampsList :+ ((g_t_end.getTimeInMillis () - g_t_start.getTimeInMillis () ), c.Expr[String] (Literal (Constant (msg) ) ).splice);
+})
+}
+
+def timeStampIt (linecode: Any): Any = macro mtimeStampx
+
+def printTimeStampsList = if (! timeStampsList.isEmpty) myPrintln (timeStampsList.filter (_._2 != "---").map (t => (t._1 + " ms", t._2.replaceAll (".this", "") ) ).distinct.mkString ("TimeStampsList:\n  ", "\n  ", "\n  ") )
+
+def toFileAndDisplay (fileName: String, htmlString: String) {
+val filo = new File (fileName)
+Some (new PrintWriter (filo) ).foreach {
+p => p.write (htmlString);
+p.close
+}
+display (filo)
+}
+
+def display (filo: File) {
+java.awt.Desktop.getDesktop ().browse (new java.net.URI ("file:///" + filo.getCanonicalPath ().replaceAll ("\\\\", "/") ) )
+}
+
+def copyFromFile (fileName: String): String = Some (scala.io.Source.fromFile (fileName) ).map (p => {
+val s = p.mkString;
+p.close;
+s
+}).mkString
+
+def copy2File (fileName: String, s: String) = Some (new PrintWriter (fileName) ).foreach {
+p => p.write (s);
+p.close
+}
+
+def copy (from: String, to: String) {
+use (new FileInputStream (from) ) {
+in =>
+use (new FileOutputStream (to) ) {
+out =>
+val buffer = new Array[Byte] (1024)
+Iterator.continually (in.read (buffer) )
+.takeWhile (_!= - 1)
+.foreach {
+out.write (buffer, 0, _)
+}
+}
+}
+}
+
+def copy (from: String, to: MyFile) {
+use (new FileInputStream (from) ) {
+in =>
+val buffer = new Array[Byte] (1024)
+Iterator.continually (in.read (buffer) )
+.takeWhile (_!= - 1)
+.foreach {
+to.fos.write (buffer, 0, _)
+}
+}
+}
+
+def copy (from: String): String = {
+var to = ""
+use (new FileReader (from) ) {
+in =>
+val buffer = new Array[Char] (1024)
+Iterator.continually (in.read (buffer) )
+.takeWhile (_!= - 1)
+.foreach {
+(i: Int) => to += buffer.toList.take (i).mkString ("")
+}
+}
+to
+}
+
+def use[T <: {
+def close (): Unit
+}] (closable: T) (block: T => Unit) {
+try {
+block (closable)
+} finally {
+closable.close ()
+}
+}
+
+def inverseMatrix (lin: List[List[Any]] ): List[List[Any]] = {
+val size = lin.map (_.size).min
+if (lin.map (_.size).indexWhere (_!= size) >= 0) {
+myErrPrintln (MyLog.tag (3) + " Truncating size! " + lin.map (_.size) )
+}
+lin.head.take (size).zipWithIndex.map (rangee => lin.map (_.apply (rangee._2) ) )
+}
 }
 
 class MyLog(s_title: String, fil: File, errExt: String) {
