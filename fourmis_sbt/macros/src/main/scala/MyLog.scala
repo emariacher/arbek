@@ -186,7 +186,8 @@ object MyLog {
     //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
     //val namez = implicitly[sourcecode.Enclosing].value
     //val namez = sourcecode.Enclosing()
-    val namez = "deprecated"
+    val namez = enclosingImpl(c).toString
+    //val namez = "deprecated"
     /*val namez = (c.enclosingClass match {
       case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
       case module@ModuleDef(_, _, _) => module.symbol.asModule.name
@@ -292,6 +293,7 @@ object MyLog {
       case Chunk.Lzy(s) => s + " "
       case Chunk.Def(s) => s + " "
     }.mkString.dropRight(1)
+    //c.Expr[T](q"""${c.prefix}($path)""")
     c.Expr[T](q"""${c.prefix}($renderedPath)""")
   }
 
