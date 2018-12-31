@@ -49,7 +49,8 @@ object ZePanel {
 
   def newZePanel(lbl: Label, maxRC: RowCol, ptype: PanelType.Value) {
     zp = new ZePanel(lbl, maxRC, ptype)
-    za = ActorDSL.actor(new ZeActor)
+    //za = ActorDSL.actor(new ZeActor)
+    za = system.actorOf(Props[ZeActor], "zePanelActor")
   }
 }
 
