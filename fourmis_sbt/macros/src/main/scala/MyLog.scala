@@ -204,8 +204,8 @@ object MyLog {
       f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
     }
     val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
-    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice + " ---> " + c.Expr[String](Literal(Constant(namez))).splice))
-    //reify(println(c.Expr[String](Literal(Constant(f1rst))).splice+" "+c.Expr[String](Literal(Constant(s2cond))).splice+" ---> "+linecode.splice))
+    //reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice + " ---> " + c.Expr[String](Literal(Constant(namez))).splice))
+    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice +  " ---> " + linecode.splice))
   }
 
   def myPrintIt(linecode: Any): Any = macro mprintx
