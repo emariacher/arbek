@@ -182,7 +182,8 @@ object MyLog {
     import c.universe._
 
     //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
-    val namez = implicitly[sourcecode.Enclosing].value
+    //val namez = implicitly[sourcecode.Enclosing].value
+    val namez = sourcecode.Enclosing()
     /*val namez = (c.enclosingClass match {
       case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
       case module@ModuleDef(_, _, _) => module.symbol.asModule.name
