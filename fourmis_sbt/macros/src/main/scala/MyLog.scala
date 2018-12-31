@@ -182,11 +182,12 @@ object MyLog {
     import c.universe._
 
     //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
-    val namez = (c.enclosingClass match {
+    val namez = "Deprecated"
+    /*val namez = (c.enclosingClass match {
       case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
       case module@ModuleDef(_, _, _) => module.symbol.asModule.name
       case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
-    }).toString
+    }).toString*/
 
     //val paramRep = show(s.tree)
     //c.Expr(q"""println($paramRep + " = " + $s)""")
@@ -208,12 +209,12 @@ object MyLog {
     import c.universe._
 
     //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
-
-    val namez = (c.enclosingClass match {
-      case clazz @ ClassDef(_, _, _, _) => clazz.symbol.asClass.name
-      case module @ ModuleDef(_, _, _)  => module.symbol.asModule.name
-      case _                            => "" // not inside a class or a module. package object, REPL, somewhere else weird
-    }).toString
+    val namez = "Deprecated"
+    /*val namez = (c.enclosingClass match {
+      case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
+      case module@ModuleDef(_, _, _) => module.symbol.asModule.name
+      case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
+    }).toString*/
 
     //val paramRep = show(s.tree)
     //c.Expr(q"""println($paramRep + " = " + $s)""")
@@ -260,7 +261,8 @@ object MyLog {
   def classImpl(c: whitebox.Context): c.Expr[String] = {
     import c.universe._
 
-    val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
+    //val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
+    val class_ = Literal(Constant("Deprecated"))
     c.Expr[String](class_)
   }
 
