@@ -66,7 +66,7 @@ object AkkaJeton {
         def receive = {
             case ResultatsJetons(lrjc) =>
                 tbx.updateStats(lrjc)
-                context.system.shutdown()
+                context.system.terminate()
         }
     }
 

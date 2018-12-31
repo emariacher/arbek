@@ -468,7 +468,7 @@ class MyLogActor extends Actor {
       b_filesActive = false
       errfile.writeFile(postProcessFunc(hlines, javascriptHeader))
       files.foreach(_.close)
-      context.system.shutdown()
+      context.system.terminate()
     //exit
     case logMsg(errorType, msg) => errorType match {
       case "H" =>
@@ -493,7 +493,7 @@ class MyLogActor extends Actor {
     case closeMsg =>
       b_filesActive = false
       files.foreach(_.close)
-      context.system.shutdown()
+      context.system.terminate()
     //exit
   }
 
