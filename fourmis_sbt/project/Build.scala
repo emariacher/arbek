@@ -38,8 +38,8 @@ object MyBuild extends Build {
               "com.typesafe.akka" %% "akka-testkit" % "2.5.19",
               "org.scalatest" %% "scalatest" % "3.0.5" % "test",
               "junit" % "junit" % "4.12" % "test",
-              "com.novocode" % "junit-interface" % "0.11" % "test"
-            ) ++ Seq(
+              "com.novocode" % "junit-interface" % "0.11" % "test",
+              "com.lihaoyi" %% "sourcecode" % "0.1.4",
               "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
               "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
               "org.scala-lang.modules" %% "scala-swing" % "2.1.0")
