@@ -41,7 +41,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     new Bleu("bleu", 60, fourmilieres.head), new BleuClair("bleuClair", 55, fourmilieres.last))
 
   zp.ptype match {
-    case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron", 100, fourmilieres.head)
+    case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron", 40, fourmilieres.head)
     case _ =>
   }
   lj = lj.sortBy(_.fourmiliere.hashCode)

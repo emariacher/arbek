@@ -207,7 +207,17 @@ object MyLog {
   def assert2(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
 
-    val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
+    //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
+
+    val namez = (c.enclosingClass match {
+      case clazz @ ClassDef(_, _, _, _) => clazz.symbol.asClass.name
+      case module @ ModuleDef(_, _, _)  => module.symbol.asModule.name
+      case _                            => "" // not inside a class or a module. package object, REPL, somewhere else weird
+    }).toString
+
+    //val paramRep = show(s.tree)
+    //c.Expr(q"""println($paramRep + " = " + $s)""")
+
 
     val actm = act.tree.toString.replaceAll(namez + "\\.this\\.", "")
     val expm = exp.tree.toString.replaceAll(namez + "\\.this\\.", "")

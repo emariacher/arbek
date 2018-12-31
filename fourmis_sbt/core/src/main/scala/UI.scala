@@ -24,6 +24,7 @@ class UI extends SimpleSwingApplication {
             minorTickSpacing = 10
             paintLabels = true
             paintTicks = true
+            value = 10
         }
         val buttonStep = new Button { text = buttonStepLbl }
         val label = new Label { text = labelLbl }

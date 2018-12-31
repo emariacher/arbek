@@ -78,7 +78,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   def avance: StateMachine = {
     zp.ptype match {
       case PanelType.LABY =>
-      case _ => label.text = role.toString.substring(0,4) + "("+math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + killed + "/" + miracule + ") "
+      case _ => label.text = role.toString.substring(0, 4) + "(" + math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + killed + "/" + miracule + ") "
         ventre -= 1
     }
     if ((cnt > zp.limit) || (tbx.lj.count(_.statut == Pheromone.MORT) > 2)) {
@@ -109,7 +109,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       // a la maison
       role match {
         case Role.OUVRIERE => fourmiliere.cnt += 1
-        case Role.SOLDAT => fourmiliere.cnt -= zp.limit/1000 // eh oui, il faut entretenir la milice.
+        case Role.SOLDAT => fourmiliere.cnt -= zp.limit / 1000 // eh oui, il faut entretenir la milice.
         // l'equilibre entre frais d'entretien et avantage depend du temps et est a peu pres 1 vs 1000
       }
       fourmiliere.cntall += 1
@@ -174,7 +174,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
             case RaceFourmi.ROND => g.drawOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
             case RaceFourmi.RECTROND => g.drawRoundRect(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2, 5, 5)
           }
-          case Role.SOLDAT => g.drawRect(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
+          case Role.SOLDAT => {
+            g.drawLine(xg - rayonh, yg - rayonv, xg + rayonh, yg + rayonv)
+            g.drawLine(xg - rayonh, yg + rayonv, xg + rayonh, yg - rayonv)
+          }
         }
       })
       zp.ptype match {
