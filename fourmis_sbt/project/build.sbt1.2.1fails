@@ -48,9 +48,14 @@ lazy val macros = (project in file("macros"))
 
 
 lazy val core = (project in file("core"))
+  .dependsOn(macros  % "compile-internal, test-internal")
   .settings(
     buildSettings,
     name := "core",
+    // include the macro classes and resources in the main jar
+    mappings in (Compile, packageBin) ++= mappings.in(macros, Compile, packageBin).value,
+    // include the macro sources in the main source jar
+    mappings in (Compile, packageSrc) ++= mappings.in(macros, Compile, packageSrc).value,
     libraryDependencies := {
       CrossVersion.partialVersion(scalaVersion.value) match {
         // if scala 2.11+ is used, add dependency on scala-xml module
@@ -61,5 +66,5 @@ lazy val core = (project in file("core"))
           libraryDependencies.value :+ "org.scala-lang" % "scala-swing" % scalaVersion.value
       }
     }
-  ).dependsOn(macros)
+  )
  
