@@ -22,3 +22,4 @@
 *.properties
 #*#
 fourmis_sbt/*/target/*
+carte1/*/target/*
