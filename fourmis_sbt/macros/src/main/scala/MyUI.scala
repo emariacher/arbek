@@ -18,7 +18,7 @@ import scala.swing.event._
 import java.awt.Color
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
-import akka.actor.{ ActorRef, ActorSystem, Props, Actor, Inbox }
+import akka.actor.{ActorRef, ActorSystem, Props, Actor, Inbox}
 
 class MyFile(fname: String) extends File(fname) {
   try {
@@ -29,11 +29,11 @@ class MyFile(fname: String) extends File(fname) {
 
   val fos = new FileOutputStream(this)
 
-  def writeFile(s: String) {
+  def writeFile(s: String): Unit = {
     fos.write(s.getBytes())
   }
 
-  def close() {
+  def close(): Unit = {
     fos.close
   }
 }
@@ -75,7 +75,7 @@ class MyFileChooser(s_title: String) extends Panel {
     val ab = new javax.swing.JButton()
     getComponents(fChooser.peer).filter(_.isInstanceOf[javax.swing.AbstractButton]).
       find((y: java.awt.Component) =>
-      y.asInstanceOf[javax.swing.AbstractButton].getIcon() == UIManager.getIcon("FileChooser.detailsViewIcon")) match {
+        y.asInstanceOf[javax.swing.AbstractButton].getIcon() == UIManager.getIcon("FileChooser.detailsViewIcon")) match {
       case Some(button) => button.asInstanceOf[javax.swing.AbstractButton].doClick
       case _ =>
     }
@@ -113,7 +113,7 @@ class MyFileChooser(s_title: String) extends Panel {
     l_parameters
   }
 
-  def writeSavedParameters(l_parameters: List[String]) {
+  def writeSavedParameters(l_parameters: List[String]): Unit = {
     val outputf = new FileOutputStream(f_defvardiff)
     l_parameters.foreach((s: String) => outputf.write((s + "\n").getBytes()))
     outputf.close();
@@ -166,7 +166,7 @@ class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters, va
   errLbl.foreground = Color.red
   contents += errLbl
 
-  def add2Panel(p: (String, MyParameter)) {
+  def add2Panel(p: (String, MyParameter)): Unit = {
     contents += new Label(p._1)
     if (p._2.classtype.isInstanceOf[PasswordField]) {
       contents += p._2.classtype.asInstanceOf[PasswordField]

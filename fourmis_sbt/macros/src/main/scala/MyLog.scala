@@ -16,25 +16,25 @@ import sourcecode.Enclosing
 import scala.language.reflectiveCalls
 
 trait LogFunction {
-  def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "")
+  def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = ""): Unit
 }
 
 class myPrintDln extends LogFunction {
   val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime) + " "
 
-  def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "") {
+  def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = ""): Unit = {
     MyLog.myPrint(srcFile + ":" + srcLine + " " + s_time + " " + msg + "\n")
   }
 }
 
 trait LogFunctionE {
-  def logE(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "")
+  def logE(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = ""): Unit
 }
 
 class myErrPrintDln extends LogFunctionE {
   val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime) + " "
 
-  def logE(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = "") {
+  def logE(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = ""): Unit = {
     MyLog.myErrPrint(srcFile + ":" + srcLine + " " + s_time + " " + msg + "\n")
   }
 }
@@ -59,7 +59,7 @@ object MyLog {
 
   def timeStamp(s_title: String): Calendar = timeStamp(Calendar.getInstance(), s_title)
 
-  def checkException(L: MyLog, i_rc: Int, s: String) {
+  def checkException(L: MyLog, i_rc: Int, s: String): Unit = {
     if (i_rc != 0) {
       L.myErrPrintln("**Exception** [" + s + "] thrown!")
       throw new Exception(s)
@@ -153,7 +153,7 @@ object MyLog {
     }
   }
 
-  def myPrint(a: Any) = if (vierge) print(a) else L.myPrint(a)
+  def myPrint(a: Any): Unit = if (vierge) print(a) else L.myPrint(a)
 
   def myPrintln(a: Any) = myPrint(a + "\n")
 
@@ -205,7 +205,7 @@ object MyLog {
     }
     val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
     //reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice + " ---> " + c.Expr[String](Literal(Constant(namez))).splice))
-    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice +  " ---> " + linecode.splice))
+    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
   }
 
   def myPrintIt(linecode: Any): Any = macro mprintx
@@ -298,207 +298,209 @@ object MyLog {
   }
 
 
-def enclosingImpl (c: scala.reflect.macros.blackbox.Context): c.Expr[Enclosing] = enclosing[Enclosing] (c) (
-! Util.isSynthetic (c) (_)
-)
+  def enclosingImpl(c: scala.reflect.macros.blackbox.Context): c.Expr[Enclosing] = enclosing[Enclosing](c)(
+    !Util.isSynthetic(c)(_)
+  )
 
   implicit def generate: Enclosing = macro enclosingImpl
 
-//*****************************************************************************************
+  //*****************************************************************************************
 
-def assert2 (c: whitebox.Context) (act: c.Expr[Any], exp: c.Expr[Any] ): c.Expr[Unit] = {
+  def assert2(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
 
-import c.universe._
+    import c.universe._
 
-//val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
-val namez = "deprecated"
-/*val namez = (c.enclosingClass match {
-  case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
-  case module@ModuleDef(_, _, _) => module.symbol.asModule.name
-  case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
-}).toString*/
+    //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
+    val namez = "deprecated"
+    /*val namez = (c.enclosingClass match {
+      case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
+      case module@ModuleDef(_, _, _) => module.symbol.asModule.name
+      case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
+    }).toString*/
 
-//val paramRep = show(s.tree)
-//c.Expr(q"""println($paramRep + " = " + $s)""")
+    //val paramRep = show(s.tree)
+    //c.Expr(q"""println($paramRep + " = " + $s)""")
 
 
-val actm = act.tree.toString.replaceAll (namez + "\\.this\\.", "")
-val expm = exp.tree.toString.replaceAll (namez + "\\.this\\.", "")
-reify ( {
-if (act.splice != exp.splice) {
-try {
-throw new Exception ("AssertionError: " + c.Expr[String] (Literal (Constant (actm) ) ).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String] (Literal (Constant (expm) ) ).splice)
-} catch {
-case unknown: Throwable => System.err.println ("" + unknown + unknown.getStackTrace.toList.filter (_.toString.indexOf ("scala.") != 0).mkString ("\n  ", "\n  ", "\n  ") );
-sys.exit
-}
-}
-})
-}
+    val actm = act.tree.toString.replaceAll(namez + "\\.this\\.", "")
+    val expm = exp.tree.toString.replaceAll(namez + "\\.this\\.", "")
+    reify({
+      if (act.splice != exp.splice) {
+        try {
+          throw new Exception("AssertionError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
+        } catch {
+          case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  "));
+            sys.exit
+        }
+      }
+    })
+  }
 
-def myAssert2 (act: Any, exp: Any): Unit = macro assert2
+  def myAssert2(act: Any, exp: Any): Unit = macro assert2
 
-// get current line in source code
-def L_ : Int = macro lineImpl
+  // get current line in source code
+  def L_ : Int = macro lineImpl
 
-def lineImpl (c: whitebox.Context): c.Expr[Int] = {
+  def lineImpl(c: whitebox.Context): c.Expr[Int] = {
 
-import c.universe._
+    import c.universe._
 
-val line = Literal (Constant (c.enclosingPosition.line) )
-c.Expr[Int] (line)
-}
+    val line = Literal(Constant(c.enclosingPosition.line))
+    c.Expr[Int](line)
+  }
 
-// get current file from source code (relative path)
-def F_ : String = macro fileImpl
+  // get current file from source code (relative path)
+  def F_ : String = macro fileImpl
 
-def fileImpl (c: whitebox.Context): c.Expr[String] = {
+  def fileImpl(c: whitebox.Context): c.Expr[String] = {
 
-import c.universe._
+    import c.universe._
 
-val absolute = c.enclosingPosition.source.file.file.toURI
-val base = new File (".").toURI
-val path = Literal (Constant (c.enclosingPosition.source.file.file.getName () ) )
-c.Expr[String] (path)
-}
+    val absolute = c.enclosingPosition.source.file.file.toURI
+    val base = new File(".").toURI
+    val path = Literal(Constant(c.enclosingPosition.source.file.file.getName()))
+    c.Expr[String](path)
+  }
 
-// get current class/object (a bit sketchy)
-def C_ : String = macro classImpl
+  // get current class/object (a bit sketchy)
+  def C_ : String = macro classImpl
 
-def classImpl (c: whitebox.Context): c.Expr[String] = {
+  def classImpl(c: whitebox.Context): c.Expr[String] = {
 
-import c.universe._
+    import c.universe._
 
-//val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
-val class_ = Literal (Constant ("Deprecated") )
-c.Expr[String] (class_)
-}
+    //val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
+    val class_ = Literal(Constant("Deprecated"))
+    c.Expr[String](class_)
+  }
 
-def myPrintDln (msg: Any) (implicit logFunc: LogFunction): Unit = macro logImpl
+  def myPrintDln(msg: Any)(implicit logFunc: LogFunction): Unit = macro logImpl
 
-def logImpl (c: whitebox.Context) (msg: c.Expr[Any] ) (logFunc: c.Expr[LogFunction] ): c.Expr[Unit] = {
+  def logImpl(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunction]): c.Expr[Unit] = {
 
-import c.universe._
+    import c.universe._
 
-reify (logFunc.splice.log (msg.splice, srcFile = fileImpl (c).splice, srcLine = lineImpl (c).splice, srcClass = classImpl (c).splice) )
-}
+    reify(logFunc.splice.log(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
+  }
 
-def myErrPrintDln (msg: Any) (implicit logFunc: LogFunctionE): Unit = macro logImplE
+  def myErrPrintDln(msg: Any)(implicit logFunc: LogFunctionE): Unit = macro logImplE
 
-def logImplE (c: whitebox.Context) (msg: c.Expr[Any] ) (logFunc: c.Expr[LogFunctionE] ): c.Expr[Unit] = {
+  def logImplE(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunctionE]): c.Expr[Unit] = {
 
-import c.universe._
+    import c.universe._
 
-reify (logFunc.splice.logE (msg.splice, srcFile = fileImpl (c).splice, srcLine = lineImpl (c).splice, srcClass = classImpl (c).splice) )
-}
+    reify(logFunc.splice.logE(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
+  }
 
-def waiting (d: Duration) {
-val t0 = System.currentTimeMillis ()
-var t1 = t0
-do {
-t1 = System.currentTimeMillis ()
-} while (t1 - t0 < d.toMillis)
-}
+  def waiting(d: Duration): Unit = {
+    val t0 = System.currentTimeMillis()
+    var t1 = t0
+    do {
+      t1 = System.currentTimeMillis()
+    } while (t1 - t0 < d.toMillis)
+  }
 
-def mtimeStampx (c: scala.reflect.macros.whitebox.Context) (linecode: c.Expr[Any] ): c.Expr[Unit] = {
+  def mtimeStampx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
 
-import c.universe._
+    import c.universe._
 
-val msg = linecode.tree.toString
-reify ( {
-g_t_start = timeStamp (g_t_start, "---");
-linecode.splice;
-g_t_end = timeStamp (g_t_start, c.Expr[String] (Literal (Constant (msg) ) ).splice);
-timeStampsList = timeStampsList :+ ((g_t_end.getTimeInMillis () - g_t_start.getTimeInMillis () ), c.Expr[String] (Literal (Constant (msg) ) ).splice);
-})
-}
+    val msg = linecode.tree.toString
+    reify({
+      g_t_start = timeStamp(g_t_start, "---");
+      linecode.splice;
+      g_t_end = timeStamp(g_t_start, c.Expr[String](Literal(Constant(msg))).splice);
+      timeStampsList = timeStampsList :+ ((g_t_end.getTimeInMillis() - g_t_start.getTimeInMillis()), c.Expr[String](Literal(Constant(msg))).splice);
+    })
+  }
 
-def timeStampIt (linecode: Any): Any = macro mtimeStampx
+  def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
-def printTimeStampsList = if (! timeStampsList.isEmpty) myPrintln (timeStampsList.filter (_._2 != "---").map (t => (t._1 + " ms", t._2.replaceAll (".this", "") ) ).distinct.mkString ("TimeStampsList:\n  ", "\n  ", "\n  ") )
+  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
-def toFileAndDisplay (fileName: String, htmlString: String) {
-val filo = new File (fileName)
-Some (new PrintWriter (filo) ).foreach {
-p => p.write (htmlString);
-p.close
-}
-display (filo)
-}
+  def toFileAndDisplay(fileName: String, htmlString: String): Unit = {
+    val filo = new File(fileName)
+    Some(new PrintWriter(filo)).foreach {
+      p =>
+        p.write(htmlString);
+        p.close
+    }
+    display(filo)
+  }
 
-def display (filo: File) {
-java.awt.Desktop.getDesktop ().browse (new java.net.URI ("file:///" + filo.getCanonicalPath ().replaceAll ("\\\\", "/") ) )
-}
+  def display(filo: File): Unit = {
+    java.awt.Desktop.getDesktop().browse(new java.net.URI("file:///" + filo.getCanonicalPath().replaceAll("\\\\", "/")))
+  }
 
-def copyFromFile (fileName: String): String = Some (scala.io.Source.fromFile (fileName) ).map (p => {
-val s = p.mkString;
-p.close;
-s
-}).mkString
+  def copyFromFile(fileName: String): String = Some(scala.io.Source.fromFile(fileName)).map(p => {
+    val s = p.mkString;
+    p.close;
+    s
+  }).mkString
 
-def copy2File (fileName: String, s: String) = Some (new PrintWriter (fileName) ).foreach {
-p => p.write (s);
-p.close
-}
+  def copy2File(fileName: String, s: String) = Some(new PrintWriter(fileName)).foreach {
+    p =>
+      p.write(s);
+      p.close
+  }
 
-def copy (from: String, to: String) {
-use (new FileInputStream (from) ) {
-in =>
-use (new FileOutputStream (to) ) {
-out =>
-val buffer = new Array[Byte] (1024)
-Iterator.continually (in.read (buffer) )
-.takeWhile (_!= - 1)
-.foreach {
-out.write (buffer, 0, _)
-}
-}
-}
-}
+  def copy(from: String, to: String): Unit = {
+    use(new FileInputStream(from)) {
+      in =>
+        use(new FileOutputStream(to)) {
+          out =>
+            val buffer = new Array[Byte](1024)
+            Iterator.continually(in.read(buffer))
+              .takeWhile(_ != -1)
+              .foreach {
+                out.write(buffer, 0, _)
+              }
+        }
+    }
+  }
 
-def copy (from: String, to: MyFile) {
-use (new FileInputStream (from) ) {
-in =>
-val buffer = new Array[Byte] (1024)
-Iterator.continually (in.read (buffer) )
-.takeWhile (_!= - 1)
-.foreach {
-to.fos.write (buffer, 0, _)
-}
-}
-}
+  def copy(from: String, to: MyFile): Unit = {
+    use(new FileInputStream(from)) {
+      in =>
+        val buffer = new Array[Byte](1024)
+        Iterator.continually(in.read(buffer))
+          .takeWhile(_ != -1)
+          .foreach {
+            to.fos.write(buffer, 0, _)
+          }
+    }
+  }
 
-def copy (from: String): String = {
-var to = ""
-use (new FileReader (from) ) {
-in =>
-val buffer = new Array[Char] (1024)
-Iterator.continually (in.read (buffer) )
-.takeWhile (_!= - 1)
-.foreach {
-(i: Int) => to += buffer.toList.take (i).mkString ("")
-}
-}
-to
-}
+  def copy(from: String): String = {
+    var to = ""
+    use(new FileReader(from)) {
+      in =>
+        val buffer = new Array[Char](1024)
+        Iterator.continually(in.read(buffer))
+          .takeWhile(_ != -1)
+          .foreach {
+            (i: Int) => to += buffer.toList.take(i).mkString("")
+          }
+    }
+    to
+  }
 
-def use[T <: {
-def close (): Unit
-}] (closable: T) (block: T => Unit) {
-try {
-block (closable)
-} finally {
-closable.close ()
-}
-}
+  def use[T <: {
+    def close() : Unit
+  }](closable: T)(block: T => Unit): Unit = {
+    try {
+      block(closable)
+    } finally {
+      closable.close()
+    }
+  }
 
-def inverseMatrix (lin: List[List[Any]] ): List[List[Any]] = {
-val size = lin.map (_.size).min
-if (lin.map (_.size).indexWhere (_!= size) >= 0) {
-myErrPrintln (MyLog.tag (3) + " Truncating size! " + lin.map (_.size) )
-}
-lin.head.take (size).zipWithIndex.map (rangee => lin.map (_.apply (rangee._2) ) )
-}
+  def inverseMatrix(lin: List[List[Any]]): List[List[Any]] = {
+    val size = lin.map(_.size).min
+    if (lin.map(_.size).indexWhere(_ != size) >= 0) {
+      myErrPrintln(MyLog.tag(3) + " Truncating size! " + lin.map(_.size))
+    }
+    lin.head.take(size).zipWithIndex.map(rangee => lin.map(_.apply(rangee._2)))
+  }
 }
 
 class MyLog(s_title: String, fil: File, errExt: String) {
@@ -522,12 +524,12 @@ class MyLog(s_title: String, fil: File, errExt: String) {
   var Gui: MyUI = _
   var b_GuiActive = false
 
-  def launchActorAndGui {
+  def launchActorAndGui: Unit = {
     MLA = MyLog.system.actorOf(Props[MyLogActor], name = "MLA")
     Gui = new MyUI("", new ZeParameters())
   }
 
-  def createGui(parameters: ZeParameters) {
+  def createGui(parameters: ZeParameters): Unit = {
     Gui = new MyUI(s_title, parameters)
     b_GuiActive = true
   }
@@ -552,7 +554,7 @@ class MyLog(s_title: String, fil: File, errExt: String) {
 
   def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
 
-  def closeFiles() {
+  def closeFiles(): Unit = {
     val t_end = Calendar.getInstance()
     myPrintDln("t_end: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS"))
     myErrPrintDln("l_diff: " + (t_end.getTimeInMillis() - t_start.getTimeInMillis()))
@@ -560,7 +562,7 @@ class MyLog(s_title: String, fil: File, errExt: String) {
     Thread.sleep(100)
   }
 
-  def hcloseFiles(headerFileName: String, postProcessFunc: (List[String], String) => String) {
+  def hcloseFiles(headerFileName: String, postProcessFunc: (List[String], String) => String): Unit = {
     val t_end = Calendar.getInstance()
     myPrintDln("t_end: " + MyLog.printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS"))
     myPrintDln("l_diff: " + (t_end.getTimeInMillis() - t_start.getTimeInMillis()))
