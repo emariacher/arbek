@@ -9,16 +9,15 @@ class CarteBlanche {
   val lregions = new ListRegions
 
   def addCarre(timeout: Int): StateMachine = {
-    var c = new Carre
-    var timeout_cpt = max(20-timeout,1)
+    var c: Carre = null
+    var timeout_cpt = max(20 - timeout, 1)
 
-    while ((!c.isLast)&(timeout_cpt>0)) {
+    do {
       c = new Carre
       lcarres.lc = lcarres.lc :+ c
-      //			System.out.println(MyLog.tag(1)+" lcarres.l: "+lcarres.lc)
-      timeout_cpt -=1
+      timeout_cpt -= 1
       //MyLog.myPrintIt(timeout, timeout_cpt)
-    }
+    } while ((!c.isLast) & (timeout_cpt > 0))
     MyLog.myPrintIt(timeout, lcarres.lc.length)
     if (c.isLast) {
       StateMachine.repandRegions
