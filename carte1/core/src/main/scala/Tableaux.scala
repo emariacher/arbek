@@ -25,11 +25,11 @@ class Tableaux(val zp: ZePanel, val maxRow: Int, val maxCol: Int, val size: Dime
   var rnd = new Random(seed)
   var count = 0
 
-  def doZeJob(command: String) {
+  def doZeJob(command: String, timeout: Int) {
     //				System.out.println(MyLog.tag(1)+" state: "+StateMachine.nameOf(state)+" "+count)
     zp.lbl.text = "Seed: " + seed + ",  " + cb + ", CountSteps: " + count
     state match {
-      case StateMachine.generate => state = cb.addCarre
+      case StateMachine.generate => state = cb.addCarre(timeout)
       case StateMachine.repandRegions => state = cb.repandRegions
       case StateMachine.cleanRegions => state = cb.cleanRegions
       case StateMachine.getRegions => state = cb.getRegions

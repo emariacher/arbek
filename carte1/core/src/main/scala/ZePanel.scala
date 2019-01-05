@@ -14,12 +14,13 @@ import scala.swing.{Label, Panel}
 
 class ZeActor extends Actor {
   context.setReceiveTimeout(1 second)
+  var slider_timeout : Int = 20
 
   def receive = {
     case ReceiveTimeout =>
-      if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout")
+      if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout", slider_timeout)
     case slider: (String, Int) =>
-      val slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100), 5000)
+      slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100), 5000)
       MyLog.myPrintIt(slider._2, slider_timeout)
       context.setReceiveTimeout(slider_timeout millisecond)
       ZePanel.zp.pause = (slider._2 == 0)
@@ -29,7 +30,7 @@ class ZeActor extends Actor {
     case "step" =>
       l.myErrPrintDln("step")
       ZePanel.zp.repaint
-      tbx.doZeJob("step")
+      tbx.doZeJob("step",0)
       context.setReceiveTimeout(10 minutes)
       ZePanel.zp.step = true
   }
