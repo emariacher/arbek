@@ -1,24 +1,15 @@
 package kebra
 
-import java.io.File
-import java.net._
-import java.util.Calendar
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.io.FileOutputStream
-import java.util.Scanner
-import java.io.FileNotFoundException
-import javax.swing.filechooser.FileFilter
-import javax.swing.JFileChooser
-import javax.swing.UIManager
-import javax.swing.JComponent
-import javax.swing.JButton
-import scala.swing._
-import scala.swing.event._
-import java.awt.Color
-import java.awt.Toolkit
+import java.awt.{Color, Toolkit}
 import java.awt.datatransfer.DataFlavor
-import akka.actor.{ ActorRef, ActorSystem, Props, Actor, Inbox }
+import java.io.{File, FileOutputStream}
+import java.net._
+import java.util.Scanner
+
+import javax.swing.UIManager
+import javax.swing.filechooser.FileFilter
+
+import scala.swing._
 
 class MyFile(fname: String) extends File(fname) {
   try {
@@ -75,7 +66,7 @@ class MyFileChooser(s_title: String) extends Panel {
     val ab = new javax.swing.JButton()
     getComponents(fChooser.peer).filter(_.isInstanceOf[javax.swing.AbstractButton]).
       find((y: java.awt.Component) =>
-      y.asInstanceOf[javax.swing.AbstractButton].getIcon() == UIManager.getIcon("FileChooser.detailsViewIcon")) match {
+        y.asInstanceOf[javax.swing.AbstractButton].getIcon() == UIManager.getIcon("FileChooser.detailsViewIcon")) match {
       case Some(button) => button.asInstanceOf[javax.swing.AbstractButton].doClick
       case _ =>
     }
@@ -135,23 +126,23 @@ class MyUI(val s_title: String, val parameters: ZeParameters) extends Frame {
     visible = true
   }
 
+  def getAndClose(): ZeParameters = {
+    val l_output = get
+    close
+    l_output
+  }
+
   def get(): ZeParameters = {
     while (gpanel.myText == "NotYet") {
       MyLog.myPrint("")
     }
     gpanel.getFromPanel
   }
-
-  def getAndClose(): ZeParameters = {
-    val l_output = get
-    close
-    l_output
-  }
 }
 
 class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters, val swingAnswerAgent: Any) extends GridPanel(rows0, cols0) {
   minimumSize = new java.awt.Dimension(500, 500)
-  var myText = "NotYet"
+  val errLbl = new Label("")
   parameters.foreach(add2Panel(_))
   contents += new Button {
     action = Action("Do the Stuff") {
@@ -162,7 +153,7 @@ class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters, va
       }
     }
   }
-  val errLbl = new Label("")
+  var myText = "NotYet"
   errLbl.foreground = Color.red
   contents += errLbl
 
@@ -212,8 +203,6 @@ class getUrlFromClipboard {
 class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[String, MyParameter] {
   /** ** Minimal Map stuff begin ****/
   lazy val keyLookup = Map() ++ pairs
-
-  override def get(key: String): Option[MyParameter] = keyLookup.get(key)
 
   override def iterator: Iterator[(String, MyParameter)] = pairs.reverseIterator
 
@@ -275,6 +264,8 @@ class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[Str
     }
   }
 
+  override def get(key: String): Option[MyParameter] = keyLookup.get(key)
+
   def saveTo(f: File): ZeParameters = {
     val outputf = new FileOutputStream(f)
     val filteredNoPasswords = new ZeParameters(pairs.filterNot(_._2.classtype.isInstanceOf[PasswordField]))
@@ -291,13 +282,13 @@ object MyParameter {
 }
 
 class MyParameter(val v: String, val defaultValue: String, val classtype: Component) {
+  var value: String = v
+
   def this(v: String) = this(v, "", new TextField)
 
   def this(v: String, defval: String) = this(v, defval, new TextField)
 
   def this(v: String, classtype: Component) = this(v, "", classtype)
-
-  var value: String = v
 
   override def toString: String = {
     classtype match {
