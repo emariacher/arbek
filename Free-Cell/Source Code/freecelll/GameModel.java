@@ -57,6 +57,9 @@ public class GameModel implements Iterable<CardPile> {
     public void reset() {
         Deck deck = new Deck();
         deck.shuffle();
+        
+        _undoStack = new ArrayDeque<CardPile>();
+        _undoOfStack = new ArrayDeque<Boolean>();
 
         //... Empty all the piles.
         for (CardPile p : _allPiles) {
