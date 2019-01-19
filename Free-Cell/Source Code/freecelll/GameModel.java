@@ -13,7 +13,7 @@ public class GameModel implements Iterable<CardPile> {
     //=================================================================== fields
     private CardPile[] _freeCells;
     private CardPile[] _tableau;
-    CardPile[] _foundation;
+    private CardPile[] _foundation;
 
     private ArrayList<CardPile> _allPiles;
 

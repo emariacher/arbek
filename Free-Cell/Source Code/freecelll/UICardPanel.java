@@ -239,12 +239,12 @@ class UICardPanel extends JComponent implements
         }
 
         // do the obvious move on mousePressed : to foundation Piles
-        for (int pile = 0; pile < _model._foundation.length; pile++) {
-            if (_model._foundation[pile].size() > 0) {
-                Card topFoundationCard = _model._foundation[pile].peekTop();
-                System.out.println("  draggedCard: " + _draggedCard + "  topFoundationCard: " + topFoundationCard);
-                if (_model._foundation[pile].rulesAllowAddingThisCard(_draggedCard)) {
-                    _model.moveAndRecord(_draggedFromPile, _model._foundation[pile], _draggedCard);
+        for (int pile = 0; pile < _model.getFoundationPiles().length; pile++) {
+            if (_model.getFoundationPiles()[pile].size() > 0) {
+                Card topFoundationCard = _model.getFoundationPiles()[pile].peekTop();
+                //System.out.println("  draggedCard: " + _draggedCard + "  topFoundationCard: " + topFoundationCard);
+                if (_model.getFoundationPiles()[pile].rulesAllowAddingThisCard(_draggedCard)) {
+                    _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile], _draggedCard);
                 }
             }
         }
