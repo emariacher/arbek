@@ -2,16 +2,18 @@
 
 package freecelll;
 
-import java.util.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 //////////////////////////////////////////////////////////////// Class GameModel
 public class GameModel implements Iterable<CardPile> {
     //=================================================================== fields
     private CardPile[] _freeCells;
     private CardPile[] _tableau;
-    private CardPile[] _foundation;
+    CardPile[] _foundation;
 
     private ArrayList<CardPile> _allPiles;
 
@@ -57,7 +59,7 @@ public class GameModel implements Iterable<CardPile> {
     public void reset() {
         Deck deck = new Deck();
         deck.shuffle();
-        
+
         _undoStack = new ArrayDeque<CardPile>();
         _undoOfStack = new ArrayDeque<Boolean>();
 
@@ -145,19 +147,24 @@ public class GameModel implements Iterable<CardPile> {
                         _undoOfStack.push(true);
                     }
                 } else {
-                    target.push(crd2move);
-                    source.pop();
-                    _notifyEveryoneOfChanges();
-                    //... Record on undo stack.
-                    _undoStack.push(source);
-                    _undoOfStack.push(false);
-                    _undoStack.push(target);
-                    _undoOfStack.push(false);
+                    moveAndRecord(source, target, crd2move);
                 }
                 result = true;
             }
         }
         return result;
+    }
+
+    public boolean moveAndRecord(CardPile source, CardPile target, Card crd2move) {
+        target.push(crd2move);
+        source.pop();
+        _notifyEveryoneOfChanges();
+        //... Record on undo stack.
+        _undoStack.push(source);
+        _undoOfStack.push(false);
+        _undoStack.push(target);
+        _undoOfStack.push(false);
+        return true;
     }
 
     public boolean undo() {
@@ -178,7 +185,7 @@ public class GameModel implements Iterable<CardPile> {
                 System.out.println("  **** UNDO[" + _undoStack.size() + ", " + source + ", " + source.size() + " -> " + target + ", " + target.size() + " - " + crd + "]**** " + sourceB + " -> " + sourceT);
                 target.pushIgnoreRules(crd);
                 source.pop();
-                if(!_undoOfStack.isEmpty()) {
+                if (!_undoOfStack.isEmpty()) {
                     isAStack = _undoOfStack.getFirst() & sourceB;
                 }
             } while (isAStack);
