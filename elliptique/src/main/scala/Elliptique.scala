@@ -2,9 +2,9 @@
   * Created by mariachere on 26.05.2015.
   */
 
-import java.util.Calendar
-import java.util.Date
 import java.text.SimpleDateFormat
+import java.util.{Calendar, Date}
+
 import scala.language.postfixOps
 import scala.math.BigInt
 import scala.util.Random
@@ -134,7 +134,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def mul(a: BigInt, b: BigInt): BigInt = (a * b) % modlo
 
-  def inverse(a:BigInt) = li.filter(_._1 == a).head._2
+  def inverse(a: BigInt) = li.filter(_._1 == a).head._2
 
   def getLambda(p: (BigInt, BigInt), q: (BigInt, BigInt)): BigInt = {
     (sub(q._1, p._1) == 0, sub(q._2, p._2) == 0) match {
@@ -240,6 +240,22 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     })
     (p, ordre)
   }).filter(_._2 != curve.size + 1)
+
+  def loopsum(p: (BigInt, BigInt)) = {
+    var ordre = 0
+    var somme = plus(p, p)
+    var lsum = List[(BigInt, BigInt)]()
+    (1 to curve.size + 4).toList.find(i => {
+      somme = plus(somme, p)
+      lsum = lsum :+ somme
+      if (somme._1 == 0 & somme._2 == 0) {
+        //println("===", p, i, somme, "===",lsum)
+        ordre = i + 2
+      }
+      somme._1 == 0 & somme._2 == 0
+    })
+    ("loopsum , p " + p + ", ordre " + ordre + ", plus(p, p )" + plus(p, p) + ", plus(plus(p, p), p) " + plus(plus(p, p), p) + ", lsum ", lsum)
+  }
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val rnd = new Random(0)

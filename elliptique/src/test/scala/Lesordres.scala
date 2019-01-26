@@ -1,8 +1,6 @@
-import Elliptique._
 import org.scalatest._
 
 import scala.math.BigInt
-import scala.util.Random
 
 
 /*
@@ -15,9 +13,11 @@ class Lesordres extends FlatSpec with Matchers {
   val premiers = EulerPrime.premiers1000
 
   def Trouve_les_nombres_premiers_qui_pourraient_marcher(a: BigInt, b: BigInt) = {
-    println("Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + "+a+"x + "+b)
-    println("y2 = x3 + "+a+"x + "+b,premiers.take(100).filter(modlo => {
+    println("Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + " + a + "x + " + b)
+    println("  e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty")
+    println("y2 = x3 + " + a + "x + " + b, premiers.take(100).filter(modlo => {
       val e = new Elliptique(modlo, a, b)
+      println("     " + (e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty) + " --- e.curve.size " + e.curve.size + " > modlo " + modlo + "& e.curve.filter(p => p._1 * p._2 == 0).isEmpty" + e.curve.filter(p => p._1 * p._2 == 0))
       e.getDelta should not equal 0
       e.curve.size > modlo & e.curve.filter(p => p._1 * p._2 == 0).isEmpty
     }))
@@ -25,7 +25,7 @@ class Lesordres extends FlatSpec with Matchers {
   }
 
   "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 7" should "be OK" in {
-    Trouve_les_nombres_premiers_qui_pourraient_marcher(0,7)
+    Trouve_les_nombres_premiers_qui_pourraient_marcher(0, 7)
   }
 
   "CheckLaBoucle241" should "be OK" in {
@@ -89,7 +89,7 @@ class Lesordres extends FlatSpec with Matchers {
   }
 
   "Ordre67" should "be OK" in {
-    println("Ordre67: ils ont tous le meme ordre!")
+    println("Ordre67: ils ont tous le meme ordre! 79")
     val e = new Elliptique(67, 0, 7)
     val lp = e.curve.sortBy(p => (p._1 * 100) + p._2)
     println(67, lp.size, lp)
@@ -113,31 +113,46 @@ class Lesordres extends FlatSpec with Matchers {
     val a = 0
     val b = 7
     val modlo = 241
-    println("y2 = x3 + "+a+"x + "+b+"  Ordre" + modlo + ": ils ont tous le meme ordre!")
+    println("y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo + ": ils ont tous le meme ordre!")
     val e = new Elliptique(modlo, a, b)
     e.getDelta should not equal 0
     val lp = e.curve.sortBy(p => (p._1 * modlo) + p._2)
     println(modlo, lp.size, lp)
 
-    println(modlo, e.curve.size, e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
+    println(modlo, e.curve.size, "liste_des_ordres_non_egaux_a_la_taille_de_la_courbe", e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
     e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual false
   }
 
   "Trouve les nombres premiers qui pourraient marcher pour y2 = x3 + 3x + 5" should "be OK" in {
-    Trouve_les_nombres_premiers_qui_pourraient_marcher(3,5)
+    Trouve_les_nombres_premiers_qui_pourraient_marcher(3, 5)
   }
 
   "Ordre223" should "be OK" in {
     val a = 3
     val b = 5
     val modlo = 223
-    println("y2 = x3 + "+a+"x + "+b+"  Ordre" + modlo + ": ils ont tous le meme ordre!")
+    println("y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo + ": ils ont tous le meme ordre!")
     val e = new Elliptique(modlo, a, b)
     e.getDelta should not equal 0
     val lp = e.curve.sortBy(p => (p._1 * modlo) + p._2)
     println(modlo, lp.size, lp)
 
-    println(modlo, e.curve.size, e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
+    println(modlo, e.curve.size, "liste_des_ordres_non_egaux_a_la_taille_de_la_courbe", e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
+    e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual true
+  }
+
+  "Ordre67-" should "be OK" in {
+    val a = 0
+    val b = 7
+    val modlo = 67
+    println("\ny2 = x3 + " + a + "x + " + b + "  Ordre " + modlo + ": ils ont tous le meme ordre!")
+    val e = new Elliptique(modlo, a, b)
+    e.getDelta should not equal 0
+    val lp = e.curve.sortBy(p => (p._1 * modlo) + p._2)
+    println(modlo, lp.size, lp)
+
+    println(modlo, e.curve.size, "liste_des_ordres_non_egaux_a_la_taille_de_la_courbe", e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
+    println(e.loopsum(e.curve.head))
     e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual true
   }
 
@@ -145,13 +160,15 @@ class Lesordres extends FlatSpec with Matchers {
     val a = 0
     val b = 7
     val modlo = 73
-    println("y2 = x3 + "+a+"x + "+b+"  Ordre" + modlo + ": ils n\'ont pas tous le meme ordre!")
+    println("\ny2 = x3 + " + a + "x + " + b + "  Ordre " + modlo + ": ils n\'ont pas tous le meme ordre!")
     val e = new Elliptique(modlo, a, b)
     e.getDelta should not equal 0
     val lp = e.curve.sortBy(p => (p._1 * modlo) + p._2)
     println(modlo, lp.size, lp)
 
-    println(modlo, e.curve.size, e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
+    println(modlo, e.curve.size, "liste_des_ordres_non_egaux_a_la_taille_de_la_courbe", e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe)
+    println(e.loopsum((BigInt(1), BigInt(9))))
+    println("(1,9)+(1,9)",e.plus((BigInt(1), BigInt(9)),(BigInt(1), BigInt(9))))
     e.liste_des_ordres_non_egaux_a_la_taille_de_la_courbe.isEmpty shouldEqual false
     /*val p=(BigInt(6), BigInt(2))
     var ordre = 0
@@ -167,7 +184,7 @@ class Lesordres extends FlatSpec with Matchers {
       somme._1 == 0 & somme._2 == 0
     })
     println(p, ordre)*/
-    println((BigInt(6), BigInt(2)),
+    println("\n------------------------\n", (BigInt(6), BigInt(2)),
       e.plus((BigInt(6), BigInt(2)), (BigInt(6), BigInt(2))),
       e.plus((BigInt(6), BigInt(2)), (BigInt(60), BigInt(0))),
       e.plus((BigInt(6), BigInt(71)), (BigInt(6), BigInt(2)))
