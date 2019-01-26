@@ -248,6 +248,9 @@ class UICardPanel extends JComponent implements
                         _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile], _draggedCard);
                         return;
                     }
+                } else if (_draggedCard.getFace() == Face.ACE) {
+                    _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile], _draggedCard);
+                    return;
                 }
             }
 
