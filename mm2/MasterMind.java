@@ -20,7 +20,7 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 	ZePanel zePanel;
 	Random hasard;
 	int graine;
-	Date date;
+	Calendar date;
 	Thread thread;
 	Panel pb;
 
@@ -30,8 +30,8 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 	 */
 	public void init() {
 		thread = new Thread(this);
-		date = new Date();
-		graine = (date.getSeconds() * date.getSeconds()) + (date.getMinutes() * date.getMinutes()) + (date.getHours() * date.getHours());
+		date = Calendar.getInstance();
+		graine = (date.get(Calendar.SECOND) * date.get(Calendar.SECOND)) + (date.get(Calendar.MINUTE) * date.get(Calendar.MINUTE)) + (date.get(Calendar.HOUR) * date.get(Calendar.HOUR));
 		hasard = new Random(graine);
 
 		setLayout(new BorderLayout());
