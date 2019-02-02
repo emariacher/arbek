@@ -75,15 +75,6 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 		thread.start();
 		moteur.start();
 	}
-
-
-	/**
-	 *  Description of the Method
-	 */
-	public void stop() {
-		thread.stop();
-	}
-
 }
 
 /**
