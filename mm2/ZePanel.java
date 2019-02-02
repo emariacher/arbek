@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 /**
  * Description of the Class
@@ -10,7 +11,7 @@ import java.awt.event.MouseListener;
  */
 public class ZePanel extends Panel
         implements Runnable,
-        MMInclude, MouseListener {
+        MMInclude, MouseListener, MouseMotionListener {
     Color couleur[] = new Color[NBRE_COULEUR];
     Color backgroundColor = Color.lightGray;
     boolean Moused = false;
@@ -188,17 +189,6 @@ public class ZePanel extends Panel
         }
     }
 
-
-//**********************************************************************************
-
-    /**
-     * Description of the Method
-     *
-     * @param x    Description of the Parameter
-     * @param y    Description of the Parameter
-     * @param drop Description of the Parameter
-     * @return Description of the Return Value
-     */
     int trouveObjetLePlusProche(int x, int y, boolean drop) {
         int pion;
 
@@ -242,7 +232,6 @@ public class ZePanel extends Panel
         }
     }
 
-
     public synchronized void mousePressed(MouseEvent evt) {
         xMoused = evt.getX();
         yMoused = evt.getY();
@@ -269,14 +258,22 @@ public class ZePanel extends Panel
         }
     }
 
-
     public synchronized void mouseDragged(MouseEvent evt) {
         xMoused = evt.getX();
         yMoused = evt.getY();
         System.out.println("[31m mouseDragged. [34m" + evt);
         if (!moteur.automatique) {
+            System.out.println("  Ici!");
+            graphics.setColor(couleur[indexCouleurMoused]);
+            graphics.fillOval(xMoused + 10,
+                    yMoused + 10,
+                    x_diametre, y_diametre);
             repaint();
         }
+    }
+
+    public synchronized void mouseMoved(MouseEvent evt) {
+        //System.out.println("[31m mouseMoved. [34m" + evt);
     }
 
     public synchronized void mouseClicked(MouseEvent evt) {
@@ -290,9 +287,5 @@ public class ZePanel extends Panel
     public synchronized void mouseEntered(MouseEvent evt) {
         System.out.println("[31m mouseEntered. [34m" + evt);
     }
-
-
-//**********************************************************************************
-
 }
 
