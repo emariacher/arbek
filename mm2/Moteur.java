@@ -39,6 +39,25 @@ public class Moteur implements Runnable, MMInclude {
     }
 
 
+    public void reset() {
+        int lign;
+        /*ligne = new Ligne[MAX_REPONSE];
+        reponse = new Reponse[MAX_REPONSE];*/
+        for (lign = 0; lign < MAX_REPONSE; lign++) {
+            if (ligne[lign] == null) {
+                break;
+            }
+            ligne[lign].invalide();
+            if (reponse[lign] != null) {
+                reponse[lign].noir = 0;
+                reponse[lign].blanc = 0;
+            }
+        }
+
+        inc = 0;
+        but = new Ligne(hasard.nextInt());
+    }
+
     /**
      * Main processing method for the Moteur object
      */
@@ -51,17 +70,8 @@ public class Moteur implements Runnable, MMInclude {
                 int lign;
 
                 int pion;
-                for (lign = 0; lign < MAX_REPONSE; lign++) {
-                    if (ligne[lign] == null) {
-                        break;
-                    }
-                    ligne[lign].invalide();
-                    reponse[lign].noir = 0;
-                    reponse[lign].blanc = 0;
-                }
+                reset();
 
-                inc = 0;
-                but = new Ligne(hasard.nextInt());
                 System.out.println("-- [31m" + but.toString() + "[30m");
 
                 while ((pasTrouve) && (inc < MAX_REPONSE)) {
