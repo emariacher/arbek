@@ -23,6 +23,8 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 	Calendar date;
 	Thread thread;
 	Panel pb;
+	BorderLayout bl;
+	GridLayout gl;
 
 
 	/**
@@ -34,7 +36,8 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 		graine = (date.get(Calendar.SECOND) * date.get(Calendar.SECOND)) + (date.get(Calendar.MINUTE) * date.get(Calendar.MINUTE)) + (date.get(Calendar.HOUR) * date.get(Calendar.HOUR));
 		hasard = new Random(graine);
 
-		setLayout(new BorderLayout());
+		bl = new BorderLayout();
+		setLayout(bl);
 
 		moteur = new Moteur(hasard.nextInt());
 		zePanel = new ZePanel(moteur);
@@ -43,7 +46,8 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 		// push buttons
 		pb = new Panel();
 		add("South", pb);
-		pb.setLayout(new GridLayout(1, 4));
+		gl = new GridLayout(1, 4);
+		pb.setLayout(gl);
 
 		autoMan.addActionListener(new autoManListener(moteur, runStop, step));
 		pb.add(autoMan);
@@ -57,6 +61,7 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 		solution.addActionListener(new solutionListener(zePanel));
 		pb.add(solution);
 
+		zePanel.addMouseListener(zePanel);
 	}
 
 
@@ -75,6 +80,7 @@ public class MasterMind extends Applet implements Runnable, MMInclude {
 		thread.start();
 		moteur.start();
 	}
+
 }
 
 /**
