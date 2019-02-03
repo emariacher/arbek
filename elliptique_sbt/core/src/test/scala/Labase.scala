@@ -1,5 +1,6 @@
 import Elliptique._
 import org.scalatest._
+import kebra.MyLog._
 
 import scala.math.BigInt
 import scala.util.Random
@@ -21,7 +22,7 @@ class Labase extends FlatSpec with Matchers {
   def stream_zero_a_linfini3p7: Stream[Triplet] = rangeStream3p7(0, 1)
 
   "TrouveLesInverses" should "be OK" in {
-    println("TrouveLesInverses")
+    myPrintIt("TrouveLesInverses")
     val li = new getInverse(67).li
     println(li)
     val result = li.filter(_._1 == 63).head._2
@@ -30,15 +31,15 @@ class Labase extends FlatSpec with Matchers {
   }
 
   "TrouveLesInverses_2" should "be OK" in {
-    println("TrouveLesInverses_2")
+    myPrintIt("TrouveLesInverses_2")
     val result = Elliptique.inverse(67,63)
     println("TrouveLesInverses_2[" + result + "]")
     result shouldEqual 50
   }
 
   "Elliptique" should "be OK" in {
-    println("Elliptique")
-    val t_ici = timeStamp(t_start, "ici!")
+    myPrintIt("Elliptique")
+    val t_ici = timeStamp(g_t_start, "ici!")
 
     val l2 = stream_zero_a_linfini2.take(67 + 2).toList
     val l3p7 = stream_zero_a_linfini3p7.take(67 + 2).toList
@@ -76,7 +77,7 @@ class Labase extends FlatSpec with Matchers {
   }
 
   " GetCurve" should "be OK" in {
-    println("GetCurve")
+    myPrintIt("GetCurve")
     val lp = new getCurve(67).lp
     println(lp)
     lp.filter(d => d._1 == 2 & d._2 == 22).isEmpty shouldEqual false
@@ -87,7 +88,7 @@ class Labase extends FlatSpec with Matchers {
   }
 
   "Sub" should "be OK" in {
-    println("Sub")
+    myPrintIt("Sub")
     val result = new Elliptique(67, 0, 7).sub(2, 6)
     println("Sub[" + result + "]")
     result shouldEqual 63

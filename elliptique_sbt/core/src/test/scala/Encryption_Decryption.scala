@@ -36,7 +36,7 @@ class Encryption_Decryption extends FlatSpec with Matchers {
     println("  step 3: encrypt/xor data[" + data + "]-->" + data_encryptee)
     myPrintIt("Decrypte")
     val Sd = e.mul(R, privateKey)._3
-    myPrintIt("  step 4: compute S ", Sd)
+    println("  step 4: compute S " + Sd)
     val data_decryptee = data_encryptee ^ Sd._1
     println("  step 5: decrypt/xor data[" + data_encryptee + "]-->" + data_decryptee)
     data_decryptee shouldEqual data
