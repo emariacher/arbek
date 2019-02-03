@@ -1,6 +1,7 @@
+import kebra.MyLog._
 import org.scalatest._
-import scala.math.BigInt
 
+import scala.math.BigInt
 
 /*
 https://www.coindesk.com/math-behind-bitcoin/
@@ -24,7 +25,7 @@ class Encryption_Decryption extends FlatSpec with Matchers {
     val publicKey = e.mul(basepoint, privateKey)._3
     publicKey shouldEqual(BigInt(52), BigInt(7))
     val data = 17
-    println("Encrypte")
+    myPrintIt("Encrypte")
     println("  step 0: basepointG [" + basepoint + "], privateKeydA [" + privateKey + "], publicKeyQA [" + publicKey + "], data [" + data + "]")
     val randomNumber_k = 3
     println("  step 1: pick random number " + randomNumber_k)
@@ -33,9 +34,9 @@ class Encryption_Decryption extends FlatSpec with Matchers {
     println("  step 2: compute R " + R + ", compute S " + Se)
     val data_encryptee = data ^ Se._1
     println("  step 3: encrypt/xor data[" + data + "]-->" + data_encryptee)
-    println("Decrypte")
+    myPrintIt("Decrypte")
     val Sd = e.mul(R, privateKey)._3
-    println("  step 4: compute S " + Sd)
+    myPrintIt("  step 4: compute S ", Sd)
     val data_decryptee = data_encryptee ^ Sd._1
     println("  step 5: decrypt/xor data[" + data_encryptee + "]-->" + data_decryptee)
     data_decryptee shouldEqual data
