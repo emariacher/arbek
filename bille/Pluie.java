@@ -23,7 +23,10 @@ public class Pluie extends Applet implements Runnable, BInclude {
     thread = new Thread(this);
 
     setLayout(new BorderLayout());
-    int nombrebilles  = Integer.valueOf(getParameter("nombrebilles")).intValue();
+      int nombrebilles = 50;
+      if(getParameter("nombrebilles")!=null) {
+        nombrebilles = Integer.valueOf(getParameter("nombrebilles")).intValue();
+    }
     tableau = new TableauPluie(size().width, size().height, 0.10, nombrebilles);
     zePanel = new ZePanel(tableau);
     add("Center", zePanel);
