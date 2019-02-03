@@ -22,5 +22,6 @@
 *.properties
 #*#
 fourmis_sbt/*/target/*
+elliptique_sbt/*/target/*
 MasterMind/*/target/*
 carte1/*/target/*
