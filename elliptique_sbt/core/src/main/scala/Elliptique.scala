@@ -2,9 +2,6 @@
   * Created by mariachere on 26.05.2015.
   */
 
-import java.text.SimpleDateFormat
-import java.util.{Calendar, Date}
-
 import scala.language.postfixOps
 import scala.math.BigInt
 import scala.util.Random
@@ -293,6 +290,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     lr
   }
 
+  def title = "y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo
 }
 
 class getCurve(val modlo: BigInt) {
