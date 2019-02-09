@@ -232,7 +232,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
       }
       somme._1 == 0 & somme._2 == 0
     })
-    ("loopsum , p " + p + ", ordre " + ordre + ", plus(p, p )" + plus(p, p) + ", plus(plus(p, p), p) " + plus(plus(p, p), p) + ", lsum ", lsum)
+    ("loopsum , p " + p + ", ordre " + ordre + ", plus(p, p )" + plus(p, p) + ", plus(plus(p, p), p) " + plus(plus(p, p), p) + ", lsum ", p, lsum.size, lsum)
   }
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
