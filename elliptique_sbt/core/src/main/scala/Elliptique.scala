@@ -296,17 +296,19 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def title = "y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo
 
-  def SumLine(p: (BigInt, BigInt), q: (BigInt, BigInt)): MySeries = {
+  def SumLine(p: (BigInt, BigInt), q: (BigInt, BigInt)): (MySeries,Double,Double) = {
     val pd = (p._1.toDouble, p._2.toDouble)
     val qd = (q._1.toDouble, q._2.toDouble)
     val modlod = modlo.toDouble
     val diff_x = qd._1 - pd._1
+    var _a_ = 0.toDouble
+    var _b_ = 0.toDouble
 
     val ms = diff_x match {
       case 0 => new MySeries("Droite Verticale [" + p + "," + q + "]", true, false, List((pd._1, 0.toDouble), (pd._1, modlod)).sortBy(_._1))
       case _ => // compute a & b in y = ax + b
-        val _a_ = (q._2.toDouble - p._2.toDouble) / diff_x
-        val _b_ = q._2.toDouble - (q._1.toDouble * _a_)
+        _a_ = (q._2.toDouble - p._2.toDouble) / diff_x
+        _b_ = q._2.toDouble - (q._1.toDouble * _a_)
         val atZero = (0.toDouble, _b_)
         var atModloY = (_a_ * modlod) + _b_
         while (atModloY < 0) {
@@ -325,7 +327,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
         myPrintIt(p, q, "y = " + _a_ + "*x + " + _b_)
         new MySeries("Droite [" + p + "," + q + "] y = " + _a_ + " *x + " + _b_, true, false, List(atZero, pd, qd, atModlo).sortBy(_._1))
     }
-    ms
+    (ms,_a_,_b_)
   }
 }
 
