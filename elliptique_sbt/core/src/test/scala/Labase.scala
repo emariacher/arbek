@@ -1,6 +1,5 @@
-import Elliptique._
-import org.scalatest._
 import kebra.MyLog._
+import org.scalatest._
 
 import scala.math.BigInt
 import scala.util.Random
@@ -32,7 +31,7 @@ class Labase extends FlatSpec with Matchers {
 
   "TrouveLesInverses_2" should "be OK" in {
     myPrintIt("TrouveLesInverses_2")
-    val result = Elliptique.inverse(67,63)
+    val result = Elliptique.inverse(67, 63)
     println("TrouveLesInverses_2[" + result + "]")
     result shouldEqual 50
   }
@@ -162,7 +161,11 @@ class Labase extends FlatSpec with Matchers {
 
     val lr4 = e.loopmul4(lp.head)
     val lr5 = e.loopmul4(lp.tail.head)
+    lr4.sortBy(p => (p._1 * 100) + p._2) should not equal lp
+    lr4.size shouldEqual lr5.size
+    lr4.size + lr5.size shouldEqual lp.size
     (lr4 ++ lr5).sortBy(p => (p._1 * 100) + p._2) shouldEqual lp
+    myPrintIt(e.title, lr4.size, lr5.size, lp.size)
   }
 
   "CheckLaBoucle71" should "be OK" in {
