@@ -180,6 +180,8 @@ class Labase extends FlatSpec with Matchers {
     println(71, lp.size, lp)
     println(lp.filter(p => p._1 * p._2 == 0))
     lp.filter(p => p._1 * p._2 == 0).isEmpty shouldEqual false
+    val sumzero = lp.filter(p => p._1 * p._2 == 0).head
+    sumzero should equal (BigInt(4), BigInt(0))
     myPrintIt(e.title, lp.filter(p => p._1 * p._2 == 0))
     lp.size should be <= 71
     lp.head shouldEqual(BigInt(1), BigInt(24))
@@ -188,8 +190,8 @@ class Labase extends FlatSpec with Matchers {
     e.check(e.plus(lp.head, lp.head)) shouldEqual true
     e.check((BigInt(33), BigInt(35))) shouldEqual true
     e.check((BigInt(33), BigInt(36))) shouldEqual true
-    e.check((BigInt(4), BigInt(0))) shouldEqual true
-    e.plus((BigInt(4), BigInt(0)), (BigInt(4), BigInt(0))) shouldEqual(BigInt(0), BigInt(0))
+    e.check(sumzero) shouldEqual true
+    e.plus(sumzero,sumzero) shouldEqual(BigInt(0), BigInt(0))
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)
@@ -208,9 +210,12 @@ class Labase extends FlatSpec with Matchers {
 
     val lr6 = e.loopsum(lp.head)
     val lr7 = e.loopsum(lp.tail.head)
+    val lrsumzero = e.loopsum(sumzero)
     lr6._4.size shouldEqual lp.size - 1
     lr7._4.size shouldEqual lp.size - 1
-    myPrintIt(e.title, lr6._4.size, lr7._4.size, lp.size)
+    lrsumzero._4.size shouldEqual 2
+    myPrintIt(e.title, lrsumzero)
+    myPrintIt(e.title, lr6._4.size, lr7._4.size, lrsumzero._4.size, lp.size)
   }
 
   "CheckLaBoucle73" should "be OK" in {
