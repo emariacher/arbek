@@ -2,6 +2,8 @@
   * Created by mariachere on 26.05.2015.
   */
 
+import kebra.MyLog._
+
 import scala.language.postfixOps
 import scala.math.BigInt
 import scala.util.Random
@@ -291,6 +293,24 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
   }
 
   def title = "y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo
+
+  def SumLineList(p: (BigInt, BigInt), q: (BigInt, BigInt)): MySeries = {
+    val diff_x = q._1.toDouble - p._1.toDouble
+
+    val ms = diff_x match {
+      case 0 => new MySeries("Droite Verticale [" + p + "," + q + "]", true, false, List((p._1, BigInt(0)), (p._1, modlo)).sortBy(_._1))
+      case _ => // compute a & b in y = ax + b
+        val _a_ = (q._2.toDouble - p._2.toDouble) / diff_x
+        val _b_ = q._2.toDouble - (q._1.toDouble * _a_)
+        val atZero = (BigInt(0), BigInt(_b_.toInt))
+        val atModloY = ((((_a_ * modlo.toInt) + (_b_.toInt)) % modlo.toInt) + modlo.toInt)% modlo.toInt
+        val atModlo = (modlo, BigInt(atModloY.toInt))
+
+        myPrintIt(p, q, _a_, _b_, atZero, atModlo)
+        new MySeries("Droite [" + p + "," + q + "]", true, false, List(atZero, p, q, atModlo).sortBy(_._1))
+    }
+    ms
+  }
 }
 
 class getCurve(val modlo: BigInt) {

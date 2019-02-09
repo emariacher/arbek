@@ -3,6 +3,8 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
 import org.jfree.util.ShapeUtilities
 import scalax.chart.XYChart
 
+import scala.math.BigInt
+
 /*
 https://www.coindesk.com/math-behind-bitcoin/
 https://crypto.stackexchange.com/questions/44304/understanding-elliptic-curve-point-addition-over-a-finite-field

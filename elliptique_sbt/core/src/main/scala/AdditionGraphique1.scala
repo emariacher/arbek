@@ -14,6 +14,7 @@ object AdditionGraphique1 extends App with scalax.chart.module.Charting {
   ScalaChartUtils.LineScatterPlot("Zobi la mouche", List(
     new MySeries(e.title, false, true, e.curve),
     new MySeries("zorglub", false, true, (for (i <- 1 to 5) yield (BigInt(i), BigInt(i))).toList),
-    new MySeries("bulgroz", true, false, (for (i <- 1 to 6) yield (BigInt(i), BigInt(i) * BigInt(i))).toList)
+    new MySeries("bulgroz", true, false, (for (i <- 1 to 6) yield (BigInt(i), BigInt(i) * BigInt(i))).toList),
+    e.SumLineList(e.curve.head, e.curve.last)
   ))
 }
