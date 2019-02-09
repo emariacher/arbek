@@ -105,6 +105,8 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     ly2.filter(y => y._2 == x._2).map(y => (x._1 % modlo, y._1 % modlo))
   }).flatten
 
+  val curved = curve.map(p => (p._1.toDouble, p._2.toDouble))
+
   def add(a: BigInt, b: BigInt) = (a + b) % modlo
 
   def sub(a: BigInt, b: BigInt) = {
@@ -294,20 +296,34 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def title = "y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo
 
-  def SumLineList(p: (BigInt, BigInt), q: (BigInt, BigInt)): MySeries = {
-    val diff_x = q._1.toDouble - p._1.toDouble
+  def SumLine(p: (BigInt, BigInt), q: (BigInt, BigInt)): MySeries = {
+    val pd = (p._1.toDouble, p._2.toDouble)
+    val qd = (q._1.toDouble, q._2.toDouble)
+    val modlod = modlo.toDouble
+    val diff_x = qd._1 - pd._1
 
     val ms = diff_x match {
-      case 0 => new MySeries("Droite Verticale [" + p + "," + q + "]", true, false, List((p._1, BigInt(0)), (p._1, modlo)).sortBy(_._1))
+      case 0 => new MySeries("Droite Verticale [" + p + "," + q + "]", true, false, List((pd._1, 0.toDouble), (pd._1, modlod)).sortBy(_._1))
       case _ => // compute a & b in y = ax + b
         val _a_ = (q._2.toDouble - p._2.toDouble) / diff_x
         val _b_ = q._2.toDouble - (q._1.toDouble * _a_)
-        val atZero = (BigInt(0), BigInt(_b_.toInt))
-        val atModloY = ((((_a_ * modlo.toInt) + (_b_.toInt)) % modlo.toInt) + modlo.toInt)% modlo.toInt
-        val atModlo = (modlo, BigInt(atModloY.toInt))
+        val atZero = (0.toDouble, _b_)
+        var atModloY = (_a_ * modlod) + _b_
+        while (atModloY < 0) {
+          atModloY += modlod
+        }
+        while (atModloY > modlod) {
+          atModloY -= modlod
+        }
+        val atModlo = (modlod, atModloY)
 
         myPrintIt(p, q, _a_, _b_, atZero, atModlo)
-        new MySeries("Droite [" + p + "," + q + "]", true, false, List(atZero, p, q, atModlo).sortBy(_._1))
+        myPrintIt(pd, qd)
+        myPrintIt(_a_ * pd._1, (_a_ * pd._1) + _b_, pd._2)
+        myPrintIt(_a_ * qd._1, (_a_ * qd._1) + _b_, qd._2)
+        myPrintIt(_a_ * modlod, (_a_ * modlod) + _b_, atModloY)
+        myPrintIt(p, q, "y = " + _a_ + "*x + " + _b_)
+        new MySeries("Droite [" + p + "," + q + "] y = " + _a_ + " *x + " + _b_, true, false, List(atZero, pd, qd, atModlo).sortBy(_._1))
     }
     ms
   }

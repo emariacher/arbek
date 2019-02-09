@@ -3,8 +3,6 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
 import org.jfree.util.ShapeUtilities
 import scalax.chart.XYChart
 
-import scala.math.BigInt
-
 /*
 https://www.coindesk.com/math-behind-bitcoin/
 https://crypto.stackexchange.com/questions/44304/understanding-elliptic-curve-point-addition-over-a-finite-field
@@ -13,7 +11,7 @@ https://www.johannes-bauer.com/compsci/ecc/#anchor24
 https://github.com/wookietreiber/scala-chart
  */
 
-class MySeries(val label: String , val line: Boolean, val shape: Boolean, val data: List[(BigInt, BigInt)])
+class MySeries(val label: String , val line: Boolean, val shape: Boolean, val data: List[(Double, Double)])
 
 object ScalaChartUtils extends scalax.chart.module.Charting {
   def LineScatterPlot(title: String, ll: List[MySeries]): XYPlot = {
