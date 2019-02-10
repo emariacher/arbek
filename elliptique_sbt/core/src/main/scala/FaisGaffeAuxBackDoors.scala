@@ -1,6 +1,4 @@
 import kebra.MyLog._
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
-import scalax.chart.XYChart
 
 /*
 https://www.coindesk.com/math-behind-bitcoin/
@@ -11,28 +9,34 @@ https://github.com/wookietreiber/scala-chart
  */
 
 object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charting {
-  def ScatterPlot(title: String, ll: List[(String, List[(BigInt, BigInt)])]) = {
-    val XYSeriesCollection = new XYSeriesCollection()
-    ll.foreach(l => {
-      val allPoints = new XYSeries(l._1)
-      l._2.foreach(p => allPoints.add(p._1.toInt, p._2.toInt))
-      XYSeriesCollection.addSeries(allPoints)
-    })
 
-    val plot = XYLineChart(XYSeriesCollection).plot
-    plot.setRenderer(new XYLineAndShapeRenderer(false, true))
+  def analyseModulo(e: Elliptique, title: String) = {
+    myPrintDln(title)
+    val lZeros = e.curve.filter(p => p._1 * p._2 == 0)
 
-    val chartScatter = XYChart(plot, title = title, legend = true)(theme = ChartTheme.Default)
+    val sumzero = if (lZeros.isEmpty) {
+      e.ZERO
+    } else {
+      lZeros.head
+    }
 
-    chartScatter.show(title, (800, 800))
+    val ls1 = e.loopsum(sumzero)
+    myPrintIt(ls1)
+
+    ScalaChartUtils.LineScatterPlot(title, List(
+      new MySeries(e.title, false, true, e.curved.filter(p => ls1._5.find(_ == p).isEmpty)),
+      new MySeries("loopsum(" + ls1._2 + ")", false, true, ls1._5)
+    ))
+
   }
 
-  val e = new Elliptique(67, 0, 7)
-  ScatterPlot("Zobi la mouche", List((e.title, e.curve),
-    ("zorglub", (for (i <- 1 to 5) yield (BigInt(i), BigInt(i))).toList),
-    ("bulgroz", (for (i <- 1 to 6) yield (BigInt(i), BigInt(i) * BigInt(i))).toList)))
 
-  myPrintDln("Choisis la bonne courbe")
-  myPrintDln("Choisis la bon modulo")
-
+  /*myPrintDln("****Choisis la bonne courbe****")
+  myPrintDln(" **Montre une bonne courbe**")
+  myPrintDln(" **Montre une mauvaise courbe**")*/
+  myPrintDln("****Choisis le bon modulo****")
+  analyseModulo(new Elliptique(67, 0, 7), " **Montre un bon modulo**")
+  analyseModulo(new Elliptique(71, 0, 7), " **Montre un mauvais modulo**")
+  analyseModulo(new Elliptique(73, 0, 7), " **Montre un mauvais modulo**")
+  analyseModulo(new Elliptique(17, 0, 7), " **Montre un mauvais modulo**")
 }

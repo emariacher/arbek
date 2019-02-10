@@ -90,6 +90,8 @@ object Elliptique {
 }
 
 class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
+  val ZERO = (BigInt(0),BigInt(0))
+
   def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
 
   def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
@@ -236,7 +238,8 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
       }
       somme._1 == 0 & somme._2 == 0
     })
-    ("loopsum , p " + p + ", ordre " + ordre + ", plus(p, p )" + plus(p, p) + ", plus(plus(p, p), p) " + plus(plus(p, p), p) + ", lsum ", p, lsum.size, lsum)
+    ("loopsum , p " + p + ", ordre " + ordre + ", plus(p, p )" + plus(p, p) + ", plus(plus(p, p), p) " + plus(plus(p, p), p) + ", lsum ", p, lsum.size, lsum,
+      (lsum.map(p => (p._1.toDouble, p._2.toDouble)) :+ (p._1.toDouble, p._2.toDouble) :+ (plus(p, p)._1.toDouble, plus(p, p)._2.toDouble)).distinct )
   }
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
@@ -319,13 +322,20 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
         }
         val atModlo = (modlod, atModloY)
 
+        val l = List(atZero, pd, qd, atModlo)
+
         myPrintIt(p, q, _a_, _b_, atZero, atModlo)
         myPrintIt(pd, qd)
         myPrintIt(_a_ * pd._1, (_a_ * pd._1) + _b_, pd._2)
         myPrintIt(_a_ * qd._1, (_a_ * qd._1) + _b_, qd._2)
         myPrintIt(_a_ * modlod, (_a_ * modlod) + _b_, atModloY)
         myPrintIt(p, q, "y = " + _a_ + "*x + " + _b_)
-        new MySeries("Droite [" + p + "," + q + "] y = " + _a_ + " *x + " + _b_, true, false, List(atZero, pd, qd, atModlo).sortBy(_._1))
+
+        /* 2 eme ligne
+        l = l :+ (0.toDouble, _b_ + atModloY)
+        l = l :+ (modlod, _b_ + atModloY + (_a_ * modlod))*/
+
+        new MySeries("Droite [" + p + "," + q + "] y = " + _a_ + " *x + " + _b_, true, false, l.sortBy(_._1))
     }
     (ms,_a_,_b_)
   }
