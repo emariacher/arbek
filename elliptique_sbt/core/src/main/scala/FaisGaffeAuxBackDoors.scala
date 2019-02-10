@@ -11,7 +11,7 @@ https://github.com/wookietreiber/scala-chart
 object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charting {
 
   def analyseModulo(e: Elliptique, title: String) = {
-    myPrintDln(title)
+    myPrintDln(title, e.title)
 
     var lsp = List[MySeries]()
     val lZeros = e.curve.filter(p => p._1 * p._2 == 0).map(z => {
@@ -22,15 +22,14 @@ object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charti
     }).flatten.distinct
 
     lsp = lsp :+ new MySeries(e.title, false, true, e.curved.filter(p => lZeros.find(_ == p).isEmpty))
-    ScalaChartUtils.LineScatterPlot(title, lsp)
+    ScalaChartUtils.LineScatterPlot(title + e.title, lsp)
   }
 
-/*myPrintDln("****Choisis la bonne courbe****")
-myPrintDln(" **Montre une bonne courbe**")
-myPrintDln(" **Montre une mauvaise courbe**")*/
-myPrintDln("****Choisis le bon modulo****")
-analyseModulo(new Elliptique(67, 0, 7), " **Montre un bon modulo**")
-analyseModulo(new Elliptique(71, 0, 7), " **Montre un mauvais modulo**")
-analyseModulo(new Elliptique(73, 0, 7), " **Montre un mauvais modulo**")
-analyseModulo(new Elliptique(17, 0, 7), " **Montre un mauvais modulo**")
+  /*myPrintDln("****Choisis la bonne courbe****")
+  myPrintDln(" **Montre une bonne courbe**")
+  myPrintDln(" **Montre une mauvaise courbe**")*/
+  myPrintDln("****Choisis le bon modulo****")
+  analyseModulo(new Elliptique(67, 0, 7), "Montre un bon modulo ")
+  analyseModulo(new Elliptique(73, 0, 7), "Montre un mauvais modulo ")
+  analyseModulo(new Elliptique(17, 0, 7), "Montre un mauvais modulo ")
 }
