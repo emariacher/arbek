@@ -14,20 +14,15 @@ object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charti
     myPrintDln(title)
     val lZeros = e.curve.filter(p => p._1 * p._2 == 0)
 
-    val sumzero = if (lZeros.isEmpty) {
-      e.ZERO
-    } else {
-      lZeros.head
+    if (!lZeros.isEmpty) {
+      val ls1 = e.loopsum(lZeros.head)
+      myPrintIt(lZeros.size, ls1)
+
+      ScalaChartUtils.LineScatterPlot(title, List(
+        new MySeries(e.title, false, true, e.curved.filter(p => ls1._5.find(_ == p).isEmpty)),
+        new MySeries("loopsum(" + ls1._2 + ")", false, true, ls1._5)
+      ))
     }
-
-    val ls1 = e.loopsum(sumzero)
-    myPrintIt(ls1)
-
-    ScalaChartUtils.LineScatterPlot(title, List(
-      new MySeries(e.title, false, true, e.curved.filter(p => ls1._5.find(_ == p).isEmpty)),
-      new MySeries("loopsum(" + ls1._2 + ")", false, true, ls1._5)
-    ))
-
   }
 
 
