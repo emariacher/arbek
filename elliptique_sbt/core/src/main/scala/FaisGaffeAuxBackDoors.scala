@@ -14,7 +14,7 @@ object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charti
     myPrintDln(title, e.title)
 
     var lsp = List[MySeries]()
-    val lZeros = e.curve.filter(p => p._1 * p._2 == 0).map(z => {
+    val lZeros = e.lZeros.map(z => {
       val lsz = e.loopsum(z)
       myPrintDln(lsz)
       lsp = lsp :+ new MySeries("loopsum(" + z + ")", false, true, lsz._5)

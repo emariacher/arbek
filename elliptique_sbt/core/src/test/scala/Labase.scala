@@ -191,7 +191,7 @@ class Labase extends FlatSpec with Matchers {
     e.check((BigInt(33), BigInt(35))) shouldEqual true
     e.check((BigInt(33), BigInt(36))) shouldEqual true
     e.check(sumzero) shouldEqual true
-    e.plus(sumzero,sumzero) shouldEqual(BigInt(0), BigInt(0))
+    e.plus(sumzero,sumzero) shouldEqual(e.ZERO)
 
     val lr1 = e.loopmul2(lp.head)
     val lr2 = e.loopmul2(lp.tail.head)

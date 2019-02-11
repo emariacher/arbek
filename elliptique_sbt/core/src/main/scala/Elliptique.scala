@@ -109,6 +109,8 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   val curved = curve.map(p => (p._1.toDouble, p._2.toDouble))
 
+  val lZeros = curve.filter(p => p._1 * p._2 == 0)
+
   def add(a: BigInt, b: BigInt) = (a + b) % modlo
 
   def sub(a: BigInt, b: BigInt) = {
