@@ -35,17 +35,17 @@ class VerifieToutesLesAdditions extends FlatSpec with Matchers {
     myPrintDln(e.title, e.curve)
     e.plus((BigInt(1), BigInt(5)), (BigInt(15), BigInt(4))) shouldEqual e.lZeros.head
     e.plus(e.lZeros.head, e.lZeros.head) shouldEqual e.ZERO
-    myPrintIt(e.loopsum(e.curve.head))
-    myPrintIt(e.curve.filter(p => (e.loopsum(e.curve.head)._4 :+ e.curve.head :+ e.plus(e.curve.head, e.curve.head)).find(p == _).isEmpty))
-    e.curve.filter(p => (e.loopsum(e.curve.head)._4 :+ e.curve.head :+ e.plus(e.curve.head, e.curve.head)).find(p == _).isEmpty).isEmpty shouldEqual false
+    myPrintIt(e.loopsum2(e.curve.head))
+    myPrintIt(e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty))
+    e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty).isEmpty shouldEqual false
   }
 
   "Check67" should "be OK" in {
     val e = new Elliptique(67, 0, 7)
     myPrintDln(e.title)
     myPrintIt(e.curve.head, e.plus(e.curve.head, e.curve.head))
-    myPrintIt(e.curve.filter(p => (e.loopsum(e.curve.head)._4 :+ e.curve.head :+ e.plus(e.curve.head, e.curve.head)).find(p == _).isEmpty))
-    e.curve.filter(p => (e.loopsum(e.curve.head)._4 :+ e.curve.head :+ e.plus(e.curve.head, e.curve.head)).find(p == _).isEmpty).isEmpty shouldEqual true
+    myPrintIt(e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty))
+    e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty).isEmpty shouldEqual true
   }
 
 }

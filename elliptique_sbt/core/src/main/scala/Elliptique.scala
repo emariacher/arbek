@@ -90,7 +90,7 @@ object Elliptique {
 }
 
 class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
-  val ZERO = (BigInt(0),BigInt(0))
+  val ZERO = (BigInt(0), BigInt(0))
 
   def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
 
@@ -241,8 +241,10 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
       somme._1 == 0 & somme._2 == 0
     })
     ("loopsum , p " + p + ", ordre " + ordre + ", plus(p, p )" + plus(p, p) + ", plus(plus(p, p), p) " + plus(plus(p, p), p) + ", lsum ", p, lsum.size, lsum,
-      (lsum.map(p => (p._1.toDouble, p._2.toDouble)) :+ (p._1.toDouble, p._2.toDouble) :+ (plus(p, p)._1.toDouble, plus(p, p)._2.toDouble)).distinct )
+      (lsum.map(p => (p._1.toDouble, p._2.toDouble)) :+ (p._1.toDouble, p._2.toDouble) :+ (plus(p, p)._1.toDouble, plus(p, p)._2.toDouble)).distinct)
   }
+
+  def loopsum2(p: (BigInt, BigInt)): List[(BigInt, BigInt)] = List(p, plus(p, p)) ++ loopsum(p)._4
 
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val rnd = new Random(0)
@@ -301,7 +303,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def title = "y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo
 
-  def SumLine(p: (BigInt, BigInt), q: (BigInt, BigInt)): (MySeries,Double,Double) = {
+  def SumLine(p: (BigInt, BigInt), q: (BigInt, BigInt)): (MySeries, Double, Double) = {
     val pd = (p._1.toDouble, p._2.toDouble)
     val qd = (q._1.toDouble, q._2.toDouble)
     val modlod = modlo.toDouble
@@ -339,7 +341,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
         new MySeries("Droite [" + p + "," + q + "] y = " + _a_ + " *x + " + _b_, true, false, l.sortBy(_._1))
     }
-    (ms,_a_,_b_)
+    (ms, _a_, _b_)
   }
 }
 
