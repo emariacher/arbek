@@ -13,16 +13,9 @@ object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charti
   def analyseModulo(e: Elliptique, title: String) = {
     myPrintDln(title, e.title)
 
-    var lsp = List[MySeries]()
-    val lZeros = e.lZeros.map(z => {
-      val lsz = e.loopsum(z)
-      myPrintDln(lsz)
-      lsp = lsp :+ new MySeries("loopsum(" + z + ")", false, true, lsz._5)
-      lsz._5
-    }).flatten.distinct
-
-    lsp = lsp :+ new MySeries(e.title, false, true, e.curved.filter(p => lZeros.find(_ == p).isEmpty))
-    ScalaChartUtils.LineScatterPlot(title + e.title, lsp)
+    ScalaChartUtils.LineScatterPlot(title + e.title, e.trouveLesBoucles.map(z => {
+      new MySeries("loopsum(" + z.head + ")", true, true, z.map(bi => (bi._1.toDouble, bi._2.toDouble)))
+    }))
   }
 
   /*myPrintDln("****Choisis la bonne courbe****")

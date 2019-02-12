@@ -38,7 +38,7 @@ class VerifieToutesLesAdditions extends FlatSpec with Matchers {
     e.plus(e.lZeros.head, e.lZeros.head) shouldEqual e.ZERO
     myPrintIt(e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty))
     e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty).isEmpty shouldEqual false
-    myPrintDln(trouveLesBoucles(e).mkString("\n  "))
+    myPrintDln(e.trouveLesBoucles.mkString("\n  "))
   }
 
   "Check67" should "be OK" in {
@@ -46,18 +46,7 @@ class VerifieToutesLesAdditions extends FlatSpec with Matchers {
     myPrintDln(e.title)
     myPrintIt(e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty))
     e.curve.filter(p => e.loopsum2(e.curve.head).find(p == _).isEmpty).isEmpty shouldEqual true
-    myPrintDln(trouveLesBoucles(e).mkString("\n  "))
+    myPrintDln(e.trouveLesBoucles.mkString("\n  "))
   }
 
-  def trouveLesBoucles(e: Elliptique): List[List[(BigInt, BigInt)]] = {
-    var listBoucles = List[List[(BigInt, BigInt)]]()
-    var lreste = e.curve
-    while (!lreste.isEmpty) {
-      val lsum = e.loopsum2(lreste.head)
-      myPrintDln(lreste.head, lsum.size, lsum)
-      listBoucles = listBoucles :+ lsum
-      lreste = lreste.filter(p => lsum.find(p == _).isEmpty)
-    }
-    listBoucles
-  }
 }

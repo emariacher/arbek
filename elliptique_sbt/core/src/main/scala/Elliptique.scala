@@ -246,6 +246,19 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
 
   def loopsum2(p: (BigInt, BigInt)): List[(BigInt, BigInt)] = List(p, plus(p, p)) ++ loopsum(p)._4
 
+  def trouveLesBoucles: List[List[(BigInt, BigInt)]] = {
+    var listBoucles = List[List[(BigInt, BigInt)]]()
+    var lreste = curve
+    while (!lreste.isEmpty) {
+      val lsum = loopsum2(lreste.head)
+      myPrintDln(lreste.head, lsum.size, lsum)
+      listBoucles = listBoucles :+ lsum
+      lreste = lreste.filter(p => lsum.find(p == _).isEmpty)
+    }
+    listBoucles
+  }
+
+
   def loopmul2(first: (BigInt, BigInt)): List[(BigInt, BigInt)] = {
     val rnd = new Random(0)
     var lr = List[(BigInt, BigInt)]()
