@@ -17,7 +17,7 @@ object ScalaChartUtils extends scalax.chart.module.Charting {
   def LineScatterPlot(title: String, ll: List[MySeries]): XYPlot = {
     val XYSeriesCollection = new XYSeriesCollection()
     ll.foreach(ms => {
-      val allPoints = new XYSeries(ms.label)
+      val allPoints = new XYSeries(ms.label, false)
       ms.data.foreach(p => allPoints.add(p._1.toInt, p._2.toInt))
       XYSeriesCollection.addSeries(allPoints)
     })
