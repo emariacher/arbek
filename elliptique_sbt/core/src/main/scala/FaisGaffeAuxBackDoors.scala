@@ -14,7 +14,7 @@ object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charti
     myPrintDln(title, e.title)
 
     ScalaChartUtils.LineScatterPlot(title + e.title, e.trouveLesBoucles.map(z => {
-      new MySeries("loopsum(" + z.head + ")", true, true, z.map(bi => (bi._1.toDouble, bi._2.toDouble)))
+      new MySeries("loopsum(" + z.head + ")["+z.size+"]", true, true, z.map(bi => (bi._1.toDouble, bi._2.toDouble)))
     }))
   }
 
@@ -24,5 +24,4 @@ object FaisGaffeAuxBackDoorsackdoors extends App with scalax.chart.module.Charti
   myPrintDln("****Choisis le bon modulo****")
   analyseModulo(new Elliptique(67, 0, 7), "Montre un bon modulo ")
   analyseModulo(new Elliptique(73, 0, 7), "Montre un mauvais modulo ")
-  analyseModulo(new Elliptique(17, 0, 7), "Montre un mauvais modulo ")
 }

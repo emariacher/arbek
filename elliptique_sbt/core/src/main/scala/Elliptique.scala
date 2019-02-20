@@ -314,7 +314,7 @@ class Elliptique(val modlo: BigInt, val a: BigInt, val b: BigInt) {
     lr
   }
 
-  def title = "y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo
+  def title = "y2 = x3 + " + a + "x + " + b + "  Ordre " + modlo + "  size " + curve.size
 
   def SumLine(p: (BigInt, BigInt), q: (BigInt, BigInt)): (MySeries, Double, Double) = {
     val pd = (p._1.toDouble, p._2.toDouble)
