@@ -26,11 +26,11 @@ public class GameModel implements Iterable<CardPile> {
     private ArrayDeque<Boolean> _undoOfStack = new ArrayDeque<Boolean>(); // undoing a whole stack
 
     //============================================================== constructor
-    public GameModel() {
+    public GameModel(int cardpile, int tableau) {
         _allPiles = new ArrayList<CardPile>();
 
-        _freeCells = new CardPile[4];
-        _tableau = new CardPileTableau[8];
+        _freeCells = new CardPile[cardpile];
+        _tableau = new CardPileTableau[tableau];
         _foundation = new CardPile[4];
 
 
