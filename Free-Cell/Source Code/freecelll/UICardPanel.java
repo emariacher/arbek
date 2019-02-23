@@ -42,7 +42,7 @@ class UICardPanel extends JComponent implements
         MouseMotionListener,
         ChangeListener {
     //================================================================ constants
-    private static final int NUMBER_OF_PILES = 8;
+    //private static final int NUMBER_OF_PILES = 8;
 
     //... Constants specifying position of display elements
     private static final int GAP = 10;
@@ -58,7 +58,7 @@ class UICardPanel extends JComponent implements
     private static final int TABLEAU_START_X = GAP;
     private static final int TABLEAU_INCR_X = Card.CARD_WIDTH + GAP;
 
-    private static final int DISPLAY_WIDTH = GAP + NUMBER_OF_PILES * TABLEAU_INCR_X;
+    //private static final int DISPLAY_WIDTH = GAP + NUMBER_OF_PILES * TABLEAU_INCR_X;
     private static final int DISPLAY_HEIGHT = TABLEAU_TOP + 3 * Card.CARD_HEIGHT + GAP;
 
     private static final Color BACKGROUND_COLOR = new Color(0, 200, 0);
@@ -93,6 +93,8 @@ class UICardPanel extends JComponent implements
     UICardPanel(GameModel model) {
         //... Save the model.
         _model = model;
+        int NUMBER_OF_PILES = model.getFreeCellPiles().length + model.getFoundationPiles().length;
+        int DISPLAY_WIDTH = GAP + NUMBER_OF_PILES * TABLEAU_INCR_X;
 
         //... Initialize graphics
         setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -106,7 +108,7 @@ class UICardPanel extends JComponent implements
         int x = TABLEAU_START_X;   // Initial x position.
         for (int pileNum = 0; pileNum < NUMBER_OF_PILES; pileNum++) {
             CardPile p;
-            if (pileNum < 4) {
+            if (pileNum < model.getFreeCellPiles().length) {
                 p = _model.getFreeCellPile(pileNum);
                 _whereIs.put(p, new Rectangle(x, FREE_CELL_TOP, Card.CARD_WIDTH,
                         Card.CARD_HEIGHT));
