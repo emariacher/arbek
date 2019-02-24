@@ -113,7 +113,7 @@ class UICardPanel extends JComponent implements
                 _whereIs.put(p, new Rectangle(x, FREE_CELL_TOP, Card.CARD_WIDTH,
                         Card.CARD_HEIGHT));
             } else {
-                p = _model.getFoundationPile(pileNum - 4);
+                p = _model.getFoundationPile(pileNum -  model.getFreeCellPiles().length);
                 _whereIs.put(p, new Rectangle(x, FOUNDATION_TOP, Card.CARD_WIDTH,
                         Card.CARD_HEIGHT));
             }
