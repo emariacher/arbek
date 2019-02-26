@@ -6,15 +6,11 @@ package freecelll;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /////////////////////////////////////////////////////////////// class UIFreeSell
-public class UIFreeSell extends JFrame {
+public class UIDoubleFreeCell extends UIFreeSell {
     //=================================================================== fields
-    private GameModel _model = new GameModel(4, 8);
-
-    UICardPanel _boardDisplay;
+    private GameModel _model = new GameModel(6, 10);
 
     //===================================================================== main
     public static void main(String[] args) {
@@ -23,13 +19,13 @@ public class UIFreeSell extends JFrame {
         //    almost always(!) works.
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new UIFreeSell();
+                new UIDoubleFreeCell();
             }
         });
     }
 
     //============================================================== constructor
-    public UIFreeSell() {
+    public UIDoubleFreeCell() {
         _boardDisplay = new UICardPanel(_model);
 
         //... Create buttons and check box.
@@ -59,16 +55,4 @@ public class UIFreeSell extends JFrame {
         setVisible(true);
     }
 
-    ////////////////////////////////////////////////////////////// ActionNewGame
-    class ActionNewGame implements ActionListener {
-        public void actionPerformed(ActionEvent evt) {
-            _model.reset();
-        }
-    }
-
-    class ActionUndo implements ActionListener {
-        public void actionPerformed(ActionEvent evt) {
-            _model.undo();
-        }
-    }
 }
