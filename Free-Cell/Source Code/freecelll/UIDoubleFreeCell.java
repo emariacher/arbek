@@ -5,7 +5,6 @@
 package freecelll;
 
 import javax.swing.*;
-import java.awt.*;
 
 /////////////////////////////////////////////////////////////// class UIFreeSell
 public class UIDoubleFreeCell extends UIFreeSell {
@@ -27,32 +26,7 @@ public class UIDoubleFreeCell extends UIFreeSell {
     //============================================================== constructor
     public UIDoubleFreeCell() {
         _boardDisplay = new UICardPanel(_model);
-
-        //... Create buttons and check box.
-        JButton newGameBtn = new JButton("New Game");
-        newGameBtn.addActionListener(new ActionNewGame());
-        JButton undoBtn = new JButton("Undo");
-        undoBtn.addActionListener(new ActionUndo());
-
-        //... Do layout
-        JPanel controlPanel = new JPanel(new FlowLayout());
-        controlPanel.add(newGameBtn);
-        controlPanel.add(undoBtn);
-
-        //... Create content pane with graphics area in center (so it expands)
-        JPanel content = new JPanel();
-        content.setLayout(new BorderLayout());
-        content.add(controlPanel, BorderLayout.NORTH);
-        content.add(_boardDisplay, BorderLayout.CENTER);
-
-        //... Set this window's characteristics.
-        setContentPane(content);
-        setTitle("Free Cell");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setVisible(true);
+        UIFreeSellGraphic();
     }
 
 }

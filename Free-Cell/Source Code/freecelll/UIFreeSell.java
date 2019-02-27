@@ -31,6 +31,10 @@ public class UIFreeSell extends JFrame {
     //============================================================== constructor
     public UIFreeSell() {
         _boardDisplay = new UICardPanel(_model);
+        UIFreeSellGraphic();
+    }
+
+    public void UIFreeSellGraphic() {
 
         //... Create buttons and check box.
         JButton newGameBtn = new JButton("New Game");
