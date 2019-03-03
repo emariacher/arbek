@@ -14,6 +14,7 @@ public class GameModel implements Iterable<CardPile> {
     private CardPile[] _freeCells;
     private CardPile[] _tableau;
     private CardPile[] _foundation;
+    private int _numdeck;
 
     private ArrayList<CardPile> _allPiles;
 
@@ -26,12 +27,13 @@ public class GameModel implements Iterable<CardPile> {
     private ArrayDeque<Boolean> _undoOfStack = new ArrayDeque<Boolean>(); // undoing a whole stack
 
     //============================================================== constructor
-    public GameModel(int cardpile, int tableau) {
+    public GameModel(int cardpile, int tableau, int numdeck) {
         _allPiles = new ArrayList<CardPile>();
 
         _freeCells = new CardPile[cardpile];
         _tableau = new CardPileTableau[tableau];
         _foundation = new CardPile[4];
+        _numdeck = numdeck;
 
 
         //... Create empty piles to hold "foundation"
@@ -57,7 +59,7 @@ public class GameModel implements Iterable<CardPile> {
 
     //==================================================================== reset
     public void reset() {
-        Deck deck = new Deck();
+        Deck deck = new Deck(_numdeck);
         deck.shuffle();
 
         _undoStack = new ArrayDeque<CardPile>();

@@ -9,7 +9,7 @@ import javax.swing.*;
 /////////////////////////////////////////////////////////////// class UIFreeSell
 public class UIDoubleFreeCell extends UIFreeSell {
     //=================================================================== fields
-    private GameModel _model = new GameModel(6, 10);
+    private GameModel _model = new GameModel(6, 10, 2);
 
     //===================================================================== main
     public static void main(String[] args) {

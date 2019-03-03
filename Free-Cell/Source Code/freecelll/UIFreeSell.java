@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 /////////////////////////////////////////////////////////////// class UIFreeSell
 public class UIFreeSell extends JFrame {
     //=================================================================== fields
-    private GameModel _model = new GameModel(4, 8);
+    private GameModel _model = new GameModel(4, 8, 1);
 
     UICardPanel _boardDisplay;
 
