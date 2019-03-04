@@ -113,7 +113,7 @@ class UICardPanel extends JComponent implements
                 _whereIs.put(p, new Rectangle(x, FREE_CELL_TOP, Card.CARD_WIDTH,
                         Card.CARD_HEIGHT));
             } else {
-                p = _model.getFoundationPile(pileNum -  model.getFreeCellPiles().length);
+                p = _model.getFoundationPile(pileNum - model.getFreeCellPiles().length);
                 _whereIs.put(p, new Rectangle(x, FOUNDATION_TOP, Card.CARD_WIDTH,
                         Card.CARD_HEIGHT));
             }
@@ -251,6 +251,13 @@ class UICardPanel extends JComponent implements
                         return;
                     }
                 } else if (_draggedCard.getFace() == Face.ACE) {
+                    for (int pile2 = 0; pile2 < _model.getFoundationPiles().length; pile2++) { // be sure that same ace is not already laid in case of DoubleFreeCell
+                        if (_model.getFoundationPiles()[pile2].size() > 0) {
+                            if (_draggedCard.getSuit() == _model.getFoundationPiles()[pile2].peekTop().getSuit()) {
+                                return;
+                            }
+                        }
+                    }
                     _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile], _draggedCard);
                     return;
                 }
