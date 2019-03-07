@@ -10,11 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /////////////////////////////////////////////////////////////// class UIFreeSell
-public class UIFreeSell extends JFrame {
+public class UIFreeSell extends UIAbstractFreeCell {
     //=================================================================== fields
     private GameModel _model = new GameModel(4, 8, 1, false);
-
-    UICardPanel _boardDisplay;
 
     //===================================================================== main
     public static void main(String[] args) {
@@ -31,36 +29,7 @@ public class UIFreeSell extends JFrame {
     //============================================================== constructor
     public UIFreeSell() {
         _boardDisplay = new UICardPanel(_model);
-        UIFreeSellGraphic();
-    }
-
-    public void UIFreeSellGraphic() {
-
-        //... Create buttons and check box.
-        JButton newGameBtn = new JButton("New Game");
-        newGameBtn.addActionListener(new ActionNewGame());
-        JButton undoBtn = new JButton("Undo");
-        undoBtn.addActionListener(new ActionUndo());
-
-        //... Do layout
-        JPanel controlPanel = new JPanel(new FlowLayout());
-        controlPanel.add(newGameBtn);
-        controlPanel.add(undoBtn);
-
-        //... Create content pane with graphics area in center (so it expands)
-        JPanel content = new JPanel();
-        content.setLayout(new BorderLayout());
-        content.add(controlPanel, BorderLayout.NORTH);
-        content.add(_boardDisplay, BorderLayout.CENTER);
-
-        //... Set this window's characteristics.
-        setContentPane(content);
-        setTitle("Free Cell");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setVisible(true);
+        UIFreeCellGraphic(new ActionNewGame(), new ActionUndo());
     }
 
     ////////////////////////////////////////////////////////////// ActionNewGame

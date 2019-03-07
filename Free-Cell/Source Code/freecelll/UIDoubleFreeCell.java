@@ -5,9 +5,11 @@
 package freecelll;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /////////////////////////////////////////////////////////////// class UIFreeSell
-public class UIDoubleFreeCell extends UIFreeSell {
+public class UIDoubleFreeCell extends UIAbstractFreeCell {
     //=================================================================== fields
     private GameModel _model = new GameModel(6, 10, 2, true);
 
@@ -26,7 +28,19 @@ public class UIDoubleFreeCell extends UIFreeSell {
     //============================================================== constructor
     public UIDoubleFreeCell() {
         _boardDisplay = new UICardPanel(_model);
-        UIFreeSellGraphic();
+        UIFreeCellGraphic(new ActionNewGame(), new ActionUndo());
     }
 
+    ////////////////////////////////////////////////////////////// ActionNewGame
+    class ActionNewGame implements ActionListener {
+        public void actionPerformed(ActionEvent evt) {
+            _model.reset();
+        }
+    }
+
+    class ActionUndo implements ActionListener {
+        public void actionPerformed(ActionEvent evt) {
+            _model.undo();
+        }
+    }
 }
