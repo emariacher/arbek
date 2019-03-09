@@ -240,7 +240,7 @@ class UICardPanel extends JComponent implements
             }
         }
 
-        if (zeStack == null) {
+        if ((zeStack == null) & (lastCardInside == null)) {
             // do the obvious move on mousePressed : to foundation Piles
             for (int pile = 0; pile < _model.getFoundationPiles().length; pile++) {
                 if (_model.getFoundationPiles()[pile].size() > 0) {
