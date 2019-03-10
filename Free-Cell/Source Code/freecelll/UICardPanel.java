@@ -242,6 +242,24 @@ class UICardPanel extends JComponent implements
 
         if ((zeStack == null) & (lastCardInside == _draggedFromPile.peekTop())) {
             // do the obvious move on mousePressed : to foundation Piles
+            // for ACES
+            if (_draggedCard.getFace() == Face.ACE) {
+                for (int pile2 = 0; pile2 < _model.getFoundationPiles().length; pile2++) { // be sure that same ace is not already laid in case of DoubleFreeCell
+                    if (_model.getFoundationPiles()[pile2].size() > 0) {
+                        if (_draggedCard.getSuit() == _model.getFoundationPiles()[pile2].peekTop().getSuit()) {
+                            return;
+                        }
+                    }
+                }
+                for (int pile2 = 0; pile2 < _model.getFoundationPiles().length; pile2++) { // then find 1st free one
+                    if (_model.getFoundationPiles()[pile2].size() == 0) {
+                        _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile2], _draggedCard);
+                        return;
+                    }
+                }
+                return;
+            }
+            // do the obvious move on mousePressed : to foundation Piles for non ACES cards
             for (int pile = 0; pile < _model.getFoundationPiles().length; pile++) {
                 if (_model.getFoundationPiles()[pile].size() > 0) {
                     Card topFoundationCard = _model.getFoundationPiles()[pile].peekTop();
@@ -250,16 +268,6 @@ class UICardPanel extends JComponent implements
                         _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile], _draggedCard);
                         return;
                     }
-                } else if (_draggedCard.getFace() == Face.ACE) {
-                    for (int pile2 = 0; pile2 < _model.getFoundationPiles().length; pile2++) { // be sure that same ace is not already laid in case of DoubleFreeCell
-                        if (_model.getFoundationPiles()[pile2].size() > 0) {
-                            if (_draggedCard.getSuit() == _model.getFoundationPiles()[pile2].peekTop().getSuit()) {
-                                return;
-                            }
-                        }
-                    }
-                    _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile], _draggedCard);
-                    return;
                 }
             }
 
