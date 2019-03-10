@@ -249,6 +249,9 @@ class UICardPanel extends JComponent implements
                 for (int pile2 = 0; pile2 < _model.getFoundationPiles().length; pile2++) { // be sure that same ace is not already laid in case of DoubleFreeCell
                     if (_model.getFoundationPiles()[pile2].size() > 0) {
                         if (_draggedCard.getSuit() == _model.getFoundationPiles()[pile2].peekTop().getSuit()) {
+                            if (_model.getFoundationPiles()[pile2].peekTop().getFace() == Face.KING) { // allow ACE on Foundation KING
+                                _model.moveAndRecord(_draggedFromPile, _model.getFoundationPiles()[pile2], _draggedCard);
+                            }
                             return;
                         }
                     }
