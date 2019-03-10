@@ -235,7 +235,7 @@ class UICardPanel extends JComponent implements
                     _dragFromY = y - lastCardInside.getY();  // how far from top
                     _draggedCard = lastCardInside;  // Remember what we're dragging.
                     _draggedFromPile = pile;
-                    _draggedCard.setPosition(_dragFromX, _dragFromY);
+                    _draggedCard.setPosition(x, y);
                     this.repaint();
                     break;   // Stop when we find the first match.
                 }
