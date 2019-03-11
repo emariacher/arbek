@@ -25,6 +25,10 @@ public class CardPileFoundation extends CardPile {
             if ((top.getSuit() == card.getSuit() &&
                     (top.getFace().ordinal() + 1 == card.getFace().ordinal()))) {
                 return true;
+            } else if ((top.getSuit() == card.getSuit() &&
+                    (top.getFace() == Face.KING) && (card.getFace() == Face.ACE))) {
+                System.out.println("ACE on KING! " + top.getSuit());
+                return true;
             }
         }
         return false;
