@@ -59,7 +59,7 @@ class UICardPanel extends JComponent implements
     private static final int TABLEAU_INCR_X = Card.CARD_WIDTH + GAP;
 
     //private static final int DISPLAY_WIDTH = GAP + NUMBER_OF_PILES * TABLEAU_INCR_X;
-    private static final int DISPLAY_HEIGHT = TABLEAU_TOP + 3 * Card.CARD_HEIGHT + GAP;
+    //private static final int DISPLAY_HEIGHT = TABLEAU_TOP + (3 * Card.CARD_HEIGHT) + GAP;
 
     private static final Color BACKGROUND_COLOR = new Color(0, 200, 0);
 
@@ -95,6 +95,7 @@ class UICardPanel extends JComponent implements
         _model = model;
         int NUMBER_OF_PILES = model.getFreeCellPiles().length + model.getFoundationPiles().length;
         int DISPLAY_WIDTH = GAP + NUMBER_OF_PILES * TABLEAU_INCR_X;
+        int DISPLAY_HEIGHT = TABLEAU_TOP + ((2 + model.getNumDeck()) * Card.CARD_HEIGHT) + GAP;
 
         //... Initialize graphics
         setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -120,7 +121,7 @@ class UICardPanel extends JComponent implements
 
             p = _model.getTableauPile(pileNum);
             _whereIs.put(p, new Rectangle(x, TABLEAU_TOP, Card.CARD_WIDTH,
-                    3 * Card.CARD_HEIGHT));
+                    (2 + model.getNumDeck()) * Card.CARD_HEIGHT));
 
             x += TABLEAU_INCR_X;
         }

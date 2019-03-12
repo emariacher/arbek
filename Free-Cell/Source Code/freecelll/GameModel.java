@@ -106,6 +106,10 @@ public class GameModel implements Iterable<CardPile> {
         return _freeCells[cellNum];
     }
 
+    public int getNumDeck() {
+        return _numdeck;
+    }
+
     //======================================================= getFoundationPiles
     public CardPile[] getFoundationPiles() {
         return _foundation;
