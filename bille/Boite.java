@@ -15,7 +15,7 @@ public class Boite extends Applet implements Runnable, BInclude {
 
         setLayout(new BorderLayout());
 
-        tableau = new TableauBoite(size().width, size().height, 1.01);
+        tableau = new TableauBoite(getSize().width, getSize().height, 1.01);
         zePanel = new ZePanel(tableau);
         add("Center", zePanel);
     }

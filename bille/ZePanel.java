@@ -25,7 +25,7 @@ public class ZePanel extends Panel
     String trace = new String("0 ");
     try {
         //******* debut
-        Dimension d = size();
+        Dimension d = getSize();
         if ((image == null) || (d.width != dim.width) || (d.height != dim.height)) {
             image    = createImage(d.width, d.height);
             dim      = d;
