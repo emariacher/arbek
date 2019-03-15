@@ -11,14 +11,14 @@ import java.awt.*;
 public class Pluie extends Applet implements Runnable, BInclude {
     TableauPluie tableau;
     ZePanel zePanel;
-    Thread thread;
+    Thread zeThread;
 
 
     /**
      * Description of the Method
      */
     public void init() {
-        thread = new Thread(this);
+        zeThread = new Thread(this);
 
         setLayout(new BorderLayout());
         int nombrebilles = 50;
@@ -38,20 +38,20 @@ public class Pluie extends Applet implements Runnable, BInclude {
      * Description of the Method
      */
     public void start() {
-        thread.start();
+        zeThread.start();
         tableau.start();
     }
 
 
     public void stop() {
         tableau.stop();
-        thread = null;
+        zeThread = null;
     }
 
     public void run() {
         zePanel.run();
         Thread thisThread = Thread.currentThread();
-        while (thread == thisThread) {
+        while (zeThread == thisThread) {
             try {
                 thisThread.sleep(10);
             } catch (InterruptedException e) {

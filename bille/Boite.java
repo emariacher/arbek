@@ -8,10 +8,10 @@ import java.io.*;
 public class Boite extends Applet implements Runnable, BInclude {
     TableauBoite tableau;
     ZePanel      zePanel;
-    Thread       thread;
+    Thread       zeThread;
 
     public void init() {
-        thread = new Thread(this);
+        zeThread = new Thread(this);
 
         setLayout(new BorderLayout());
 
@@ -20,17 +20,26 @@ public class Boite extends Applet implements Runnable, BInclude {
         add("Center", zePanel);
     }
 
-    public void run() {
-        zePanel.run();
-    }
-
     public void start() {
-        thread.start();
+        zeThread.start();
         tableau.start();
     }
-    public void stop()  {
+
+
+    public void stop() {
         tableau.stop();
-        thread.stop();
+        zeThread = null;
     }
 
+    public void run() {
+        zePanel.run();
+        Thread thisThread = Thread.currentThread();
+        while (zeThread == thisThread) {
+            try {
+                thisThread.sleep(10);
+            } catch (InterruptedException e) {
+            }
+            repaint();
+        }
+    }
 }
