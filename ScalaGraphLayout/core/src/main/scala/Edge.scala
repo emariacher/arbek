@@ -1,6 +1,6 @@
-class Edge {
-  var from = 0
-  var to = 0
+package graphlayout
+
+class Edge(val from: GNode, val to: GNode) {
 
   var len = .0
 }

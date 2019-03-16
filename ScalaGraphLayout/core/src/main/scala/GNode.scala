@@ -1,4 +1,6 @@
-class Node {
+package graphlayout
+
+class GNode(val lbl: String) {
   var x = .0
   var y = .0
 
@@ -7,5 +9,5 @@ class Node {
 
   var fixed = false
 
-  var lbl: String = null
+  //var lbl: String = null
 }
