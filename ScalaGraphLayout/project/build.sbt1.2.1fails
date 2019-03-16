@@ -1,0 +1,71 @@
+
+
+val buildSettings = Seq(
+  ThisBuild / organization := "org.scalamacros",
+  ThisBuild / version := "1.0.0",
+  ThisBuild / scalaVersion := "2.12.6",
+  ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots"),
+  ThisBuild / resolvers += Resolver.sonatypeRepo("releases"),
+  ThisBuild / scalacOptions ++= Seq("-feature", "-deprecation")
+)
+
+
+lazy val fourmis_sbt_root = (project in file("."))
+  .aggregate(macros, core)
+  .dependsOn(macros, core)
+  .settings(
+    buildSettings,
+    name := "fourmis_sbt_root",
+    run := run in Compile in core
+  )
+
+lazy val macros = (project in file("macros"))
+  .settings(
+    buildSettings,
+    name := "macros",
+    libraryDependencies += (scalaVersion) ("org.scala-lang" % "scala-reflect" % _).value,
+    libraryDependencies := {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
+        case Some((2, scalaMajor)) if scalaMajor >= 11 =>
+          libraryDependencies.value ++ Seq(
+            "com.typesafe.akka" %% "akka-actor" % "2.5.19",
+            "com.typesafe.akka" %% "akka-testkit" % "2.5.19",
+            "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+            "junit" % "junit" % "4.12" % "test",
+            "com.novocode" % "junit-interface" % "0.11" % "test",
+            "com.lihaoyi" %% "sourcecode" % "0.1.4",
+            "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
+            "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
+            "org.scala-lang.modules" %% "scala-swing" % "2.1.0")
+        // in Scala 2.10, quasiquotes are provided by macro paradise
+        case Some((2, 10)) =>
+          libraryDependencies.value ++ Seq(
+            compilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full),
+            "org.scalamacros" %% "quasiquotes" % "2.1.0-M5" cross CrossVersion.binary)
+      }
+    }
+  )
+
+
+lazy val core = (project in file("core"))
+  .dependsOn(macros  % "compile-internal, test-internal")
+  .settings(
+    buildSettings,
+    name := "core",
+    // include the macro classes and resources in the main jar
+    mappings in (Compile, packageBin) ++= mappings.in(macros, Compile, packageBin).value,
+    // include the macro sources in the main source jar
+    mappings in (Compile, packageSrc) ++= mappings.in(macros, Compile, packageSrc).value,
+    libraryDependencies := {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        // if scala 2.11+ is used, add dependency on scala-xml module
+        case Some((2, scalaMajor)) if scalaMajor >= 11 =>
+          libraryDependencies.value
+        case _ =>
+          // or just libraryDependencies.value if you don't depend on scala-swing
+          libraryDependencies.value :+ "org.scala-lang" % "scala-swing" % scalaVersion.value
+      }
+    }
+  )
+ 
