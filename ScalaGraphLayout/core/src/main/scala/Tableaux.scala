@@ -38,8 +38,13 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   }
   var lc = List.empty[Carre]
   val sinput = "un-deux, deux-trois, trois-un"
-  var lnodes = java.util.regex.Pattern.compile("\\p{Punct}").split(sinput).map(_.trim).distinct
-  MyLog.myPrintIt(sinput, "[", lnodes.mkString("!"), "]")
+  val ledges = java.util.regex.Pattern.compile(",").split(sinput).map(t => {
+    val ln = java.util.regex.Pattern.compile("-").split(t.trim).map(new GNode(_))
+    new Edge(ln.head, ln.last)
+  })
+  val lnodes = ledges.map(_.getNodes).flatten.distinct
+
+  MyLog.myPrintIt(sinput, "[", lnodes.mkString("!"), "][", ledges.mkString("/"), "]")
 
   var ltimestamps = List[Long](0)
   var t_startAkka: Calendar = _
