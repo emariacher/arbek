@@ -1,6 +1,6 @@
-package labyrinthe
+package pageblanche
 
-import labyrinthe.FrontiereV._
+import FrontiereV._
 import kebra._
 import kebra.LL._
 import kebra.MyLog._

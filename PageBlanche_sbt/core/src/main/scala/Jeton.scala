@@ -1,10 +1,10 @@
-package labyrinthe
+package pageblanche
 
 import java.awt.Color
 import java.awt.Graphics2D
-import labyrinthe.Tableaux._
-import labyrinthe.ZePanel._
-import labyrinthe.FrontiereV._
+import Tableaux._
+import ZePanel._
+import FrontiereV._
 import kebra._
 import scala.swing.Label
 import scala.collection.mutable.Queue
@@ -263,8 +263,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
           }
         }
 
-        // sinon continue à essayer de sortir de revenir au centre du labyrinthe
-        sortDuLabyrinthe
+        // sinon continue à essayer de sortir de revenir au centre du pageblanche
+        sortDupageblanche
         //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
         traces = traces :+ rc
       case Pheromone.CHERCHE =>
@@ -305,8 +305,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
           }
         }
 
-        // sinon continue à essayer de sortir du labyrinthe
-        sortDuLabyrinthe
+        // sinon continue à essayer de sortir du pageblanche
+        sortDupageblanche
         traces = traces :+ rc
       case Pheromone.RAMENE => retourne
       case Pheromone.MORT => {
@@ -354,7 +354,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     })
   }
 
-  def sortDuLabyrinthe {
+  def sortDupageblanche {
     // essaye de trouver une case vierge en suivant l'ordre de priorite defini
     if (next.r == 888) {
       next = firstStep

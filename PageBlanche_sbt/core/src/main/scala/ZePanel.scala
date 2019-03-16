@@ -1,6 +1,6 @@
-package labyrinthe
+package pageblanche
 
-import labyrinthe.ZePanel._
+import ZePanel._
 
 import scala.swing.Panel
 import akka.actor._
@@ -9,7 +9,7 @@ import java.awt.Dimension
 import java.awt.Color
 import scala.math._
 import scala.swing.Label
-import labyrinthe.Tableaux._
+import Tableaux._
 //import kebra.LL._
 import kebra._
 import scala.concurrent.duration._

@@ -4,7 +4,7 @@ import scala.util.Random
 import java.awt.{Graphics, Graphics2D, Dimension, Color}
 import java.util.Calendar
 import kebra._
-import statlaby.AkkaJeton
+import AkkaJeton._
 import scala.collection.immutable._
 
 object Tableaux {

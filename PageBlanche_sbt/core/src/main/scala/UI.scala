@@ -1,8 +1,8 @@
-package labyrinthe
+package pageblanche
 import java.io.File
 
 import kebra.LL._
-import pageblanche.Tableaux._
+import Tableaux._
 
 import scala.swing._
 import scala.swing.event.{ButtonClicked, ValueChanged}

@@ -1,7 +1,7 @@
 /**
  * Created by mariachere on 22.04.2015.
  */
-package labyrinthe
+package pageblanche
 
 class Depot(val ts: Int, val ph: Pheromone.Value, val fourmi: Jeton) {
 

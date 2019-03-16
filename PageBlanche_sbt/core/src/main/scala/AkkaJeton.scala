@@ -1,4 +1,4 @@
-package statlaby
+package pageblanche
 
 /*
  * libraries needed: akka.actor and config-0.4.0.jar from typesafe
@@ -9,8 +9,7 @@ import akka.routing.RoundRobinPool
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 import kebra.MyLog._
-import labyrinthe._
-import labyrinthe.Tableaux._
+import Tableaux._
 
 object AkkaJeton {
     sealed trait AvanceJeton

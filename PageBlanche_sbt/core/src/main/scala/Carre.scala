@@ -1,11 +1,11 @@
-package labyrinthe
+package pageblanche
 
 import java.awt.Dimension
 import java.awt.Graphics2D
 import scala.collection.immutable.{List, ListSet}
 import java.awt.Color
-import labyrinthe.FrontiereV._
-import labyrinthe.Tableaux._
+import FrontiereV._
+import Tableaux._
 import kebra._
 
 class Carre(val rc: RowCol) {

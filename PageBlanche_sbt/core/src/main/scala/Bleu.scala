@@ -1,7 +1,7 @@
-package labyrinthe
+package pageblanche
 
-import labyrinthe.FrontiereV._
-import labyrinthe.Tableaux._
+import FrontiereV._
+import Tableaux._
 
 class Bleu(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Jeton(couleur, rayon, fourmiliere) {
     val ordreChoix = new Circular(List(nord, est, sud, ouest), auHasard, auHasard)

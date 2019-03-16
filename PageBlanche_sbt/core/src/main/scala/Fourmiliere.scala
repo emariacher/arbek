@@ -1,6 +1,6 @@
-package labyrinthe
+package pageblanche
 
-import labyrinthe.RaceFourmi.RaceFourmi
+import RaceFourmi.RaceFourmi
 import scala.swing.Label
 
 /**

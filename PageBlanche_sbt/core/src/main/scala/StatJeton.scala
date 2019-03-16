@@ -1,6 +1,6 @@
-package labyrinthe
+package pageblanche
 
-import labyrinthe.ZePanel._
+import ZePanel._
 
 class StatJeton(val couleur: Couleur) {
   def this() = this(new Couleur("Couleur du temps"))
