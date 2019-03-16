@@ -1,11 +1,12 @@
 package pageblanche
 
-import scala.util.Random
-import java.awt.{Graphics, Graphics2D, Dimension, Color}
+import java.awt.Dimension
 import java.util.Calendar
+
 import kebra._
-import AkkaJeton._
+
 import scala.collection.immutable._
+import scala.util.Random
 
 object Tableaux {
   var tbx: Tableaux = _
@@ -31,23 +32,12 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var countGenere = 0
   var countAvance = 0
   var fourmilieres = zp.ptype match {
-    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet",RaceFourmi.ROND),
-      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre",RaceFourmi.RECTROND))
-    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet",RaceFourmi.ROND))
+    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet", RaceFourmi.ROND),
+      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre", RaceFourmi.RECTROND))
+    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet", RaceFourmi.ROND))
   }
   var lc = List.empty[Carre]
-  var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
-    new VertFonce("vertFonce", 70, fourmilieres.last), new VertClair("vertClair", 65, fourmilieres.head),
-    new Bleu("bleu", 60, fourmilieres.head), new BleuClair("bleuClair", 55, fourmilieres.last))
 
-  zp.ptype match {
-    case PanelType.FOURMILIERES => lj = lj :+ new Soldat("marron", 40, fourmilieres.head)
-    case _ =>
-  }
-  lj = lj.sortBy(_.fourmiliere.hashCode)
-  //lj = List(new Orange("orange", 75))
-  val mj = lj.map((j: Jeton) => (j.couleur, j)).toMap
-  val mjs = lj.map((j: Jeton) => (j.couleur, new StatJeton(j.couleur))).toMap
   var ltimestamps = List[Long](0)
   var t_startAkka: Calendar = _
   var nrOfWorkers = 4
@@ -94,15 +84,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
           }
           carreLePlusActif.bloque = true
         }
-        lj.filter(_.role == Role.SOLDAT).foreach(soldat => {
-          lj.filter(_.statut != Pheromone.MORT).foreach(j => {
-            if ((j.rc == soldat.rc) && (j.fourmiliere != soldat.fourmiliere)) {
-              j.statut = Pheromone.MORT
-              j.killed += 1
-              LL.l.myErrPrintln(MyLog.tagnt(1) + " " + soldat.toString + " a tue " + j.toString)
-            }
-          })
-        })
       case StateMachine.reset => state = reset
       case StateMachine.termine =>
         if (graphic) {
@@ -120,17 +101,12 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
 
   def nettoie: StateMachine = {
     lc.foreach(_.nettoie)
-    lj.foreach(_.init)
 
     StateMachine.avance
   }
 
   def avance: StateMachine = {
-    if (lj.map(_.avance).filter((sm: StateMachine) => sm == StateMachine.avance).isEmpty) {
-      StateMachine.termine
-    } else {
-      StateMachine.avance
-    }
+    StateMachine.avance
   }
 
   def genere: StateMachine = {
@@ -148,19 +124,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     LL.l.myPrintln(seed)
     lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
     fourmilieres.foreach(_.cntmp = 0)
-    mj.foreach((cj: (Couleur, Jeton)) => {
-      // val cnt = cj._2.cnt
-      val cnt = zp.ptype match {
-        case PanelType.LABY => cj._2.cnt
-        case _ => cj._2.aRameneDeLaJaffe
-      }
-      val js = mjs.getOrElse(cj._1, new StatJeton())
-      if (cnt != 0) {
-        cj._2.label.text = js.toString
-      }
-      js.update(cnt)
-      cj._2.resetLocal
-    })
     QA
     StateMachine.genere
   }
@@ -210,7 +173,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       nrOfWorkers = rnd.nextInt(maxWorkers) + 5
       t_startAkka = Calendar.getInstance();
     }
-    AkkaJeton.goJetons(nrOfWorkers, lj)
+    AkkaJeton.goJetons(nrOfWorkers)
     StateMachine.attend
   }
 
@@ -221,15 +184,11 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     countAvance = 0
     LL.l.myPrintln(seed)
     lc = (0 until maxRow).map((row: Int) => (0 until maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
-    lj.foreach(_.resetLocal)
     QA
     StateMachine.genere
   }
 
   def updateStats(lrjc: List[(Couleur, Int, Int)]) {
-    lrjc.foreach((ci: (Couleur, Int, Int)) => {
-      mjs.getOrElse(ci._1, new StatJeton()).update(ci._2)
-    })
     if (seedIndex > 10) {
       val ljArrivesAuBout = lrjc.filter((ci: (Couleur, Int, Int)) => ci._2 > 0 && ci._2 < zp.limit).map((ci: (Couleur, Int, Int)) => ci._2)
       val timeStamp = MyLog.timeStamp(t_startAkka)

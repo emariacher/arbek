@@ -1,13 +1,14 @@
 package pageblanche
 
-import java.awt.Color
-import java.awt.Graphics2D
-import Tableaux._
-import ZePanel._
-import FrontiereV._
+import java.awt.{Color, Graphics2D}
+
 import kebra._
-import scala.swing.Label
+import pageblanche.FrontiereV._
+import pageblanche.Tableaux._
+import pageblanche.ZePanel._
+
 import scala.collection.mutable.Queue
+import scala.swing.Label
 
 abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Fourmiliere) {
   val label = new Label {
@@ -81,7 +82,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
       case _ => label.text = role.toString.substring(0, 4) + "(" + math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + killed + "/" + miracule + ") "
         ventre -= 1
     }
-    if ((cnt > zp.limit) || (tbx.lj.count(_.statut == Pheromone.MORT) > 2)) {
+    if (cnt > zp.limit) {
       StateMachine.termine
     } else if ((ventre < 1) || (statut == Pheromone.MORT)) {
       if (ventre == 0) {

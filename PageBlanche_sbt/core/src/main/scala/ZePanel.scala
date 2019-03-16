@@ -74,7 +74,6 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
 
     g.setColor(Color.black)
     tbx.lc.foreach(_.paint(g))
-    tbx.lj.foreach(_.paint(g))
   }
 }
 
