@@ -19,7 +19,6 @@
 *.*~
 *.PNG
 *.db
-*.properties
 #*#
 fourmis_sbt/*/target/*
 elliptique_sbt/*/target/*
