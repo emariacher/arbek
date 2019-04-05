@@ -124,6 +124,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     //l.myPrintln(MyLog.tag(1) + " genere")
     val notFulls = lc.filter(_.notFull == true).map(_.genere).filter(_.notFull == true)
     //l.myPrintln(MyLog.tag(1) + " genere " + notFulls.size)
+    ledges.foreach(_.opTimize)
     if (notFulls.isEmpty) StateMachine.nettoie else StateMachine.genere
   }
 
@@ -134,6 +135,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       n.x = rnd.nextDouble() * zp.largeur
       n.y = rnd.nextDouble() * zp.hauteur
     })
+    ledges.foreach(_.len = rnd.nextDouble() * 100)
     countGenere = 0
     countAvance = 0
     LL.l.myPrintln(seed)
@@ -199,6 +201,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       n.x = rnd.nextDouble() * zp.largeur
       n.y = rnd.nextDouble() * zp.hauteur
     })
+    ledges.foreach(_.len = rnd.nextDouble() * 100)
     countGenere = 0
     countAvance = 0
     LL.l.myPrintln(seed)
