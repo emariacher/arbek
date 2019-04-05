@@ -37,12 +37,15 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet", RaceFourmi.ROND))
   }
   var lc = List.empty[Carre]
-  val sinput = "un-deux, deux-trois, trois-un"
-  val ledges = java.util.regex.Pattern.compile(",").split(sinput).map(t => {
+  val sinput = "un-deux, deux-trois, trois-un, un-quatre"
+  val ledges1 = java.util.regex.Pattern.compile(",").split(sinput).map(t => {
     val ln = java.util.regex.Pattern.compile("-").split(t.trim).map(new GNode(_))
     new Edge(ln.head, ln.last)
   })
-  val lnodes = ledges.map(_.getNodes).flatten.distinct
+  val lnodes = ledges1.map(_.getNodes).flatten.distinct
+  val ledges = ledges1.map(e => {
+    new Edge(lnodes.filter(_ == e.from).head, lnodes.filter(_ == e.to).head)
+  })
 
   MyLog.myPrintIt(sinput, "[", lnodes.mkString("!"), "][", ledges.mkString("/"), "]")
 
