@@ -125,7 +125,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     val notFulls = lc.filter(_.notFull == true).map(_.genere).filter(_.notFull == true)
     //l.myPrintln(MyLog.tag(1) + " genere " + notFulls.size)
     ledges.foreach(_.opTimize)
-    if (notFulls.isEmpty) StateMachine.nettoie else StateMachine.genere
+    //if (notFulls.isEmpty) StateMachine.nettoie else StateMachine.genere
+    StateMachine.genere
   }
 
   def reset: StateMachine = {
