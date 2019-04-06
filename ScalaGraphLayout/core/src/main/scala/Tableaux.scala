@@ -136,7 +136,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       n.x = rnd.nextDouble() * zp.largeur
       n.y = rnd.nextDouble() * zp.hauteur
     })
-    ledges.foreach(_.len = rnd.nextDouble() * 100)
+    ledges.foreach(_.len = rnd.nextDouble() * 500)
     countGenere = 0
     countAvance = 0
     LL.l.myPrintln(seed)
@@ -198,11 +198,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   def reset2: StateMachine = {
     seed = getNextSeed
     rnd = new Random(seed)
-    lnodes.foreach(n => {
-      n.x = rnd.nextDouble() * zp.largeur
-      n.y = rnd.nextDouble() * zp.hauteur
-    })
-    ledges.foreach(_.len = rnd.nextDouble() * 100)
     countGenere = 0
     countAvance = 0
     LL.l.myPrintln(seed)

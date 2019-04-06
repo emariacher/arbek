@@ -2,6 +2,9 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
+import graphlayout.Tableaux.tbx
+import kebra.MyLog
+
 class Edge(val from: GNode, val to: GNode) {
   var len = .0
   var diff = .0
@@ -16,13 +19,16 @@ class Edge(val from: GNode, val to: GNode) {
   }
 
   def opTimize = {
+    MyLog.myPrintln(toString)
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
+    MyLog.myPrintln("                 ",deltaX,deltaY)
     diff = len - Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
-    from.x = from.x + (getSign(diff) * getSign(deltaX))
-    from.y = from.y + (getSign(diff) * getSign(deltaY))
-    to.x = to.x - (getSign(diff) * getSign(deltaX))
-    to.y = to.y - (getSign(diff) * getSign(deltaY))
+    from.x = from.x - (getSign(diff) * getSign(deltaX))
+    from.y = from.y - (getSign(diff) * getSign(deltaY))
+    to.x = to.x + (getSign(diff) * getSign(deltaX))
+    to.y = to.y + (getSign(diff) * getSign(deltaY))
+    MyLog.myPrintln("                 ",toString)
   }
 
   def paint(g: Graphics2D): Unit = {
