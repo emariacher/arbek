@@ -3,6 +3,7 @@ package graphlayout
 import java.awt.Dimension
 import java.util.Calendar
 
+import graphlayout.Tableaux.tbx
 import kebra._
 
 import scala.collection.immutable._
@@ -26,6 +27,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   val mperfs = scala.collection.mutable.Map.empty[Int, List[Double]]
   var state = StateMachine.reset
   var oldstate = StateMachine.reset
+  var MouseState = MouseStateMachine.reset
   var seedIndex = 0
   var seed: Int = _
   var rnd: Random = _
@@ -52,6 +54,34 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var ltimestamps = List[Long](0)
   var t_startAkka: Calendar = _
   var nrOfWorkers = 4
+
+  def doZeMouseJob(mouse: (String, Int, Int)): Unit = {
+    MyLog.myPrintIt(MouseStateMachine, mouse)
+    MouseState match {
+      case MouseStateMachine.drag =>
+        mouse._1 match {
+          case "MouseR" =>
+            MyLog.myPrintIt(mouse)
+            MouseState = MouseStateMachine.reset
+          case "MouseM" =>
+            MyLog.myPrintIt(mouse)
+          case _ => //MyLog.myPrintIt(mouse)
+        }
+      case MouseStateMachine.reset =>
+        mouse._1 match {
+          case "MouseP" =>
+            val nearestNode = tbx.lnodes.map(n => (n, n.pasLoin(mouse._2, mouse._3))).sortBy(_._2).head
+            if (nearestNode._2 < 80) {
+              MyLog.myPrintIt(mouse, nearestNode._1)
+              MouseState = MouseStateMachine.drag
+            } else {
+              MyLog.myPrintIt(tbx.lnodes.map(n => (n, n.pasLoin(mouse._2, mouse._3))).sortBy(_._2).mkString)
+            }
+          case _ => //MyLog.myPrintIt(mouse)
+        }
+      case _ =>
+    }
+  }
 
   def doZeJob(command: String, graphic: Boolean) {
     //l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
@@ -157,16 +187,16 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
 
   def QA {
     /*if((seed==10)&(maxRC.r==20)&(maxRC.c==20)&(StatJeton.limit==200)) {
-                                                            val ljs = mjs.toList.sorted(CompareStatJeton)
-                                                                    L.myErrPrintDln(""+ljs)
-                                                                    myAssert(ljs.head._2.min==43)
-                                                                    myAssert(ljs.last._2.max==90)
-                                                                    myAssert(ljs.last._2.couleur.toString=="turquoise")
-                                                                    myAssert(ljs.head._2.cntDepasse==0)
-                                                                    myAssert(ljs.apply(1)._2.cntDepasse==2)
-                                                                    myAssert(ljs.apply(2)._2.cnt==10)
-                                                                    //exit
-                                                        } */
+                                                              val ljs = mjs.toList.sorted(CompareStatJeton)
+                                                                      L.myErrPrintDln(""+ljs)
+                                                                      myAssert(ljs.head._2.min==43)
+                                                                      myAssert(ljs.last._2.max==90)
+                                                                      myAssert(ljs.last._2.couleur.toString=="turquoise")
+                                                                      myAssert(ljs.head._2.cntDepasse==0)
+                                                                      myAssert(ljs.apply(1)._2.cntDepasse==2)
+                                                                      myAssert(ljs.apply(2)._2.cnt==10)
+                                                                      //exit
+                                                          } */
     LL.l.myPrint(".")
   }
 
@@ -239,6 +269,15 @@ object StateMachine {
   val attend = StateMachine("attend")
   val termine = StateMachine("termine")
   val reset = StateMachine("reset")
+}
+
+case class MouseStateMachine private(state: String) {
+  override def toString = "State_" + state
+}
+
+object MouseStateMachine {
+  val drag = MouseStateMachine("drag")
+  val reset = MouseStateMachine("reset")
 }
 
 object CompareStatJeton extends Ordering[(Couleur, StatJeton)] {

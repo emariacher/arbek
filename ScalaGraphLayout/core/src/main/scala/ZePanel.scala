@@ -1,17 +1,15 @@
 package graphlayout
 
-import ZePanel._
+import java.awt.{Color, Dimension, Graphics2D}
 
-import scala.swing.Panel
 import akka.actor._
-import java.awt.Graphics2D
-import java.awt.Dimension
-import java.awt.Color
+import graphlayout.Tableaux._
+
 import scala.math._
-import scala.swing.Label
-import Tableaux._
+import scala.swing.{Label, Panel}
 //import kebra.LL._
 import kebra._
+
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -37,6 +35,8 @@ class ZeActor extends Actor {
     case "bloque" =>
       //l.myErrPrintDln("bloque")
       tbx.doZeJob("bloque", true)
+    case mouse: (String, Int, Int) =>
+      tbx.doZeMouseJob(mouse)
   }
 }
 

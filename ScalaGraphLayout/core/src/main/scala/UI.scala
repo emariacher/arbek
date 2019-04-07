@@ -7,7 +7,7 @@ import kebra.LL._
 import kebra.MyLog
 
 import scala.swing._
-import scala.swing.event.{ButtonClicked, MouseClicked, ValueChanged}
+import scala.swing.event._
 
 class UI extends SimpleSwingApplication {
   val titre = "graphlayout."
@@ -49,10 +49,10 @@ class UI extends SimpleSwingApplication {
         contents += buttonStep
       }
       border = Swing.EmptyBorder(30, 30, 10, 30)
-      listenTo(mouse.clicks)
+      listenTo(mouse.clicks, mouse.moves)
       reactions += {
-        case e: MouseClicked =>
-          MyLog.myPrintIt("Mouse clicked at " + e.point)
+        case e: MouseEvent => ZePanel.za ! (e.toString.substring(0, 6), e.point.x, e.point.y)
+        case _ => MyLog.myPrintIt("Ici!")
       }
     }
     listenTo(sliderpp, buttonStep)

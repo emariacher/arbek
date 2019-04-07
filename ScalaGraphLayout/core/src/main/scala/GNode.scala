@@ -2,6 +2,8 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
+import kebra.MyLog
+
 class GNode(val lbl: String) {
   var x = .0
   var y = .0
@@ -32,4 +34,8 @@ class GNode(val lbl: String) {
     g.drawString(lbl, x.toInt - (w - 10) / 2, (y.toInt + (h - 8) / 2))
   }
 
+  def pasLoin(mx: Int, my: Int): Double = {
+    //MyLog.myPrintIt(toString, mx, x, my, y, Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y))))
+    Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y)))
+  }
 }

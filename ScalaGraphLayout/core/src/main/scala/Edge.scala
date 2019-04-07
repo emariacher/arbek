@@ -19,13 +19,12 @@ class Edge(val from: GNode, val to: GNode) {
   }
 
   def opTimize = {
-    MyLog.myPrintln(toString)
+    //MyLog.myPrintln(toString)
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
     dist = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
     diff = len - dist
     val inc = Math.abs(Math.log(Math.abs(diff)))
-    MyLog.myPrintln("                 ", deltaX, deltaY, inc)
     from.x = from.x - (getSign(diff) * getSign(deltaX) * inc)
     from.y = from.y - (getSign(diff) * getSign(deltaY) * inc)
     to.x = to.x + (getSign(diff) * getSign(deltaX) * inc)
