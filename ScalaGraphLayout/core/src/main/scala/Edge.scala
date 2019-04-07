@@ -3,6 +3,8 @@ package graphlayout
 import java.awt.{Color, Graphics2D}
 
 import kebra.MyLog
+import scala.util.Random
+
 
 class Edge(val from: GNode, val to: GNode) {
   var len = .0
@@ -18,17 +20,17 @@ class Edge(val from: GNode, val to: GNode) {
     else -1.0
   }
 
-  def opTimize = {
+  def opTimize(rnd: Random) = {
     //MyLog.myPrintln(toString)
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
     dist = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
     diff = len - dist
     val inc = Math.abs(Math.log(Math.abs(diff)))
-    from.x = from.x - (getSign(diff) * getSign(deltaX) * inc)
-    from.y = from.y - (getSign(diff) * getSign(deltaY) * inc)
-    to.x = to.x + (getSign(diff) * getSign(deltaX) * inc)
-    to.y = to.y + (getSign(diff) * getSign(deltaY) * inc)
+    from.x = from.x - (getSign(diff) * getSign(deltaX) * inc * rnd.nextInt(2))
+    from.y = from.y - (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(2))
+    to.x = to.x + (getSign(diff) * getSign(deltaX) * inc * rnd.nextInt(2))
+    to.y = to.y + (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(2))
   }
 
   def paint(g: Graphics2D): Unit = {
