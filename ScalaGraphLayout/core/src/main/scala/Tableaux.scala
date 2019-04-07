@@ -28,6 +28,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var state = StateMachine.reset
   var oldstate = StateMachine.reset
   var MouseState = MouseStateMachine.reset
+  var nearestNode: GNode = _
   var seedIndex = 0
   var seed: Int = _
   var rnd: Random = _
@@ -56,23 +57,27 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var nrOfWorkers = 4
 
   def doZeMouseJob(mouse: (String, Int, Int)): Unit = {
-    MyLog.myPrintIt(MouseStateMachine, mouse)
+    //MyLog.myPrintIt(MouseState, mouse)
     MouseState match {
       case MouseStateMachine.drag =>
         mouse._1 match {
           case "MouseR" =>
-            MyLog.myPrintIt(mouse)
+            //MyLog.myPrintIt(mouse)
+            nearestNode = null
             MouseState = MouseStateMachine.reset
-          case "MouseM" =>
-            MyLog.myPrintIt(mouse)
+          case "MouseD" =>
+            nearestNode.x = mouse._2
+            nearestNode.y = mouse._3
+          //MyLog.myPrintIt(mouse, nearestNode)
           case _ => //MyLog.myPrintIt(mouse)
         }
       case MouseStateMachine.reset =>
         mouse._1 match {
           case "MouseP" =>
-            val nearestNode = tbx.lnodes.map(n => (n, n.pasLoin(mouse._2, mouse._3))).sortBy(_._2).head
-            if (nearestNode._2 < 80) {
-              MyLog.myPrintIt(mouse, nearestNode._1)
+            val nearestFNode = tbx.lnodes.map(n => (n, n.pasLoin(mouse._2, mouse._3))).sortBy(_._2).head
+            if (nearestFNode._2 < 80) {
+              nearestNode = nearestFNode._1
+              MyLog.myPrintIt(mouse, nearestNode)
               MouseState = MouseStateMachine.drag
             } else {
               MyLog.myPrintIt(tbx.lnodes.map(n => (n, n.pasLoin(mouse._2, mouse._3))).sortBy(_._2).mkString)
@@ -166,7 +171,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       n.x = rnd.nextDouble() * zp.largeur
       n.y = rnd.nextDouble() * zp.hauteur
     })
-    ledges.foreach(_.len = rnd.nextDouble() * 500)
+    ledges.foreach(_.len = 200 + rnd.nextDouble() * 500)
     countGenere = 0
     countAvance = 0
     LL.l.myPrintln(seed)
@@ -272,7 +277,7 @@ object StateMachine {
 }
 
 case class MouseStateMachine private(state: String) {
-  override def toString = "State_" + state
+  override def toString = "MouseState_" + state
 }
 
 object MouseStateMachine {
