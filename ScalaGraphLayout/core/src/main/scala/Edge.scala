@@ -15,6 +15,8 @@ class Edge(val from: GNode, val to: GNode) {
 
   def getNodes = List(from, to)
 
+  def getNodesString = List(from.lbl,to.lbl).sortBy(_.hashCode)
+
   def getSign(d: Double) = {
     if (d > 0) 1.0
     else -1.0

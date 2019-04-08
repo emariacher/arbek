@@ -49,6 +49,12 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   val ledges = ledges1.map(e => {
     new Edge(lnodes.filter(_ == e.from).head, lnodes.filter(_ == e.to).head)
   })
+  val lallpossibleedges = lnodes.map(_.lbl).combinations(2).map(_.sortBy(_.hashCode).mkString("-")).toList
+  MyLog.myPrintIt(lallpossibleedges.mkString("!"))
+  val lzedges = ledges.map(_.getNodes.map(_.lbl).sortBy(_.hashCode).mkString("-")).mkString("!")
+  MyLog.myPrintIt(lzedges)
+  val lnoedges = lallpossibleedges.filter(s => lzedges.indexOf(s) < 0)
+  MyLog.myPrintIt(lnoedges.mkString("+"))
 
   MyLog.myPrintIt(sinput, "[", lnodes.mkString("!"), "][", ledges.mkString("/"), "]")
 
