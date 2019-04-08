@@ -2,7 +2,6 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
-import kebra.MyLog
 import scala.util.Random
 
 
@@ -15,14 +14,14 @@ class Edge(val from: GNode, val to: GNode) {
 
   def getNodes = List(from, to)
 
-  def getNodesString = List(from.lbl,to.lbl).sortBy(_.hashCode)
+  def getNodesString = List(from.lbl, to.lbl).sortBy(_.hashCode)
 
   def getSign(d: Double) = {
     if (d > 0) 1.0
     else -1.0
   }
 
-  def opTimize(rnd: Random) = {
+  def opTimize(rnd: Random) = { // quand il y a un lien, trouve la bonne distance
     //MyLog.myPrintln(toString)
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
@@ -33,6 +32,17 @@ class Edge(val from: GNode, val to: GNode) {
     from.y = from.y - (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(2))
     to.x = to.x + (getSign(diff) * getSign(deltaX) * inc * rnd.nextInt(2))
     to.y = to.y + (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(2))
+  }
+
+  def ecarte(rnd: Random) = { // quand il n'y a pas de lien, ecarte toi au maximum
+    //MyLog.myPrintln(toString)
+    val deltaX = to.x - from.x
+    val deltaY = to.y - from.y
+    val inc = 2
+    from.x = from.x - (getSign(deltaX) * inc * rnd.nextInt(2))
+    from.y = from.y - (getSign(deltaY) * inc * rnd.nextInt(2))
+    to.x = to.x + (getSign(deltaX) * inc * rnd.nextInt(2))
+    to.y = to.y + (getSign(deltaY) * inc * rnd.nextInt(2))
   }
 
   def paint(g: Graphics2D): Unit = {
