@@ -51,9 +51,12 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   })
   val lallpossibleedges = lnodes.map(_.lbl).combinations(2).map(_.sortBy(_.hashCode)).toList
   val lzedges = ledges.map(_.getNodes.map(_.lbl).sortBy(_.hashCode))
-  val lnoedges = lallpossibleedges.filter(e => lzedges.filter(_.mkString==e.mkString).isEmpty)
-  MyLog.myPrintIt(lnoedges.map(_.mkString("-")).mkString("+"))
-    
+  val lnoedges = lallpossibleedges.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
+    new Edge(lnodes.filter(_.lbl == c.head).head, lnodes.filter(_.lbl == c.last).head)
+  })
+  lnoedges.foreach(_.len = 500)
+  MyLog.myPrintIt(lnoedges.mkString("+"))
+
   MyLog.myPrintIt(sinput, "[", lnodes.mkString("!"), "][", ledges.mkString("/"), "]")
 
   var ltimestamps = List[Long](0)
@@ -164,6 +167,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     val notFulls = lc.filter(_.notFull == true).map(_.genere).filter(_.notFull == true)
     //l.myPrintln(MyLog.tag(1) + " genere " + notFulls.size)
     ledges.foreach(_.opTimize(rnd))
+    lnoedges.foreach(_.opTimize(rnd))
     //if (notFulls.isEmpty) StateMachine.nettoie else StateMachine.genere
     StateMachine.genere
   }
