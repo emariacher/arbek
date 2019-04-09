@@ -27,11 +27,11 @@ class Edge(val from: GNode, val to: GNode) {
     val deltaY = to.y - from.y
     dist = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
     diff = len - dist
-    val inc = Math.abs(Math.log(Math.abs(diff)))
-    from.x = from.x - (getSign(diff) * getSign(deltaX) * inc * rnd.nextInt(2))
-    from.y = from.y - (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(2))
-    to.x = to.x + (getSign(diff) * getSign(deltaX) * inc * rnd.nextInt(2))
-    to.y = to.y + (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(2))
+    val inc = Math.sqrt(Math.abs(diff))
+    from.x = from.x - (getSign(diff) * getSign(deltaX) * inc * rnd.nextInt(3))
+    from.y = from.y - (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(3))
+    to.x = to.x + (getSign(diff) * getSign(deltaX) * inc * rnd.nextInt(3))
+    to.y = to.y + (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(3))
   }
 
   def ecarte(rnd: Random) = { // quand il n'y a pas de lien, ecarte toi au maximum
