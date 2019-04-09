@@ -163,13 +163,9 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   }
 
   def genere: StateMachine = {
-    //l.myPrintln(MyLog.tag(1) + " genere")
-    val notFulls = lc.filter(_.notFull == true).map(_.genere).filter(_.notFull == true)
-    //l.myPrintln(MyLog.tag(1) + " genere " + notFulls.size)
     ledges.foreach(_.opTimize(rnd))
     lnoedges.foreach(_.ecarte(rnd))
     lnodes.foreach(_.remetsDansLeTableau(zp.largeur, zp.hauteur, 10))
-    //if (notFulls.isEmpty) StateMachine.nettoie else StateMachine.genere
     StateMachine.genere
   }
 
@@ -183,10 +179,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     ledges.foreach(_.len = 100 + rnd.nextDouble() * 400)
     countGenere = 0
     countAvance = 0
-    LL.l.myPrintln(seed)
-    lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
-    fourmilieres.foreach(_.cntmp = 0)
-    QA
     StateMachine.genere
   }
 
@@ -199,56 +191,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     }
   }
 
-  def QA {
-    /*if((seed==10)&(maxRC.r==20)&(maxRC.c==20)&(StatJeton.limit==200)) {
-                                                              val ljs = mjs.toList.sorted(CompareStatJeton)
-                                                                      L.myErrPrintDln(""+ljs)
-                                                                      myAssert(ljs.head._2.min==43)
-                                                                      myAssert(ljs.last._2.max==90)
-                                                                      myAssert(ljs.last._2.couleur.toString=="turquoise")
-                                                                      myAssert(ljs.head._2.cntDepasse==0)
-                                                                      myAssert(ljs.apply(1)._2.cntDepasse==2)
-                                                                      myAssert(ljs.apply(2)._2.cnt==10)
-                                                                      //exit
-                                                          } */
-    LL.l.myPrint(".")
-  }
-
-  def doZeJob2 {
-    //if(oldstate!=state) L.myPrintDln(" state: "+state)
-    oldstate = state
-    state match {
-      case StateMachine.genere =>
-        state = genere
-        countGenere += 1
-      case StateMachine.nettoie => state = nettoie
-      case StateMachine.avance => state = avance2
-      case StateMachine.attend =>
-      case StateMachine.reset => state = reset2
-      case StateMachine.termine => state = StateMachine.reset
-      case _ =>
-    }
-  }
-
-  def avance2: StateMachine = {
-    if (seedIndex > 10) {
-      nrOfWorkers = rnd.nextInt(maxWorkers) + 5
-      t_startAkka = Calendar.getInstance();
-    }
-    AkkaJeton.goJetons(nrOfWorkers)
-    StateMachine.attend
-  }
-
-  def reset2: StateMachine = {
-    seed = getNextSeed
-    rnd = new Random(seed)
-    countGenere = 0
-    countAvance = 0
-    LL.l.myPrintln(seed)
-    lc = (0 until maxRow).map((row: Int) => (0 until maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
-    QA
-    StateMachine.genere
-  }
 
   def updateStats(lrjc: List[(Couleur, Int, Int)]) {
     if (seedIndex > 10) {
