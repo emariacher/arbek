@@ -1,6 +1,6 @@
 package graphlayout
 
-import Tableaux._
+import graphlayout.Tableaux._
 
 class RowCol(val r: Int, val c: Int) {
     override def toString: String = "rc_" + r + "_" + c

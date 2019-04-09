@@ -1,6 +1,7 @@
 package graphlayout
 
-import RaceFourmi.RaceFourmi
+import graphlayout.RaceFourmi.RaceFourmi
+
 import scala.swing.Label
 
 /**

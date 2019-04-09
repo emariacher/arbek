@@ -1,12 +1,11 @@
 package graphlayout
 
-import java.awt.Dimension
-import java.awt.Graphics2D
-import scala.collection.immutable.{List, ListSet}
-import java.awt.Color
-import FrontiereV._
-import Tableaux._
-import kebra._
+import java.awt.{Color, Graphics2D}
+
+import graphlayout.FrontiereV._
+import graphlayout.Tableaux._
+
+import scala.collection.immutable.List
 
 class Carre(val rc: RowCol) {
   def this(r: Int, c: Int) = this(new RowCol(r, c))

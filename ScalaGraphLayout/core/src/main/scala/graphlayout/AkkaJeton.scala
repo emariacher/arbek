@@ -1,12 +1,8 @@
 package graphlayout
 
-/*
- * libraries needed: akka.actor and config-0.4.0.jar from typesafe
- */
-
-import akka.actor._
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.routing.RoundRobinPool
-import graphlayout.Tableaux._
+import graphlayout.Tableaux.tbx
 
 object AkkaJeton {
 

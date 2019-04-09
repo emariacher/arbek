@@ -2,10 +2,10 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
-import kebra._
 import graphlayout.FrontiereV._
 import graphlayout.Tableaux._
 import graphlayout.ZePanel._
+import kebra._
 
 import scala.collection.mutable.Queue
 import scala.swing.Label

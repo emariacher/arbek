@@ -43,16 +43,16 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   val sinput = "un-deux, deux-trois, trois-un, un-quatre, cinq-quatre,six-sept,six-huit,six-neuf,sept-huit,sept-neuf,huit-neuf"
   val ledges1 = java.util.regex.Pattern.compile(",").split(sinput).map(t => {
     val ln = java.util.regex.Pattern.compile("-").split(t.trim).map(new GNode(_))
-    new Edge(ln.head, ln.last)
+    new GEdge(ln.head, ln.last)
   })
   val lnodes = ledges1.map(_.getNodes).flatten.distinct
   val ledges = ledges1.map(e => {
-    new Edge(lnodes.filter(_ == e.from).head, lnodes.filter(_ == e.to).head)
+    new GEdge(lnodes.filter(_ == e.from).head, lnodes.filter(_ == e.to).head)
   })
-  val lallpossibleedges = lnodes.map(_.lbl).combinations(2).map(_.sortBy(_.hashCode)).toList
-  val lzedges = ledges.map(_.getNodes.map(_.lbl).sortBy(_.hashCode))
+  val lallpossibleedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList
+  val lzedges = ledges.map(_.getNodes.map(_.getID).sortBy(_.hashCode))
   val lnoedges = lallpossibleedges.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
-    new Edge(lnodes.filter(_.lbl == c.head).head, lnodes.filter(_.lbl == c.last).head)
+    new GEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
   lnoedges.foreach(_.len = 500)
   MyLog.myPrintIt(lnoedges.mkString("+"))

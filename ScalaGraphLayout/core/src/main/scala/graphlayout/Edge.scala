@@ -1,20 +1,16 @@
 package graphlayout
 
-import java.awt.{Color, Graphics2D}
+import java.awt.{Graphics2D}
 
 import scala.util.Random
 
 
-class Edge(val from: GNode, val to: GNode) {
+abstract class Edge(val from: Node, val to: Node) {
   var len = .0
   var diff = .0
   var dist = .0
 
-  override def toString: String = from.lbl + (from.x.toInt, from.y.toInt).toString + "->" + to.lbl + (to.x.toInt, to.y.toInt).toString + "[%.2f".format(len) + "/%.2f".format(dist) + "/%.2f]".format(diff)
-
-  def getNodes = List(from, to)
-
-  def getNodesString = List(from.lbl, to.lbl).sortBy(_.hashCode)
+  def getNodesString = List(from.getID, to.getID).sortBy(_.hashCode)
 
   def getSign(d: Double) = {
     if (d > 0) 1.0
@@ -45,15 +41,5 @@ class Edge(val from: GNode, val to: GNode) {
     to.y = to.y + (getSign(deltaY) * inc * rnd.nextInt(2))
   }
 
-  def paint(g: Graphics2D): Unit = {
-    if (Math.abs(dist.toInt - len.toInt) > 40) {
-      g.setColor(Color.red)
-    } else if (Math.abs(dist.toInt - len.toInt) > 10) {
-      g.setColor(Color.orange)
-    } else {
-      g.setColor(Color.green)
-    }
-    g.drawLine(from.x.toInt, from.y.toInt, to.x.toInt, to.y.toInt)
-    g.drawString(dist.toInt + "/" + len.toInt, (from.x.toInt + to.x.toInt) / 2, (from.y.toInt + to.y.toInt) / 2)
-  }
+  def paint(g: Graphics2D)
 }

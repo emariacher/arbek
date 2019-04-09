@@ -1,6 +1,6 @@
 package graphlayout
 
-import ZePanel._
+import graphlayout.ZePanel._
 
 class StatJeton(val couleur: Couleur) {
   def this() = this(new Couleur("Couleur du temps"))
