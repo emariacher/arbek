@@ -168,6 +168,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     //l.myPrintln(MyLog.tag(1) + " genere " + notFulls.size)
     ledges.foreach(_.opTimize(rnd))
     lnoedges.foreach(_.ecarte(rnd))
+    lnodes.foreach(_.remetsDansLeTableau(zp.largeur, zp.hauteur, 10))
     //if (notFulls.isEmpty) StateMachine.nettoie else StateMachine.genere
     StateMachine.genere
   }

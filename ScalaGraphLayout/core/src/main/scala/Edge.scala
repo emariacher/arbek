@@ -38,7 +38,7 @@ class Edge(val from: GNode, val to: GNode) {
     //MyLog.myPrintln(toString)
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
-    val inc = 2
+    val inc = 1
     from.x = from.x - (getSign(deltaX) * inc * rnd.nextInt(2))
     from.y = from.y - (getSign(deltaY) * inc * rnd.nextInt(2))
     to.x = to.x + (getSign(deltaX) * inc * rnd.nextInt(2))
@@ -46,7 +46,14 @@ class Edge(val from: GNode, val to: GNode) {
   }
 
   def paint(g: Graphics2D): Unit = {
-    g.setColor(Color.green)
+    if (Math.abs(dist.toInt - len.toInt) > 40) {
+      g.setColor(Color.red)
+    } else if (Math.abs(dist.toInt - len.toInt) > 10) {
+      g.setColor(Color.orange)
+    } else {
+      g.setColor(Color.green)
+    }
     g.drawLine(from.x.toInt, from.y.toInt, to.x.toInt, to.y.toInt)
+    g.drawString(dist.toInt + "/" + len.toInt, (from.x.toInt + to.x.toInt) / 2, (from.y.toInt + to.y.toInt) / 2)
   }
 }

@@ -2,14 +2,9 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
-import kebra.MyLog
-
 class GNode(val lbl: String) {
   var x = .0
   var y = .0
-
-  var dx: Double = .0
-  var dy: Double = .0
 
   var fixed = false
 
@@ -37,5 +32,10 @@ class GNode(val lbl: String) {
   def pasLoin(mx: Int, my: Int): Double = {
     //MyLog.myPrintIt(toString, mx, x, my, y, Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y))))
     Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y)))
+  }
+
+  def remetsDansLeTableau(largeur: Int, hauteur: Int, border: Int): Unit = {
+    x = Math.max(Math.min(largeur - border, x), border)
+    y = Math.max(Math.min(hauteur - border, y), border)
   }
 }
