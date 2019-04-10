@@ -22,7 +22,6 @@ class ZeActor extends Actor {
     case slider: (String, Int) =>
       val slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100), 5000)
       MyLog.myPrintIt(slider._2, slider_timeout)
-      MyLog.myPrintIt(tbx.ledges.mkString)
       context.setReceiveTimeout(slider_timeout millisecond)
       ZePanel.zp.pause = (slider._2 == 0)
       ZePanel.zp.run = !ZePanel.zp.pause
@@ -36,7 +35,7 @@ class ZeActor extends Actor {
       //l.myErrPrintDln("bloque")
       tbx.doZeJob("bloque", true)
     case mouse: (String, Int, Int) =>
-      tbx.doZeMouseJob(mouse)
+      tbx.graph.doZeMouseJob(mouse)
   }
 }
 
@@ -61,7 +60,7 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
   var limit: Int = _
   preferredSize = new Dimension(largeur, hauteur)
   val origin = new Dimension(0, 0)
-  newTbx(this, maxRC, preferredSize, origin)
+  newTbx(this, maxRC, preferredSize, origin, new GraphLayout)
 
   limit = ptype match {
     case PanelType.LABY => 1000
@@ -75,8 +74,7 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
 
     g.setColor(Color.black)
     tbx.lc.foreach(_.paint(g))
-    tbx.ledges.foreach(_.paint(g))
-    tbx.lnodes.foreach(_.paint(g))
+    tbx.graph.paint(g)
   }
 }
 
