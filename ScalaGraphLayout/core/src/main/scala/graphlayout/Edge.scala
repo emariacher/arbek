@@ -30,15 +30,18 @@ abstract class Edge(val from: Node, val to: Node) {
     to.y = to.y + (getSign(diff) * getSign(deltaY) * inc * rnd.nextInt(3))
   }
 
-  def ecarte(rnd: Random) = { // quand il n'y a pas de lien, ecarte toi au maximum
+  def ecarte(rnd: Random, limit: Int) = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
-    val inc = 1
-    from.x = from.x - (getSign(deltaX) * inc * rnd.nextInt(2))
-    from.y = from.y - (getSign(deltaY) * inc * rnd.nextInt(2))
-    to.x = to.x + (getSign(deltaX) * inc * rnd.nextInt(2))
-    to.y = to.y + (getSign(deltaY) * inc * rnd.nextInt(2))
+    dist = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
+    if(dist<limit) {
+      val inc = 1
+      from.x = from.x - (getSign(deltaX) * inc * rnd.nextInt(2))
+      from.y = from.y - (getSign(deltaY) * inc * rnd.nextInt(2))
+      to.x = to.x + (getSign(deltaX) * inc * rnd.nextInt(2))
+      to.y = to.y + (getSign(deltaY) * inc * rnd.nextInt(2))
+    }
   }
 
   def paint(g: Graphics2D)

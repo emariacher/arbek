@@ -11,7 +11,7 @@ class GraphLayout extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: GNode = _
 
-  val sinput = "un-deux, deux-trois, trois-un, un-quatre, cinq-quatre,six-sept,six-huit,six-neuf,sept-huit,sept-neuf,huit-neuf"
+  val sinput = "un-deux, deux-trois, trois-un, un-quatre, cinq-quatre,dix-onze,six-sept,six-huit,six-neuf,sept-huit,sept-neuf,huit-neuf"
   val ledges1 = java.util.regex.Pattern.compile(",").split(sinput).map(t => {
     val ln = java.util.regex.Pattern.compile("-").split(t.trim).map(new GNode(_))
     new GEdge(ln.head, ln.last)
@@ -32,7 +32,7 @@ class GraphLayout extends GraphAbstract {
 
   def genere: StateMachine = {
     ledges.foreach(_.opTimize(tbx.rnd))
-    lnoedges.foreach(_.ecarte(tbx.rnd))
+    lnoedges.foreach(_.ecarte(tbx.rnd, 500))
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     StateMachine.genere
   }
@@ -44,7 +44,7 @@ class GraphLayout extends GraphAbstract {
       n.x = tbx.rnd.nextDouble() * tbx.zp.largeur
       n.y = tbx.rnd.nextDouble() * tbx.zp.hauteur
     })
-    ledges.foreach(_.len = 100 + tbx.rnd.nextDouble() * 400)
+    ledges.foreach(_.len = 50 + tbx.rnd.nextDouble() * 200)
     StateMachine.genere
   }
 
