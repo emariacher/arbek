@@ -1,11 +1,12 @@
 package labyrinthe
 
-import scala.util.Random
-import java.awt.{Graphics, Graphics2D, Dimension, Color}
+import java.awt.Dimension
 import java.util.Calendar
+
 import kebra._
-import statlaby.AkkaJeton
+
 import scala.collection.immutable._
+import scala.util.Random
 
 object Tableaux {
   var tbx: Tableaux = _
@@ -31,9 +32,9 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var countGenere = 0
   var countAvance = 0
   var fourmilieres = zp.ptype match {
-    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet",RaceFourmi.ROND),
-      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre",RaceFourmi.RECTROND))
-    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet",RaceFourmi.ROND))
+    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet", RaceFourmi.ROND),
+      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre", RaceFourmi.RECTROND))
+    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet", RaceFourmi.ROND))
   }
   var lc = List.empty[Carre]
   var lj = List(new Rouge("rouge", 80, fourmilieres.head), new Orange("orange", 75, fourmilieres.last),
@@ -161,7 +162,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       js.update(cnt)
       cj._2.resetLocal
     })
-    QA
     StateMachine.genere
   }
 
@@ -172,58 +172,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     } else {
       Calendar.getInstance.getTimeInMillis.toInt
     }
-  }
-
-  def QA {
-    /*if((seed==10)&(maxRC.r==20)&(maxRC.c==20)&(StatJeton.limit==200)) {
-                                                            val ljs = mjs.toList.sorted(CompareStatJeton)
-                                                                    L.myErrPrintDln(""+ljs)
-                                                                    myAssert(ljs.head._2.min==43)
-                                                                    myAssert(ljs.last._2.max==90)
-                                                                    myAssert(ljs.last._2.couleur.toString=="turquoise")
-                                                                    myAssert(ljs.head._2.cntDepasse==0)
-                                                                    myAssert(ljs.apply(1)._2.cntDepasse==2)
-                                                                    myAssert(ljs.apply(2)._2.cnt==10)
-                                                                    //exit
-                                                        } */
-    LL.l.myPrint(".")
-  }
-
-  def doZeJob2 {
-    //if(oldstate!=state) L.myPrintDln(" state: "+state)
-    oldstate = state
-    state match {
-      case StateMachine.genere =>
-        state = genere
-        countGenere += 1
-      case StateMachine.nettoie => state = nettoie
-      case StateMachine.avance => state = avance2
-      case StateMachine.attend =>
-      case StateMachine.reset => state = reset2
-      case StateMachine.termine => state = StateMachine.reset
-      case _ =>
-    }
-  }
-
-  def avance2: StateMachine = {
-    if (seedIndex > 10) {
-      nrOfWorkers = rnd.nextInt(maxWorkers) + 5
-      t_startAkka = Calendar.getInstance();
-    }
-    AkkaJeton.goJetons(nrOfWorkers, lj)
-    StateMachine.attend
-  }
-
-  def reset2: StateMachine = {
-    seed = getNextSeed
-    rnd = new Random(seed)
-    countGenere = 0
-    countAvance = 0
-    LL.l.myPrintln(seed)
-    lc = (0 until maxRow).map((row: Int) => (0 until maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
-    lj.foreach(_.resetLocal)
-    QA
-    StateMachine.genere
   }
 
   def updateStats(lrjc: List[(Couleur, Int, Int)]) {
