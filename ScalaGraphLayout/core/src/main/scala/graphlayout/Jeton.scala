@@ -77,57 +77,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   }
 
   def avance: StateMachine = {
-    zp.ptype match {
-      case PanelType.LABY =>
-      case _ => label.text = role.toString.substring(0, 4) + "(" + math.max(0, ventre).toString + "/" + aRameneDeLaJaffeTemp + "/" + aRameneDeLaJaffe + "/" + killed + "/" + miracule + ") "
-        ventre -= 1
-    }
-    if (cnt > zp.limit) {
-      StateMachine.termine
-    } else if ((ventre < 1) || (statut == Pheromone.MORT)) {
-      if (ventre == 0) {
-        LL.l.myErrPrintln(MyLog.tagnt(1) + " C est la faim! " + toString)
-      }
-      cnt = zp.limit + 1
-      statut = Pheromone.MORT
-      StateMachine.termine
-    } else if ((next.r == 0) || (next.c == 0) || (next.r == (tbx.maxRow + 1)) || (next.c == (tbx.maxCol + 1))) {
-      // a l'exterieur
-      //l.myPrintln(MyLog.tagnt(1) + " " + toString)
-      if (statut == Pheromone.CHERCHE) {
-        if (zp.ptype == PanelType.LABY) {
-          StateMachine.termine
-        } else {
-          statut = Pheromone.RAMENE
-          aRameneDeLaJaffe += 1
-          aRameneDeLaJaffeTemp += 1
-          pasFini
-        }
-      } else {
-        pasFini
-      }
-    } else if (rc.equals(fourmiliere.nid)) {
-      // a la maison
-      role match {
-        case Role.OUVRIERE => fourmiliere.cnt += 1
-        case Role.SOLDAT => fourmiliere.cnt -= zp.limit / 1000 // eh oui, il faut entretenir la milice.
-        // l'equilibre entre frais d'entretien et avantage depend du temps et est a peu pres 1 vs 1000
-      }
-      fourmiliere.cntall += 1
-      fourmiliere.cntmp += 1
-      fourmiliere.label.text = "] fml(" + fourmiliere.cntmp + "/" + fourmiliere.cnt + "/" + fourmiliere.cntall + ")[ "
-      if (statut == Pheromone.REVIENS) {
-        LL.l.myErrPrintDln("******************************************************")
-        LL.l.myErrPrintDln("***************** Miracle! " + toString)
-        LL.l.myErrPrintDln("******************************************************")
-        statut = Pheromone.CHERCHE
-        miracule += 1
-      }
-      ventre = ventrePlein
-      pasFini
-    } else {
-      pasFini
-    }
+    avance
   }
 
   def canGo = (if (goNorth) "N1" else "N0") + (if (goSouth) "S1" else "S0") + (if (goWest) "O1" else "O0") + (if (goEast) "E1" else "E0")
@@ -181,23 +131,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
           }
         }
       })
-      zp.ptype match {
-        case PanelType.LABY =>
-          g.fillOval(xg - rayonh, yg - rayonv, rayonh * 2, rayonv * 2)
-        case _ =>
-          rayonh = (tbx.size.getWidth.toInt * 60) / (tbx.maxCol * 200)
-          rayonv = (tbx.size.getHeight.toInt * 60) / (tbx.maxRow * 200)
-          lastDirection.f match {
-            case NORD => g.fillOval(xg, yg - rayonv, rayonh, rayonv)
-              g.fillOval(xg, yg, rayonh, rayonv * 2)
-            case SUD => g.fillOval(xg, yg, rayonh, rayonv * 2)
-              g.fillOval(xg, yg + rayonv, rayonh, rayonv)
-            case OUEST => g.fillOval(xg - rayonh, yg, rayonh, rayonv)
-              g.fillOval(xg, yg, rayonh * 2, rayonv)
-            case EST => g.fillOval(xg, yg, rayonh * 2, rayonv)
-              g.fillOval(xg + rayonh, yg, rayonh, rayonv)
-          }
-      }
       g.setColor(Color.black)
       statut match {
         case Pheromone.CHERCHE => g.drawString(" ", xg, yg)
@@ -320,12 +253,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     if (next.r == 888) {
       //l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
       statut = Pheromone.MORT
-    }
-    if (zp.ptype != PanelType.LABY) {
-      val zc = tbx.findCarre(rc)
-      if (zc != null) {
-        zc.depotPheromones = zc.depotPheromones :+ new Depot(tbx.countAvance, statut, this)
-      }
     }
     if (next.r > row) lastDirection = sud
     if (next.r < row) lastDirection = nord

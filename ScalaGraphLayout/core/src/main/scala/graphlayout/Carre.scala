@@ -123,28 +123,6 @@ class Carre(val rc: RowCol) {
     if (bloque) {
       g.fillOval(x-3, y-3, 6, 6)
     }
-
-    tbx.zp.ptype match {
-      case PanelType.LABY => frontieres.foreach(f => f.paint(g, horiz, vert, x, y,frontieresColor(f)))
-      case _ => frontieres.foreach(f => f.paint(g, horiz, vert, x, y))
-    }
-
-    g.setColor(Color.black)
-    if (depotPheromones.length > 0) {
-      //g.drawString("" + calculePheromone, x - horiz, y - vert)
-      tbx.fourmilieres.zipWithIndex.map(fi =>{
-        g.setColor(fi._1.couleur.color)
-        g.fillOval(x - horiz+(fi._2*2), y - vert+(fi._2*2), math.log(calculePheromone(fi._1)).toInt+2, math.log(calculePheromone(fi._1)).toInt+2)
-      })
-      //g.setColor(Color.gray)
-      //g.fillOval(x - horiz, y - vert, math.log(calculePheromone).toInt+2, math.log(calculePheromone).toInt+2)
-    }
-    //g.drawString(toString,x,y)
-  }
-
-  override def toString: String = {
-    "{" + rc + " " + tbx.fourmilieres.map(f => f.toString+"("+calculePheromone(f)+")" ) + "}"
-    //"Carre{("+row+","+col+"), "+frontieres+"}"
   }
 
   def getLeftCarre: Option[Carre] = {

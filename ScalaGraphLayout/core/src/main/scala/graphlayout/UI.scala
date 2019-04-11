@@ -9,11 +9,10 @@ import kebra.MyLog
 import scala.swing._
 import scala.swing.event._
 
-class UI extends SimpleSwingApplication {
+class UI(graph: GraphAbstract) extends SimpleSwingApplication {
   val titre = "graphlayout."
   val buttonStepLbl = "step"
   val labelLbl = "Idle Label"
-  val zpanelType = PanelType.LABY
   newMyLL(this.getClass.getName, new File("out\\cowabunga"), "htm", true)
 
   def top = new MainFrame {
@@ -32,17 +31,10 @@ class UI extends SimpleSwingApplication {
       text = labelLbl
     }
 
-    ZePanel.newZePanel(label, new RowCol(40, 40), zpanelType)
+    ZePanel.newZePanel(label, new RowCol(40, 40), graph)
 
     contents = new BoxPanel(Orientation.Vertical) {
       contents += label
-      contents += new BoxPanel(Orientation.Horizontal) {
-        //contents ++= tbx.lj.map(_.label)
-        //contents ++= tbx.fourmilieres.map(_.label)
-        tbx.fourmilieres.foreach(fml => {
-          contents += fml.label
-        })
-      }
       contents += ZePanel.zp
       contents += new BoxPanel(Orientation.Horizontal) {
         contents += sliderpp

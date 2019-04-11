@@ -31,11 +31,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var rnd: Random = _
   var countGenere = 0
   var countAvance = 0
-  var fourmilieres = zp.ptype match {
-    case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet", RaceFourmi.ROND),
-      new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre", RaceFourmi.RECTROND))
-    case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet", RaceFourmi.ROND))
-  }
   var lc = List.empty[Carre]
 
   var ltimestamps = List[Long](0)

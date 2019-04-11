@@ -44,14 +44,13 @@ object ZePanel {
   var za: ActorRef = _
   implicit val system = MyLog.system
 
-  def newZePanel(lbl: Label, maxRC: RowCol, ptype: PanelType.Value) {
-    zp = new ZePanel(lbl, maxRC, ptype)
-    //za = ActorDSL.actor(new ZeActor)
+  def newZePanel(lbl: Label, maxRC: RowCol, graph: GraphAbstract) {
+    zp = new ZePanel(lbl, maxRC, graph)
     za = system.actorOf(Props[ZeActor], "zePanelActor")
   }
 }
 
-class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) extends Panel {
+class ZePanel(val lbl: Label, val maxRC: RowCol, val graph: GraphAbstract) extends Panel {
   var pause = false
   var step = false
   var run = false
@@ -60,13 +59,7 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
   var limit: Int = _
   preferredSize = new Dimension(largeur, hauteur)
   val origin = new Dimension(0, 0)
-  newTbx(this, maxRC, preferredSize, origin, new GraphLayout)
-
-  limit = ptype match {
-    case PanelType.LABY => 1000
-    case PanelType.FOURMI => 5000
-    case PanelType.FOURMILIERES => 5000
-  }
+  newTbx(this, maxRC, preferredSize, origin, graph)
 
   override def paint(g: Graphics2D) {
     g.setColor(Color.white)
@@ -74,12 +67,6 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val ptype: PanelType.Value) ext
 
     g.setColor(Color.black)
     tbx.lc.foreach(_.paint(g))
-    tbx.graph.paint(g)
+    graph.paint(g)
   }
-}
-
-object PanelType extends Enumeration {
-  type PanelType = Value
-  val LABY, FOURMI, FOURMILIERES = Value
-  PanelType.values foreach println
 }
