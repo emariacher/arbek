@@ -31,8 +31,9 @@ class GraphLayout extends GraphAbstract {
   MyLog.myPrintIt(sinput, "[", lnodes.mkString("!"), "][", ledges.mkString("/"), "]")
 
   def genere: StateMachine = {
+    ledges.foreach(_.getDist)
     ledges.foreach(_.opTimize(tbx.rnd))
-    lnoedges.foreach(_.ecarte(tbx.rnd, 500))
+    lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte(tbx.rnd))
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     StateMachine.genere
   }
