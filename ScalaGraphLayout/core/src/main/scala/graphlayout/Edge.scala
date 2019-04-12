@@ -24,23 +24,39 @@ abstract class Edge(val from: Node, val to: Node) {
     dist
   }
 
+
   def opTimize(rnd: Random) = { // quand il y a un lien, trouve la bonne distance
     //MyLog.myPrintln(toString)
     diff = len - dist._1
     val inc = Math.sqrt(Math.abs(diff))
-    from.x = from.x - (getSign(diff) * dist._2 * inc * rnd.nextInt(3))
-    from.y = from.y - (getSign(diff) * dist._3 * inc * rnd.nextInt(3))
-    to.x = to.x + (getSign(diff) * dist._2 * inc * rnd.nextInt(3))
-    to.y = to.y + (getSign(diff) * dist._3 * inc * rnd.nextInt(3))
+    val dx = (dist._2 * inc * (rnd.nextInt(1)+3))
+    val dy = (dist._3 * inc * (rnd.nextInt(1)+3))
+    from.x = from.x - (getSign(diff) * from.updateAverageX(dx))
+    from.y = from.y - (getSign(diff) * from.updateAverageY(dy))
+    to.x = to.x + (getSign(diff) * to.updateAverageX(dx))
+    to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
   }
 
   def ecarte(rnd: Random) = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
     val inc = 1
-    from.x = from.x - (dist._2 * inc * rnd.nextInt(2))
-    from.y = from.y - (dist._3 * inc * rnd.nextInt(2))
-    to.x = to.x + (dist._2 * inc * rnd.nextInt(2))
-    to.y = to.y + (dist._3 * inc * rnd.nextInt(2))
+    val dx = (dist._2 * inc * (rnd.nextInt(1)+1))
+    val dy = (dist._3 * inc * (rnd.nextInt(1)+1))
+    if (from.x < to.x) {
+      from.x = from.x - from.updateAverageX(dx)
+      to.x = to.x + to.updateAverageX(dx)
+    } else {
+      from.x = from.x + from.updateAverageX(dx)
+      to.x = to.x - to.updateAverageX(dx)
+    }
+
+    if (from.y < to.y) {
+      from.y = from.y - from.updateAverageY(dy)
+      to.y = to.y + to.updateAverageY(dy)
+    } else {
+      from.y = from.y + from.updateAverageY(dy)
+      to.y = to.y - to.updateAverageY(dy)
+    }
   }
 
   def paint(g: Graphics2D)

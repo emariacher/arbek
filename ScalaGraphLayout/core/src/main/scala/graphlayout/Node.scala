@@ -6,11 +6,25 @@ abstract class Node {
   var x = .0
   var y = .0
 
+  var slidingAverageMultiplier = 3
+  var slidingAverageDeltax = .0
+  var slidingAverageDeltay = .0
+
   override def equals(any: Any): Boolean = {
     any match {
       case g: Node => hashCode.equals(g.hashCode)
       case _ => false
     }
+  }
+
+  def updateAverageX(dx: Double) = {
+    slidingAverageDeltax = ((slidingAverageMultiplier * slidingAverageDeltax + dx)) / (slidingAverageMultiplier + 1)
+    slidingAverageDeltax
+  }
+
+  def updateAverageY(dy: Double) = {
+    slidingAverageDeltay = ((slidingAverageMultiplier * slidingAverageDeltax + dy)) / (slidingAverageMultiplier + 1)
+    slidingAverageDeltay
   }
 
   def getID: String
