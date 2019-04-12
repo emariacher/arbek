@@ -29,8 +29,8 @@ abstract class Edge(val from: Node, val to: Node) {
     //MyLog.myPrintln(toString)
     diff = len - dist._1
     val inc = Math.sqrt(Math.abs(diff))
-    val dx = (dist._2 * inc * (rnd.nextInt(1)+1))
-    val dy = (dist._3 * inc * (rnd.nextInt(1)+1))
+    val dx = (dist._2 * inc)
+    val dy = (dist._3 * inc)
     from.x = from.x - (getSign(diff) * from.updateAverageX(dx))
     from.y = from.y - (getSign(diff) * from.updateAverageY(dy))
     to.x = to.x + (getSign(diff) * to.updateAverageX(dx))
@@ -40,8 +40,8 @@ abstract class Edge(val from: Node, val to: Node) {
   def ecarte(rnd: Random) = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
     val inc = 1
-    val dx = (inc * (rnd.nextInt(1)+1))
-    val dy = (inc * (rnd.nextInt(1)+1))
+    val dx = inc
+    val dy = inc
     if (from.x < to.x) {
       from.x = from.x - dx
       to.x = to.x + dx
