@@ -35,6 +35,9 @@ class GraphLayout extends GraphAbstract {
     ledges.foreach(_.opTimize(tbx.rnd))
     lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte(tbx.rnd))
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
+    if (nearestNode != null) {
+      MyLog.myPrintln(nearestNode.lbl, nearestNode.slidingAverageDeltax, nearestNode.slidingAverageDeltay)
+    }
     StateMachine.genere
   }
 
@@ -56,7 +59,7 @@ class GraphLayout extends GraphAbstract {
         mouse._1 match {
           case "MouseR" =>
             //MyLog.myPrintIt(mouse)
-            nearestNode = null
+            //nearestNode = null
             MouseState = MouseStateMachine.reset
           case "MouseD" =>
             nearestNode.x = mouse._2

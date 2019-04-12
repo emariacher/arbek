@@ -40,22 +40,22 @@ abstract class Edge(val from: Node, val to: Node) {
   def ecarte(rnd: Random) = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
     val inc = 1
-    val dx = (dist._2 * inc * (rnd.nextInt(1)+1))
-    val dy = (dist._3 * inc * (rnd.nextInt(1)+1))
+    val dx = (inc * (rnd.nextInt(1)+1))
+    val dy = (inc * (rnd.nextInt(1)+1))
     if (from.x < to.x) {
-      from.x = from.x - from.updateAverageX(dx)
-      to.x = to.x + to.updateAverageX(dx)
+      from.x = from.x - dx
+      to.x = to.x + dx
     } else {
-      from.x = from.x + from.updateAverageX(dx)
-      to.x = to.x - to.updateAverageX(dx)
+      from.x = from.x + dx
+      to.x = to.x - dx
     }
 
     if (from.y < to.y) {
-      from.y = from.y - from.updateAverageY(dy)
-      to.y = to.y + to.updateAverageY(dy)
+      from.y = from.y - dy
+      to.y = to.y + dy
     } else {
-      from.y = from.y + from.updateAverageY(dy)
-      to.y = to.y - to.updateAverageY(dy)
+      from.y = from.y + dy
+      to.y = to.y - dy
     }
   }
 
