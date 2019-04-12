@@ -29,8 +29,8 @@ abstract class Edge(val from: Node, val to: Node) {
     //MyLog.myPrintln(toString)
     diff = len - dist._1
     val inc = Math.sqrt(Math.abs(diff))
-    val dx = (dist._2 * inc * (rnd.nextInt(1)+3))
-    val dy = (dist._3 * inc * (rnd.nextInt(1)+3))
+    val dx = (dist._2 * inc * (rnd.nextInt(1)+1))
+    val dy = (dist._3 * inc * (rnd.nextInt(1)+1))
     from.x = from.x - (getSign(diff) * from.updateAverageX(dx))
     from.y = from.y - (getSign(diff) * from.updateAverageY(dy))
     to.x = to.x + (getSign(diff) * to.updateAverageX(dx))
