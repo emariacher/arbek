@@ -9,6 +9,8 @@ abstract class Node {
   var slidingAverageMultiplier = 3
   var slidingAverageDeltax = .0
   var slidingAverageDeltay = .0
+  var slidingAverageDeltaxOld = .0
+  var slidingAverageDeltayOld = .0
 
   override def equals(any: Any): Boolean = {
     any match {
@@ -17,13 +19,26 @@ abstract class Node {
     }
   }
 
+  def getSign(d: Double) = {
+    if (d > 0) 1
+    else -1
+  }
+
   def updateAverageX(dx: Double) = {
-    slidingAverageDeltax = ((slidingAverageMultiplier * slidingAverageDeltax + dx)) / (slidingAverageMultiplier + 1)
+    slidingAverageDeltax = ((slidingAverageMultiplier * slidingAverageDeltaxOld + dx)) / (slidingAverageMultiplier + 1)
+    if (getSign(slidingAverageDeltax) != getSign(slidingAverageDeltaxOld)) {
+      slidingAverageDeltax = slidingAverageDeltax / 2
+    }
+    slidingAverageDeltaxOld = slidingAverageDeltax
     slidingAverageDeltax
   }
 
   def updateAverageY(dy: Double) = {
-    slidingAverageDeltay = ((slidingAverageMultiplier * slidingAverageDeltax + dy)) / (slidingAverageMultiplier + 1)
+    slidingAverageDeltay = ((slidingAverageMultiplier * slidingAverageDeltayOld + dy)) / (slidingAverageMultiplier + 1)
+    if (getSign(slidingAverageDeltay) != getSign(slidingAverageDeltayOld)) {
+      slidingAverageDeltay = slidingAverageDeltay / 2
+    }
+    slidingAverageDeltayOld = slidingAverageDeltay
     slidingAverageDeltay
   }
 
