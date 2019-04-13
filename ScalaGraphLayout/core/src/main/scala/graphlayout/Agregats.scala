@@ -16,7 +16,7 @@ class Agregats extends GraphAbstract {
   val lGreenNodes = (1 to number).toList.map(z => new ANode(Tribu.Vert))
   val lnodes = lOrangeNodes ++ lGreenNodes
   // believe me or not but vals are volatile
-  var ledges =  List[AEdge]()
+  var ledges = List[AEdge]()
   (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2)).foreach(c => ledges = ledges :+ new AEdge(c.head, c.last))
   val ledges2 = (lOrangeNodes.combinations(2).map(c => new AEdge(c.head, c.last)) ++ lGreenNodes.combinations(2).map(c => new AEdge(c.head, c.last)))
   val ledges3 = (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2)).map(c => new AEdge(c.head, c.last))
@@ -30,13 +30,12 @@ class Agregats extends GraphAbstract {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
 
-  lnoedges.foreach(_.len = 500)
   MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))
 
   def genere: StateMachine = {
     ledges.foreach(_.getDist)
-    ledges.foreach(_.opTimize)
+    ledges.foreach(_.rassemble)
     lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte(200))
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     if (nearestNode != null) {
@@ -52,7 +51,7 @@ class Agregats extends GraphAbstract {
       n.x = tbx.rnd.nextDouble() * tbx.zp.largeur
       n.y = tbx.rnd.nextDouble() * tbx.zp.hauteur
     })
-    ledges.foreach(_.len = 50 + tbx.rnd.nextDouble() * 200)
+    ledges.foreach(_.len = 10)
     StateMachine.genere
   }
 

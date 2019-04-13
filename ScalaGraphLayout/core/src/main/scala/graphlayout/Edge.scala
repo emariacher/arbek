@@ -35,6 +35,18 @@ abstract class Edge(val from: Node, val to: Node) {
     to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
   }
 
+  def rassemble = { // quand il y a un lien, trouve la bonne distance
+    //MyLog.myPrintln(toString)
+    diff = len - dist._1
+    val inc = 1
+    val dx = (dist._2 * inc)
+    val dy = (dist._3 * inc)
+    from.x = from.x - (getSign(diff) * from.updateAverageX(dx))
+    from.y = from.y - (getSign(diff) * from.updateAverageY(dy))
+    to.x = to.x + (getSign(diff) * to.updateAverageX(dx))
+    to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
+  }
+
   def ecarte(limit: Int) = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
     val inc = limit / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
