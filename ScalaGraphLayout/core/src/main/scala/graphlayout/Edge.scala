@@ -25,7 +25,7 @@ abstract class Edge(val from: Node, val to: Node) {
   }
 
 
-  def opTimize(rnd: Random) = { // quand il y a un lien, trouve la bonne distance
+  def opTimize = { // quand il y a un lien, trouve la bonne distance
     //MyLog.myPrintln(toString)
     diff = len - dist._1
     val inc = Math.sqrt(Math.abs(diff))
@@ -37,7 +37,7 @@ abstract class Edge(val from: Node, val to: Node) {
     to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
   }
 
-  def ecarte(rnd: Random) = { // quand il n'y a pas de lien, ecarte toi au maximum
+  def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
     val inc = 1
     val dx = inc
