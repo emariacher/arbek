@@ -35,9 +35,9 @@ abstract class Edge(val from: Node, val to: Node) {
     to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
   }
 
-  def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum
+  def ecarte(limit: Int) = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
-    val inc = 1
+    val inc = limit / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
     val dx = inc
     val dy = inc
     if (from.x < to.x) {

@@ -33,7 +33,7 @@ class GraphLayout extends GraphAbstract {
   def genere: StateMachine = {
     ledges.foreach(_.getDist)
     ledges.foreach(_.opTimize)
-    lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte)
+    lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte(200))
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     if (nearestNode != null) {
       MyLog.myPrintln(nearestNode.lbl, nearestNode.slidingAverageDeltax, nearestNode.slidingAverageDeltay)
