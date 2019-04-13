@@ -41,10 +41,10 @@ abstract class Edge(val from: Node, val to: Node) {
     val inc = 1
     val dx = (dist._2 * inc)
     val dy = (dist._3 * inc)
-    from.x = from.x - (getSign(diff) * from.updateAverageX(dx))
-    from.y = from.y - (getSign(diff) * from.updateAverageY(dy))
-    to.x = to.x + (getSign(diff) * to.updateAverageX(dx))
-    to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
+    from.x = from.x - (getSign(diff) * dx)
+    from.y = from.y - (getSign(diff) * dy)
+    to.x = to.x + (getSign(diff) * dx)
+    to.y = to.y + (getSign(diff) * dy)
   }
 
   def ecarte(limit: Int) = { // quand il n'y a pas de lien, ecarte toi au maximum
