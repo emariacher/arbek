@@ -2,8 +2,6 @@ package graphlayout
 
 import java.awt.Graphics2D
 
-import scala.util.Random
-
 
 abstract class Edge(val from: Node, val to: Node) {
   var len = .0
@@ -28,7 +26,7 @@ abstract class Edge(val from: Node, val to: Node) {
   def opTimize = { // quand il y a un lien, trouve la bonne distance
     //MyLog.myPrintln(toString)
     diff = len - dist._1
-    val inc = Math.sqrt(Math.abs(diff))
+    val inc = Math.abs(diff) / 3
     val dx = (dist._2 * inc)
     val dy = (dist._3 * inc)
     from.x = from.x - (getSign(diff) * from.updateAverageX(dx))

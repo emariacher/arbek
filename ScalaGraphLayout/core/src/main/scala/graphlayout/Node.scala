@@ -25,18 +25,22 @@ abstract class Node {
   }
 
   def updateAverageX(dx: Double) = {
-    slidingAverageDeltax = ((slidingAverageMultiplier * slidingAverageDeltaxOld + dx)) / (slidingAverageMultiplier + 1)
+    slidingAverageDeltax = (((slidingAverageMultiplier * slidingAverageDeltaxOld) + dx)) / (slidingAverageMultiplier + 1)
     if (getSign(slidingAverageDeltax) != getSign(slidingAverageDeltaxOld)) {
       slidingAverageDeltax = slidingAverageDeltax / 2
+    } else if (Math.abs(slidingAverageDeltax - slidingAverageDeltaxOld) < 0.2) {
+      slidingAverageDeltax = slidingAverageDeltax / 4
     }
     slidingAverageDeltaxOld = slidingAverageDeltax
     slidingAverageDeltax
   }
 
   def updateAverageY(dy: Double) = {
-    slidingAverageDeltay = ((slidingAverageMultiplier * slidingAverageDeltayOld + dy)) / (slidingAverageMultiplier + 1)
+    slidingAverageDeltay = (((slidingAverageMultiplier * slidingAverageDeltayOld) + dy)) / (slidingAverageMultiplier + 1)
     if (getSign(slidingAverageDeltay) != getSign(slidingAverageDeltayOld)) {
       slidingAverageDeltay = slidingAverageDeltay / 2
+    } else if (Math.abs(slidingAverageDeltay - slidingAverageDeltayOld) < 0.2) {
+      slidingAverageDeltay = slidingAverageDeltay / 4
     }
     slidingAverageDeltayOld = slidingAverageDeltay
     slidingAverageDeltay
