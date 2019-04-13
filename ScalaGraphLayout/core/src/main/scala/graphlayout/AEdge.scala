@@ -9,7 +9,7 @@ class AEdge(from: ANode, to: ANode) extends Edge(from, to) {
   def getNodes = List(from, to)
 
   def paint(g: Graphics2D): Unit = {
-    if (Math.abs(dist._1.toInt - len.toInt) > 40) {
+    /*if (Math.abs(dist._1.toInt - len.toInt) > 40) {
       g.setColor(Color.red)
     } else if (Math.abs(dist._1.toInt - len.toInt) > 10) {
       g.setColor(Color.orange)
@@ -17,6 +17,6 @@ class AEdge(from: ANode, to: ANode) extends Edge(from, to) {
       g.setColor(Color.green)
     }
     g.drawLine(from.x.toInt, from.y.toInt, to.x.toInt, to.y.toInt)
-    g.drawString(dist._1.toInt + "/" + len.toInt, (from.x.toInt + to.x.toInt) / 2, (from.y.toInt + to.y.toInt) / 2)
+    g.drawString(dist._1.toInt + "/" + len.toInt, (from.x.toInt + to.x.toInt) / 2, (from.y.toInt + to.y.toInt) / 2)*/
   }
 }

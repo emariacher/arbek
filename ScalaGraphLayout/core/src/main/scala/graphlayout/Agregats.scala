@@ -10,7 +10,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 5
+  val number = 20
 
   val lOrangeNodes = (1 to number).toList.map(z => new ANode(Tribu.Orange))
   val lGreenNodes = (1 to number).toList.map(z => new ANode(Tribu.Vert))
