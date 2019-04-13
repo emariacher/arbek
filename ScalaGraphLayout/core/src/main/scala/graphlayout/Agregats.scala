@@ -10,19 +10,29 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 4
+  val number = 5
 
   val lOrangeNodes = (1 to number).toList.map(z => new ANode(Tribu.Orange))
   val lGreenNodes = (1 to number).toList.map(z => new ANode(Tribu.Vert))
   val lnodes = lOrangeNodes ++ lGreenNodes
-  val ledges = List(new AEdge(lnodes.head, lnodes.tail.head))
+  // believe me or not but vals are volatile
+  var ledges =  List[AEdge]()
+  (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2)).foreach(c => ledges = ledges :+ new AEdge(c.head, c.last))
+  val ledges2 = (lOrangeNodes.combinations(2).map(c => new AEdge(c.head, c.last)) ++ lGreenNodes.combinations(2).map(c => new AEdge(c.head, c.last)))
+  val ledges3 = (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2)).map(c => new AEdge(c.head, c.last))
+  MyLog.myPrintIt(ledges.mkString("\n -1-", "\n -1-", "\n -1-"), ledges2.mkString("\n -2-", "\n -2-", "\n -2-"), ledges3.mkString("\n -3-", "\n -3-", "\n -3-"))
+  MyLog.myPrintIt(ledges.mkString("\n -1-", "\n -1-", "\n -1-"), ledges2.mkString("\n -2-", "\n -2-", "\n -2-"), ledges3.mkString("\n -3-", "\n -3-", "\n -3-"))
   val lallpossibleedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList
+  MyLog.myPrintIt(ledges.mkString("\n -"))
   val lzedges = ledges.map(_.getNodes.map(_.getID).sortBy(_.hashCode))
+  MyLog.myPrintIt(ledges.mkString("\n -"))
   val lnoedges = lallpossibleedges.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
+
   lnoedges.foreach(_.len = 500)
-  MyLog.myPrintIt(lnoedges.mkString("+"))
+  MyLog.myPrintIt(ledges.mkString("\n -"))
+  MyLog.myPrintIt(lnoedges.mkString("\n %"))
 
   def genere: StateMachine = {
     ledges.foreach(_.getDist)
