@@ -29,9 +29,6 @@ case class Tribu private(tribu: Color) {
 }
 
 object Tribu {
-  val Orange = Tribu(Color.orange)
-  val Vert = Tribu(Color.green)
-  val Bleu = Tribu(Color.blue)
-  val Rouge = Tribu(Color.red)
+  val tribus = List(Tribu(Color.orange), Tribu(Color.green), Tribu(Color.blue), Tribu(Color.red))
 }
 

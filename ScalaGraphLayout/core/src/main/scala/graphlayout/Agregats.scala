@@ -12,18 +12,12 @@ class Agregats extends GraphAbstract {
   var nearestNode: ANode = _
   val number = 20
 
-  val lOrangeNodes = (1 to number).toList.map(z => new ANode(Tribu.Orange))
-  val lGreenNodes = (1 to number).toList.map(z => new ANode(Tribu.Vert))
-  val lBlueNodes = (1 to number).toList.map(z => new ANode(Tribu.Bleu))
-  val lRedNodes = (1 to number).toList.map(z => new ANode(Tribu.Rouge))
-  val lnodes = lOrangeNodes ++ lGreenNodes ++ lBlueNodes ++ lRedNodes
+  val ltribus = Tribu.tribus.map( t => (1 to number).toList.map(z => new ANode(t)))
+  val lnodes = ltribus.flatten
   // believe me or not but vals are volatile
   var ledges = List[AEdge]()
-  (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2) ++ lBlueNodes.combinations(2) ++ lRedNodes.combinations(2)).foreach(c => ledges = ledges :+ new AEdge(c.head, c.last))
-  val ledges2 = (lOrangeNodes.combinations(2).map(c => new AEdge(c.head, c.last)) ++ lGreenNodes.combinations(2).map(c => new AEdge(c.head, c.last)))
-  val ledges3 = (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2)).map(c => new AEdge(c.head, c.last))
-  MyLog.myPrintIt(ledges.mkString("\n -1-", "\n -1-", "\n -1-"), ledges2.mkString("\n -2-", "\n -2-", "\n -2-"), ledges3.mkString("\n -3-", "\n -3-", "\n -3-"))
-  MyLog.myPrintIt(ledges.mkString("\n -1-", "\n -1-", "\n -1-"), ledges2.mkString("\n -2-", "\n -2-", "\n -2-"), ledges3.mkString("\n -3-", "\n -3-", "\n -3-"))
+  var ledges4 = ltribus.map(tl => tl.combinations(2)).flatten.foreach(c => ledges = ledges :+ new AEdge(c.head, c.last))
+  MyLog.myPrintIt(ledges.mkString("\n -4-", "\n -4-", "\n -4-"))
   val lallpossibleedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList
   MyLog.myPrintIt(ledges.mkString("\n -"))
   val lzedges = ledges.map(_.getNodes.map(_.getID).sortBy(_.hashCode))
