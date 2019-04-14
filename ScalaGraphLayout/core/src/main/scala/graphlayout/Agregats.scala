@@ -14,10 +14,12 @@ class Agregats extends GraphAbstract {
 
   val lOrangeNodes = (1 to number).toList.map(z => new ANode(Tribu.Orange))
   val lGreenNodes = (1 to number).toList.map(z => new ANode(Tribu.Vert))
-  val lnodes = lOrangeNodes ++ lGreenNodes
+  val lBlueNodes = (1 to number).toList.map(z => new ANode(Tribu.Bleu))
+  val lRedNodes = (1 to number).toList.map(z => new ANode(Tribu.Rouge))
+  val lnodes = lOrangeNodes ++ lGreenNodes ++ lBlueNodes ++ lRedNodes
   // believe me or not but vals are volatile
   var ledges = List[AEdge]()
-  (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2)).foreach(c => ledges = ledges :+ new AEdge(c.head, c.last))
+  (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2) ++ lBlueNodes.combinations(2) ++ lRedNodes.combinations(2)).foreach(c => ledges = ledges :+ new AEdge(c.head, c.last))
   val ledges2 = (lOrangeNodes.combinations(2).map(c => new AEdge(c.head, c.last)) ++ lGreenNodes.combinations(2).map(c => new AEdge(c.head, c.last)))
   val ledges3 = (lOrangeNodes.combinations(2) ++ lGreenNodes.combinations(2)).map(c => new AEdge(c.head, c.last))
   MyLog.myPrintIt(ledges.mkString("\n -1-", "\n -1-", "\n -1-"), ledges2.mkString("\n -2-", "\n -2-", "\n -2-"), ledges3.mkString("\n -3-", "\n -3-", "\n -3-"))
