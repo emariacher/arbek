@@ -11,7 +11,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 20
+  val number = 10
 
   val ltribus = Tribu.tribus.map(t => (1 to number).toList.map(z => new ANode(t)))
   val lnodes = ltribus.flatten
@@ -64,17 +64,15 @@ class Agregats extends GraphAbstract {
   }
 
   def listeAgregats(tribu: Tribu, radius: Int) = {
-    var lzedges = getEdges(tribu)
+    var lzedges = getEdges(tribu).filter(e => e.dist._1 < radius)
     MyLog.myPrintIt(tribu.c.couleur, getNodes(tribu).map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y)).mkString(", "))
     getNodes(tribu).map(n => {
-      //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y))
-      val zorg = getEdges(lzedges, n).partition(e => e.dist._1 < radius)
-      if (!zorg._1.isEmpty) {
-        //MyLog.myPrintIt(zorg._1.mkString(", "))
-        lzedges = lzedges.filter(e => !zorg._2.filter(e2 => e2 == e).isEmpty)
-        //MyLog.myPrintIt(lzedges.mkString("~ "))
+      //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), lzedges.mkString("~ "))
+      val zorg = getEdges(lzedges, n)
+      if (!zorg.isEmpty) {
+        //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), zorg.mkString(", "))
       }
-      zorg._1.map(e => e.getNodes).flatten.distinct.map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y))
+      zorg.map(e => e.getNodes).flatten.distinct.map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y))
     }).filter(!_.isEmpty)
   }
 
