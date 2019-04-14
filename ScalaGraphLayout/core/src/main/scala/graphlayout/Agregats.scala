@@ -65,15 +65,21 @@ class Agregats extends GraphAbstract {
 
   def listeAgregats(tribu: Tribu, radius: Int) = {
     var lzedges = getEdges(tribu).filter(e => e.dist._1 < radius)
+    var lznodes = getNodes(tribu)
     MyLog.myPrintIt(tribu.c.couleur, getNodes(tribu).map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y)).mkString(", "))
     getNodes(tribu).map(n => {
-      //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), lzedges.mkString("~ "))
-      val zorg = getEdges(lzedges, n)
-      if (!zorg.isEmpty) {
-        //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), zorg.mkString(", "))
+      //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), lznodes.mkString("~ "))
+      if (!lznodes.filter(_ == n).isEmpty) {
+        val zorg = getEdges(lzedges, n)
+        if (!zorg.isEmpty) {
+          //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), zorg.mkString(", "))
+          lznodes = lznodes.filter(n2 => zorg.map(e => e.getNodes).flatten.filter(_ == n2).isEmpty)
+        }
+        zorg.map(e => e.getNodes).flatten.distinct.map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y))
+      } else {
+        List[AEdge]()
       }
-      zorg.map(e => e.getNodes).flatten.distinct.map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y))
-    }).filter(!_.isEmpty)
+    }).filter(!_.isEmpty).distinct
   }
 
   def reset: StateMachine = {
