@@ -32,14 +32,50 @@ class Agregats extends GraphAbstract {
     if (nearestNode != null) {
       MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
     }
+    MyLog.myPrintln("*******************************************")
     Tribu.tribus.foreach(t => {
       t.label.text = ", " + dispersion(t)
+      MyLog.myPrintIt(t.c.couleur, listeAgregats(t, 200).mkString("\n  ", "\n  ", "\n"))
     })
     StateMachine.genere
   }
 
+  def getEdges(tribu: Tribu) = ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty)
+
+  def getEdges(l: List[AEdge], node: ANode) = l.filter(e => !e.getNodes.filter(n => node == n).isEmpty)
+
+  def getEdges(node: ANode) = ledges.filter(e => !e.getNodes.filter(n => node == n).isEmpty)
+
+  def getNodes(tribu: Tribu) = lnodes.filter(n => n.tribu == tribu)
+
   def dispersion(tribu: Tribu): Int = {
-    (ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty).map(_.dist._1).sum / number).toInt
+    (getEdges(tribu).map(_.dist._1).sum / number).toInt
+  }
+
+  def centre(tribu: Tribu): (Double, Double) = {
+    var centrex = .0
+    var centrey = .0
+
+    lnodes.filter(n => n.tribu == tribu).map(n => (n.x, n.y)).foreach(p => {
+      centrex += p._1
+      centrey += p._2
+    })
+    (centrex, centrey)
+  }
+
+  def listeAgregats(tribu: Tribu, radius: Int) = {
+    var lzedges = getEdges(tribu)
+    MyLog.myPrintIt(tribu.c.couleur, getNodes(tribu).map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y)).mkString(", "))
+    getNodes(tribu).map(n => {
+      //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y))
+      val zorg = getEdges(lzedges, n).partition(e => e.dist._1 < radius)
+      if (!zorg._1.isEmpty) {
+        //MyLog.myPrintIt(zorg._1.mkString(", "))
+        lzedges = lzedges.filter(e => !zorg._2.filter(e2 => e2 == e).isEmpty)
+        //MyLog.myPrintIt(lzedges.mkString("~ "))
+      }
+      zorg._1.map(e => e.getNodes).flatten.distinct.map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y))
+    }).filter(!_.isEmpty)
   }
 
   def reset: StateMachine = {

@@ -11,7 +11,7 @@ class ANode(val tribu: Tribu) extends Node {
   def getID = hashCode.toString
 
   def paint(g: Graphics2D) {
-    g.setColor(tribu.couleur)
+    g.setColor(tribu.c.color)
     log.foreach(p => g.fillOval(p._1, p._2, 3, 3))
     g.fillOval(x.toInt, y.toInt, 10, 10)
     g.setColor(if (selected) {
@@ -24,18 +24,16 @@ class ANode(val tribu: Tribu) extends Node {
   }
 }
 
-case class Tribu private(tribu: Color) {
-  override def toString = "Tribu_" + tribu.toString
-
+case class Tribu private(c: Couleur) {
   var label = new Label {
     text = "*"
-    foreground = tribu
+    foreground = c.color
   }
-
-  def couleur = tribu
 }
 
 object Tribu {
-  val tribus = List(Tribu(Color.orange), Tribu(Color.green), Tribu(Color.blue), Tribu(Color.red), Tribu(Color.cyan), Tribu(Color.yellow))
+  val tribus = List(new Tribu(new Couleur("orange")), new Tribu(new Couleur("vertFonce")),
+    new Tribu(new Couleur("bleu")), new Tribu(new Couleur("rouge")),
+    new Tribu(new Couleur("bleuClair")))
 }
 

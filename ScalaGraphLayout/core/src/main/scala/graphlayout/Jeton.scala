@@ -414,25 +414,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   override def toString = "{" + couleur + " " + rc + " " + canGo + " " + statut + " v" + ventre + "}"
 }
 
-class Couleur(val couleur: String) {
-  val color = couleur match {
-    case "rouge" => Color.red
-    case "orange" => Color.orange
-    case "vertClair" => Color.green
-    case "bleu" => Color.blue
-    case "bleuClair" => Color.cyan
-    case "pourpre" => Color.magenta
-    case "grisFonce" => Color.darkGray
-    case "grisClair" => Color.lightGray
-    case "violet" => new Color(0x900090)
-    case "marron" => new Color(0xb00050)
-    case "vertFonce" => new Color(0x008000)
-    case _ => throw new Exception("NOGOOD!")
-  }
-
-  override def toString = couleur
-}
-
 class Circular(list: Seq[Frontiere], nextfIn: (Circular) => Frontiere, prevfIn: (Circular) => Frontiere) extends Iterator[Frontiere] {
 
   val elements = new Queue[Frontiere] ++= list
