@@ -8,7 +8,7 @@ abstract class Edge(val from: Node, val to: Node) {
   var diff = .0
   var dist = (.0, .0, .0)
   var attraction = 1
-  var repulsion = 500
+  var repulsion = 200
 
   def getNodesString = List(from.getID, to.getID).sortBy(_.hashCode)
 

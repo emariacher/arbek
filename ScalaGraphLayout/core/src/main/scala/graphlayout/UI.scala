@@ -6,7 +6,7 @@ import kebra.LL._
 import kebra.MyLog
 
 import scala.swing.event._
-import scala.swing.{Label, _}
+import scala.swing.{Label, Slider, _}
 
 class UI(graph: GraphAbstract) extends SimpleSwingApplication {
   val titre = "graphlayout."
@@ -26,18 +26,18 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
     val sliderAttraction = new Slider {
       name = "Attraction"
       majorTickSpacing = 20
-      minorTickSpacing = 1
+      minorTickSpacing = 5
       paintLabels = true
       paintTicks = true
       value = 1
     }
     val sliderRepulsion = new Slider {
       name = "Repulsion"
-      majorTickSpacing = 1000
-      minorTickSpacing = 100
+      majorTickSpacing = 20
+      minorTickSpacing = 5
       paintLabels = true
       paintTicks = true
-      value = 500
+      value = 10
     }
     val buttonStep = new Button {
       text = buttonStepLbl
@@ -57,6 +57,7 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
       }
       contents += new BoxPanel(Orientation.Horizontal) {
         contents += new Label("Attraction")
+        contents += new Label("                              ")
         contents += new Label("Repulsion")
       }
       contents += new BoxPanel(Orientation.Horizontal) {
@@ -72,7 +73,7 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
     }
     listenTo(sliderpp, sliderAttraction, sliderRepulsion, buttonStep)
     reactions += {
-      case ValueChanged(b) => ZePanel.za ! (b.name, sliderpp.value)
+      case ValueChanged(b) => ZePanel.za ! (b.name, b.asInstanceOf[Slider].value)
       case ButtonClicked(b) => ZePanel.za ! b.text
       case _ =>
     }

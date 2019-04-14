@@ -5,6 +5,7 @@ import java.awt.Graphics2D
 import graphlayout.Tableaux.tbx
 import kebra.MyLog
 
+import scala.math.{max, min}
 import scala.util.Random
 
 class GraphLayout extends GraphAbstract {
@@ -82,6 +83,14 @@ class GraphLayout extends GraphAbstract {
         }
       case _ =>
     }
+  }
+
+  def doZeSliderJob(slider: (String, Int)): Unit = {
+    slider_timeout = min(max(1, (slider._2 * slider._2) / 100), 5000)
+    MyLog.myPrintIt(slider._1, slider._2, slider_timeout)
+    ZePanel.zp.pause = (slider._2 == 0)
+    ZePanel.zp.run = !ZePanel.zp.pause
+    ZePanel.zp.step = false
   }
 
   def paint(g: Graphics2D): Unit = {
