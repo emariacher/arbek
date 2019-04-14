@@ -32,7 +32,14 @@ class Agregats extends GraphAbstract {
     if (nearestNode != null) {
       MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
     }
+    Tribu.tribus.foreach(t => {
+      t.label.text = ", " + dispersion(t)
+    })
     StateMachine.genere
+  }
+
+  def dispersion(tribu: Tribu): Int = {
+    (ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty).map(_.dist._1).sum / number).toInt
   }
 
   def reset: StateMachine = {

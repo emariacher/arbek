@@ -50,6 +50,12 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
 
     contents = new BoxPanel(Orientation.Vertical) {
       contents += label
+      contents += new BoxPanel(Orientation.Horizontal) {
+        Tribu.tribus.foreach(t => {
+          contents += t.label
+        })
+      }
+
       contents += ZePanel.zp
       contents += new BoxPanel(Orientation.Horizontal) {
         contents += sliderpp
