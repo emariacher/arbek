@@ -87,15 +87,17 @@ class Agregats extends GraphAbstract {
     slider._1 match {
       case "Repulsion" =>
         if (nearestNode != null) {
-          ledges.filter(e => !e.getNodes.filter(n => n.tribu == nearestNode.tribu).isEmpty).foreach(e => e.repulsion = slider._2)
+          lnoedges.filter(e => !e.getNodes.filter(n => n.tribu == nearestNode.tribu).isEmpty).foreach(e => e.repulsion = slider._2 * 20)
         } else {
-          ledges.foreach(e => e.repulsion = slider._2)
+          MyLog.myPrintIt(slider._1, slider._2, ledges.head.repulsion)
+          lnoedges.foreach(e => e.repulsion = slider._2 * 20)
+          MyLog.myPrintIt(slider._1, slider._2, ledges.head.repulsion)
         }
       case "Attraction" =>
         if (nearestNode != null) {
-          ledges.filter(e => !e.getNodes.filter(n => n.tribu == nearestNode.tribu).isEmpty).foreach(e => e.attraction = slider._2)
+          ledges.filter(e => !e.getNodes.filter(n => n.tribu == nearestNode.tribu).isEmpty).foreach(e => e.attraction = max(slider._2 / 10, 1))
         } else {
-          ledges.foreach(e => e.attraction = slider._2)
+          ledges.foreach(e => e.attraction = max(slider._2 / 10, 1))
         }
       case _ =>
         slider_timeout = min(max(1, (slider._2 * slider._2) / 100), 5000)
