@@ -12,17 +12,11 @@ class Agregats extends GraphAbstract {
   var nearestNode: ANode = _
   val number = 20
 
-  val ltribus = Tribu.tribus.map( t => (1 to number).toList.map(z => new ANode(t)))
+  val ltribus = Tribu.tribus.map(t => (1 to number).toList.map(z => new ANode(t)))
   val lnodes = ltribus.flatten
-  // believe me or not but vals are volatile
-  var ledges = List[AEdge]()
-  var ledges4 = ltribus.map(tl => tl.combinations(2)).flatten.foreach(c => ledges = ledges :+ new AEdge(c.head, c.last))
-  MyLog.myPrintIt(ledges.mkString("\n -4-", "\n -4-", "\n -4-"))
-  val lallpossibleedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList
-  MyLog.myPrintIt(ledges.mkString("\n -"))
+  var ledges = ltribus.map(tl => tl.combinations(2)).flatten.map(c => new AEdge(c.head, c.last))
   val lzedges = ledges.map(_.getNodes.map(_.getID).sortBy(_.hashCode))
-  MyLog.myPrintIt(ledges.mkString("\n -"))
-  val lnoedges = lallpossibleedges.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
+  val lnoedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
 
