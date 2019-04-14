@@ -2,12 +2,11 @@ package graphlayout
 
 import java.io.File
 
-import graphlayout.Tableaux._
 import kebra.LL._
 import kebra.MyLog
 
-import scala.swing._
 import scala.swing.event._
+import scala.swing.{Label, _}
 
 class UI(graph: GraphAbstract) extends SimpleSwingApplication {
   val titre = "graphlayout."
@@ -18,11 +17,27 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
   def top = new MainFrame {
     title = titre
     val sliderpp = new Slider {
-      majorTickSpacing = 100
-      minorTickSpacing = 10
+      majorTickSpacing = 20
+      minorTickSpacing = 5
       paintLabels = true
       paintTicks = true
       value = 10
+    }
+    val sliderAttraction = new Slider {
+      name = "Attraction"
+      majorTickSpacing = 20
+      minorTickSpacing = 1
+      paintLabels = true
+      paintTicks = true
+      value = 1
+    }
+    val sliderRepulsion = new Slider {
+      name = "Repulsion"
+      majorTickSpacing = 1000
+      minorTickSpacing = 100
+      paintLabels = true
+      paintTicks = true
+      value = 500
     }
     val buttonStep = new Button {
       text = buttonStepLbl
@@ -40,6 +55,14 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
         contents += sliderpp
         contents += buttonStep
       }
+      contents += new BoxPanel(Orientation.Horizontal) {
+        contents += new Label("Attraction")
+        contents += new Label("Repulsion")
+      }
+      contents += new BoxPanel(Orientation.Horizontal) {
+        contents += sliderAttraction
+        contents += sliderRepulsion
+      }
       border = Swing.EmptyBorder(30, 30, 10, 30)
       listenTo(mouse.clicks, mouse.moves)
       reactions += {
@@ -47,9 +70,9 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
         case _ => MyLog.myPrintIt("Ici!")
       }
     }
-    listenTo(sliderpp, buttonStep)
+    listenTo(sliderpp, sliderAttraction, sliderRepulsion, buttonStep)
     reactions += {
-      case ValueChanged(b) => ZePanel.za ! ("slider", sliderpp.value)
+      case ValueChanged(b) => ZePanel.za ! (b.name, sliderpp.value)
       case ButtonClicked(b) => ZePanel.za ! b.text
       case _ =>
     }

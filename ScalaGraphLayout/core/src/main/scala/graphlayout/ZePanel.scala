@@ -20,12 +20,8 @@ class ZeActor extends Actor {
     case ReceiveTimeout =>
       if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout", true)
     case slider: (String, Int) =>
-      val slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100), 5000)
-      MyLog.myPrintIt(slider._2, slider_timeout)
-      context.setReceiveTimeout(slider_timeout millisecond)
-      ZePanel.zp.pause = (slider._2 == 0)
-      ZePanel.zp.run = !ZePanel.zp.pause
-      ZePanel.zp.step = false
+      tbx.graph.doZeSliderJob(slider)
+      context.setReceiveTimeout(tbx.graph.slider_timeout millisecond)
     case "step" =>
       LL.l.myErrPrintDln("step")
       ZePanel.zp.repaint

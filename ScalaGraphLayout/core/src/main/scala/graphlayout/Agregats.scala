@@ -5,6 +5,7 @@ import java.awt.Graphics2D
 import graphlayout.Tableaux.tbx
 import kebra.MyLog
 
+import scala.math.{max, min}
 import scala.util.Random
 
 class Agregats extends GraphAbstract {
@@ -25,8 +26,8 @@ class Agregats extends GraphAbstract {
 
   def genere: StateMachine = {
     ledges.foreach(_.getDist)
-    ledges.foreach(_.rassemble(2))
-    lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte(200))
+    ledges.foreach(_.rassemble)
+    lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte)
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     if (nearestNode != null) {
       MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
@@ -78,6 +79,30 @@ class Agregats extends GraphAbstract {
           case _ => //MyLog.myPrintIt(mouse)
         }
       case _ =>
+    }
+  }
+
+  override def doZeSliderJob(slider: (String, Int)): Unit = {
+    MyLog.myPrintIt(slider._1, slider._2)
+    slider._1 match {
+      case "Repulsion" =>
+        if (nearestNode != null) {
+          ledges.filter(e => !e.getNodes.filter(n => n.tribu == nearestNode.tribu).isEmpty).foreach(e => e.repulsion = slider._2)
+        } else {
+          ledges.foreach(e => e.repulsion = slider._2)
+        }
+      case "Attraction" =>
+        if (nearestNode != null) {
+          ledges.filter(e => !e.getNodes.filter(n => n.tribu == nearestNode.tribu).isEmpty).foreach(e => e.attraction = slider._2)
+        } else {
+          ledges.foreach(e => e.attraction = slider._2)
+        }
+      case _ =>
+        slider_timeout = min(max(1, (slider._2 * slider._2) / 100), 5000)
+        MyLog.myPrintIt(slider._1, slider._2, slider_timeout)
+        ZePanel.zp.pause = (slider._2 == 0)
+        ZePanel.zp.run = !ZePanel.zp.pause
+        ZePanel.zp.step = false
     }
   }
 

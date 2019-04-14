@@ -7,6 +7,8 @@ abstract class Edge(val from: Node, val to: Node) {
   var len = .0
   var diff = .0
   var dist = (.0, .0, .0)
+  var attraction = 1
+  var repulsion = 500
 
   def getNodesString = List(from.getID, to.getID).sortBy(_.hashCode)
 
@@ -35,20 +37,20 @@ abstract class Edge(val from: Node, val to: Node) {
     to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
   }
 
-  def rassemble(inc : Int) = { // quand il y a un lien, trouve la bonne distance
+  def rassemble = { // quand il y a un lien, trouve la bonne distance
     //MyLog.myPrintln(toString)
     diff = len - dist._1
-    val dx = (dist._2 * inc)
-    val dy = (dist._3 * inc)
+    val dx = (dist._2 * attraction)
+    val dy = (dist._3 * attraction)
     from.x = from.x - (getSign(diff) * dx)
     from.y = from.y - (getSign(diff) * dy)
     to.x = to.x + (getSign(diff) * dx)
     to.y = to.y + (getSign(diff) * dy)
   }
 
-  def ecarte(limit: Int) = { // quand il n'y a pas de lien, ecarte toi au maximum
+  def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
-    val inc = limit / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
+    val inc = repulsion / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
     val dx = inc
     val dy = inc
     if (from.x < to.x) {
