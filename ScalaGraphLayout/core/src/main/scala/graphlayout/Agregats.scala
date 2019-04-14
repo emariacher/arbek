@@ -37,7 +37,7 @@ class Agregats extends GraphAbstract {
 
   def genere: StateMachine = {
     ledges.foreach(_.getDist)
-    ledges.foreach(_.rassemble)
+    ledges.foreach(_.rassemble(2))
     lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte(200))
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     if (nearestNode != null) {

@@ -35,10 +35,9 @@ abstract class Edge(val from: Node, val to: Node) {
     to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
   }
 
-  def rassemble = { // quand il y a un lien, trouve la bonne distance
+  def rassemble(inc : Int) = { // quand il y a un lien, trouve la bonne distance
     //MyLog.myPrintln(toString)
     diff = len - dist._1
-    val inc = 1
     val dx = (dist._2 * inc)
     val dy = (dist._3 * inc)
     from.x = from.x - (getSign(diff) * dx)
