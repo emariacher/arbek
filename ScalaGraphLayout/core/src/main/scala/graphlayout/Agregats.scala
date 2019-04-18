@@ -34,7 +34,7 @@ class Agregats extends GraphAbstract {
     }
     MyLog.myPrintln("*******************************************")
     Tribu.tribus.foreach(t => {
-      t.label.text = ", " + listeAgregats(t, 200)
+      t.label.text = ", " + listeAgregats(t, 200).mkString("[", "/", "]")
       //MyLog.myPrintIt(t.c.couleur, listeAgregats(t, 200).mkString("\n  ", "\n  ", "\n"))
     })
     StateMachine.genere
@@ -79,7 +79,7 @@ class Agregats extends GraphAbstract {
       } else {
         List[AEdge]()
       }
-    }).filter(!_.isEmpty).distinct.map(_.length).mkString("[", "/", "]")
+    }).filter(!_.isEmpty).distinct.map(_.length)
   }
 
   def reset: StateMachine = {
