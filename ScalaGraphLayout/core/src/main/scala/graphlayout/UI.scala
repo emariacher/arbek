@@ -21,7 +21,7 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
       minorTickSpacing = 5
       paintLabels = true
       paintTicks = true
-      value = 10
+      value = 5
     }
     val sliderAttraction = new Slider {
       name = "Attraction"

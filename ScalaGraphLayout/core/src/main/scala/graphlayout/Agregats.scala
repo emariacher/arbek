@@ -34,8 +34,8 @@ class Agregats extends GraphAbstract {
     }
     MyLog.myPrintln("*******************************************")
     Tribu.tribus.foreach(t => {
-      t.label.text = ", " + dispersion(t)
-      MyLog.myPrintIt(t.c.couleur, listeAgregats(t, 200).mkString("\n  ", "\n  ", "\n"))
+      t.label.text = ", " + listeAgregats(t, 200)
+      //MyLog.myPrintIt(t.c.couleur, listeAgregats(t, 200).mkString("\n  ", "\n  ", "\n"))
     })
     StateMachine.genere
   }
@@ -66,7 +66,7 @@ class Agregats extends GraphAbstract {
   def listeAgregats(tribu: Tribu, radius: Int) = {
     var lzedges = getEdges(tribu).filter(e => e.dist._1 < radius)
     var lznodes = getNodes(tribu)
-    MyLog.myPrintIt(tribu.c.couleur, getNodes(tribu).map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y)).mkString(", "))
+    //MyLog.myPrintln(tribu.c.couleur, getNodes(tribu).length, getNodes(tribu).map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y)).mkString(", "))
     getNodes(tribu).map(n => {
       //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), lznodes.mkString("~ "))
       if (!lznodes.filter(_ == n).isEmpty) {
@@ -79,7 +79,7 @@ class Agregats extends GraphAbstract {
       } else {
         List[AEdge]()
       }
-    }).filter(!_.isEmpty).distinct
+    }).filter(!_.isEmpty).distinct.map(_.length).mkString("[", "/", "]")
   }
 
   def reset: StateMachine = {
