@@ -12,6 +12,9 @@ class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
   val number = 10
+  var compteurDAgregatsFormes = 0
+  var compteurDAgregatsFormesOld = 0
+  var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
 
   val ltribus = Tribu.tribus.map(t => (1 to number).toList.map(z => new ANode(t)))
   val lnodes = ltribus.flatten
@@ -32,11 +35,24 @@ class Agregats extends GraphAbstract {
     if (nearestNode != null) {
       MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
     }
-    MyLog.myPrintln("*******************************************")
+
+    val listeDesAgregats = Tribu.tribus.map(t => listeAgregats(t, 200))
+
     Tribu.tribus.foreach(t => {
       t.label.text = ", " + listeAgregats(t, 200).mkString("[", "/", "]")
       //MyLog.myPrintIt(t.c.couleur, listeAgregats(t, 200).mkString("\n  ", "\n  ", "\n"))
     })
+    MyLog.myPrintIt(listeDesAgregats.map(a => a.mkString("[", "/", "]")).mkString("\n  ", "\n  ", "\n"),
+      listeDesAgregats.count(a => a.length == 1))
+
+    compteurDAgregatsFormes = listeDesAgregats.count(a => a.length == 1)
+    if (compteurDAgregatsFormes == compteurDAgregatsFormesOld) {
+      compteurDeCompteur += 1
+    } else {
+      compteurDeCompteur = 0
+    }
+    compteurDAgregatsFormesOld = compteurDAgregatsFormes
+    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "]"
     StateMachine.genere
   }
 
