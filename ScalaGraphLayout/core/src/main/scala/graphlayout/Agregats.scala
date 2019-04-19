@@ -40,7 +40,7 @@ class Agregats extends GraphAbstract {
     val listeDesAgregats = Tribu.tribus.map(t => (t, listeAgregats(t, 100)))
 
     listeDesAgregats.foreach(a => {
-      a._1.label.text = ", " + a._2.mkString("[", "/", "]")
+      a._1.label.text = ", " + a._2.map(_._2).mkString("[", "/", "]")
     })
 
     compteurDAgregatsFormes = listeDesAgregats.count(a => a._2.length == 1)
@@ -50,9 +50,17 @@ class Agregats extends GraphAbstract {
       compteurDeCompteur = 0
     }
     compteurDAgregatsFormesOld = compteurDAgregatsFormes
-    agitation = listeDesAgregats.filter(a => a._2.length != 1).map(a => getNodes(a._1).map(_.mouvement).sum).sum.toInt
+    agitation = listeDesAgregats.map(lln => {
+      lln._2.map(ln => {
+        ln._1.head.toString.toDouble
+      }).sum
+    }).sum.toInt
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitation
     StateMachine.genere
+  }
+
+  def getAgregatAgitation(ln: List[ANode]): Unit = {
+
   }
 
   def getEdges(tribu: Tribu) = ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty)
@@ -90,11 +98,11 @@ class Agregats extends GraphAbstract {
           //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), zorg.mkString(", "))
           lznodes = lznodes.filter(n2 => zorg.map(e => e.getNodes).flatten.filter(_ == n2).isEmpty)
         }
-        zorg.map(e => e.getNodes).flatten.distinct.map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y))
+        zorg.map(e => e.getNodes).flatten.distinct
       } else {
         List[AEdge]()
       }
-    }).filter(!_.isEmpty).distinct.map(_.length)
+    }).filter(!_.isEmpty).distinct.map(ln => (ln, ln.length))
   }
 
   def reset: StateMachine = {

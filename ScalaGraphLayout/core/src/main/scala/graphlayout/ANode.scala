@@ -10,6 +10,8 @@ class ANode(val tribu: Tribu) extends Node {
 
   def getID = hashCode.toString
 
+  override def toString = "%.2f".format(mouvement)
+
   def paint(g: Graphics2D) {
     g.setColor(tribu.c.color)
     log.foreach(p => g.fillOval(p._1, p._2, 3, 3))
