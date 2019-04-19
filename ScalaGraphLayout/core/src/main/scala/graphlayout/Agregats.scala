@@ -93,14 +93,16 @@ class Agregats extends GraphAbstract {
     getNodes(tribu).map(n => {
       //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), lznodes.mkString("~ "))
       if (!lznodes.filter(_ == n).isEmpty) {
-        val zorg = getEdges(lzedges, n)
+        var zorg = getEdges(lzedges, n)
         if (!zorg.isEmpty) {
           //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), zorg.mkString(", "))
           lznodes = lznodes.filter(n2 => zorg.map(e => e.getNodes).flatten.filter(_ == n2).isEmpty)
+          zorg.map(e => e.getNodes).flatten.distinct
+        } else {
+          List(n)
         }
-        zorg.map(e => e.getNodes).flatten.distinct
       } else {
-        List[AEdge]()
+        List[ANode]()
       }
     }).filter(!_.isEmpty).distinct.map(ln => (ln, ln.length))
   }
