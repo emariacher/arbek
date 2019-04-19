@@ -15,6 +15,7 @@ class Agregats extends GraphAbstract {
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
+  var agitation = 0 // Les noeuds qui ne sont pas dans des agregats de taille egale a number, bougent-ils beaucoup ?
 
   val ltribus = Tribu.tribus.map(t => (1 to number).toList.map(z => new ANode(t)))
   val lnodes = ltribus.flatten
@@ -49,7 +50,8 @@ class Agregats extends GraphAbstract {
       compteurDeCompteur = 0
     }
     compteurDAgregatsFormesOld = compteurDAgregatsFormes
-    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "]"
+    agitation = listeDesAgregats.filter(a => a._2.length != 1).map(a => getNodes(a._1).map(_.mouvement).sum).sum.toInt
+    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitation
     StateMachine.genere
   }
 

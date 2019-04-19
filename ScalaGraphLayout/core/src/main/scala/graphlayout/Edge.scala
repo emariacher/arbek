@@ -35,6 +35,8 @@ abstract class Edge(val from: Node, val to: Node) {
     from.y = from.y - (getSign(diff) * from.updateAverageY(dy))
     to.x = to.x + (getSign(diff) * to.updateAverageX(dx))
     to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
+    to.mouvement = Math.sqrt((dx * dx) + (dy * dy))
+    from.mouvement = Math.sqrt((dx * dx) + (dy * dy))
   }
 
   def rassemble = { // quand il y a un lien, trouve la bonne distance
@@ -46,12 +48,14 @@ abstract class Edge(val from: Node, val to: Node) {
     from.y = from.y - (getSign(diff) * dy)
     to.x = to.x + (getSign(diff) * dx)
     to.y = to.y + (getSign(diff) * dy)
+    to.mouvement = Math.sqrt((dx * dx) + (dy * dy))
+    from.mouvement = Math.sqrt((dx * dx) + (dy * dy))
   }
 
   def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
     val inc = repulsion / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
-    val dx = inc
+  val dx = inc
     val dy = inc
     if (from.x < to.x) {
       from.x = from.x - dx
@@ -68,6 +72,8 @@ abstract class Edge(val from: Node, val to: Node) {
       from.y = from.y + dy
       to.y = to.y - dy
     }
+    to.mouvement = Math.sqrt((dx * dx) + (dy * dy))
+    from.mouvement = Math.sqrt((dx * dx) + (dy * dy))
   }
 
   def paint(g: Graphics2D)

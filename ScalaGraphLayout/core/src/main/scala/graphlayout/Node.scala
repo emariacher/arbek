@@ -7,6 +7,7 @@ abstract class Node {
   var y = .0
 
   var slidingAverageMultiplier = 3
+  var mouvement = .0
   var slidingAverageDeltax = .0
   var slidingAverageDeltay = .0
   var slidingAverageDeltaxOld = .0
