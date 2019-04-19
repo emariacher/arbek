@@ -36,16 +36,13 @@ class Agregats extends GraphAbstract {
       MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
     }
 
-    val listeDesAgregats = Tribu.tribus.map(t => listeAgregats(t, 200))
+    val listeDesAgregats = Tribu.tribus.map(t => (t, listeAgregats(t, 100)))
 
-    Tribu.tribus.foreach(t => {
-      t.label.text = ", " + listeAgregats(t, 200).mkString("[", "/", "]")
-      //MyLog.myPrintIt(t.c.couleur, listeAgregats(t, 200).mkString("\n  ", "\n  ", "\n"))
+    listeDesAgregats.foreach(a => {
+      a._1.label.text = ", " + a._2.mkString("[", "/", "]")
     })
-    MyLog.myPrintIt(listeDesAgregats.map(a => a.mkString("[", "/", "]")).mkString("\n  ", "\n  ", "\n"),
-      listeDesAgregats.count(a => a.length == 1))
 
-    compteurDAgregatsFormes = listeDesAgregats.count(a => a.length == 1)
+    compteurDAgregatsFormes = listeDesAgregats.count(a => a._2.length == 1)
     if (compteurDAgregatsFormes == compteurDAgregatsFormesOld) {
       compteurDeCompteur += 1
     } else {

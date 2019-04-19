@@ -14,7 +14,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class ZeActor extends Actor {
-  context.setReceiveTimeout(1 second)
+  context.setReceiveTimeout(300 milliseconds)
 
   def receive = {
     case ReceiveTimeout =>
