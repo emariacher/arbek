@@ -38,7 +38,7 @@ class Agregats extends GraphAbstract {
   def rassemble: StateMachine = {
     ledges.foreach(_.getDist)
     ledges.foreach(_.rassemble)
-    lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte)
+    lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte) // occupe toi seulement d'ecarter potentiellement les noeuds si ils a moins de 500 l'un de l'autre
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     if (nearestNode != null) {
       MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
@@ -62,9 +62,9 @@ class Agregats extends GraphAbstract {
         ln._1.head.toString.toDouble
       }).sum
     }).sum.toInt
-    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
     val stabilisationRassemble = 200
     agitationMoyenne = ((agitationMoyenne * stabilisationRassemble) + agitation) / (stabilisationRassemble + 1)
+    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
     if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble)) {
       StateMachine.ouestlajaffe
     } else {
@@ -96,17 +96,17 @@ class Agregats extends GraphAbstract {
   }
 
   def listeAgregats(tribu: Tribu, radius: Int) = {
-    var lzedges = getEdges(tribu).filter(e => e.dist._1 < radius)
-    var lznodes = getNodes(tribu)
+    var ltedges = getEdges(tribu).filter(e => e.dist._1 < radius)
+    var ltnodesPasEncoreTraites = getNodes(tribu)
     //MyLog.myPrintln(tribu.c.couleur, getNodes(tribu).length, getNodes(tribu).map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y)).mkString(", "))
     getNodes(tribu).map(n => {
       //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), lznodes.mkString("~ "))
-      if (!lznodes.filter(_ == n).isEmpty) {
-        var zorg = getEdges(lzedges, n)
-        if (!zorg.isEmpty) {
+      if (!ltnodesPasEncoreTraites.filter(_ == n).isEmpty) {
+        var ledgesLinkingZeNode = getEdges(ltedges, n)
+        if (!ledgesLinkingZeNode.isEmpty) {
           //MyLog.myPrintIt(tribu.c.couleur, "[%.0f".format(n.x) + ",%.0f]".format(n.y), zorg.mkString(", "))
-          lznodes = lznodes.filter(n2 => zorg.map(e => e.getNodes).flatten.filter(_ == n2).isEmpty)
-          zorg.map(e => e.getNodes).flatten.distinct
+          ltnodesPasEncoreTraites = ltnodesPasEncoreTraites.filter(n2 => ledgesLinkingZeNode.map(e => e.getNodes).flatten.filter(_ == n2).isEmpty)
+          ledgesLinkingZeNode.map(e => e.getNodes).flatten.distinct
         } else {
           List(n)
         }
