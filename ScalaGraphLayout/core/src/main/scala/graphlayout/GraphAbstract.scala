@@ -7,7 +7,7 @@ abstract class GraphAbstract {
 
   def reset: StateMachine
 
-  def genere: StateMachine
+  def rassemble: StateMachine
 
   def doZeMouseJob(mouse: (String, Int, Int)): Unit
 

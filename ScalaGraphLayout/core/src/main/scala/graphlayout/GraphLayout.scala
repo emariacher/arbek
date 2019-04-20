@@ -31,7 +31,7 @@ class GraphLayout extends GraphAbstract {
 
   MyLog.myPrintIt(sinput, "[", lnodes.mkString("!"), "][", ledges.mkString("/"), "]")
 
-  def genere: StateMachine = {
+  def rassemble: StateMachine = {
     ledges.foreach(_.getDist)
     ledges.foreach(_.opTimize)
     lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte)
@@ -39,7 +39,7 @@ class GraphLayout extends GraphAbstract {
     if (nearestNode != null) {
       MyLog.myPrintln(nearestNode.lbl, nearestNode.slidingAverageDeltax, nearestNode.slidingAverageDeltay)
     }
-    StateMachine.genere
+    StateMachine.rassemble
   }
 
   def reset: StateMachine = {
@@ -50,7 +50,7 @@ class GraphLayout extends GraphAbstract {
       n.y = tbx.rnd.nextDouble() * tbx.zp.hauteur
     })
     ledges.foreach(_.len = 50 + tbx.rnd.nextDouble() * 200)
-    StateMachine.genere
+    StateMachine.rassemble
   }
 
   def doZeMouseJob(mouse: (String, Int, Int)): Unit = {

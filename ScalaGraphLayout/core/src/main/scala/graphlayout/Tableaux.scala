@@ -41,11 +41,11 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   def doZeJob(command: String, graphic: Boolean) {
     //l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
     if (graphic) {
-      zp.lbl.text = "Seed: " + seed + ", CountSteps: " + countGenere
+      zp.lbl.text = "Seed: " + seed + ", CountSteps: " + countGenere + " " + state
     }
     state match {
-      case StateMachine.genere =>
-        state = graph.genere
+      case StateMachine.rassemble =>
+        state = graph.rassemble
         countGenere += 1
       case StateMachine.nettoie => state = nettoie
       case StateMachine.avance =>
@@ -112,7 +112,7 @@ case class StateMachine private(state: String) {
 }
 
 object StateMachine {
-  val genere = StateMachine("genere")
+  val rassemble = StateMachine("rassemble")
   val getJetons = StateMachine("getJetons")
   val nettoie = StateMachine("nettoie")
   val avance = StateMachine("avance")

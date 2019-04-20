@@ -28,7 +28,7 @@ class Agregats extends GraphAbstract {
   MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))
 
-  def genere: StateMachine = {
+  def rassemble: StateMachine = {
     ledges.foreach(_.getDist)
     ledges.foreach(_.rassemble)
     lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte)
@@ -56,7 +56,7 @@ class Agregats extends GraphAbstract {
       }).sum
     }).sum.toInt
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitation
-    StateMachine.genere
+    StateMachine.rassemble
   }
 
   def getAgregatAgitation(ln: List[ANode]): Unit = {
@@ -115,7 +115,7 @@ class Agregats extends GraphAbstract {
       n.y = tbx.rnd.nextDouble() * tbx.zp.hauteur
     })
     ledges.foreach(_.len = 10)
-    StateMachine.genere
+    StateMachine.rassemble
   }
 
   def doZeMouseJob(mouse: (String, Int, Int)): Unit = {
