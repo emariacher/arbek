@@ -42,6 +42,10 @@ class GraphLayout extends GraphAbstract {
     StateMachine.rassemble
   }
 
+  def ouestlajaffe: StateMachine = {
+    StateMachine.ouestlajaffe
+  }
+
   def reset: StateMachine = {
     tbx.seed = tbx.getNextSeed
     tbx.rnd = new Random(tbx.seed)

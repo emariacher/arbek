@@ -15,7 +15,8 @@ class Agregats extends GraphAbstract {
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
-  var agitation = 0 // Les noeuds qui ne sont pas dans des agregats de taille egale a number, bougent-ils beaucoup ?
+  var agitation = Tribu.tribus.length * 5 // Les noeuds qui ne sont pas dans des agregats de taille egale a number, bougent-ils beaucoup ?
+  var agitationMoyenne = Tribu.tribus.length * 5
 
   val ltribus = Tribu.tribus.map(t => (1 to number).toList.map(z => new ANode(t)))
   val lnodes = ltribus.flatten
@@ -25,8 +26,14 @@ class Agregats extends GraphAbstract {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
 
-  MyLog.myPrintIt(ledges.mkString("\n -"))
-  MyLog.myPrintIt(lnoedges.mkString("\n %"))
+  /*MyLog.myPrintIt(ledges.mkString("\n -"))
+  MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
+
+
+  def ouestlajaffe: StateMachine = {
+    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
+    StateMachine.ouestlajaffe
+  }
 
   def rassemble: StateMachine = {
     ledges.foreach(_.getDist)
@@ -55,12 +62,14 @@ class Agregats extends GraphAbstract {
         ln._1.head.toString.toDouble
       }).sum
     }).sum.toInt
-    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitation
-    StateMachine.rassemble
-  }
-
-  def getAgregatAgitation(ln: List[ANode]): Unit = {
-
+    tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
+    val stabilisationRassemble = 200
+    agitationMoyenne = ((agitationMoyenne * stabilisationRassemble) + agitation) / (stabilisationRassemble + 1)
+    if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble)) {
+      StateMachine.ouestlajaffe
+    } else {
+      StateMachine.rassemble
+    }
   }
 
   def getEdges(tribu: Tribu) = ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty)

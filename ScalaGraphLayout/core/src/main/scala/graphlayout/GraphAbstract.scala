@@ -9,6 +9,8 @@ abstract class GraphAbstract {
 
   def rassemble: StateMachine
 
+  def ouestlajaffe: StateMachine
+
   def doZeMouseJob(mouse: (String, Int, Int)): Unit
 
   def doZeSliderJob(slider: (String, Int)): Unit

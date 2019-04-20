@@ -47,7 +47,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       case StateMachine.rassemble =>
         state = graph.rassemble
         countGenere += 1
-      case StateMachine.nettoie => state = nettoie
+      case StateMachine.accumule => state = graph.ouestlajaffe
       case StateMachine.avance =>
         state = avance
         countAvance += 1
@@ -113,8 +113,8 @@ case class StateMachine private(state: String) {
 
 object StateMachine {
   val rassemble = StateMachine("rassemble")
-  val getJetons = StateMachine("getJetons")
-  val nettoie = StateMachine("nettoie")
+  val accumule = StateMachine("accumule")
+  val ouestlajaffe = StateMachine("ouEstLaJaffe")
   val avance = StateMachine("avance")
   val attend = StateMachine("attend")
   val termine = StateMachine("termine")
