@@ -34,16 +34,13 @@ class Agregats extends GraphAbstract {
   def ouestlajaffe: StateMachine = {
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
     if (ljaffe == null) {
-      var cnt = 3 // sinon, ils sont les uns sur les autres
       ljaffe = ltribus.map(ln => {
         val x = ln.map(_.x).sum / ln.length
         val y = ln.map(_.y).sum / ln.length
         val lpe = lePlusEloigne(x, y, tbx.zp.largeur, tbx.zp.hauteur, 40)
         val n = new JNode(ln.head.tribu)
-        n.x = lpe._1 + (cnt * ((tbx.rnd.nextInt(1) * (-2)) + 1))
-        n.y = lpe._2 + (cnt * ((tbx.rnd.nextInt(1) * (-2)) + 1))
-
-        cnt += 3
+        n.x = lpe._1 + ((tbx.rnd.nextInt(30) * (-4)) + 60) // sinon, ils sont les uns sur les autres
+        n.y = lpe._2 + ((tbx.rnd.nextInt(30) * (-4)) + 60) // sinon, ils sont les uns sur les autres
         n
       })
       MyLog.myPrintIt(ljaffe.mkString(","))
@@ -82,7 +79,6 @@ class Agregats extends GraphAbstract {
     agitationMoyenne = ((agitationMoyenne * stabilisationRassemble) + agitation) / (stabilisationRassemble + 1)
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
     if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble) & (listeDesAgregats.count(_._2.length == 1) > 2)) {
-      MyLog.myPrintIt("Ici!")
       StateMachine.ouestlajaffe
     } else {
       if (compteurDeCompteur > stabilisationRassemble) {
