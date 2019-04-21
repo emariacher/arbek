@@ -60,18 +60,4 @@ abstract class Node {
     x = Math.max(Math.min(largeur - border, x), border)
     y = Math.max(Math.min(hauteur - border, y), border)
   }
-
-  def lePlusEloigne(largeur: Int, hauteur: Int, border: Int) = {
-    val lpex = if (largeur - x > x) {
-      largeur
-    } else {
-      0
-    }
-    val lpey = if (hauteur - y > y) {
-      hauteur
-    } else {
-      0
-    }
-    (lpex, lpey)
-  }
 }

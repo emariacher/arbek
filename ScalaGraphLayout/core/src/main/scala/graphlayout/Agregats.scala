@@ -11,7 +11,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 10
+  val number = 20
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
@@ -26,12 +26,28 @@ class Agregats extends GraphAbstract {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
+  var ljaffe: List[JNode] = _
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
 
   def ouestlajaffe: StateMachine = {
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
+    if (ljaffe == null) {
+      var cnt = 3 // sinon, ils sont les uns sur les autres
+      ljaffe = ltribus.map(ln => {
+        val x = ln.map(_.x).sum / ln.length
+        val y = ln.map(_.y).sum / ln.length
+        val lpe = lePlusEloigne(x, y, tbx.zp.largeur, tbx.zp.hauteur, 40)
+        val n = new JNode(ln.head.tribu)
+        n.x = lpe._1 + (cnt * ((tbx.rnd.nextInt(1) * (-2)) + 1))
+        n.y = lpe._2 + (cnt * ((tbx.rnd.nextInt(1) * (-2)) + 1))
+
+        cnt += 3
+        n
+      })
+      MyLog.myPrintIt(ljaffe.mkString(","))
+    }
     StateMachine.ouestlajaffe
   }
 
@@ -62,17 +78,18 @@ class Agregats extends GraphAbstract {
         ln.head.toString.toDouble
       }).sum
     }).sum.toInt
-    val stabilisationRassemble = 200
+    val stabilisationRassemble = 100
     agitationMoyenne = ((agitationMoyenne * stabilisationRassemble) + agitation) / (stabilisationRassemble + 1)
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
     if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble) & (listeDesAgregats.count(_._2.length == 1) > 2)) {
+      MyLog.myPrintIt("Ici!")
       StateMachine.ouestlajaffe
     } else {
       if (compteurDeCompteur > stabilisationRassemble) {
         ledges.foreach(e => e.attraction += 1)
         lnoedges.foreach(e => e.repulsion -= 1)
         compteurDeCompteur = 0
-        MyLog.myPrintD("Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion)
+        MyLog.myPrintD("Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n")
       }
       StateMachine.rassemble
     }
@@ -183,19 +200,25 @@ class Agregats extends GraphAbstract {
     (getEdges(tribu).map(_.dist._1).sum / number).toInt
   }
 
-  def centre(tribu: Tribu): (Double, Double) = {
-    var centrex = .0
-    var centrey = .0
-
-    lnodes.filter(n => n.tribu == tribu).map(n => (n.x, n.y)).foreach(p => {
-      centrex += p._1
-      centrey += p._2
-    })
-    (centrex, centrey)
+  def lePlusEloigne(x: Double, y: Double, largeur: Int, hauteur: Int, border: Int) = {
+    val lpex = if (largeur - x > x) {
+      largeur - border
+    } else {
+      border
+    }
+    val lpey = if (hauteur - y > y) {
+      hauteur - border
+    } else {
+      border
+    }
+    (lpex, lpey)
   }
 
   def paint(g: Graphics2D): Unit = {
     ledges.foreach(_.paint(g))
     lnodes.foreach(_.paint(g))
+    if (ljaffe != null) {
+      ljaffe.foreach(_.paint(g))
+    }
   }
 }
