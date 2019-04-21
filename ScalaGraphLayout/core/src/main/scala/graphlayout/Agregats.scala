@@ -25,10 +25,10 @@ class Agregats extends GraphAbstract {
   val lnoedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
+  var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
-
 
   def ouestlajaffe: StateMachine = {
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
@@ -44,10 +44,10 @@ class Agregats extends GraphAbstract {
       MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
     }
 
-    val listeDesAgregats = Tribu.tribus.map(t => (t, listeAgregats(t, 100)))
+    listeDesAgregats = Tribu.tribus.map(t => (t, listeAgregats(t, 100)))
 
     listeDesAgregats.foreach(a => {
-      a._1.label.text = ", " + a._2.map(_._2).mkString("[", "/", "]")
+      a._1.label.text = ", " + a._2.map(_.length).mkString("[", "/", "]")
     })
 
     compteurDAgregatsFormes = listeDesAgregats.count(a => a._2.length == 1)
@@ -59,43 +59,26 @@ class Agregats extends GraphAbstract {
     compteurDAgregatsFormesOld = compteurDAgregatsFormes
     agitation = listeDesAgregats.map(lln => {
       lln._2.map(ln => {
-        ln._1.head.toString.toDouble
+        ln.head.toString.toDouble
       }).sum
     }).sum.toInt
     val stabilisationRassemble = 200
     agitationMoyenne = ((agitationMoyenne * stabilisationRassemble) + agitation) / (stabilisationRassemble + 1)
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
-    if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble)) {
+    if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble) & (listeDesAgregats.count(_._2.length == 1) > 2)) {
       StateMachine.ouestlajaffe
     } else {
+      if (compteurDeCompteur > stabilisationRassemble) {
+        ledges.foreach(e => e.attraction += 1)
+        lnoedges.foreach(e => e.repulsion -= 1)
+        compteurDeCompteur = 0
+        MyLog.myPrintD("Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion)
+      }
       StateMachine.rassemble
     }
   }
 
-  def getEdges(tribu: Tribu) = ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty)
-
-  def getEdges(l: List[AEdge], node: ANode) = l.filter(e => !e.getNodes.filter(n => node == n).isEmpty)
-
-  def getEdges(node: ANode) = ledges.filter(e => !e.getNodes.filter(n => node == n).isEmpty)
-
-  def getNodes(tribu: Tribu) = lnodes.filter(n => n.tribu == tribu)
-
-  def dispersion(tribu: Tribu): Int = {
-    (getEdges(tribu).map(_.dist._1).sum / number).toInt
-  }
-
-  def centre(tribu: Tribu): (Double, Double) = {
-    var centrex = .0
-    var centrey = .0
-
-    lnodes.filter(n => n.tribu == tribu).map(n => (n.x, n.y)).foreach(p => {
-      centrex += p._1
-      centrey += p._2
-    })
-    (centrex, centrey)
-  }
-
-  def listeAgregats(tribu: Tribu, radius: Int) = {
+  def listeAgregats(tribu: Tribu, radius: Int): List[List[ANode]] = {
     var ltedges = getEdges(tribu).filter(e => e.dist._1 < radius)
     var ltnodesPasEncoreTraites = getNodes(tribu)
     //MyLog.myPrintln(tribu.c.couleur, getNodes(tribu).length, getNodes(tribu).map(n => "[%.0f".format(n.x) + ",%.0f]".format(n.y)).mkString(", "))
@@ -113,7 +96,7 @@ class Agregats extends GraphAbstract {
       } else {
         List[ANode]()
       }
-    }).filter(!_.isEmpty).distinct.map(ln => (ln, ln.length))
+    }).filter(!_.isEmpty).distinct
   }
 
   def reset: StateMachine = {
@@ -170,9 +153,7 @@ class Agregats extends GraphAbstract {
         if (nearestNode != null) {
           lnoedges.filter(e => !e.getNodes.filter(n => n.tribu == nearestNode.tribu).isEmpty).foreach(e => e.repulsion = slider._2 * 20)
         } else {
-          MyLog.myPrintIt(slider._1, slider._2, ledges.head.repulsion)
           lnoedges.foreach(e => e.repulsion = slider._2 * 20)
-          MyLog.myPrintIt(slider._1, slider._2, ledges.head.repulsion)
         }
       case "Attraction" =>
         if (nearestNode != null) {
@@ -187,6 +168,30 @@ class Agregats extends GraphAbstract {
         ZePanel.zp.run = !ZePanel.zp.pause
         ZePanel.zp.step = false
     }
+  }
+
+
+  def getEdges(tribu: Tribu) = ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty)
+
+  def getEdges(l: List[AEdge], node: ANode) = l.filter(e => !e.getNodes.filter(n => node == n).isEmpty)
+
+  def getEdges(node: ANode) = ledges.filter(e => !e.getNodes.filter(n => node == n).isEmpty)
+
+  def getNodes(tribu: Tribu) = lnodes.filter(n => n.tribu == tribu)
+
+  def dispersion(tribu: Tribu): Int = {
+    (getEdges(tribu).map(_.dist._1).sum / number).toInt
+  }
+
+  def centre(tribu: Tribu): (Double, Double) = {
+    var centrex = .0
+    var centrey = .0
+
+    lnodes.filter(n => n.tribu == tribu).map(n => (n.x, n.y)).foreach(p => {
+      centrex += p._1
+      centrey += p._2
+    })
+    (centrex, centrey)
   }
 
   def paint(g: Graphics2D): Unit = {
