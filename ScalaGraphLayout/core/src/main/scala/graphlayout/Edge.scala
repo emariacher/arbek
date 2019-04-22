@@ -49,6 +49,7 @@ class Edge(val from: Node, val to: Node) {
     //MyLog.myPrintln(toString)
     var inc = repulsion / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
     if (inc.isNaN) inc = 1
+    if (inc.isInfinity) inc = 1
     val dx = inc
     val dy = inc
     var fromx = .0

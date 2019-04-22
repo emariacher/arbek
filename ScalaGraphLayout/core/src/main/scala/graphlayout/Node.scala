@@ -2,6 +2,8 @@ package graphlayout
 
 import java.awt.Graphics2D
 
+import kebra.MyLog
+
 import scala.util.Random
 
 class Node(var x: Double, var y: Double) {
@@ -27,6 +29,9 @@ class Node(var x: Double, var y: Double) {
   }
 
   def update(ux: Double, uy: Double, umouvement: Double) {
+    if((ux.isNaN)||(uy.isNaN)) {
+      MyLog.myPrintIt(ux.isNaN,uy.isNaN)
+    }
     x = ux
     y = uy
     mouvement = umouvement
@@ -73,10 +78,10 @@ class Node(var x: Double, var y: Double) {
     y = Math.max(Math.min(hauteur - border, y), border)
   }
 
-  def desempile(lnodes: List[Node], rnd: Random): Unit = {
+  def desempile(lnodes: List[Node], largeur: Int, hauteur: Int, rnd: Random): Unit = {
     while (!lnodes.filter(n => n.hashCode != hashCode & n.x.toInt == x.toInt & n.y.toInt == y.toInt).isEmpty) {
-      x += (rnd.nextInt(lnodes.length) - lnodes.length)
-      y += (rnd.nextInt(lnodes.length) - lnodes.length)
+      x = (rnd.nextInt(largeur))
+      y = (rnd.nextInt(hauteur))
     }
   }
 
