@@ -50,6 +50,7 @@ class Agregats extends GraphAbstract {
       lnoedgesJaffe = ljaffe.combinations(2).toList.map(c => {
         new Edge(c.head, c.last)
       }).filter(_.getDist._1 < 200)
+      lnoedgesJaffe.foreach(_.repulsion = 10)
       MyLog.myPrintIt(ljaffe.mkString("\n  "))
       MyLog.myPrintIt(ledgesJaffe.mkString("\n  "))
       MyLog.myPrintIt(lnoedgesJaffe.mkString("\n  "))
@@ -57,8 +58,8 @@ class Agregats extends GraphAbstract {
     } else {
       ledgesJaffe.foreach(_.getDist)
       ledgesJaffe.foreach(_.opTimize)
-      //lnoedgesJaffe.foreach(_.ecarte)
-      ljaffe.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 60))
+      lnoedgesJaffe.foreach(_.ecarte)
+      ljaffe.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 20))
       MyLog.myPrintIt(ljaffe.mkString("\n  "))
     }
     if (tbx.countGenere > 5) {
@@ -163,10 +164,9 @@ class Agregats extends GraphAbstract {
       e.getDist
     }).head
     val jn = new JNode(tribu)
-    jn.update(coord._1, coord._2, .0)
+    jn.update(coord._1 + tbx.rnd.nextInt(7), coord._2 + tbx.rnd.nextInt(5), .0)
     val e = new Edge(coin, jn)
     e.len = 100
-    e.repulsion = 10
     ledgesJaffe = ledgesJaffe :+ e
     jn
   }
