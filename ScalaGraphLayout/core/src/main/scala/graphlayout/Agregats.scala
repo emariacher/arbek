@@ -27,13 +27,7 @@ class Agregats extends GraphAbstract {
   })
 
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
-  val enHautAGauche = new FixedNode(.0, .0)
-  /*val enBasAGauche = new FixedNode((.0, tbx.zp.hauteur.toDouble))
-  val enHautADroite = new FixedNode(tbx.zp.largeur.toDouble, .0)
-  val enBasAdroite = new FixedNode(tbx.zp.largeur, tbx.zp.hauteur.toDouble)*/
-  var lCoins = List[FixedNode]()
-  lCoins = lCoins :+ enHautAGauche
-  //val lCoins = List[FixedNode](new FixedNode((.0, .0)), new FixedNode(.0, tbx.zp.hauteur), new FixedNode((tbx.zp.largeur, .0)), new FixedNode((tbx.zp.largeur, tbx.zp.hauteur)))
+  var lCoins : List[FixedNode] = _
   var ledgesJaffe = List[Edge]()
   var ljaffe: List[JNode] = _
 
@@ -43,6 +37,7 @@ class Agregats extends GraphAbstract {
   def ouestlajaffe: StateMachine = {
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
     if (ljaffe == null) {
+      lCoins = List(new FixedNode(.0, .0), new FixedNode(.0, tbx.zp.hauteur), new FixedNode(tbx.zp.largeur, .0), new FixedNode(tbx.zp.largeur, tbx.zp.hauteur))
       ljaffe = ltribus.map(ln => {
         val x = ln.map(_.x).sum / ln.length
         val y = ln.map(_.y).sum / ln.length
