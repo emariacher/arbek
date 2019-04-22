@@ -9,6 +9,8 @@ class Edge(val from: Node, val to: Node) {
   var attraction = 1
   var repulsion = 200
 
+  override def toString: String = from.toString + " -> " + to.toString
+
   def getNodesString = List(from.getID, to.getID).sortBy(_.hashCode)
 
   def getSign(d: Double) = {

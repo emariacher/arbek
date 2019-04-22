@@ -15,6 +15,8 @@ class Node(var x: Double, var y: Double) {
 
   def this(coord: (Double, Double)) = this(coord._1, coord._2)
 
+  override def toString: String = "[%.0f,%.0f]".format(x, y)
+
   override def equals(any: Any): Boolean = {
     any match {
       case g: Node => hashCode.equals(g.hashCode)

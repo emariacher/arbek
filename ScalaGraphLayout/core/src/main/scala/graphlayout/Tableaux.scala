@@ -47,7 +47,9 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       case StateMachine.rassemble =>
         state = graph.rassemble
         countGenere += 1
-      case StateMachine.ouestlajaffe => state = graph.ouestlajaffe
+      case StateMachine.ouestlajaffe =>
+        state = graph.ouestlajaffe
+        countGenere += 1
       case StateMachine.avance =>
         state = avance
         countAvance += 1

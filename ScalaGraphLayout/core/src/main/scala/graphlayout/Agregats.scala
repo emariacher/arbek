@@ -27,8 +27,9 @@ class Agregats extends GraphAbstract {
   })
 
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
-  var lCoins : List[FixedNode] = _
+  var lCoins: List[FixedNode] = _
   var ledgesJaffe = List[Edge]()
+  var lnoedgesJaffe = List[Edge]()
   var ljaffe: List[JNode] = _
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
@@ -37,6 +38,8 @@ class Agregats extends GraphAbstract {
   def ouestlajaffe: StateMachine = {
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
     if (ljaffe == null) {
+
+      tbx.countGenere = 0
       lCoins = List(new FixedNode(.0, .0), new FixedNode(.0, tbx.zp.hauteur), new FixedNode(tbx.zp.largeur, .0), new FixedNode(tbx.zp.largeur, tbx.zp.hauteur))
       ljaffe = ltribus.map(ln => {
         val x = ln.map(_.x).sum / ln.length
@@ -44,12 +47,25 @@ class Agregats extends GraphAbstract {
         val lpe = lePlusEloigne(x, y, tbx.zp.largeur, tbx.zp.hauteur, 40)
         lePlusProche(lpe, lCoins, ln.head.tribu)
       })
-      MyLog.myPrintIt(ljaffe.mkString(","))
+      lnoedgesJaffe = ljaffe.combinations(2).toList.map(c => {
+        new Edge(c.head, c.last)
+      }).filter(_.getDist._1 < 200)
+      MyLog.myPrintIt(ljaffe.mkString("\n  "))
+      MyLog.myPrintIt(ledgesJaffe.mkString("\n  "))
+      MyLog.myPrintIt(lnoedgesJaffe.mkString("\n  "))
+      lnodes.foreach(_.log = List[(Int, Int)]())
     } else {
       ledgesJaffe.foreach(_.getDist)
       ledgesJaffe.foreach(_.opTimize)
+      lnoedgesJaffe.foreach(_.ecarte)
+      ljaffe.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 60))
+      MyLog.myPrintIt(ljaffe.mkString("\n  "))
     }
-    StateMachine.ouestlajaffe
+    if (tbx.countGenere > 5) {
+      StateMachine.accumule
+    } else {
+      StateMachine.ouestlajaffe
+    }
   }
 
   def rassemble: StateMachine = {
