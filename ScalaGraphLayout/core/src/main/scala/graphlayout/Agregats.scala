@@ -26,12 +26,15 @@ class Agregats extends GraphAbstract {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
 
-  var Coins = List[FixedNode]()
-  /*val enHautAGauche = new FixedNode(.0, .0)
-  val enBasAGauche = new FixedNode(.0, tbx.zp.hauteur)
-  val enHautADroite = new FixedNode(tbx.zp.largeur, .0)
-  val enBasAdroite = new FixedNode(tbx.zp.largeur, tbx.zp.hauteur)*/
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
+  val enHautAGauche = new FixedNode(.0, .0)
+  /*val enBasAGauche = new FixedNode((.0, tbx.zp.hauteur.toDouble))
+  val enHautADroite = new FixedNode(tbx.zp.largeur.toDouble, .0)
+  val enBasAdroite = new FixedNode(tbx.zp.largeur, tbx.zp.hauteur.toDouble)*/
+  var lCoins = List[FixedNode]()
+  lCoins = lCoins :+ enHautAGauche
+  //val lCoins = List[FixedNode](new FixedNode((.0, .0)), new FixedNode(.0, tbx.zp.hauteur), new FixedNode((tbx.zp.largeur, .0)), new FixedNode((tbx.zp.largeur, tbx.zp.hauteur)))
+  var ledgesJaffe = List[Edge]()
   var ljaffe: List[JNode] = _
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
@@ -44,12 +47,12 @@ class Agregats extends GraphAbstract {
         val x = ln.map(_.x).sum / ln.length
         val y = ln.map(_.y).sum / ln.length
         val lpe = lePlusEloigne(x, y, tbx.zp.largeur, tbx.zp.hauteur, 40)
-        val n = new JNode(ln.head.tribu)
-        n.x = lpe._1 + ((tbx.rnd.nextInt(30) * (-4)) + 60) // sinon, ils sont les uns sur les autres
-        n.y = lpe._2 + ((tbx.rnd.nextInt(30) * (-4)) + 60) // sinon, ils sont les uns sur les autres
-        n
+        lePlusProche(lpe, lCoins, ln.head.tribu)
       })
       MyLog.myPrintIt(ljaffe.mkString(","))
+    } else {
+      ledgesJaffe.foreach(_.getDist)
+      ledgesJaffe.foreach(_.opTimize)
     }
     StateMachine.ouestlajaffe
   }
@@ -140,13 +143,20 @@ class Agregats extends GraphAbstract {
     } else {
       border
     }
-    (lpex, lpey)
+    (lpex.toDouble, lpey.toDouble)
   }
 
-  def lePlusProche(coord : (Double,Double),ln : List[Node], tribu : Tribu) = {
-    ln.sortBy(n => {
-       val e = new Edge(n,new FixedNode(coord))
-    })
+  def lePlusProche(coord: (Double, Double), ln: List[Node], tribu: Tribu) = {
+    val coin = ln.sortBy(n => {
+      val e = new Edge(n, new FixedNode(coord))
+      e.getDist
+    }).head
+    val jn = new JNode(tribu)
+    jn.update(coord._1, coord._2, .0)
+    val e = new Edge(coin, jn)
+    e.len = 50
+    ledgesJaffe = ledgesJaffe :+ e
+    jn
   }
 
   def doZeMouseJob(mouse: (String, Int, Int)): Unit = {
