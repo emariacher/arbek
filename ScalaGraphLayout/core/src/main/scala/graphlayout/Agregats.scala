@@ -52,6 +52,7 @@ class Agregats extends GraphAbstract {
       }).filter(_.getDist._1 < 200)
       lnoedgesJaffe.foreach(_.repulsion = 10)
       MyLog.myPrintIt(ljaffe.mkString("\n  "))
+      ljaffe.foreach(_.desempile(ljaffe ++ lCoins, tbx.rnd))
       MyLog.myPrintIt(ledgesJaffe.mkString("\n  "))
       MyLog.myPrintIt(lnoedgesJaffe.mkString("\n  "))
       lnodes.foreach(_.log = List[(Int, Int)]())
@@ -60,7 +61,7 @@ class Agregats extends GraphAbstract {
       ledgesJaffe.foreach(_.opTimize)
       lnoedgesJaffe.foreach(_.ecarte)
       ljaffe.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 20))
-      MyLog.myPrintIt(ljaffe.mkString("\n  "))
+      //MyLog.myPrintIt(ljaffe.mkString("\n  "))
     }
     if (tbx.countGenere > 5) {
       StateMachine.accumule
@@ -140,6 +141,7 @@ class Agregats extends GraphAbstract {
       n.x = tbx.rnd.nextDouble() * tbx.zp.largeur
       n.y = tbx.rnd.nextDouble() * tbx.zp.hauteur
     })
+    lnodes.foreach(_.desempile(lnodes, tbx.rnd))
     ledges.foreach(_.len = 10)
     StateMachine.rassemble
   }
@@ -164,7 +166,8 @@ class Agregats extends GraphAbstract {
       e.getDist
     }).head
     val jn = new JNode(tribu)
-    jn.update(coord._1 + tbx.rnd.nextInt(7), coord._2 + tbx.rnd.nextInt(5), .0)
+    //jn.update(coord._1, coord._2, .0)
+    jn.update(coord._1 + tbx.rnd.nextInt(ln.length), coord._2 + tbx.rnd.nextInt(ln.length), .0)
     val e = new Edge(coin, jn)
     e.len = 100
     ledgesJaffe = ledgesJaffe :+ e

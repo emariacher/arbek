@@ -2,6 +2,8 @@ package graphlayout
 
 import java.awt.Graphics2D
 
+import scala.util.Random
+
 class Node(var x: Double, var y: Double) {
 
   var slidingAverageMultiplier = 3
@@ -70,4 +72,13 @@ class Node(var x: Double, var y: Double) {
     x = Math.max(Math.min(largeur - border, x), border)
     y = Math.max(Math.min(hauteur - border, y), border)
   }
+
+  def desempile(lnodes: List[Node], rnd: Random): Unit = {
+    while (!lnodes.filter(n => n.hashCode != hashCode & n.x.toInt == x.toInt & n.y.toInt == y.toInt).isEmpty) {
+      x += (rnd.nextInt(lnodes.length) - lnodes.length)
+      y += (rnd.nextInt(lnodes.length) - lnodes.length)
+    }
+  }
+
+
 }
