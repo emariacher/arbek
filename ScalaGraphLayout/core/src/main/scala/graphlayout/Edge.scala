@@ -47,8 +47,9 @@ class Edge(val from: Node, val to: Node) {
 
   def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum
     //MyLog.myPrintln(toString)
-    val inc = repulsion / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
-  val dx = inc
+    var inc = repulsion / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
+    if (inc.isNaN) inc = 1
+    val dx = inc
     val dy = inc
     var fromx = .0
     var fromy = .0
