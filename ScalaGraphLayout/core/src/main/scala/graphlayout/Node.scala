@@ -2,9 +2,7 @@ package graphlayout
 
 import java.awt.Graphics2D
 
-abstract class Node {
-  var x = .0
-  var y = .0
+class Node(var x: Double, var y: Double) {
 
   var slidingAverageMultiplier = 3
   var mouvement = .0
@@ -13,6 +11,10 @@ abstract class Node {
   var slidingAverageDeltaxOld = .0
   var slidingAverageDeltayOld = .0
 
+  def this() = this(.0, .0)
+
+  def this(coord: (Double, Double)) = this(coord._1, coord._2)
+
   override def equals(any: Any): Boolean = {
     any match {
       case g: Node => hashCode.equals(g.hashCode)
@@ -20,7 +22,7 @@ abstract class Node {
     }
   }
 
-  def update(ux: Double, uy: Double, umouvement : Double) {
+  def update(ux: Double, uy: Double, umouvement: Double) {
     x = ux
     y = uy
     mouvement = umouvement
@@ -53,9 +55,9 @@ abstract class Node {
     slidingAverageDeltay
   }
 
-  def getID: String
+  def getID: String = "[%.0f,%.0f]".format(x, y)
 
-  def paint(g: Graphics2D)
+  def paint(g: Graphics2D) = {}
 
   def pasLoin(mx: Int, my: Int): Double = {
     //MyLog.myPrintIt(toString, mx, x, my, y, Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y))))

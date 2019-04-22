@@ -8,11 +8,11 @@ class ANode(val tribu: Tribu) extends Node {
   var selected = false
   var log = List[(Int, Int)]()
 
-  def getID = hashCode.toString
+  override def getID = hashCode.toString
 
   override def toString = "%.2f".format(mouvement)
 
-  def paint(g: Graphics2D) {
+  override def paint(g: Graphics2D) {
     g.setColor(tribu.c.color)
     log.foreach(p => g.fillOval(p._1, p._2, 3, 3))
     g.fillOval(x.toInt, y.toInt, 10, 10)

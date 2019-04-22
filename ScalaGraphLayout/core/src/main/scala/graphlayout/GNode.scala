@@ -7,9 +7,9 @@ class GNode(val lbl: String) extends Node{
 
   override def hashCode: Int = lbl.hashCode
 
-  def getID = lbl
+  override def getID = lbl
 
-  def paint(g: Graphics2D) {
+  override def paint(g: Graphics2D) {
     val w = g.getFontMetrics.stringWidth(lbl) + 10
     val h = g.getFontMetrics.getHeight() + 4
     g.setColor(Color.orange)

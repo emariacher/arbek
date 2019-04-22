@@ -2,8 +2,7 @@ package graphlayout
 
 import java.awt.Graphics2D
 
-
-abstract class Edge(val from: Node, val to: Node) {
+class Edge(val from: Node, val to: Node) {
   var len = .0
   var diff = .0
   var dist = (.0, .0, .0)
@@ -35,7 +34,7 @@ abstract class Edge(val from: Node, val to: Node) {
     to.update(to.x + (getSign(diff) * to.updateAverageX(dx)), to.y + (getSign(diff) * to.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
   }
 
-  def rassemble = { // quand il y a un lien, trouve la bonne distance
+  def rassemble = { // quand il y a un lien, rassemble
     //MyLog.myPrintln(toString)
     diff = len - dist._1
     val dx = (dist._2 * attraction)
@@ -72,5 +71,5 @@ abstract class Edge(val from: Node, val to: Node) {
     to.update(tox, toy, Math.sqrt((dx * dx) + (dy * dy)))
   }
 
-  def paint(g: Graphics2D)
+  def paint(g: Graphics2D) {}
 }

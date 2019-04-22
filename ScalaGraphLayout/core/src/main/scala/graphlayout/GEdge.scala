@@ -8,7 +8,7 @@ class GEdge(from: GNode, to: GNode) extends Edge(from, to) {
 
   def getNodes = List(from, to)
 
-  def paint(g: Graphics2D): Unit = {
+  override def paint(g: Graphics2D): Unit = {
     if (Math.abs(dist._1.toInt - len.toInt) > 40) {
       g.setColor(Color.red)
     } else if (Math.abs(dist._1.toInt - len.toInt) > 10) {

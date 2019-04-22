@@ -25,6 +25,12 @@ class Agregats extends GraphAbstract {
   val lnoedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
+
+  var Coins = List[FixedNode]()
+  /*val enHautAGauche = new FixedNode(.0, .0)
+  val enBasAGauche = new FixedNode(.0, tbx.zp.hauteur)
+  val enHautADroite = new FixedNode(tbx.zp.largeur, .0)
+  val enBasAdroite = new FixedNode(tbx.zp.largeur, tbx.zp.hauteur)*/
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
   var ljaffe: List[JNode] = _
 
@@ -123,6 +129,26 @@ class Agregats extends GraphAbstract {
     StateMachine.rassemble
   }
 
+  def lePlusEloigne(x: Double, y: Double, largeur: Int, hauteur: Int, border: Int) = {
+    val lpex = if (largeur - x > x) {
+      largeur - border
+    } else {
+      border
+    }
+    val lpey = if (hauteur - y > y) {
+      hauteur - border
+    } else {
+      border
+    }
+    (lpex, lpey)
+  }
+
+  def lePlusProche(coord : (Double,Double),ln : List[Node], tribu : Tribu) = {
+    ln.sortBy(n => {
+       val e = new Edge(n,new FixedNode(coord))
+    })
+  }
+
   def doZeMouseJob(mouse: (String, Int, Int)): Unit = {
     //MyLog.myPrintIt(MouseState, mouse)
     MouseState match {
@@ -183,7 +209,6 @@ class Agregats extends GraphAbstract {
     }
   }
 
-
   def getEdges(tribu: Tribu) = ledges.filter(e => !e.getNodes.filter(n => n.tribu == tribu).isEmpty)
 
   def getEdges(l: List[AEdge], node: ANode) = l.filter(e => !e.getNodes.filter(n => node == n).isEmpty)
@@ -194,20 +219,6 @@ class Agregats extends GraphAbstract {
 
   def dispersion(tribu: Tribu): Int = {
     (getEdges(tribu).map(_.dist._1).sum / number).toInt
-  }
-
-  def lePlusEloigne(x: Double, y: Double, largeur: Int, hauteur: Int, border: Int) = {
-    val lpex = if (largeur - x > x) {
-      largeur - border
-    } else {
-      border
-    }
-    val lpey = if (hauteur - y > y) {
-      hauteur - border
-    } else {
-      border
-    }
-    (lpex, lpey)
   }
 
   def paint(g: Graphics2D): Unit = {

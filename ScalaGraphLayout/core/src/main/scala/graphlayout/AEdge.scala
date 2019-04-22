@@ -8,6 +8,4 @@ class AEdge(from: ANode, to: ANode) extends Edge(from, to) {
   override def toString: String = (from.x.toInt, from.y.toInt).toString + "->" + (to.x.toInt, to.y.toInt).toString
 
   def getNodes = List(from, to)
-
-  def paint(g: Graphics2D): Unit = {}
 }
