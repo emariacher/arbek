@@ -31,12 +31,8 @@ abstract class Edge(val from: Node, val to: Node) {
     val inc = Math.abs(diff) / 3
     val dx = (dist._2 * inc)
     val dy = (dist._3 * inc)
-    from.x = from.x - (getSign(diff) * from.updateAverageX(dx))
-    from.y = from.y - (getSign(diff) * from.updateAverageY(dy))
-    to.x = to.x + (getSign(diff) * to.updateAverageX(dx))
-    to.y = to.y + (getSign(diff) * to.updateAverageY(dy))
-    to.mouvement = Math.sqrt((dx * dx) + (dy * dy))
-    from.mouvement = Math.sqrt((dx * dx) + (dy * dy))
+    from.update(from.x - (getSign(diff) * from.updateAverageX(dx)), from.y - (getSign(diff) * from.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
+    to.update(to.x + (getSign(diff) * to.updateAverageX(dx)), to.y + (getSign(diff) * to.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
   }
 
   def rassemble = { // quand il y a un lien, trouve la bonne distance
@@ -44,12 +40,8 @@ abstract class Edge(val from: Node, val to: Node) {
     diff = len - dist._1
     val dx = (dist._2 * attraction)
     val dy = (dist._3 * attraction)
-    from.x = from.x - (getSign(diff) * dx)
-    from.y = from.y - (getSign(diff) * dy)
-    to.x = to.x + (getSign(diff) * dx)
-    to.y = to.y + (getSign(diff) * dy)
-    to.mouvement = Math.sqrt((dx * dx) + (dy * dy))
-    from.mouvement = Math.sqrt((dx * dx) + (dy * dy))
+    from.update(from.x - (getSign(diff) * dx), from.y - (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
+    to.update(to.x + (getSign(diff) * dx), to.y + (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
   }
 
   def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum
@@ -57,23 +49,27 @@ abstract class Edge(val from: Node, val to: Node) {
     val inc = repulsion / dist._1 // plus ils sont loin l'un de l'autre, moins l'effet de repulsion est fort
   val dx = inc
     val dy = inc
+    var fromx = .0
+    var fromy = .0
+    var tox = .0
+    var toy = .0
     if (from.x < to.x) {
-      from.x = from.x - dx
-      to.x = to.x + dx
+      fromx = from.x - dx
+      tox = to.x + dx
     } else {
-      from.x = from.x + dx
-      to.x = to.x - dx
+      fromx = from.x + dx
+      tox = to.x - dx
     }
 
     if (from.y < to.y) {
-      from.y = from.y - dy
-      to.y = to.y + dy
+      fromy = from.y - dy
+      toy = to.y + dy
     } else {
-      from.y = from.y + dy
-      to.y = to.y - dy
+      fromy = from.y + dy
+      toy = to.y - dy
     }
-    to.mouvement = Math.sqrt((dx * dx) + (dy * dy))
-    from.mouvement = Math.sqrt((dx * dx) + (dy * dy))
+    from.update(fromx, fromy, Math.sqrt((dx * dx) + (dy * dy)))
+    to.update(tox, toy, Math.sqrt((dx * dx) + (dy * dy)))
   }
 
   def paint(g: Graphics2D)

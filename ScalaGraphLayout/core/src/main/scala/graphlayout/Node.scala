@@ -20,6 +20,12 @@ abstract class Node {
     }
   }
 
+  def update(ux: Double, uy: Double, umouvement : Double) {
+    x = ux
+    y = uy
+    mouvement = umouvement
+  }
+
   def getSign(d: Double) = {
     if (d > 0) 1
     else -1
