@@ -37,6 +37,12 @@ class Node(var x: Double, var y: Double) {
     mouvement = umouvement
   }
 
+  def dist(n: Node) = {
+    val deltaX = n.x - x
+    val deltaY = n.y - y
+    Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
+  }
+
   def getSign(d: Double) = {
     if (d > 0) 1
     else -1

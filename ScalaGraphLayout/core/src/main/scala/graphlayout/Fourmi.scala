@@ -6,6 +6,7 @@ import scala.util.Random
 
 class Fourmi(val anode: ANode) {
   var direction: Double = .0
+  var jnode: JNode = _
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
@@ -18,6 +19,17 @@ class Fourmi(val anode: ANode) {
     if (anode.remetsDansLeTableau(largeur, hauteur, border)) {
       direction = rnd.nextDouble() * Math.PI * 2
     }
+  }
+
+  def aDetecteLaNourriture(ljaffe: List[JNode], limitDetection: Double) = {
+    jnode = ljaffe.filter(_.tribu == anode.tribu).head
+    (anode.dist(jnode) < limitDetection)
+  }
+
+  def getNodeDirection(n: Node) = {
+    val deltaX = n.x - anode.x
+    val deltaY = n.y - anode.y
+    Math.atan(deltaX / deltaY)
   }
 
   def paint(g: Graphics2D) {

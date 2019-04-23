@@ -44,6 +44,11 @@ class Agregats extends GraphAbstract {
     } else {
       lfourmi.foreach(_.avance)
       lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
+      lfourmi.foreach(f => {
+        if (f.aDetecteLaNourriture(ljaffe, 100)) {
+          f.direction = f.getNodeDirection(f.jnode)
+        }
+      })
     }
     StateMachine.travaille
   }
