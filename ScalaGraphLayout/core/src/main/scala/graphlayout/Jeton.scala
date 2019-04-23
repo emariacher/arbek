@@ -260,7 +260,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     if (next.c < col) lastDirection = ouest
     setRowCol(next)
     cnt += 1
-    StateMachine.avance
+    StateMachine.travaille
   }
 
   def findPossibles: List[RowCol] = {

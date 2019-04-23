@@ -50,8 +50,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       case StateMachine.ouestlajaffe =>
         state = graph.ouestlajaffe
         countGenere += 1
-      case StateMachine.avance =>
-        state = avance
+      case StateMachine.travaille =>
+        state = graph.travaille
         countAvance += 1
       case StateMachine.reset => state = graph.reset
       case StateMachine.termine =>
@@ -66,16 +66,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         state = StateMachine.reset
       case _ =>
     }
-  }
-
-  def nettoie: StateMachine = {
-    lc.foreach(_.nettoie)
-
-    StateMachine.avance
-  }
-
-  def avance: StateMachine = {
-    StateMachine.avance
   }
 
   def getNextSeed: Int = {
@@ -117,7 +107,7 @@ object StateMachine {
   val rassemble = StateMachine("rassemble")
   val accumule = StateMachine("accumule")
   val ouestlajaffe = StateMachine("ouEstLaJaffe")
-  val avance = StateMachine("avance")
+  val travaille = StateMachine("travaille")
   val attend = StateMachine("attend")
   val termine = StateMachine("termine")
   val reset = StateMachine("reset")

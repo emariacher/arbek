@@ -31,9 +31,18 @@ class Agregats extends GraphAbstract {
   var ledgesJaffe = List[Edge]()
   var lnoedgesJaffe = List[Edge]()
   var ljaffe: List[JNode] = _
+  var lfourmi : List[Fourmi] = _
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
+
+  def travaille: StateMachine = {
+    if(lfourmi==null) {
+      lfourmi = lnodes.map(n => new Fourmi(n))
+      MyLog.myPrintIt("Ici")
+    }
+    StateMachine.travaille
+  }
 
   def ouestlajaffe: StateMachine = {
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
@@ -65,7 +74,7 @@ class Agregats extends GraphAbstract {
       //MyLog.myPrintIt(ljaffe.mkString("\n  "))
     }
     if (tbx.countGenere > 100) {
-      StateMachine.accumule
+      StateMachine.travaille
     } else {
       StateMachine.ouestlajaffe
     }
