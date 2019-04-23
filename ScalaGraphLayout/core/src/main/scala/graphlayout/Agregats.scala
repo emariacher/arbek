@@ -262,7 +262,18 @@ class Agregats extends GraphAbstract {
 
   def paint(g: Graphics2D): Unit = {
     ledges.foreach(_.paint(g))
-    lnodes.foreach(_.paint(g))
+
+    tbx.state match {
+      case StateMachine.rassemble =>
+        lnodes.foreach(_.paint(g))
+      case StateMachine.ouestlajaffe =>
+        lnodes.foreach(_.paint(g))
+      case StateMachine.travaille =>
+        if (lfourmi != null) {
+          lfourmi.foreach(_.paint(g))
+        }
+    }
+
     if (ljaffe != null) {
       ljaffe.foreach(_.paint(g))
     }

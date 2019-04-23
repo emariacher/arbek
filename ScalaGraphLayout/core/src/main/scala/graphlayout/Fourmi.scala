@@ -4,11 +4,10 @@ import java.awt.{Color, Graphics2D}
 
 import scala.util.Random
 
-class Fourmi(val anode: ANode) extends ANode(anode.tribu) {
+class Fourmi(val anode: ANode) {
   var direction: Double = .0
-  updateFromNode
 
-  override def toString = "[%.0f,%.0f]".format(x, y) + tribu
+  override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
   def avance = {
     anode.x += Math.sin(direction) * 2
@@ -21,19 +20,16 @@ class Fourmi(val anode: ANode) extends ANode(anode.tribu) {
     }
   }
 
-  def updateFromNode: Unit = {
-    x = anode.x
-    y = anode.y
-  }
-
-  override def paint(g: Graphics2D) {
-    g.setColor(tribu.c.color)
-    g.fillOval(x.toInt, y.toInt, 7, 12)
-    g.setColor(if (selected) {
+  def paint(g: Graphics2D) {
+    g.setColor(anode.tribu.c.color)
+    anode.log.foreach(p => g.fillOval(p._1, p._2, 3, 3))
+    g.fillOval(anode.x.toInt, anode.y.toInt, 7, 12)
+    g.setColor(if (anode.selected) {
       Color.red
     } else {
       Color.black
     })
-    g.drawOval(x.toInt, y.toInt, 7, 12)
+    g.drawOval(anode.x.toInt, anode.y.toInt, 7, 12)
+    anode.log = anode.log :+ (anode.x.toInt, anode.y.toInt)
   }
 }
