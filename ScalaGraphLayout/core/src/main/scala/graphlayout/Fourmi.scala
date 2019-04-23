@@ -3,9 +3,15 @@ package graphlayout
 import java.awt.{Color, Graphics2D}
 
 class Fourmi(val anode: ANode) extends ANode(anode.tribu) {
+  var direction : Double = .0
   updateFromNode
 
   override def toString = "[%.0f,%.0f]".format(x, y) + tribu
+
+  def avance = {
+    anode.x += Math.sin(direction)
+    anode.y += Math.cos(direction)
+  }
 
   def updateFromNode: Unit = {
     x = anode.x

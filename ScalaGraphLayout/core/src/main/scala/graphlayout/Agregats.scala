@@ -31,15 +31,18 @@ class Agregats extends GraphAbstract {
   var ledgesJaffe = List[Edge]()
   var lnoedgesJaffe = List[Edge]()
   var ljaffe: List[JNode] = _
-  var lfourmi : List[Fourmi] = _
+  var lfourmi: List[Fourmi] = _
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
 
   def travaille: StateMachine = {
-    if(lfourmi==null) {
+    if (lfourmi == null) {
       lfourmi = lnodes.map(n => new Fourmi(n))
+      lfourmi.foreach(_.direction = tbx.rnd.nextDouble() * Math.PI * 2)
       MyLog.myPrintIt("Ici")
+    } else {
+      lfourmi.foreach(_.avance)
     }
     StateMachine.travaille
   }
