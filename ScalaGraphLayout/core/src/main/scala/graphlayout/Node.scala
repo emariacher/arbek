@@ -29,8 +29,8 @@ class Node(var x: Double, var y: Double) {
   }
 
   def update(ux: Double, uy: Double, umouvement: Double) {
-    if((ux.isNaN)||(uy.isNaN)) {
-      MyLog.myPrintIt(ux.isNaN,uy.isNaN)
+    if ((ux.isNaN) || (uy.isNaN)) {
+      MyLog.myPrintIt(ux.isNaN, uy.isNaN)
     }
     x = ux
     y = uy
@@ -73,9 +73,14 @@ class Node(var x: Double, var y: Double) {
     Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y)))
   }
 
-  def remetsDansLeTableau(largeur: Int, hauteur: Int, border: Int): Unit = {
-    x = Math.max(Math.min(largeur - border, x), border)
-    y = Math.max(Math.min(hauteur - border, y), border)
+  def remetsDansLeTableau(largeur: Int, hauteur: Int, border: Int): Boolean = {
+    val newx = Math.max(Math.min(largeur - border, x), border)
+    val tx = (newx != x)
+    if (tx) x = newx
+    val newy = Math.max(Math.min(hauteur - border, y), border)
+    val ty = (newy != y)
+    if (ty) y = newy
+    tx || ty
   }
 
   def desempile(lnodes: List[Node], largeur: Int, hauteur: Int, rnd: Random): Unit = {

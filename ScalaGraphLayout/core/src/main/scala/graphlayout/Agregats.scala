@@ -43,6 +43,7 @@ class Agregats extends GraphAbstract {
       MyLog.myPrintIt("Ici")
     } else {
       lfourmi.foreach(_.avance)
+      lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
     }
     StateMachine.travaille
   }
