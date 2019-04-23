@@ -39,16 +39,15 @@ class Agregats extends GraphAbstract {
   def travaille: StateMachine = {
     if (lfourmi == null) {
       lfourmi = lnodes.map(n => new Fourmi(n))
-      lfourmi.foreach(_.direction = tbx.rnd.nextDouble() * Math.PI * 2)
+      lfourmi.foreach(f => {
+        f.direction = tbx.rnd.nextDouble() * Math.PI * 2
+        f.jnode = ljaffe.filter(_.tribu == f.anode.tribu).head
+      })
       MyLog.myPrintIt("Ici")
     } else {
       lfourmi.foreach(_.avance)
       lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
-      lfourmi.foreach(f => {
-        if (f.aDetecteLaNourriture(ljaffe, 100)) {
-          f.direction = f.getNodeDirection(f.jnode)
-        }
-      })
+      lfourmi.foreach(_.doZeJob)
     }
     StateMachine.travaille
   }
@@ -277,6 +276,7 @@ class Agregats extends GraphAbstract {
         if (lfourmi != null) {
           lfourmi.foreach(_.paint(g))
         }
+      case _ =>
     }
 
     if (ljaffe != null) {
