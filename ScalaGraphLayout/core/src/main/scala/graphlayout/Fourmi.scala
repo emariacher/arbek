@@ -2,6 +2,9 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
+import graphlayout.Tableaux.tbx
+import kebra.MyLog
+
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
@@ -9,12 +12,20 @@ class Fourmi(val anode: ANode) {
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
   var log = List[(Int, Int, FourmiStateMachine)]()
+  var index: Int = _
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
   def avance = {
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
+  }
+
+  def rembobine = {
+    anode.x = log.apply(index)._1
+    anode.y = log.apply(index)._2
+    index -= 1
+    index
   }
 
   def redirige(largeur: Int, hauteur: Int, border: Int, rnd: Random): Unit = {
@@ -26,17 +37,26 @@ class Fourmi(val anode: ANode) {
   def doZeJob: Unit = {
     state match {
       case FourmiStateMachine.cherche =>
+        avance
         if (aDetecteLaNourriture(100)) {
           state = FourmiStateMachine.detecte
           direction = getNodeDirection(jnode)
         }
       case FourmiStateMachine.detecte =>
+        avance
         if (aDetecteLaNourriture(20)) {
           state = FourmiStateMachine.retourne
+          index = log.length - 2
         }
       case FourmiStateMachine.retourne =>
-
+        if (rembobine == 1) {
+          state = FourmiStateMachine.cherche
+          direction = tbx.rnd.nextDouble() * Math.PI * 2
+          log = List[(Int, Int, FourmiStateMachine)]()
+        }
+      case _ => MyLog.myErrPrintD(state + "\n")
     }
+    redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
   }
 
   def aDetecteLaNourriture(limitDetection: Double) = (anode.dist(jnode) < limitDetection)
