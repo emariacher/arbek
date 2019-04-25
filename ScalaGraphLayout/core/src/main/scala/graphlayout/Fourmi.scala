@@ -8,6 +8,7 @@ class Fourmi(val anode: ANode) {
   var direction: Double = .0
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
+  var log = List[(Int, Int, FourmiStateMachine)]()
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
@@ -51,21 +52,25 @@ class Fourmi(val anode: ANode) {
     var fourmiL = 0
     var fourmiH = 0
     g.setColor(anode.tribu.c.color)
-    state match {
-      case FourmiStateMachine.cherche =>
-        pheronomeD = 1
-        fourmiL = 7
-        fourmiH = 12
-      case FourmiStateMachine.detecte =>
-        pheronomeD = 1
-        fourmiL = 8
-        fourmiH = 14
-      case FourmiStateMachine.retourne =>
-        pheronomeD = 3
-        fourmiL = 10
-        fourmiH = 16
-    }
-    anode.log.foreach(p => g.fillOval(p._1, p._2, pheronomeD, pheronomeD))
+    log.foreach(p => {
+      p._3 match {
+        case FourmiStateMachine.cherche =>
+          pheronomeD = 2
+          fourmiL = 7
+          fourmiH = 12
+        case FourmiStateMachine.detecte =>
+          pheronomeD = 2
+          fourmiL = 9
+          fourmiH = 14
+        case FourmiStateMachine.retourne =>
+          pheronomeD = 3
+          fourmiL = 10
+          fourmiH = 16
+        case _ =>
+      }
+      g.fillOval(p._1, p._2, pheronomeD, pheronomeD)
+    })
+
     g.fillOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
     g.setColor(if (anode.selected) {
       Color.red
@@ -73,7 +78,7 @@ class Fourmi(val anode: ANode) {
       Color.black
     })
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
-    anode.log = anode.log :+ (anode.x.toInt, anode.y.toInt)
+    log = log :+ (anode.x.toInt, anode.y.toInt, state)
   }
 }
 
