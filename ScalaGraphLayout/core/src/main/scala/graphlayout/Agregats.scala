@@ -30,20 +30,20 @@ class Agregats extends GraphAbstract {
   var lCoins: List[FixedNode] = _
   var ledgesJaffe = List[Edge]()
   var lnoedgesJaffe = List[Edge]()
-  var ljaffe: List[JNode] = _
-  var lfourmi: List[Fourmi] = _
+  var ljaffe = List.empty[JNode]
+  var lfourmi = List.empty[Fourmi]
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
 
   def travaille: StateMachine = {
-    if (lfourmi == null) {
+    if (lfourmi.isEmpty) {
       lfourmi = lnodes.map(n => new Fourmi(n))
       lfourmi.foreach(f => {
         f.direction = tbx.rnd.nextDouble() * Math.PI * 2
         f.jnode = ljaffe.filter(_.tribu == f.anode.tribu).head
       })
-      MyLog.myPrintIt("Ici")
+      //MyLog.myPrintIt("Ici")
     } else {
       lfourmi.foreach(_.avance)
       lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
@@ -52,11 +52,12 @@ class Agregats extends GraphAbstract {
     StateMachine.travaille
   }
 
+  var countOuEstLaJaffe = 0
+
   def ouestlajaffe: StateMachine = {
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
-    if (ljaffe == null) {
-
-      tbx.countGenere = 0
+    if (ljaffe.isEmpty) {
+      countOuEstLaJaffe = tbx.ts
       lCoins = List(new FixedNode(.0, .0), new FixedNode(.0, tbx.zp.hauteur), new FixedNode(tbx.zp.largeur, .0), new FixedNode(tbx.zp.largeur, tbx.zp.hauteur))
       ljaffe = ltribus.map(ln => {
         val x = ln.map(_.x).sum / ln.length
@@ -80,7 +81,7 @@ class Agregats extends GraphAbstract {
       ljaffe.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 20))
       //MyLog.myPrintIt(ljaffe.mkString("\n  "))
     }
-    if (tbx.countGenere > 100) {
+    if (tbx.ts - countOuEstLaJaffe > 100) {
       StateMachine.travaille
     } else {
       StateMachine.ouestlajaffe
@@ -161,7 +162,6 @@ class Agregats extends GraphAbstract {
     lnodes.foreach(_.desempile(lnodes, tbx.zp.largeur, tbx.zp.hauteur, tbx.rnd)) // si jamais
     ledges.foreach(_.len = 10)
     tbx.lc = (0 to tbx.maxRow).map((row: Int) => (0 to tbx.maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
-    MyLog.myPrintIt(tbx.lc.length, tbx.zp.largeur, tbx.maxCol, tbx.zp.hauteur, tbx.maxRow)
     StateMachine.rassemble
   }
 
@@ -230,7 +230,7 @@ class Agregats extends GraphAbstract {
   }
 
   override def doZeSliderJob(slider: (String, Int)): Unit = {
-    MyLog.myPrintIt(slider._1, slider._2)
+    //MyLog.myPrintIt(slider._1, slider._2)
     slider._1 match {
       case "Repulsion" =>
         if (nearestNode != null) {
@@ -246,7 +246,7 @@ class Agregats extends GraphAbstract {
         }
       case _ =>
         slider_timeout = min(max(1, (slider._2 * slider._2) / 100), 5000)
-        MyLog.myPrintIt(slider._1, slider._2, slider_timeout)
+        //MyLog.myPrintIt(slider._1, slider._2, slider_timeout)
         ZePanel.zp.pause = (slider._2 == 0)
         ZePanel.zp.run = !ZePanel.zp.pause
         ZePanel.zp.step = false
@@ -274,14 +274,10 @@ class Agregats extends GraphAbstract {
       case StateMachine.ouestlajaffe =>
         lnodes.foreach(_.paint(g))
       case StateMachine.travaille =>
-        if (lfourmi != null) {
-          lfourmi.foreach(_.paint(g))
-        }
+        lfourmi.foreach(_.paint(g))
       case _ =>
     }
-
-    if (ljaffe != null) {
-      ljaffe.foreach(_.paint(g))
-    }
+    ljaffe.foreach(_.paint(g))
+    tbx.lc.foreach(_.paint(g))
   }
 }

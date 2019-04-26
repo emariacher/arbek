@@ -30,8 +30,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var seedIndex = 0
   var seed: Int = _
   var rnd: Random = _
-  var countGenere = 0
-  var countAvance = 0
+  var ts = 0
   var lc = List.empty[Carre]
 
   var ltimestamps = List[Long](0)
@@ -42,18 +41,15 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   def doZeJob(command: String, graphic: Boolean) {
     //l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
     if (graphic) {
-      zp.lbl.text = "Seed: " + seed + ", CountSteps: " + countGenere + " " + state
+      zp.lbl.text = "Seed: " + seed + ", TimeStamp: " + ts + " " + state
     }
     state match {
       case StateMachine.rassemble =>
         state = graph.rassemble
-        countGenere += 1
       case StateMachine.ouestlajaffe =>
         state = graph.ouestlajaffe
-        countGenere += 1
       case StateMachine.travaille =>
         state = graph.travaille
-        countAvance += 1
       case StateMachine.reset => state = graph.reset
       case StateMachine.termine =>
         if (graphic) {
@@ -67,6 +63,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         state = StateMachine.reset
       case _ =>
     }
+    ts += 1
   }
 
   def getNextSeed: Int = {

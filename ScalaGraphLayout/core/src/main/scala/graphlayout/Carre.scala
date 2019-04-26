@@ -7,7 +7,12 @@ import graphlayout.Tableaux._
 
 import scala.collection.immutable.List
 
+object Carre {
+  val valeurDepot = 1000.0
+}
+
 class Carre(val rc: RowCol) {
+
   def this(r: Int, c: Int) = this(new RowCol(r, c))
 
   val row = rc.r
@@ -18,6 +23,17 @@ class Carre(val rc: RowCol) {
   var frontieresColor = scala.collection.mutable.Map.empty[Frontiere, Color]
   var depotPheromones = List[Depot]()
   var bloque = false
+
+
+  def updatePheronome(tribu: Tribu) = {
+    var z = depotPheromones.find(_.tribu == tribu)
+    if (z.isEmpty) {
+      depotPheromones = depotPheromones :+ new Depot(tbx.ts, Carre.valeurDepot, tribu)
+    } else {
+      z.head.update(tbx.ts, Carre.valeurDepot)
+    }
+  }
+
 
   def autre(maFrontiere: Frontiere) = {
     maFrontiere.f match {
@@ -38,6 +54,7 @@ class Carre(val rc: RowCol) {
         }
       }
     }
+
     nettoie2(nord)
     nettoie2(sud)
     nettoie2(ouest)
@@ -64,7 +81,7 @@ class Carre(val rc: RowCol) {
           if (!c.hasFrontiere(autreFrontiere)) {
             if (rnd > prolongeThreshold) {
               frontieres = frontieres :+ maFrontiere
-              if(frontieresColor.size==0) {
+              if (frontieresColor.size == 0) {
                 frontieresColor(maFrontiere) = new Color(tbx.rnd.nextInt(0xC0ffff))
               } else {
                 frontieresColor(maFrontiere) = frontieresColor.toList.map(_._2).head
@@ -75,6 +92,7 @@ class Carre(val rc: RowCol) {
         case _ =>
       }
     }
+
     decide(nord)
     decide(sud)
     decide(ouest)
@@ -86,6 +104,7 @@ class Carre(val rc: RowCol) {
   def rnd = tbx.rnd.nextInt(1000)
 
   def hasFrontiere(f: Frontiere) = !frontieres.filter(_ == f).isEmpty
+
   def getFrontiere(f: Frontiere) = frontieres.filter(_ == f).head
 
   def notFull = {
@@ -119,10 +138,13 @@ class Carre(val rc: RowCol) {
     val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
     val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
 
-    g.setColor(Color.black)
-    if (bloque) {
-      g.fillOval(x-3, y-3, 6, 6)
-    }
+    var radius = 8
+    depotPheromones.sortBy(_.ph).reverse.foreach(d => {
+      g.setColor(d.tribu.c.color)
+      g.fillOval(x - 3, y - 3, radius, radius)
+      radius -= 1
+    })
+
   }
 
   def getLeftCarre: Option[Carre] = {
@@ -141,13 +163,16 @@ class Carre(val rc: RowCol) {
     tbx.lc.find((cf: Carre) => cf.row == row + 1 && cf.col == col)
   }
 
-  def calculePheromone(fourmiliere: Fourmiliere): Int = {0
+  def calculePheromone(fourmiliere: Fourmiliere): Int = {
+    0
   }
 
-  def calculePheromoneDesEnnemies(fourmiliere: Fourmiliere): Int = {0
+  def calculePheromoneDesEnnemies(fourmiliere: Fourmiliere): Int = {
+    0
   }
 
-  def calculePheromoneAll: Int = {0
+  def calculePheromoneAll: Int = {
+    0
   }
 }
 

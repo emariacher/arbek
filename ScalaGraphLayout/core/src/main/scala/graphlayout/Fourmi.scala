@@ -5,6 +5,7 @@ import java.awt.{Color, Graphics2D}
 import graphlayout.Tableaux.tbx
 import kebra.MyLog
 
+import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
@@ -24,6 +25,8 @@ class Fourmi(val anode: ANode) {
   def rembobine = {
     anode.x = log.apply(index)._1
     anode.y = log.apply(index)._2
+    val c = tbx.findCarre(anode.x.toInt, anode.y.toInt)
+    c.updatePheronome(anode.tribu)
     index -= 1
     index
   }
