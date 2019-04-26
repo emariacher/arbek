@@ -7,9 +7,6 @@ import graphlayout.Tableaux._
 
 import scala.collection.immutable.List
 
-object Carre {
-  val valeurDepot = 1000.0
-}
 
 class Carre(val rc: RowCol) {
 
@@ -28,9 +25,9 @@ class Carre(val rc: RowCol) {
   def updatePheronome(tribu: Tribu) = {
     var z = depotPheromones.find(_.tribu == tribu)
     if (z.isEmpty) {
-      depotPheromones = depotPheromones :+ new Depot(tbx.ts, Carre.valeurDepot, tribu)
+      depotPheromones = depotPheromones :+ new Depot(tbx.ts, Depot.valeurDepot, tribu)
     } else {
-      z.head.update(tbx.ts, Carre.valeurDepot)
+      z.head.update(tbx.ts, Depot.valeurDepot)
     }
   }
 
@@ -138,11 +135,11 @@ class Carre(val rc: RowCol) {
     val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
     val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
 
-    var radius = 8
     depotPheromones.sortBy(_.ph).reverse.foreach(d => {
       g.setColor(d.tribu.c.color)
+      val radius = (d.ph / Depot.display).toInt
       g.fillOval(x - 3, y - 3, radius, radius)
-      radius -= 1
+      d.evapore
     })
 
   }
