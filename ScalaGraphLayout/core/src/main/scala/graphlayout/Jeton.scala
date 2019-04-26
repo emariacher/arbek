@@ -31,7 +31,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   var traces = List.empty[RowCol]
   var next = new RowCol(888, 888)
   var lastDirection = nord
-  var statut = Pheromone.CHERCHE
   var ventre = ventrePlein
   var indexBlocage = ventrePlein
   var aRameneDeLaJaffe = 0
@@ -45,7 +44,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   def init = {
     setRowCol(fourmiliere.nid)
     visible = true
-    statut = Pheromone.CHERCHE
     ventre = ventrePlein
   }
 
@@ -132,13 +130,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
         }
       })
       g.setColor(Color.black)
-      statut match {
-        case Pheromone.CHERCHE => g.drawString(" ", xg, yg)
-        case Pheromone.RAMENE => g.drawString("+", xg, yg)
-        case Pheromone.REVIENS => g.drawString("-", xg, yg)
-        case Pheromone.MORT => g.drawString("*", xg, yg)
-        case _ => g.drawString("?", xg, yg)
-      }
     }
   }
 
@@ -154,106 +145,8 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   def firstStep: RowCol
 
   def pasFini: StateMachine = {
-    //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
-    statut match {
-      case Pheromone.REVIENS =>
-        //l.myPrintln(MyLog.tag(1) + " " + toString + " " + lastDirection)
-        next = firstStep
-        /* verifie si tu ne retombes pas sur tes traces avant le blocage
-        l.myPrintDln(toString + " " + indexBlocage)
-        var possibles = findPossibles.filter(z => {
-          traces.find(!_.equals(z)).isEmpty
-        }).filter(z => {
-          traces.indexOf(z) < indexBlocage
-        }).sortBy(z => {
-          traces.indexOf(z)
-        })
-        if (!possibles.isEmpty) {
-          l.myErrPrintDln(toString + " " + indexBlocage + " " + possibles)
-          next = possibles.head
-        }*/
-        var possibles = findPossibles.filter(z => {
-          traces.find(_.equals(z)).isEmpty
-        }).filter(z => {
-          tbx.findCarre(z).calculePheromone(fourmiliere) > 0
-        }).sortWith((a, b) => {
-          tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
-        })
-
-        if (!possibles.isEmpty) {
-          //l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
-          next = new RowCol(possibles.head.r, possibles.head.c)
-          // mais ne reviens pas sur tes pas!
-          //l.myPrintln(MyLog.func(1) + "traces: " + traces)
-          if (!traces.isEmpty) {
-            //l.myPrintln(MyLog.func(1) + "traceslast: " + traces.last+" nextr "+next)
-            if (next.equals(traces.last)) {
-              possibles = possibles.drop(1)
-              //l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
-              if (!possibles.isEmpty) {
-                next = new RowCol(possibles.head.r, possibles.head.c)
-              }
-            }
-          }
-        }
-
-        // sinon continue à essayer de sortir de revenir au centre du graphlayout
-        sortDugraphlayout
-        //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
-        traces = traces :+ rc
-      case Pheromone.CHERCHE =>
-        next = firstStep
-        // essaye de trouver une case qui a le maximum de Pheromones[RAMENE]
-        var possibles = role match {
-          case Role.OUVRIERE => findPossibles.filter(z => {
-            traces.find(_.equals(z)).isEmpty
-          }).filter(z => {
-            tbx.findCarre(z).calculePheromone(fourmiliere) > 0
-          }).sortWith((a, b) => {
-            tbx.findCarre(a).calculePheromone(fourmiliere) > tbx.findCarre(b).calculePheromone(fourmiliere)
-          })
-          case Role.SOLDAT => findPossibles.filter(z => {
-            traces.find(_.equals(z)).isEmpty
-          }).filter(z => {
-            tbx.findCarre(z).calculePheromoneDesEnnemies(fourmiliere) > 0
-          }).sortWith((a, b) => {
-            tbx.findCarre(a).calculePheromoneDesEnnemies(fourmiliere) > tbx.findCarre(b).calculePheromoneDesEnnemies(fourmiliere)
-          })
-        }
-
-
-        if (!possibles.isEmpty) {
-          //l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
-          next = new RowCol(possibles.head.r, possibles.head.c)
-          // mais ne reviens pas sur tes pas!
-          //l.myPrintln(MyLog.func(1) + "traces: " + traces)
-          if (!traces.isEmpty) {
-            //l.myPrintln(MyLog.func(1) + "traceslast: " + traces.last+" nextr "+next)
-            if (next.equals(traces.last)) {
-              possibles = possibles.drop(1)
-              //l.myPrintln(MyLog.func(1) + "possibles: " + possibles)
-              if (!possibles.isEmpty) {
-                next = new RowCol(possibles.head.r, possibles.head.c)
-              }
-            }
-          }
-        }
-
-        // sinon continue à essayer de sortir du graphlayout
-        sortDugraphlayout
-        traces = traces :+ rc
-      case Pheromone.RAMENE => retourne
-      case Pheromone.MORT => {
-        // rien
-      }
-      case _ => LL.l.myErrPrintDln(toString)
-    }
 
     //l.myPrintln(MyLog.tag(1) + couleur + " " + lastDirection + " " + rc + " -> " + next + " [" + traces.length + "] " + traces)
-    if (next.r == 888) {
-      //l.myErrPrintDln(toString + " -> " + next + " [" + traces.length + "] " + traces)
-      statut = Pheromone.MORT
-    }
     if (next.r > row) lastDirection = sud
     if (next.r < row) lastDirection = nord
     if (next.c > col) lastDirection = est
@@ -326,26 +219,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
 
   def retourne() {
 
-    if (traces.isEmpty || next.equals(fourmiliere.nid)) {
-      // tu es revenue au nid
-      statut = Pheromone.CHERCHE;
-      traces = List.empty[RowCol]
-      /*} else {
-        // retourne sur tes pas
-        next = traces.last
-        traces = traces.dropRight(1)
-      }*/
-    } else if (canGo2(traces.last)) {
-      // retourne sur tes pas
-      next = traces.last
-      traces = traces.dropRight(1)
-    } else {
-      // bah maintenant il y a une barriere qui a ete creee
-      LL.l.myErrPrintDln("[" + toString + "] n'arrive plus a revenir sur ses traces car une barriere vient d etre installee ")
-      statut = Pheromone.REVIENS
-      indexBlocage = traces.length - 1
-      //traces = List.empty[RowCol]
-    }
   }
 
   def raccourci() {
@@ -354,7 +227,6 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     // liste les possibles et prends celui qui raccourci plus le chemin de retour
     if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
-      statut = Pheromone.CHERCHE;
       traces = List.empty[RowCol]
     } else {
 
@@ -411,7 +283,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     next
   }
 
-  override def toString = "{" + couleur + " " + rc + " " + canGo + " " + statut + " v" + ventre + "}"
+  override def toString = "{" + couleur + " " + rc + " " + canGo +  " v" + ventre + "}"
 }
 
 class Circular(list: Seq[Frontiere], nextfIn: (Circular) => Frontiere, prevfIn: (Circular) => Frontiere) extends Iterator[Frontiere] {

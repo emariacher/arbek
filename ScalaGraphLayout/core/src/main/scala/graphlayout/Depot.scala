@@ -3,12 +3,4 @@
  */
 package graphlayout
 
-class Depot(val ts: Int, val ph: Pheromone.Value, val fourmi: Jeton) {
-
-}
-
-object Pheromone extends Enumeration {
-  type Pheronome = Value
-  val CHERCHE, RAMENE, REVIENS, MORT = Value
-  Pheromone.values foreach println
-}
+class Depot(val ts: Int, var ph: Double, val tribu: Tribu) {}

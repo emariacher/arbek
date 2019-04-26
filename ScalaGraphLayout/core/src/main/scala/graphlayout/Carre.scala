@@ -141,16 +141,13 @@ class Carre(val rc: RowCol) {
     tbx.lc.find((cf: Carre) => cf.row == row + 1 && cf.col == col)
   }
 
-  def calculePheromone(fourmiliere: Fourmiliere): Int = {
-    depotPheromones.filter(_.ph == Pheromone.RAMENE).filter(_.fourmi.fourmiliere == fourmiliere).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
+  def calculePheromone(fourmiliere: Fourmiliere): Int = {0
   }
 
-  def calculePheromoneDesEnnemies(fourmiliere: Fourmiliere): Int = {
-    depotPheromones.filter(_.fourmi.fourmiliere != fourmiliere).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
+  def calculePheromoneDesEnnemies(fourmiliere: Fourmiliere): Int = {0
   }
 
-  def calculePheromoneAll: Int = {
-    depotPheromones.filter(_.ph == Pheromone.RAMENE).map(d => 400.0 / (1.0 + (tbx.countAvance - d.ts))).sum.toInt
+  def calculePheromoneAll: Int = {0
   }
 }
 

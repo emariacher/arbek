@@ -46,7 +46,7 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
       text = labelLbl
     }
 
-    ZePanel.newZePanel(label, new RowCol(40, 40), graph)
+    ZePanel.newZePanel(label, new RowCol(70, 100), graph)
 
     contents = new BoxPanel(Orientation.Vertical) {
       contents += label

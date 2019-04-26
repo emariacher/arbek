@@ -68,11 +68,10 @@ class Agregats extends GraphAbstract {
         new Edge(c.head, c.last)
       }).filter(_.getDist._1 < 200)
       lnoedgesJaffe.foreach(_.repulsion = 10)
-      MyLog.myPrintIt(ljaffe.mkString("\n  "))
       ljaffe.foreach(_.desempile(ljaffe ++ lCoins, tbx.zp.largeur, tbx.zp.hauteur, tbx.rnd))
-      MyLog.myPrintIt(ljaffe.mkString("\n  "))
+      /*MyLog.myPrintIt(ljaffe.mkString("\n  "))
       MyLog.myPrintIt(ledgesJaffe.mkString("\n  "))
-      MyLog.myPrintIt(lnoedgesJaffe.mkString("\n  "))
+      MyLog.myPrintIt(lnoedgesJaffe.mkString("\n  "))*/
       lnodes.foreach(_.log = List[(Int, Int)]())
     } else {
       ledgesJaffe.foreach(_.getDist)
@@ -161,6 +160,8 @@ class Agregats extends GraphAbstract {
     })
     lnodes.foreach(_.desempile(lnodes, tbx.zp.largeur, tbx.zp.hauteur, tbx.rnd)) // si jamais
     ledges.foreach(_.len = 10)
+    tbx.lc = (0 to tbx.maxRow).map((row: Int) => (0 to tbx.maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
+    MyLog.myPrintIt(tbx.lc.length, tbx.zp.largeur, tbx.maxCol, tbx.zp.hauteur, tbx.maxRow)
     StateMachine.rassemble
   }
 

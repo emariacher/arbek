@@ -3,6 +3,7 @@ package graphlayout
 import java.awt.Dimension
 import java.util.Calendar
 
+import graphlayout.Tableaux.tbx
 import kebra._
 
 import scala.collection.immutable._
@@ -89,7 +90,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     state = StateMachine.termine
   }
 
-  def findCarre(rc2f: RowCol) = {
+  def findCarre(rc2f: RowCol): Carre = {
     var z = lc.find(_.rc.equals(rc2f))
     if (z.isEmpty) {
       null
@@ -97,6 +98,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       z.head
     }
   }
+
+  def findCarre(x: Int, y: Int): Carre = findCarre(new RowCol(y * maxRow / tbx.zp.hauteur, x * maxCol / tbx.zp.largeur))
 }
 
 case class StateMachine private(state: String) {
