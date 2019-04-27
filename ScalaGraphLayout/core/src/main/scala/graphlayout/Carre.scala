@@ -25,6 +25,7 @@ class Carre(val rc: RowCol) {
       z.head.update(Depot.valeurDepot)
     }
   }
+
   def getDepot(tribu: Tribu) = depotPheromones.filter(_.tribu == tribu).map(_.ph).sum
 
   def isLast() = (rc == tbx.maxRC.moinsUn)
@@ -44,7 +45,7 @@ class Carre(val rc: RowCol) {
 
   }
 
-  def getVoisins = List(getLeftCarre, getUpCarre, getRightCarre, getDownCarre).filter(_ != null)
+  def getVoisins = tbx.lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
 
   def getLeftCarre = tbx.lc.find((cf: Carre) => cf.row == row && cf.col == col - 1).getOrElse(null)
 
