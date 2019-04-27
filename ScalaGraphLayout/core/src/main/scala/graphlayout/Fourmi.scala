@@ -20,10 +20,10 @@ class Fourmi(val anode: ANode) {
   def avance = {
     val zeCarre = tbx.findCarre(anode.x, anode.y)
     val z = zeCarre.getVoisins.filter(c => {
-      !c.depotPheromones.filter(_.tribu == anode.tribu).map(_.ph).isEmpty
-    }).sortBy(c => c.depotPheromones.filter(_.tribu == anode.tribu).map(_.ph).head).reverse
+      !c.getDepot(anode.tribu).isEmpty
+    }).sortBy(c => c.getDepot(anode.tribu).head).reverse
     if (!z.isEmpty) {
-      MyLog.myPrintln(toString, zeCarre, z.map(c => (c, c.depotPheromones.filter(_.tribu == anode.tribu).map( p => "%.1f".format(p.ph)).head)).mkString(","))
+      MyLog.myPrintln(toString, zeCarre, z.map(c => (c, c.getDepot(anode.tribu).map("%.1f".format(_)).head)).mkString(","))
       // en repartant de la fourmiliere, la fourmi a X% de chance d'aller dans une case a pheronomes et 100-X% de change a aller dans une direction au hasard
       // sinon la fourmi a X% de chance d'aller dans une case a pheronomes , 99-X% de change a aller dans la meme direction et 1% de change a aller dans une direction au hasard
       // plus il y a de pheronomes, plus X est grand

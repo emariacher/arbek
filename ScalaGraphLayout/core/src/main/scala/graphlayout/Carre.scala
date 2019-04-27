@@ -25,6 +25,7 @@ class Carre(val rc: RowCol) {
       z.head.update(Depot.valeurDepot)
     }
   }
+  def getDepot(tribu: Tribu) = depotPheromones.filter(_.tribu == tribu).map(_.ph)
 
   def isLast() = (rc == tbx.maxRC.moinsUn)
 
