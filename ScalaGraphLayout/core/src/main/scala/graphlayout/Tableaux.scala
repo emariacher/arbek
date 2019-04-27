@@ -51,16 +51,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       case StateMachine.travaille =>
         state = graph.travaille
       case StateMachine.reset => state = graph.reset
-      case StateMachine.termine =>
-        if (graphic) {
-          LL.l.myErrPrintln(zp.lbl.text)
-          if ((command == "step") || zp.run) {
-            zp.pause = false
-          } else {
-            zp.pause = true
-          }
-        }
-        state = StateMachine.reset
       case _ =>
     }
     ts += 1
@@ -75,17 +65,6 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     }
   }
 
-
-  def updateStats(lrjc: List[(Couleur, Int, Int)]) {
-    if (seedIndex > 10) {
-      val ljArrivesAuBout = lrjc.filter((ci: (Couleur, Int, Int)) => ci._2 > 0 && ci._2 < zp.limit).map((ci: (Couleur, Int, Int)) => ci._2)
-      val timeStamp = MyLog.timeStamp(t_startAkka)
-      val perf = ljArrivesAuBout.sum * 1000.0 / (nrOfWorkers * ljArrivesAuBout.length * timeStamp)
-      mperfs(nrOfWorkers) = mperfs.getOrElse(nrOfWorkers, List.empty[Double]) :+ perf
-      //L.myPrintDln(seedIndex+" "+mperfs)
-    }
-    state = StateMachine.termine
-  }
 
   def findCarre(rc2f: RowCol): Carre = {
     var z = lc.find(_.rc.equals(rc2f))
@@ -105,11 +84,8 @@ case class StateMachine private(state: String) {
 
 object StateMachine {
   val rassemble = StateMachine("rassemble")
-  val accumule = StateMachine("accumule")
   val ouestlajaffe = StateMachine("ouEstLaJaffe")
   val travaille = StateMachine("travaille")
-  val attend = StateMachine("attend")
-  val termine = StateMachine("termine")
   val reset = StateMachine("reset")
 }
 
@@ -122,9 +98,3 @@ object MouseStateMachine {
   val reset = MouseStateMachine("reset")
 }
 
-object CompareStatJeton extends Ordering[(Couleur, StatJeton)] {
-  def compare(x: (Couleur, StatJeton), y: (Couleur, StatJeton)): Int = {
-    if (y._2.max == x._2.max) y._2.min - x._2.min
-    else y._2.max - x._2.max
-  }
-}
