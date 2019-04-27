@@ -45,6 +45,8 @@ class Carre(val rc: RowCol) {
 
   }
 
+  def getVoisins(lc: List[Carre]) = lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
+
   def getVoisins = tbx.lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
 
   def getLeftCarre = tbx.lc.find((cf: Carre) => cf.row == row && cf.col == col - 1).getOrElse(null)

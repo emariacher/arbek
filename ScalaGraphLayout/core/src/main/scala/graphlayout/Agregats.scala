@@ -45,9 +45,10 @@ class Agregats extends GraphAbstract {
       })
       //MyLog.myPrintIt("Ici")
     } else {
-      lfourmi.foreach(_.avance)
+      val listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
+      lfourmi.foreach(_.avance(listCarreAvecPheronome))
       lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
-      lfourmi.foreach(_.doZeJob)
+      lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
     }
     StateMachine.travaille
   }

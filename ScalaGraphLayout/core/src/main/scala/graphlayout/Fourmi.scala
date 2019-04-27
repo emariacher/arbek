@@ -17,10 +17,10 @@ class Fourmi(val anode: ANode) {
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
-  def avance = {
+  def avance(lc: List[Carre]) = {
     val zeCarre = tbx.findCarre(anode.x, anode.y)
-    val z = zeCarre.getVoisins.filter(c => {
-      c.getDepot(anode.tribu)!= .0
+    val z = zeCarre.getVoisins(lc).filter(c => {
+      c.getDepot(anode.tribu) != .0
     }).sortBy(c => c.getDepot(anode.tribu)).reverse
     if (!z.isEmpty) {
       MyLog.myPrintln(toString, zeCarre, z.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)))).mkString(","))
@@ -49,16 +49,16 @@ class Fourmi(val anode: ANode) {
     }
   }
 
-  def doZeJob: Unit = {
+  def doZeJob(lc: List[Carre]): Unit = {
     state match {
       case FourmiStateMachine.cherche =>
-        avance
+        avance(lc)
         if (aDetecteLaNourriture(100)) {
           state = FourmiStateMachine.detecte
           direction = getNodeDirection(jnode)
         }
       case FourmiStateMachine.detecte =>
-        avance
+        avance(lc)
         if (aDetecteLaNourriture(20)) {
           state = FourmiStateMachine.retourne
           index = log.length - 2
