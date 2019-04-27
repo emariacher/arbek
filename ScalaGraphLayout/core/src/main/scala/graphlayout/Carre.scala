@@ -20,9 +20,9 @@ class Carre(val rc: RowCol) {
   def updatePheronome(tribu: Tribu) = {
     var z = depotPheromones.find(_.tribu == tribu)
     if (z.isEmpty) {
-      depotPheromones = depotPheromones :+ new Depot(tbx.ts, Depot.valeurDepot, tribu)
+      depotPheromones = depotPheromones :+ new Depot(Depot.valeurDepot, tribu)
     } else {
-      z.head.update(tbx.ts, Depot.valeurDepot)
+      z.head.update(Depot.valeurDepot)
     }
   }
 

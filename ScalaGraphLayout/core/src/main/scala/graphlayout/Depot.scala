@@ -9,14 +9,8 @@ object Depot {
   val evaporation = 0.99
 }
 
-class Depot(var ts: Int, var ph: Double, val tribu: Tribu) {
-  def update(ts2: Int, d: Double) = {
-    ts = ts2
-    ph += d
-  }
+class Depot(var ph: Double, val tribu: Tribu) {
+  def update(d: Double) = ph += d
 
-  def evapore = {
-    ph = ph * Depot.evaporation
-  }
-
- }
+  def evapore = ph = ph * Depot.evaporation
+}
