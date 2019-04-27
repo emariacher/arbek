@@ -1,6 +1,6 @@
 package graphlayout
 
-import java.awt.{Color, Graphics2D}
+import java.awt.Graphics2D
 
 import graphlayout.Tableaux._
 
@@ -15,6 +15,7 @@ class Carre(val rc: RowCol) {
   val col = rc.c
   var depotPheromones = List[Depot]()
 
+  override def toString: String = "{r" + row + ", c" + col + "}"
 
   def updatePheronome(tribu: Tribu) = {
     var z = depotPheromones.find(_.tribu == tribu)
@@ -42,20 +43,15 @@ class Carre(val rc: RowCol) {
 
   }
 
-  def getLeftCarre: Option[Carre] = {
-    tbx.lc.find((cf: Carre) => cf.row == row && cf.col == col - 1)
-  }
+  def getVoisins = List(getLeftCarre, getUpCarre, getRightCarre, getDownCarre).filter(_ != null)
 
-  def getUpCarre: Option[Carre] = {
-    tbx.lc.find((cf: Carre) => cf.row == row - 1 && cf.col == col)
-  }
+  def getLeftCarre = tbx.lc.find((cf: Carre) => cf.row == row && cf.col == col - 1).getOrElse(null)
 
-  def getRightCarre: Option[Carre] = {
-    tbx.lc.find((cf: Carre) => cf.row == row && cf.col == col + 1)
-  }
+  def getUpCarre = tbx.lc.find((cf: Carre) => cf.row == row - 1 && cf.col == col).getOrElse(null)
 
-  def getDownCarre: Option[Carre] = {
-    tbx.lc.find((cf: Carre) => cf.row == row + 1 && cf.col == col)
-  }
+  def getRightCarre = tbx.lc.find((cf: Carre) => cf.row == row && cf.col == col + 1).getOrElse(null)
+
+  def getDownCarre = tbx.lc.find((cf: Carre) => cf.row == row + 1 && cf.col == col).getOrElse(null)
+
 }
 

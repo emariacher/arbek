@@ -75,7 +75,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     }
   }
 
-  def findCarre(x: Int, y: Int): Carre = findCarre(new RowCol(y * maxRow / tbx.zp.hauteur, x * maxCol / tbx.zp.largeur))
+  def findCarre(x: Double, y: Double): Carre = findCarre(new RowCol(y.toInt * maxRow / tbx.zp.hauteur, x.toInt * maxCol / tbx.zp.largeur))
 }
 
 case class StateMachine private(state: String) {

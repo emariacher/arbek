@@ -18,6 +18,14 @@ class Fourmi(val anode: ANode) {
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
   def avance = {
+    val zeCarre = tbx.findCarre(anode.x, anode.y)
+    val z = zeCarre.getVoisins.filter(c => {
+      !c.depotPheromones.filter(_.tribu == anode.tribu).map(_.ph).isEmpty
+    })
+    if (!z.isEmpty) {
+      MyLog.myPrintIt(toString, zeCarre,z.mkString(","))
+    }
+
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
   }
@@ -25,7 +33,7 @@ class Fourmi(val anode: ANode) {
   def rembobine = {
     anode.x = log.apply(index)._1
     anode.y = log.apply(index)._2
-    val c = tbx.findCarre(anode.x.toInt, anode.y.toInt)
+    val c = tbx.findCarre(anode.x, anode.y)
     c.updatePheronome(anode.tribu)
     index -= 1
     index
