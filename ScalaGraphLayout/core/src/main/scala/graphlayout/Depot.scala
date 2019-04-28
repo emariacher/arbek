@@ -7,6 +7,7 @@ object Depot {
   val valeurDepot = 100.0
   val display = valeurDepot / 10
   val evaporation = 0.99
+  val evapore = 2 // plus assez de pheronome pour que ca ait un effet
 }
 
 class Depot(var ph: Double, val tribu: Tribu) {

@@ -30,6 +30,8 @@ class Carre(val rc: RowCol) {
 
   def isLast() = (rc == tbx.maxRC.moinsUn)
 
+  def evapore = depotPheromones.sortBy(_.ph).reverse.take(2).filter(_.ph > Depot.evapore).foreach(_.evapore) // les 3eme pheronome sont gommes par les 2 premiers
+
   def paint(g: Graphics2D) {
     val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
     val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
@@ -40,9 +42,7 @@ class Carre(val rc: RowCol) {
       g.setColor(d.tribu.c.color)
       val radius = (d.ph / Depot.display).toInt
       g.fillOval(x - 3, y - 3, radius, radius)
-      d.evapore
     })
-
   }
 
   def getVoisins(lc: List[Carre]) = lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)

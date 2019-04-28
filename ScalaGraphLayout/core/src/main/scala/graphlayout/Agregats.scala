@@ -32,6 +32,7 @@ class Agregats extends GraphAbstract {
   var lnoedgesJaffe = List[Edge]()
   var ljaffe = List.empty[JNode]
   var lfourmi = List.empty[Fourmi]
+  var listCarreAvecPheronome = List[Carre]()
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
@@ -45,11 +46,14 @@ class Agregats extends GraphAbstract {
       })
       //MyLog.myPrintIt("Ici")
     } else {
-      val listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
+      listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
       lfourmi.foreach(_.avance(listCarreAvecPheronome))
       lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
       lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
+      listCarreAvecPheronome.foreach(_.evapore)
     }
+    listeDesAgregats.foreach(a => a._1.label.text = ", %.0f".format(listCarreAvecPheronome.map(_.depotPheromones.filter(_.tribu == a._1).map(_.ph).sum).sum))
+
     StateMachine.travaille
   }
 
