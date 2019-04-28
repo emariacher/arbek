@@ -7,6 +7,7 @@ import kebra.MyLog
 
 import scala.collection.immutable.List
 import scala.util.Random
+import org.apache.commons.math3.distribution
 
 class Fourmi(val anode: ANode) {
   var direction: Double = .0

@@ -41,6 +41,7 @@ object MyBuild extends Build {
               "com.novocode" % "junit-interface" % "0.11" % "test",
               "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
               "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
+              "org.apache.commons" % "commons-math3" % "3.5",
               "org.scala-lang.modules" %% "scala-swing" % "2.1.0")
           case Some((2, scalaMajor)) if scalaMajor >= 12 =>
             libraryDependencies.value ++ Seq(
@@ -52,6 +53,7 @@ object MyBuild extends Build {
               "com.lihaoyi" %% "sourcecode" % "0.1.4",
               "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
               "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
+              "org.apache.commons" % "commons-math3" % "3.5",
               "org.scala-lang.modules" %% "scala-swing" % "2.1.0")
           // in Scala 2.10, quasiquotes are provided by macro paradise
           case Some((2, 10)) =>
