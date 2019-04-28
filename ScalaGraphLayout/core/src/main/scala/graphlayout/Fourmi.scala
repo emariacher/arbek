@@ -7,7 +7,7 @@ import kebra.MyLog
 
 import scala.collection.immutable.List
 import scala.util.Random
-import org.apache.commons.math3.distribution
+import org.apache.commons.math3.distribution.NormalDistribution
 
 class Fourmi(val anode: ANode) {
   var direction: Double = .0
@@ -15,6 +15,7 @@ class Fourmi(val anode: ANode) {
   var state: FourmiStateMachine = FourmiStateMachine.cherche
   var log = List[(Int, Int, FourmiStateMachine)]()
   var index: Int = _
+  var estRevenueALaFourmiliere = 0
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
@@ -31,6 +32,7 @@ class Fourmi(val anode: ANode) {
       // si il y a plusieurs case a pheronomes, la probabilite de la fourmi de choisr l'une ou l'autre case est proportionnelle aux pheronomes contenues
     }
 
+    direction = new NormalDistribution(direction, 0.1).sample
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
   }
@@ -69,6 +71,7 @@ class Fourmi(val anode: ANode) {
           state = FourmiStateMachine.cherche
           direction = tbx.rnd.nextDouble() * Math.PI * 2
           log = List[(Int, Int, FourmiStateMachine)]()
+          estRevenueALaFourmiliere += 1
         }
       case _ => MyLog.myErrPrintD(state + "\n")
     }

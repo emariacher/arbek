@@ -52,7 +52,10 @@ class Agregats extends GraphAbstract {
       lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
       listCarreAvecPheronome.foreach(_.evapore)
     }
-    listeDesAgregats.foreach(a => a._1.label.text = ", %.0f".format(listCarreAvecPheronome.map(_.depotPheromones.filter(_.tribu == a._1).map(_.ph).sum).sum))
+    listeDesAgregats.foreach(a => a._1.label.text = ", %d/%.0f".format(
+      lfourmi.filter(_.anode.tribu == a._1).map(_.estRevenueALaFourmiliere).sum,
+      listCarreAvecPheronome.map(_.depotPheromones.filter(_.tribu == a._1).map(_.ph).sum).sum)
+    )
 
     StateMachine.travaille
   }
