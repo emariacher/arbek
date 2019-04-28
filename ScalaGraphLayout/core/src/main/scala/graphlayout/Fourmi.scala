@@ -4,10 +4,10 @@ import java.awt.{Color, Graphics2D}
 
 import graphlayout.Tableaux.tbx
 import kebra.MyLog
+import org.apache.commons.math3.distribution.NormalDistribution
 
 import scala.collection.immutable.List
 import scala.util.Random
-import org.apache.commons.math3.distribution.NormalDistribution
 
 class Fourmi(val anode: ANode) {
   var direction: Double = .0
@@ -16,22 +16,39 @@ class Fourmi(val anode: ANode) {
   var log = List[(Int, Int, FourmiStateMachine)]()
   var index: Int = _
   var estRevenueALaFourmiliere = 0
+  val distributionAvecPheromone = new NormalDistribution()
+  val influenceDesPheromones = .05
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
   def avance(lc: List[Carre]) = {
     val zeCarre = tbx.findCarre(anode.x, anode.y)
-    val z = zeCarre.getVoisins(lc).filter(c => {
+    val lVoisinsAvecDepot = zeCarre.getVoisins(lc).filter(c => {
       c.getDepot(anode.tribu) != .0
     }).sortBy(c => c.getDepot(anode.tribu)).reverse
-    if (!z.isEmpty) {
-      MyLog.myPrintln(toString, zeCarre, z.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)))).mkString(","))
-      // en repartant de la fourmiliere, la fourmi a X% de chance d'aller dans une case a pheronomes et 100-X% de change a aller dans une direction au hasard
-      // sinon la fourmi a X% de chance d'aller dans une case a pheronomes , 99-X% de change a aller dans la meme direction et 1% de change a aller dans une direction au hasard
-      // plus il y a de pheronomes, plus X est grand
-      // si il y a plusieurs case a pheronomes, la probabilite de la fourmi de choisr l'une ou l'autre case est proportionnelle aux pheronomes contenues
+    if (!lVoisinsAvecDepot.isEmpty) {
+      distributionAvecPheromone.sample match {
+        case d if (d > influenceDesPheromones) || (d > (1 - influenceDesPheromones)) =>
+          val recalibreDe0A1 = (d - influenceDesPheromones) / 1 - (influenceDesPheromones * 2)
+          var somme = .0
+          val lvoisinsAvecDepotIncremente = lVoisinsAvecDepot.map(c => {
+            somme += c.getDepot(anode.tribu)
+            somme
+          })
+          if (lVoisinsAvecDepot.length > 2) {
+            MyLog.myPrintln(toString, zeCarre, lVoisinsAvecDepot.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)))).mkString(","))
+            MyLog.myPrintln(lvoisinsAvecDepotIncremente.map("%.1f".format(_)).mkString(","))
+          }
+          avanceAPeupresCommeAvant
+        case _ => // default
+          avanceAPeupresCommeAvant
+      }
+    } else {
+      avanceAPeupresCommeAvant
     }
+  }
 
+  def avanceAPeupresCommeAvant = {
     direction = new NormalDistribution(direction, 0.1).sample
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
