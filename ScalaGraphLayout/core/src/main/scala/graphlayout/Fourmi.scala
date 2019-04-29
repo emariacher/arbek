@@ -18,6 +18,8 @@ class Fourmi(val anode: ANode) {
   var estRevenueALaFourmiliere = 0
   val distributionAvecPheromone = new UniformRealDistribution()
   val influenceDesPheromones = .05
+  var oldDistance = .0
+  var trigger = true
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
 
@@ -46,8 +48,9 @@ class Fourmi(val anode: ANode) {
       }
 
       if (ltake.length > 1) {
-        val caseAPheromoneChoisie = lVoisinsAvecDepot.apply(ltake.length - 1)
-        avanceAPeuPresCommeAvant
+        val XYCaseAPheromoneChoisie = lVoisinsAvecDepot.apply(ltake.length - 1).getXY
+        anode.x = XYCaseAPheromoneChoisie._1
+        anode.y = XYCaseAPheromoneChoisie._2
       } else {
         avanceAPeuPresCommeAvant
       }
@@ -60,6 +63,11 @@ class Fourmi(val anode: ANode) {
     direction = new NormalDistribution(direction, 0.1).sample
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
+  }
+
+  def avanceDroit = {
+    anode.x += Math.sin(direction) * 3
+    anode.y += Math.cos(direction) * 3
   }
 
   def rembobine = {
@@ -83,10 +91,17 @@ class Fourmi(val anode: ANode) {
         avance(lc)
         if (aDetecteLaNourriture(100)) {
           state = FourmiStateMachine.detecte
-          direction = getNodeDirection(jnode)
+          MyLog.myPrintIt(anode.tribu)
+          oldDistance = anode.dist(jnode)
+          direction = anode.getNodeDirection(jnode)
         }
       case FourmiStateMachine.detecte =>
-        avance(lc)
+        avanceDroit
+        val newDistance = anode.dist(jnode)
+        if ((newDistance > oldDistance) && (trigger)) {
+          MyLog.myErrPrintln(anode.tribu, "od %.0f, nd %.0f, d %.02f, ".format(oldDistance, newDistance, direction))
+          trigger = false
+        }
         if (aDetecteLaNourriture(20)) {
           state = FourmiStateMachine.retourne
           index = log.length - 2
@@ -105,12 +120,6 @@ class Fourmi(val anode: ANode) {
 
   def aDetecteLaNourriture(limitDetection: Double) = (anode.dist(jnode) < limitDetection)
 
-  def getNodeDirection(n: Node) = {
-    val deltaX = n.x - anode.x
-    val deltaY = n.y - anode.y
-    Math.atan(deltaX / deltaY)
-  }
-
   def paint(g: Graphics2D) {
     var pheronomeD = 0
     var fourmiL = 0
@@ -123,11 +132,11 @@ class Fourmi(val anode: ANode) {
           fourmiL = 7
           fourmiH = 12
         case FourmiStateMachine.detecte =>
-          pheronomeD = 2
+          pheronomeD = 4
           fourmiL = 9
           fourmiH = 14
         case FourmiStateMachine.retourne =>
-          pheronomeD = 3
+          pheronomeD = 0
           fourmiL = 10
           fourmiH = 16
         case _ =>

@@ -47,9 +47,8 @@ class Agregats extends GraphAbstract {
       //MyLog.myPrintIt("Ici")
     } else {
       listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
-      lfourmi.foreach(_.avance(listCarreAvecPheronome))
-      lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
       lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
+      lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
       listCarreAvecPheronome.foreach(_.evapore)
     }
     listeDesAgregats.foreach(a => a._1.label.text = ", %d/%.0f".format(
@@ -120,7 +119,7 @@ class Agregats extends GraphAbstract {
     compteurDAgregatsFormesOld = compteurDAgregatsFormes
     agitation = listeDesAgregats.map(lln => {
       lln._2.map(ln => {
-        ln.head.toString.toDouble
+        ln.head.toString2.toDouble
       }).sum
     }).sum.toInt
     val stabilisationRassemble = 100

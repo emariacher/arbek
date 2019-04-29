@@ -1,19 +1,16 @@
 package kebra
 
 import java.io._
-import java.text.SimpleDateFormat
+import java.text.{ParsePosition, SimpleDateFormat}
 import java.util.{Calendar, Date}
-
-import scala.language.experimental.macros
-import scala.reflect.macros.{Context, whitebox}
-import scala.concurrent.duration.Duration
-import scala.concurrent.duration._
-import java.text.ParsePosition
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import sourcecode.Enclosing
 
+import scala.concurrent.duration.Duration
+import scala.language.experimental.macros
 import scala.language.reflectiveCalls
+import scala.reflect.macros.whitebox
 
 trait LogFunction {
   def log(msg: Any, srcFile: String = "", srcLine: Int = -1, srcClass: String = ""): Unit
@@ -209,6 +206,21 @@ object MyLog {
   }
 
   def myPrintIt(linecode: Any): Any = macro mprintx
+
+  def meprintx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
+    import c.universe._
+    val namez = enclosingImpl(c).toString.split("\"").tail.head.split(" ").head
+    var f1rst = linecode.tree.productIterator.toList.head.toString
+    if (f1rst.indexOf("scala") == 0) {
+      f1rst = ""
+    } else {
+      f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
+    }
+    val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
+    reify(myErrPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
+  }
+
+  def myErrPrintIt(linecode: Any): Any = macro meprintx
 
 
   //***********https://github.com/lihaoyi/sourcecode******

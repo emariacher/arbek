@@ -10,7 +10,7 @@ class ANode(val tribu: Tribu) extends Node {
 
   override def getID = hashCode.toString
 
-  override def toString = "%.2f".format(mouvement)
+  def toString2 = "%.2f".format(mouvement)
 
   override def paint(g: Graphics2D) {
     g.setColor(tribu.c.color)
