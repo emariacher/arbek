@@ -26,6 +26,14 @@ class Carre(val rc: RowCol) {
     }
   }
 
+  def getXY = {
+    val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
+    val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
+    val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
+    val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
+    (x, y)
+  }
+
   def getDepot(tribu: Tribu) = depotPheromones.filter(_.tribu == tribu).map(_.ph).sum
 
   def isLast() = (rc == tbx.maxRC.moinsUn)
@@ -33,15 +41,11 @@ class Carre(val rc: RowCol) {
   def evapore = depotPheromones.sortBy(_.ph).reverse.take(2).filter(_.ph > Depot.evapore).foreach(_.evapore) // les 3eme pheronome sont gommes par les 2 premiers
 
   def paint(g: Graphics2D) {
-    val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
-    val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
-    val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
-    val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
-
+    val xy = getXY
     depotPheromones.sortBy(_.ph).reverse.foreach(d => {
       g.setColor(d.tribu.c.color)
       val radius = (d.ph / Depot.display).toInt
-      g.fillOval(x - 3, y - 3, radius, radius)
+      g.fillOval(xy._1 - 3, xy._2 - 3, radius, radius)
     })
   }
 

@@ -4,7 +4,7 @@ import java.awt.{Color, Graphics2D}
 
 import graphlayout.Tableaux.tbx
 import kebra.MyLog
-import org.apache.commons.math3.distribution.NormalDistribution
+import org.apache.commons.math3.distribution._
 
 import scala.collection.immutable.List
 import scala.util.Random
@@ -16,7 +16,7 @@ class Fourmi(val anode: ANode) {
   var log = List[(Int, Int, FourmiStateMachine)]()
   var index: Int = _
   var estRevenueALaFourmiliere = 0
-  val distributionAvecPheromone = new NormalDistribution()
+  val distributionAvecPheromone = new UniformRealDistribution()
   val influenceDesPheromones = .05
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
@@ -27,28 +27,36 @@ class Fourmi(val anode: ANode) {
       c.getDepot(anode.tribu) != .0
     }).sortBy(c => c.getDepot(anode.tribu)).reverse
     if (!lVoisinsAvecDepot.isEmpty) {
-      distributionAvecPheromone.sample match {
-        case d if (d > influenceDesPheromones) || (d > (1 - influenceDesPheromones)) =>
-          val recalibreDe0A1 = (d - influenceDesPheromones) / 1 - (influenceDesPheromones * 2)
-          var somme = .0
-          val lvoisinsAvecDepotIncremente = lVoisinsAvecDepot.map(c => {
-            somme += c.getDepot(anode.tribu)
-            somme
-          })
-          if (lVoisinsAvecDepot.length > 2) {
-            MyLog.myPrintln(toString, zeCarre, lVoisinsAvecDepot.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)))).mkString(","))
-            MyLog.myPrintln(lvoisinsAvecDepotIncremente.map("%.1f".format(_)).mkString(","))
-          }
-          avanceAPeupresCommeAvant
-        case _ => // default
-          avanceAPeupresCommeAvant
+      val sommeDesPheromones = lVoisinsAvecDepot.map(_.getDepot(anode.tribu)).sum
+      var somme = influenceDesPheromones
+      val lvoisinsAvecDepotIncremente: List[Double] = List(influenceDesPheromones) ++ lVoisinsAvecDepot.map(c => {
+        somme += c.getDepot(anode.tribu) / (sommeDesPheromones * (1 + influenceDesPheromones))
+        somme
+      })
+      val proba = distributionAvecPheromone.sample
+      val ltake = lvoisinsAvecDepotIncremente.takeWhile(_ < proba)
+      if (lVoisinsAvecDepot.length > 3) {
+        MyLog.myPrintln("\n", toString, zeCarre, "%.1f".format(lVoisinsAvecDepot.map(_.getDepot(anode.tribu)).sum),
+          lVoisinsAvecDepot.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)))).mkString(","))
+        MyLog.myPrintln(lvoisinsAvecDepotIncremente.map("%.3f".format(_)).mkString("-"))
+        MyLog.myPrintln("%.3f + ".format(proba), ltake.map("%.3f".format(_)).mkString("-"), ltake.length)
+        if (ltake.length > 1) {
+          MyLog.myPrintIt(lVoisinsAvecDepot.apply(ltake.length - 1))
+        }
+      }
+
+      if (ltake.length > 1) {
+        val caseAPheromoneChoisie = lVoisinsAvecDepot.apply(ltake.length - 1)
+        avanceAPeuPresCommeAvant
+      } else {
+        avanceAPeuPresCommeAvant
       }
     } else {
-      avanceAPeupresCommeAvant
+      avanceAPeuPresCommeAvant
     }
   }
 
-  def avanceAPeupresCommeAvant = {
+  def avanceAPeuPresCommeAvant = {
     direction = new NormalDistribution(direction, 0.1).sample
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
