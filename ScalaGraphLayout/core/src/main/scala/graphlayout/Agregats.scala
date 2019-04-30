@@ -11,7 +11,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 20
+  val number = 10
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
@@ -44,12 +44,11 @@ class Agregats extends GraphAbstract {
         f.direction = tbx.rnd.nextDouble() * Math.PI * 2
         f.jnode = ljaffe.filter(_.tribu == f.anode.tribu).head
       })
-      //MyLog.myPrintIt("Ici")
+      MyLog.myPrintIt(lfourmi.find(_.anode.selected))
     } else {
+      listCarreAvecPheronome.foreach(_.evapore)
       listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
       lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
-      lfourmi.foreach(_.redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd))
-      listCarreAvecPheronome.foreach(_.evapore)
     }
     listeDesAgregats.foreach(a => a._1.label.text = ", %d/%.0f".format(
       lfourmi.filter(_.anode.tribu == a._1).map(_.estRevenueALaFourmiliere).sum,
@@ -72,10 +71,11 @@ class Agregats extends GraphAbstract {
         val lpe = lePlusEloigne(x, y, tbx.zp.largeur, tbx.zp.hauteur, 40)
         lePlusProche(lpe, lCoins, ln.head.tribu)
       })
+      ledgesJaffe.foreach(_.attraction= 0) // a quoi ca sert, ce truc?
       lnoedgesJaffe = ljaffe.combinations(2).toList.map(c => {
         new Edge(c.head, c.last)
       }).filter(_.getDist._1 < 200)
-      lnoedgesJaffe.foreach(_.repulsion = 10)
+      lnoedgesJaffe.foreach(_.repulsion = 0) // a quoi ca sert, ce truc?
       ljaffe.foreach(_.desempile(ljaffe ++ lCoins, tbx.zp.largeur, tbx.zp.hauteur, tbx.rnd))
       /*MyLog.myPrintIt(ljaffe.mkString("\n  "))
       MyLog.myPrintIt(ledgesJaffe.mkString("\n  "))

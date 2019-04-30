@@ -6,8 +6,8 @@ class Edge(val from: Node, val to: Node) {
   var len = .0
   var diff = .0
   var dist = (.0, .0, .0)
-  var attraction = 1
-  var repulsion = 200
+  var attraction = 1.0
+  var repulsion = 200.0
 
   override def toString: String = from.toString + " -> " + to.toString
 
