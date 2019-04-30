@@ -51,6 +51,7 @@ class Fourmi(val anode: ANode) {
         val XYCaseAPheromoneChoisie = lVoisinsAvecDepot.apply(ltake.length - 1).getXY
         anode.x = XYCaseAPheromoneChoisie._1
         anode.y = XYCaseAPheromoneChoisie._2
+        MyLog.myPrintIt(anode.toString)
       } else {
         avanceAPeuPresCommeAvant
       }

@@ -101,7 +101,7 @@ class Node(var x: Double, var y: Double) {
     val deltaY = n.y - y
     val atan = Math.atan(deltaX / deltaY)
     val atan2 = Math.atan2(deltaX, deltaY)
-    MyLog.myPrintIt(toString, "(%.02f,%.02f)".format(deltaX, deltaY), "[a %.02f, a2 %.02f]".format(atan, atan2))
+    //MyLog.myPrintIt(toString, "(%.02f,%.02f)".format(deltaX, deltaY), "[a %.02f, a2 %.02f]".format(atan, atan2))
     if (atan == atan2) {
       atan
     } else {
