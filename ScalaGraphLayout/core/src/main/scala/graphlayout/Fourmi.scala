@@ -102,7 +102,7 @@ class Fourmi(val anode: ANode) {
           MyLog.myErrPrintln(anode.tribu, "od %.0f, nd %.0f, d %.02f, ".format(oldDistance, newDistance, direction))
           trigger = false
         }
-        if (aDetecteLaNourriture(20)) {
+        if (aDetecteLaNourriture(15)) {
           state = FourmiStateMachine.retourne
           index = log.length - 2
         }

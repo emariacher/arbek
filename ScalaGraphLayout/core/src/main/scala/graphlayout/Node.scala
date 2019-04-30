@@ -99,7 +99,13 @@ class Node(var x: Double, var y: Double) {
   def getNodeDirection(n: Node) = {
     val deltaX = n.x - x
     val deltaY = n.y - y
-    MyLog.myPrintIt(toString, "(%.02f,%.02f)".format(deltaX, deltaY), "[a %.02f, a2 %.02f]".format(Math.atan(deltaX / deltaY), Math.atan2(deltaX, deltaY)))
-    Math.atan(deltaX / deltaY)
+    val atan = Math.atan(deltaX / deltaY)
+    val atan2 = Math.atan2(deltaX, deltaY)
+    MyLog.myPrintIt(toString, "(%.02f,%.02f)".format(deltaX, deltaY), "[a %.02f, a2 %.02f]".format(atan, atan2))
+    if (atan == atan2) {
+      atan
+    } else {
+      atan + Math.PI
+    }
   }
 }
