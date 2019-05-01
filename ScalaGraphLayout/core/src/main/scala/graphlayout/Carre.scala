@@ -14,6 +14,14 @@ class Carre(val rc: RowCol) {
   val row = rc.r
   val col = rc.c
   var depotPheromones = List[Depot]()
+  val XY = {
+    val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
+    val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
+    val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
+    val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
+    (x.toDouble, y.toDouble)
+  }
+  val fn = new FixedNode(XY)
 
   override def toString: String = "{r" + row + ", c" + col + "}"
 
@@ -36,14 +44,6 @@ class Carre(val rc: RowCol) {
 
   }
 
-  def getXY: (Double, Double) = {
-    val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
-    val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
-    val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
-    val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
-    (x, y)
-  }
-
   def getDepot(tribu: Tribu) = depotPheromones.filter(_.tribu == tribu).map(_.ph).sum
 
   def isLast() = (rc == tbx.maxRC.moinsUn)
@@ -51,11 +51,10 @@ class Carre(val rc: RowCol) {
   def evapore = depotPheromones.sortBy(_.ph).reverse.take(2).filter(_.ph > Depot.evapore).foreach(_.evapore) // les 3eme pheronome sont gommes par les 2 premiers
 
   def paint(g: Graphics2D) {
-    val xy = getXY
     depotPheromones.sortBy(_.ph).reverse.foreach(d => {
       g.setColor(d.tribu.c.color)
       val radius = (d.ph / Depot.display).toInt
-      g.fillOval(xy._1.toInt - 3, xy._2.toInt - 3, radius, radius)
+      g.fillOval(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
     })
   }
 

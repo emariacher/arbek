@@ -27,11 +27,9 @@ class Fourmi(val anode: ANode) {
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
 
   def avance(lc: List[Carre]) = {
-    val listeDesCarresReniflables = lc.filter(c => anode.pasLoin(c.getXY) < influenceDesPheromones & c.hasPheromone(tribu) > 0)
-      .filter(c => (Math.abs(direction - anode.getNodeDirection(c.getXY)) % (Math.PI * 2)) < angleDeReniflage)
-
-    val lfixedNodes = listeDesCarresReniflables.map(c => new FixedNode(c.getXY))
-      avanceAPeuPresCommeAvant
+    val listeDesCarresReniflables = lc.filter(c => anode.pasLoin(c.XY) < influenceDesPheromones & c.hasPheromone(tribu) > 0)
+      .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
+    avanceAPeuPresCommeAvant
   }
 
   def avanceAPeuPresCommeAvant = {
