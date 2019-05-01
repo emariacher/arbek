@@ -29,7 +29,19 @@ class Fourmi(val anode: ANode) {
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c => anode.pasLoin(c.XY) < influenceDesPheromones & c.hasPheromone(tribu) > 0)
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
-    avanceAPeuPresCommeAvant
+    if (listeDesCarresReniflables.isEmpty) {
+      avanceAPeuPresCommeAvant
+    } else {
+      val lfedges = listeDesCarresReniflables.map(c => {
+        val e = new Edge(c.fn, anode)
+        e.attraction = c.hasPheromone(tribu)
+        e
+      })
+      val oldnode = new Node(anode.x, anode.y)
+      lfedges.foreach(_.getDist)
+      lfedges.foreach(_.rassemble)
+      direction = oldnode.getNodeDirection(anode)
+    }
   }
 
   def avanceAPeuPresCommeAvant = {
