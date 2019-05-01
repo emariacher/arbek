@@ -31,6 +31,9 @@ class Fourmi(val anode: ANode) {
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty) {
       avanceAPeuPresCommeAvant
+      if (anode.selected) {
+        MyLog.myErrPrintIt(tribu, anode, "d%.2f".format(direction))
+      }
     } else {
       val lfedges = listeDesCarresReniflables.map(c => {
         val e = new Edge(c.fn, anode)
@@ -38,14 +41,23 @@ class Fourmi(val anode: ANode) {
         e
       })
       val oldnode = new Node(anode.x, anode.y)
+      if (anode.selected) {
+        MyLog.myPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
+        MyLog.myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
+          "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"))
+        MyLog.myPrintln(lfedges.mkString("e{", ",", "}"))
+      }
       lfedges.foreach(_.getDist)
-      lfedges.foreach(_.rassemble)
+      lfedges.foreach(_.opTimize)
       direction = oldnode.getNodeDirection(anode)
+      if (anode.selected) {
+        MyLog.myPrintln(tribu, anode, "%.2f".format(direction))
+      }
     }
   }
 
   def avanceAPeuPresCommeAvant = {
-    direction = new NormalDistribution(direction, 0.1).sample
+    direction = new NormalDistribution(direction, 0.1).sample % (Math.PI*2)
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
   }

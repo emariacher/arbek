@@ -218,7 +218,7 @@ class Agregats extends GraphAbstract {
       case MouseStateMachine.reset =>
         mouse._1 match {
           case "MouseP" =>
-            val nearestFNode = lnodes.map(n => (n, n.pasLoin(mouse._2, mouse._3))).sortBy(_._2).head
+            val nearestFNode = lnodes.map(n => (n, n.pasLoin(mouse._2.toDouble, mouse._3.toDouble))).sortBy(_._2).head
             if (nearestFNode._2 < 80) {
               if (nearestNode != null) {
                 nearestNode.selected = false
@@ -228,7 +228,7 @@ class Agregats extends GraphAbstract {
               MyLog.myPrintIt(mouse, nearestNode)
               MouseState = MouseStateMachine.drag
             } else {
-              MyLog.myPrintIt(lnodes.map(n => (n, n.pasLoin(mouse._2, mouse._3))).sortBy(_._2).mkString)
+              MyLog.myPrintIt(lnodes.map(n => (n, n.pasLoin(mouse._2.toDouble, mouse._3.toDouble))).sortBy(_._2).mkString)
             }
           case _ => //MyLog.myPrintIt(mouse)
         }
