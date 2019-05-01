@@ -74,9 +74,9 @@ class Node(var x: Double, var y: Double) {
 
   def paint(g: Graphics2D) = {}
 
-  def pasLoin(mx: Int, my: Int): Double = {
+  def pasLoin(m: (Double, Double)): Double = {
     //MyLog.myPrintIt(toString, mx, x, my, y, Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y))))
-    Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y)))
+    Math.sqrt(((m._1 - x) * (m._1 - x)) + ((m._2 - y) * (m._2 - y)))
   }
 
   def remetsDansLeTableau(largeur: Int, hauteur: Int, border: Int): Boolean = {
@@ -96,9 +96,11 @@ class Node(var x: Double, var y: Double) {
     }
   }
 
-  def getNodeDirection(n: Node) = {
-    val deltaX = n.x - x
-    val deltaY = n.y - y
+  def getNodeDirection(n: Node): Double = getNodeDirection(n.x, n.y)
+
+  def getNodeDirection(xy: (Double, Double)): Double = {
+    val deltaX = xy._1 - x
+    val deltaY = xy._2 - y
     val atan = Math.atan(deltaX / deltaY)
     val atan2 = Math.atan2(deltaX, deltaY)
     //MyLog.myPrintIt(toString, "(%.02f,%.02f)".format(deltaX, deltaY), "[a %.02f, a2 %.02f]".format(atan, atan2))

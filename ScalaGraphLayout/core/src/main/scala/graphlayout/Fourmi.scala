@@ -10,6 +10,8 @@ import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
+  val influenceDesPheromones = 20.0
+  val angleDeReniflage = Math.PI / 3
   val tribu = anode.tribu
   var direction: Double = .0
   var jnode: JNode = _
@@ -18,7 +20,6 @@ class Fourmi(val anode: ANode) {
   var index: Int = _
   var estRevenueALaFourmiliere = 0
   val distributionAvecPheromone = new UniformRealDistribution()
-  val influenceDesPheromones = .1
   var oldDistance = .0
   var trigger = true
   var logcarres = List[Carre]()
@@ -26,8 +27,11 @@ class Fourmi(val anode: ANode) {
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
 
   def avance(lc: List[Carre]) = {
-    val zeCarre = tbx.findCarre(anode.x, anode.y)
-    avanceAPeuPresCommeAvant
+    val listeDesCarresReniflables = lc.filter(c => anode.pasLoin(c.getXY) < influenceDesPheromones & c.hasPheromone(tribu) > 0)
+      .filter(c => (Math.abs(direction - anode.getNodeDirection(c.getXY)) % (Math.PI * 2)) < angleDeReniflage)
+
+    val lfixedNodes = listeDesCarresReniflables.map(c => new FixedNode(c.getXY))
+      avanceAPeuPresCommeAvant
   }
 
   def avanceAPeuPresCommeAvant = {
@@ -45,7 +49,7 @@ class Fourmi(val anode: ANode) {
     anode.x = log.apply(index)._1
     anode.y = log.apply(index)._2
     val c = tbx.findCarre(anode.x, anode.y)
-    c.updatePheronome(tribu)
+    c.updatePheromone(tribu)
     index -= 1
     index
   }

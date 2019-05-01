@@ -17,7 +17,7 @@ class Carre(val rc: RowCol) {
 
   override def toString: String = "{r" + row + ", c" + col + "}"
 
-  def updatePheronome(tribu: Tribu) = {
+  def updatePheromone(tribu: Tribu) = {
     var z = depotPheromones.find(_.tribu == tribu)
     if (z.isEmpty) {
       depotPheromones = depotPheromones :+ new Depot(Depot.valeurDepot, tribu)
@@ -26,7 +26,17 @@ class Carre(val rc: RowCol) {
     }
   }
 
-  def getXY = {
+  def hasPheromone(tribu: Tribu) = {
+    var z = depotPheromones.find(_.tribu == tribu)
+    if (z.isEmpty) {
+      .0
+    } else {
+      z.head.ph
+    }
+
+  }
+
+  def getXY: (Double, Double) = {
     val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
     val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
     val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
@@ -45,7 +55,7 @@ class Carre(val rc: RowCol) {
     depotPheromones.sortBy(_.ph).reverse.foreach(d => {
       g.setColor(d.tribu.c.color)
       val radius = (d.ph / Depot.display).toInt
-      g.fillOval(xy._1 - 3, xy._2 - 3, radius, radius)
+      g.fillOval(xy._1.toInt - 3, xy._2.toInt - 3, radius, radius)
     })
   }
 
