@@ -10,6 +10,7 @@ import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
+  val tribu = anode.tribu
   var direction: Double = .0
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
@@ -22,92 +23,11 @@ class Fourmi(val anode: ANode) {
   var trigger = true
   var logcarres = List[Carre]()
 
-  override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + anode.tribu
+  override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
 
   def avance(lc: List[Carre]) = {
     val zeCarre = tbx.findCarre(anode.x, anode.y)
-    val lVoisinsAvecDepot = zeCarre.getVoisins(lc).
-      filter(_.getDepot(anode.tribu) != .0).
-      sortBy(_.getDepot(anode.tribu)).reverse
-    if (!lVoisinsAvecDepot.isEmpty) {
-      val sommeDesPheromones = lVoisinsAvecDepot.map(_.getDepot(anode.tribu)).sum
-      var somme = influenceDesPheromones
-      val lVoisinsAvecDepotFiltered = lVoisinsAvecDepot.filter(c => !(logcarres contains c)) // evite de repasser par le meme chemin
-      val proba = distributionAvecPheromone.sample
-      if (lVoisinsAvecDepotFiltered.length > 1) {
-        val lvoisinsAvecDepotIncremente: List[Double] = List(influenceDesPheromones) ++ lVoisinsAvecDepotFiltered.map(c => {
-          somme += c.getDepot(anode.tribu) / (sommeDesPheromones * (1 + influenceDesPheromones))
-          somme
-        })
-        val ltake = lvoisinsAvecDepotIncremente.takeWhile(_ < proba)
-        if (ltake.length > 1) {
-          val XYCaseAPheromoneChoisie = lVoisinsAvecDepot.apply(ltake.length - 1).getXY
-          if (anode.selected) {
-            MyLog.myErrPrintln("\n*1*!", toString, zeCarre, "!%.1f".format(lVoisinsAvecDepot.map(_.getDepot(anode.tribu)).sum),
-              lVoisinsAvecDepot.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)), logcarres contains c)).mkString(","))
-            MyLog.myPrintln(lvoisinsAvecDepotIncremente.map("%.3f".format(_)).mkString("=", "-", "="))
-            MyLog.myPrintln("%.3f + ".format(proba), ltake.map("%.3f".format(_)).mkString("{", "-", "}"), ltake.length)
-            MyLog.myPrintIt(lVoisinsAvecDepot.apply(ltake.length - 1))
-            MyLog.myErrPrintln("avant1", anode.toString, tbx.findCarre(anode.x, anode.y))
-          }
-          anode.x = XYCaseAPheromoneChoisie._1
-          anode.y = XYCaseAPheromoneChoisie._2
-          if (anode.selected) {
-            val c = tbx.findCarre(anode.x, anode.y)
-            MyLog.myPrintln("apres1", anode.toString, c, c.depotPheromones.filter(_.tribu == anode.tribu).isEmpty)
-          }
-        } else {
-          if (anode.selected) {
-            MyLog.myPrintln("\n*2*!", toString, zeCarre, "!%.1f".format(lVoisinsAvecDepot.map(_.getDepot(anode.tribu)).sum),
-              lVoisinsAvecDepot.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)), logcarres contains c)).mkString(","))
-            MyLog.myPrintln(lvoisinsAvecDepotIncremente.map("%.3f".format(_)).mkString("=", "-", "="))
-            MyLog.myPrintln("%.3f + ".format(proba), ltake.map("%.3f".format(_)).mkString("{", "-", "}"), ltake.length)
-            //MyLog.myPrintIt(lVoisinsAvecDepot.apply(ltake.length - 1))
-            MyLog.myPrintln("avant2", anode.toString, tbx.findCarre(anode.x, anode.y))
-          }
-          avanceAPeuPresCommeAvant
-          if (anode.selected) MyLog.myPrintln("apres2", anode.toString, tbx.findCarre(anode.x, anode.y))
-        }
-      } else {
-        val lvoisinsAvecDepotIncremente: List[Double] = List(influenceDesPheromones) ++ lVoisinsAvecDepot.map(c => {
-          somme += c.getDepot(anode.tribu) / (sommeDesPheromones * (1 + influenceDesPheromones))
-          somme
-        })
-        val ltake = lvoisinsAvecDepotIncremente.takeWhile(_ < proba)
-        if (ltake.length > 0) {
-          val XYCaseAPheromoneChoisie = lVoisinsAvecDepot.apply(ltake.length - 1).getXY
-          if (anode.selected) {
-            MyLog.myErrPrintln("\n*3*!", toString, zeCarre, "!%.1f".format(lVoisinsAvecDepot.map(_.getDepot(anode.tribu)).sum),
-              lVoisinsAvecDepot.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)), logcarres contains c)).mkString(","))
-            MyLog.myPrintln(lvoisinsAvecDepotIncremente.map("%.3f".format(_)).mkString("=", "-", "="))
-            MyLog.myPrintln("%.3f + ".format(proba), ltake.map("%.3f".format(_)).mkString("{", "-", "}"), ltake.length)
-            MyLog.myPrintIt(lVoisinsAvecDepot.apply(ltake.length - 1))
-            MyLog.myErrPrintln("avant3", anode.toString, tbx.findCarre(anode.x, anode.y))
-          }
-          anode.x = XYCaseAPheromoneChoisie._1
-          anode.y = XYCaseAPheromoneChoisie._2
-          if (anode.selected) {
-            val c = tbx.findCarre(anode.x, anode.y)
-            MyLog.myPrintln("apres3", anode.toString, c, c.depotPheromones.filter(_.tribu == anode.tribu).isEmpty)
-          }
-        } else {
-          if (anode.selected) {
-            MyLog.myPrintln("\n*4*!", toString, zeCarre, "!%.1f".format(lVoisinsAvecDepot.map(_.getDepot(anode.tribu)).sum),
-              lVoisinsAvecDepot.map(c => (c, "%.1f".format(c.getDepot(anode.tribu)), logcarres contains c)).mkString(","))
-            MyLog.myPrintln(lvoisinsAvecDepotIncremente.map("%.3f".format(_)).mkString("=", "-", "="))
-            MyLog.myPrintln("%.3f + ".format(proba), ltake.map("%.3f".format(_)).mkString("{", "-", "}"), ltake.length)
-            //MyLog.myPrintIt(lVoisinsAvecDepot.apply(ltake.length - 1))
-            MyLog.myPrintln("avant4", anode.toString, tbx.findCarre(anode.x, anode.y))
-          }
-          avanceAPeuPresCommeAvant
-          if (anode.selected) MyLog.myPrintln("apres4", anode.toString, tbx.findCarre(anode.x, anode.y))
-        }
-      }
-    } else {
-      if (anode.selected) MyLog.myPrintln("avant5", anode.toString, tbx.findCarre(anode.x, anode.y))
-      avanceAPeuPresCommeAvant
-      if (anode.selected) MyLog.myPrintln("apres5", anode.toString, tbx.findCarre(anode.x, anode.y))
-    }
+    avanceAPeuPresCommeAvant
   }
 
   def avanceAPeuPresCommeAvant = {
@@ -125,7 +45,7 @@ class Fourmi(val anode: ANode) {
     anode.x = log.apply(index)._1
     anode.y = log.apply(index)._2
     val c = tbx.findCarre(anode.x, anode.y)
-    c.updatePheronome(anode.tribu)
+    c.updatePheronome(tribu)
     index -= 1
     index
   }
@@ -142,7 +62,7 @@ class Fourmi(val anode: ANode) {
         avance(lc)
         if (aDetecteLaNourriture(100)) {
           state = FourmiStateMachine.detecte
-          MyLog.myPrintIt(anode.tribu)
+          MyLog.myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
           direction = anode.getNodeDirection(jnode)
         }
@@ -150,7 +70,7 @@ class Fourmi(val anode: ANode) {
         avanceDroit
         val newDistance = anode.dist(jnode)
         if ((newDistance > oldDistance) && (trigger)) {
-          MyLog.myErrPrintln(anode.tribu, "od %.0f, nd %.0f, d %.02f, ".format(oldDistance, newDistance, direction))
+          MyLog.myErrPrintln(tribu, "od %.0f, nd %.0f, d %.02f, ".format(oldDistance, newDistance, direction))
           trigger = false
         }
         if (aDetecteLaNourriture(15)) {
@@ -175,7 +95,7 @@ class Fourmi(val anode: ANode) {
     var pheronomeD = 0
     var fourmiL = 0
     var fourmiH = 0
-    g.setColor(anode.tribu.c.color)
+    g.setColor(tribu.c.color)
     log.foreach(p => {
       p._3 match {
         case FourmiStateMachine.cherche =>
