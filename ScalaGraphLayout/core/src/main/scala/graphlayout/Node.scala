@@ -30,11 +30,12 @@ class Node(var x: Double, var y: Double) {
 
   def update(ux: Double, uy: Double, umouvement: Double) {
     if ((ux.isNaN) || (uy.isNaN)) {
-      MyLog.myPrintIt(ux.isNaN, uy.isNaN)
+      MyLog.myErrPrintIt(toString, ux.isNaN, uy.isNaN)
+    } else {
+      x = ux
+      y = uy
+      mouvement = umouvement
     }
-    x = ux
-    y = uy
-    mouvement = umouvement
   }
 
   def dist(n: Node) = {
@@ -78,6 +79,8 @@ class Node(var x: Double, var y: Double) {
     //MyLog.myPrintIt(toString, mx, x, my, y, Math.sqrt(((mx - x) * (mx - x)) + ((my - y) * (my - y))))
     Math.sqrt(((m._1 - x) * (m._1 - x)) + ((m._2 - y) * (m._2 - y)))
   }
+
+  def pasLoin(n: Node): Double = pasLoin(n.x, n.y)
 
   def remetsDansLeTableau(largeur: Int, hauteur: Int, border: Int): Boolean = {
     val newx = Math.max(Math.min(largeur - border, x), border)

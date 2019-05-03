@@ -10,6 +10,9 @@ import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
+  val CEstLaFourmiliere = 20.0
+  var fourmiliere: Fourmiliere = _
+  var estRevenueALaFourmiliere = 0
   val influenceDesPheromones = 40.0
   val angleDeReniflage = (Math.PI * 3 / 4) - .01
   val tribu = anode.tribu
@@ -18,11 +21,11 @@ class Fourmi(val anode: ANode) {
   var state: FourmiStateMachine = FourmiStateMachine.cherche
   var log = List[(Int, Int, FourmiStateMachine)]()
   var index: Int = _
-  var estRevenueALaFourmiliere = 0
   val distributionAvecPheromone = new UniformRealDistribution()
   var oldDistance = .0
   var trigger = true
   var logcarres = List[Carre]()
+  var compteurDansLesPheromones = 0
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
 
@@ -32,8 +35,9 @@ class Fourmi(val anode: ANode) {
     if (listeDesCarresReniflables.isEmpty) {
       avanceAPeuPresCommeAvant
       if (anode.selected) {
-        myErrPrintIt(tribu, anode, "d%.2f".format(direction))
+        myErrPrintIt(tribu, anode, "d%.2f".format(direction), compteurDansLesPheromones)
       }
+      compteurDansLesPheromones = 0
     } else {
       val lfedges = listeDesCarresReniflables.map(c => {
         val e = new Edge(c.fn, anode)
@@ -56,11 +60,14 @@ class Fourmi(val anode: ANode) {
       lfedges.foreach(_.getDist)
       lfedges.foreach(_.opTimize)
       direction = oldnode.getNodeDirection(anode)
+      compteurDansLesPheromones += 1
       if (anode.selected) {
         myPrintln(tribu, anode, "%.2f".format(direction))
       }
     }
   }
+
+  def estALaFourmiliere = anode.pasLoin(fourmiliere.centre) < CEstLaFourmiliere
 
   def avanceAPeuPresCommeAvant = {
     direction = new NormalDistribution(direction, 0.1).sample
@@ -74,11 +81,15 @@ class Fourmi(val anode: ANode) {
   }
 
   def rembobine = {
-    anode.x = log.apply(index)._1
-    anode.y = log.apply(index)._2
-    val c = tbx.findCarre(anode.x, anode.y)
-    c.updatePheromone(tribu)
-    index -= 1
+    if (index < 0) {
+      myErrPrintIt("\n", toString, index, compteurDansLesPheromones, estALaFourmiliere, state)
+    } else {
+      anode.x = log.apply(index)._1
+      anode.y = log.apply(index)._2
+      val c = tbx.findCarre(anode.x, anode.y)
+      c.updatePheromone(tribu)
+      index -= 1
+    }
     index
   }
 
@@ -94,7 +105,7 @@ class Fourmi(val anode: ANode) {
         avance(lc)
         if (aDetecteLaNourriture(300)) {
           state = FourmiStateMachine.detecte
-          myPrintIt(tribu)
+          //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
           direction = anode.getNodeDirection(jnode)
         }
@@ -102,7 +113,7 @@ class Fourmi(val anode: ANode) {
         avanceDroit
         val newDistance = anode.dist(jnode)
         if ((newDistance > oldDistance) && (trigger)) {
-          myErrPrintln(tribu, "od %.0f, nd %.0f, d %.02f, ".format(oldDistance, newDistance, direction))
+          myErrPrintDln(tribu, "od %.1f, nd %.1f, d %.02f, ".format(oldDistance, newDistance, direction))
           trigger = false
         }
         if (aDetecteLaNourriture(10)) {
@@ -110,7 +121,15 @@ class Fourmi(val anode: ANode) {
           index = log.length - 2
         }
       case FourmiStateMachine.retourne =>
-        if ((rembobine == 1) || (false)) {
+        if ((rembobine == 1) || (estALaFourmiliere)) {
+          //myPrintIt("\n", toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
+          if ((index == 1) & (!estALaFourmiliere)) {
+            myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, anode.pasLoin(fourmiliere.centre), estRevenueALaFourmiliere)
+            val l = 0
+            //anode.selected = true
+          } else if (estRevenueALaFourmiliere > 0) {
+            myPrintDln("Ici!")
+          }
           state = FourmiStateMachine.cherche
           direction = tbx.rnd.nextDouble() * Math.PI * 2
           log = List[(Int, Int, FourmiStateMachine)]()
@@ -148,11 +167,12 @@ class Fourmi(val anode: ANode) {
     })
 
     g.fillOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
-    g.setColor(if (anode.selected) {
-      Color.red
+    if (anode.selected) {
+      g.setColor(Color.red)
+      g.drawOval(anode.x.toInt - 2, anode.y.toInt - 2, fourmiL + 4, fourmiH + 4)
     } else {
-      Color.black
-    })
+      g.setColor(Color.black)
+    }
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
     log = log :+ (anode.x.toInt, anode.y.toInt, state)
     logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
