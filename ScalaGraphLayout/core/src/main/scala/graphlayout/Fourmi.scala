@@ -110,7 +110,7 @@ class Fourmi(val anode: ANode) {
           index = log.length - 2
         }
       case FourmiStateMachine.retourne =>
-        if (rembobine == 1) {
+        if ((rembobine == 1) || (false)) {
           state = FourmiStateMachine.cherche
           direction = tbx.rnd.nextDouble() * Math.PI * 2
           log = List[(Int, Int, FourmiStateMachine)]()

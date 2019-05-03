@@ -27,6 +27,7 @@ class Agregats extends GraphAbstract {
   })
 
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
+  var listeDesFourmilieres: List[(Tribu, FixedNode, List[Fourmi])] = _
   var lCoins: List[FixedNode] = _
   var ledgesJaffe = List[Edge]()
   var lnoedgesJaffe = List[Edge]()
@@ -45,6 +46,10 @@ class Agregats extends GraphAbstract {
         f.jnode = ljaffe.filter(_.tribu == f.anode.tribu).head
       })
       MyLog.myPrintIt(lfourmi.find(_.anode.selected))
+      listeDesFourmilieres = listeDesAgregats.map(lln => lln._2.map(ln => (lln._1, ln))).flatten.map(fm => {
+        (fm._1, new FixedNode(fm._2.map(_.x).sum / fm._2.length, fm._2.map(_.y).sum / fm._2.length), fm._2)
+      }).map(fm => (fm._1, fm._2, fm._3.map(an => lfourmi.filter(_.anode == an).head)))
+      MyLog.myPrintIt(listeDesFourmilieres.map(fm => (fm._1, fm._2, fm._3.mkString("{", ",", "}"))).mkString("[\n", "\n  ", "\n]"))
     } else {
       listCarreAvecPheronome.foreach(_.evapore)
       listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
@@ -71,7 +76,7 @@ class Agregats extends GraphAbstract {
         val lpe = lePlusEloigne(x, y, tbx.zp.largeur, tbx.zp.hauteur, 40)
         lePlusProche(lpe, lCoins, ln.head.tribu)
       })
-      ledgesJaffe.foreach(_.attraction= 0) // a quoi ca sert, ce truc?
+      ledgesJaffe.foreach(_.attraction = 0) // a quoi ca sert, ce truc?
       lnoedgesJaffe = ljaffe.combinations(2).toList.map(c => {
         new Edge(c.head, c.last)
       }).filter(_.getDist._1 < 200)
