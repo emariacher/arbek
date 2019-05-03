@@ -3,15 +3,15 @@ package graphlayout
 import java.awt.{Color, Graphics2D}
 
 import graphlayout.Tableaux.tbx
-import kebra.MyLog
+import kebra.MyLog._
 import org.apache.commons.math3.distribution._
 
 import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
-  val influenceDesPheromones = 20.0
-  val angleDeReniflage = Math.PI / 3
+  val influenceDesPheromones = 40.0
+  val angleDeReniflage = (Math.PI * 3 / 4) - .01
   val tribu = anode.tribu
   var direction: Double = .0
   var jnode: JNode = _
@@ -32,7 +32,7 @@ class Fourmi(val anode: ANode) {
     if (listeDesCarresReniflables.isEmpty) {
       avanceAPeuPresCommeAvant
       if (anode.selected) {
-        MyLog.myErrPrintIt(tribu, anode, "d%.2f".format(direction))
+        myErrPrintIt(tribu, anode, "d%.2f".format(direction))
       }
     } else {
       val lfedges = listeDesCarresReniflables.map(c => {
@@ -42,22 +42,28 @@ class Fourmi(val anode: ANode) {
       })
       val oldnode = new Node(anode.x, anode.y)
       if (anode.selected) {
-        MyLog.myPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
-        MyLog.myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
+        myPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
+        myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
           "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"))
-        MyLog.myPrintln(lfedges.mkString("e{", ",", "}"))
+        myPrintln(lfedges.mkString("e{", ",", "}"))
       }
+      lfedges.foreach(_.getDist)
+      lfedges.foreach(_.opTimize)
+      lfedges.foreach(_.getDist)
+      lfedges.foreach(_.opTimize)
+      lfedges.foreach(_.getDist)
+      lfedges.foreach(_.opTimize)
       lfedges.foreach(_.getDist)
       lfedges.foreach(_.opTimize)
       direction = oldnode.getNodeDirection(anode)
       if (anode.selected) {
-        MyLog.myPrintln(tribu, anode, "%.2f".format(direction))
+        myPrintln(tribu, anode, "%.2f".format(direction))
       }
     }
   }
 
   def avanceAPeuPresCommeAvant = {
-    direction = new NormalDistribution(direction, 0.1).sample % (Math.PI*2)
+    direction = new NormalDistribution(direction, 0.1).sample
     anode.x += Math.sin(direction) * 2
     anode.y += Math.cos(direction) * 2
   }
@@ -86,9 +92,9 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(100)) {
+        if (aDetecteLaNourriture(300)) {
           state = FourmiStateMachine.detecte
-          MyLog.myPrintIt(tribu)
+          myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
           direction = anode.getNodeDirection(jnode)
         }
@@ -96,10 +102,10 @@ class Fourmi(val anode: ANode) {
         avanceDroit
         val newDistance = anode.dist(jnode)
         if ((newDistance > oldDistance) && (trigger)) {
-          MyLog.myErrPrintln(tribu, "od %.0f, nd %.0f, d %.02f, ".format(oldDistance, newDistance, direction))
+          myErrPrintln(tribu, "od %.0f, nd %.0f, d %.02f, ".format(oldDistance, newDistance, direction))
           trigger = false
         }
-        if (aDetecteLaNourriture(15)) {
+        if (aDetecteLaNourriture(10)) {
           state = FourmiStateMachine.retourne
           index = log.length - 2
         }
@@ -110,7 +116,7 @@ class Fourmi(val anode: ANode) {
           log = List[(Int, Int, FourmiStateMachine)]()
           estRevenueALaFourmiliere += 1
         }
-      case _ => MyLog.myErrPrintD(state + "\n")
+      case _ => myErrPrintD(state + "\n")
     }
     redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
   }
