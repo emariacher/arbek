@@ -97,7 +97,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(300)) {
+        if (aDetecteLaNourriture(500)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
@@ -121,18 +121,18 @@ class Fourmi(val anode: ANode) {
           }
           if ((index == 1) & (!estALaFourmiliere)) {
             myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
-            myPrintDln(log.map(z => (z._1,z._2)).mkString(", "))
+            myPrintDln(log.map(z => (z._1, z._2)).mkString(", "))
             val l = 0
             //anode.selected = true
           } else if (estRevenueALaFourmiliere > 0) {
             myPrintDln("Ici!", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
           }
-          if(tbx.graph.triggerTraceNotAlreadyActivated) {
+          if (tbx.graph.triggerTraceNotAlreadyActivated) {
             triggerTrace = true
             myPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
           }
           state = FourmiStateMachine.cherche
-          direction = tbx.rnd.nextDouble() * Math.PI * 2
+          direction = direction * (-1) // essaye de reprendre le meme chemin
           log = List((anode.x.toInt, anode.y.toInt, state))
           estRevenueALaFourmiliere += 1
         }

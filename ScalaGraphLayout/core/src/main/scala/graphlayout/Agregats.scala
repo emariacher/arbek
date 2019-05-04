@@ -27,7 +27,7 @@ class Agregats extends GraphAbstract {
   })
 
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
-  var listeDesFourmilieres: List[Fourmiliere] = _
+  var listeDesFourmilieres= List[Fourmiliere]()
   var lCoins: List[FixedNode] = _
   var ledgesJaffe = List[Edge]()
   var lnoedgesJaffe = List[Edge]()
@@ -295,5 +295,6 @@ class Agregats extends GraphAbstract {
       case _ =>
     }
     ljaffe.foreach(_.paint(g))
+    listeDesFourmilieres.foreach(_.paint(g))
   }
 }
