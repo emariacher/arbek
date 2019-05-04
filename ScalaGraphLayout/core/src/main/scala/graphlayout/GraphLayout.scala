@@ -101,6 +101,8 @@ class GraphLayout extends GraphAbstract {
     ZePanel.zp.step = false
   }
 
+  def triggerTraceNotAlreadyActivated = true
+
   def paint(g: Graphics2D): Unit = {
     ledges.foreach(_.paint(g))
     lnodes.foreach(_.paint(g))

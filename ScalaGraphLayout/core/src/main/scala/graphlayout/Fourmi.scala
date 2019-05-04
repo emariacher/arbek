@@ -23,7 +23,7 @@ class Fourmi(val anode: ANode) {
   var index: Int = _
   val distributionAvecPheromone = new UniformRealDistribution()
   var oldDistance = .0
-  var trigger = true
+  var triggerTrace = false
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
 
@@ -112,23 +112,29 @@ class Fourmi(val anode: ANode) {
       case FourmiStateMachine.detecte =>
         avanceDroit
         val newDistance = anode.dist(jnode)
-        if ((newDistance > oldDistance) && (trigger)) {
+        /*if ((newDistance > oldDistance) && (triggerTrace)) {
           myErrPrintDln(tribu, "od %.1f, nd %.1f, d %.02f, ".format(oldDistance, newDistance, direction))
-          trigger = false
-        }
+          triggerTrace = false
+        }*/
         if (aDetecteLaNourriture(10)) {
           state = FourmiStateMachine.retourne
           index = log.length - 2
         }
       case FourmiStateMachine.retourne =>
         if ((rembobine == 1) || (estALaFourmiliere)) {
-          //myPrintIt("\n", toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
+          if (triggerTrace) {
+            myPrintIt("\n", toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
+          }
           if ((index == 1) & (!estALaFourmiliere)) {
-            myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, anode.pasLoin(fourmiliere.centre), estRevenueALaFourmiliere)
+            myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
             val l = 0
             //anode.selected = true
           } else if (estRevenueALaFourmiliere > 0) {
-            myPrintDln("Ici!")
+            myPrintDln("Ici!", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+          }
+          if(tbx.graph.triggerTraceNotAlreadyActivated) {
+            triggerTrace = true
+            myPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
           }
           state = FourmiStateMachine.cherche
           direction = tbx.rnd.nextDouble() * Math.PI * 2
@@ -175,6 +181,9 @@ class Fourmi(val anode: ANode) {
     }
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
     log = log :+ (anode.x.toInt, anode.y.toInt, state)
+    if (triggerTrace) {
+      myPrintDln(toString, state)
+    }
     logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
   }
 }

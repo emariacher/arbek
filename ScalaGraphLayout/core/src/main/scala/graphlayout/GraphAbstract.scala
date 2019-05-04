@@ -17,5 +17,7 @@ abstract class GraphAbstract {
 
   def doZeSliderJob(slider: (String, Int)): Unit
 
+  def triggerTraceNotAlreadyActivated: Boolean
+
   def paint(g: Graphics2D)
 }

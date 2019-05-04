@@ -278,6 +278,8 @@ class Agregats extends GraphAbstract {
     (getEdges(tribu).map(_.dist._1).sum / number).toInt
   }
 
+  def triggerTraceNotAlreadyActivated = lfourmi.filter(_.triggerTrace).isEmpty
+
   def paint(g: Graphics2D): Unit = {
     tbx.lc.foreach(_.paint(g))
     tbx.state match {
