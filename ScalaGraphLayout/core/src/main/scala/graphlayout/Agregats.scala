@@ -11,7 +11,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 10
+  val number = 1
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
@@ -131,14 +131,17 @@ class Agregats extends GraphAbstract {
     val stabilisationRassemble = 100
     agitationMoyenne = ((agitationMoyenne * stabilisationRassemble) + agitation) / (stabilisationRassemble + 1)
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
-    if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble) & (listeDesAgregats.count(_._2.length == 1) > 2)) {
+    if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble)
+      & (listeDesAgregats.count(_._2.length == 1) > Math.min(2, listeDesAgregats.length - 1))) {
       StateMachine.ouestlajaffe
     } else {
       if (compteurDeCompteur > stabilisationRassemble) {
         ledges.foreach(e => e.attraction += 1)
         lnoedges.foreach(e => e.repulsion -= 1)
         compteurDeCompteur = 0
-        MyLog.myPrintD("Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n")
+        if (!ledges.isEmpty & !lnoedges.isEmpty) {
+          MyLog.myPrintD("Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n")
+        }
       }
       StateMachine.rassemble
     }
