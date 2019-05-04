@@ -34,18 +34,18 @@ class Fourmi(val anode: ANode) {
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty) {
       avanceAPeuPresCommeAvant
-      if (anode.selected) {
+      if (triggerTrace) {
         myErrPrintIt(tribu, anode, "d%.2f".format(direction), compteurDansLesPheromones)
       }
       compteurDansLesPheromones = 0
     } else {
       val lfedges = listeDesCarresReniflables.map(c => {
         val e = new Edge(c.fn, anode)
-        e.attraction = c.hasPheromone(tribu)
+        //e.attraction = Math.max(c.hasPheromone(tribu),10)
         e
       })
       val oldnode = new Node(anode.x, anode.y)
-      if (anode.selected) {
+      if (triggerTrace) {
         myPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
         myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
           "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"))
@@ -53,15 +53,9 @@ class Fourmi(val anode: ANode) {
       }
       lfedges.foreach(_.getDist)
       lfedges.foreach(_.opTimize)
-      lfedges.foreach(_.getDist)
-      lfedges.foreach(_.opTimize)
-      lfedges.foreach(_.getDist)
-      lfedges.foreach(_.opTimize)
-      lfedges.foreach(_.getDist)
-      lfedges.foreach(_.opTimize)
       direction = oldnode.getNodeDirection(anode)
       compteurDansLesPheromones += 1
-      if (anode.selected) {
+      if (triggerTrace) {
         myPrintln(tribu, anode, "%.2f".format(direction))
       }
     }
@@ -81,14 +75,14 @@ class Fourmi(val anode: ANode) {
   }
 
   def rembobine = {
-    if (index < 0) {
-      myErrPrintIt("\n", toString, index, compteurDansLesPheromones, estALaFourmiliere, state)
+    if (index < 1) {
+      myErrPrintIt(toString, index, compteurDansLesPheromones, estALaFourmiliere, state)
     } else {
+      index -= 1
       anode.x = log.apply(index)._1
       anode.y = log.apply(index)._2
       val c = tbx.findCarre(anode.x, anode.y)
       c.updatePheromone(tribu)
-      index -= 1
     }
     index
   }
@@ -121,16 +115,17 @@ class Fourmi(val anode: ANode) {
           index = log.length - 2
         }
       case FourmiStateMachine.retourne =>
-        if ((rembobine == 1) || (estALaFourmiliere)) {
+        if ((rembobine == 0) || (estALaFourmiliere)) {
           if (triggerTrace) {
             myPrintIt("\n", toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
           }
           if ((index == 1) & (!estALaFourmiliere)) {
-            myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+            myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+            myPrintDln(log.map(z => (z._1,z._2)).mkString(", "))
             val l = 0
             //anode.selected = true
           } else if (estRevenueALaFourmiliere > 0) {
-            myPrintDln("Ici!", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+            myPrintDln("Ici!", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
           }
           if(tbx.graph.triggerTraceNotAlreadyActivated) {
             triggerTrace = true
@@ -138,7 +133,7 @@ class Fourmi(val anode: ANode) {
           }
           state = FourmiStateMachine.cherche
           direction = tbx.rnd.nextDouble() * Math.PI * 2
-          log = List[(Int, Int, FourmiStateMachine)]()
+          log = List((anode.x.toInt, anode.y.toInt, state))
           estRevenueALaFourmiliere += 1
         }
       case _ => myErrPrintD(state + "\n")
