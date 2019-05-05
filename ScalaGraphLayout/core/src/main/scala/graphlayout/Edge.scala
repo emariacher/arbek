@@ -43,6 +43,9 @@ class Edge(val from: Node, val to: Node) {
     diff = len - dist._1
     val dx = (dist._2 * attraction)
     val dy = (dist._3 * attraction)
+    if ((dx.isNaN) || (dy.isNaN)) {
+      myErrPrintIt(toString, dx.isNaN, dy.isNaN)
+    }
     from.update(from.x - (getSign(diff) * dx), from.y - (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
     to.update(to.x + (getSign(diff) * dx), to.y + (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
   }

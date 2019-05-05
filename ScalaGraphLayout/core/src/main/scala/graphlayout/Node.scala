@@ -2,7 +2,7 @@ package graphlayout
 
 import java.awt.Graphics2D
 
-import kebra.MyLog
+import kebra.MyLog._
 
 import scala.util.Random
 
@@ -30,7 +30,7 @@ class Node(var x: Double, var y: Double) {
 
   def update(ux: Double, uy: Double, umouvement: Double) {
     if ((ux.isNaN) || (uy.isNaN)) {
-      MyLog.myErrPrintIt(toString, ux.isNaN, uy.isNaN)
+      myErrPrintIt(toString, ux.isNaN, uy.isNaN)
     } else {
       x = ux
       y = uy
@@ -106,8 +106,11 @@ class Node(var x: Double, var y: Double) {
     val deltaY = xy._2 - y
     val atan = Math.atan(deltaX / deltaY)
     val atan2 = Math.atan2(deltaX, deltaY)
-    //MyLog.myPrintIt(toString, "(%.02f,%.02f)".format(deltaX, deltaY), "[a %.02f, a2 %.02f]".format(atan, atan2))
-    if (atan == atan2) {
+    if ((atan.isNaN) || (atan2.isNaN)) {
+      myErrPrintIt("\n", toString, "xy(%.02f,%.02f)".format(xy._1, xy._2), "dxy(%.02f,%.02f)".format(deltaX, deltaY),
+        "[a %.02f, a2 %.02f]".format(atan, atan2))
+      Math.PI / 2
+    } else if (atan == atan2) {
       atan
     } else {
       atan + Math.PI
