@@ -2,6 +2,8 @@ package graphlayout
 
 import java.awt.Graphics2D
 
+import kebra.MyLog._
+
 class Edge(val from: Node, val to: Node) {
   var len = .0
   var diff = .0
@@ -27,11 +29,11 @@ class Edge(val from: Node, val to: Node) {
 
 
   def opTimize = { // quand il y a un lien, trouve la bonne distance
-    //MyLog.myPrintln(toString)
     diff = len - dist._1
     val inc = Math.abs(diff) / 3
     val dx = (dist._2 * inc)
     val dy = (dist._3 * inc)
+    //myPrintIt(toString, len, diff, "%02f  %02f %02f".format(inc, dx, dy))
     from.update(from.x - (getSign(diff) * from.updateAverageX(dx)), from.y - (getSign(diff) * from.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
     to.update(to.x + (getSign(diff) * to.updateAverageX(dx)), to.y + (getSign(diff) * to.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
   }

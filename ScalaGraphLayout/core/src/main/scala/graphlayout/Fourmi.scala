@@ -23,7 +23,7 @@ class Fourmi(val anode: ANode) {
   var index: Int = _
   val distributionAvecPheromone = new UniformRealDistribution()
   var oldDistance = .0
-  var triggerTrace = false
+  var triggerTrace = true
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
 
@@ -41,7 +41,7 @@ class Fourmi(val anode: ANode) {
     } else {
       val lfedges = listeDesCarresReniflables.map(c => {
         val e = new Edge(c.fn, anode)
-        //e.attraction = Math.max(c.hasPheromone(tribu),10)
+        e.attraction = Math.min(c.hasPheromone(tribu),4)
         e
       })
       val oldnode = new Node(anode.x, anode.y)
@@ -52,7 +52,8 @@ class Fourmi(val anode: ANode) {
         myPrintln(lfedges.mkString("e{", ",", "}"))
       }
       lfedges.foreach(_.getDist)
-      lfedges.foreach(_.opTimize)
+      //lfedges.foreach(_.opTimize) // ou rassemble
+      lfedges.foreach(_.rassemble) // ou optimize
       direction = oldnode.getNodeDirection(anode)
       compteurDansLesPheromones += 1
       if (triggerTrace) {

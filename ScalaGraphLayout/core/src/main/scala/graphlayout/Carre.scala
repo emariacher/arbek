@@ -21,7 +21,7 @@ class Carre(val rc: RowCol) {
     val y = tbx.origin.getHeight.toInt + (vert * ((2 * row) + 1))
     (x.toDouble, y.toDouble)
   }
-  val XYInt = (XY._1.toInt,XY._2.toInt)
+  val XYInt = (XY._1.toInt, XY._2.toInt)
   val fn = new FixedNode(XY)
 
   override def toString: String = "{r" + row + ", c" + col + "}"
@@ -54,8 +54,8 @@ class Carre(val rc: RowCol) {
   def paint(g: Graphics2D) {
     depotPheromones.sortBy(_.ph).reverse.foreach(d => {
       g.setColor(d.tribu.c.color)
-      val radius = (d.ph / Depot.display).toInt
-      g.fillOval(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
+      val radius = Math.max((d.ph / Depot.display).toInt, 2)
+      g.drawRect(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
     })
   }
 
