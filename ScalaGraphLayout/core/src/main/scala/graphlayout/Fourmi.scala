@@ -34,27 +34,32 @@ class Fourmi(val anode: ANode) {
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty) {
       avanceAPeuPresCommeAvant
-      if (triggerTrace) {
+      /*if (triggerTrace) {
         myErrPrintIt(tribu, anode, "d%.2f".format(direction), compteurDansLesPheromones)
-      }
+      }*/
       compteurDansLesPheromones = 0
     } else {
       val lfedges = listeDesCarresReniflables.map(c => {
         val e = new Edge(c.fn, anode)
-        e.attraction = Math.min(c.hasPheromone(tribu),4)
+        e.attraction = Math.min(c.hasPheromone(tribu), 4)
         e
       })
       val oldnode = new Node(anode.x, anode.y)
       if (triggerTrace) {
         myPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
         myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
-          "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"))
+          "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"), listeDesCarresReniflables.length)
+
+        val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
+        myErrPrintDln(listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length)
+
         myPrintln(lfedges.mkString("e{", ",", "}"))
       }
       lfedges.foreach(_.getDist)
       //lfedges.foreach(_.opTimize) // ou rassemble
       lfedges.foreach(_.rassemble) // ou optimize
       direction = oldnode.getNodeDirection(anode)
+      logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
       if (triggerTrace) {
         myPrintln(tribu, anode, "%.2f".format(direction))
@@ -180,7 +185,6 @@ class Fourmi(val anode: ANode) {
     if (triggerTrace) {
       myPrintDln(toString, state)
     }
-    logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
   }
 }
 
