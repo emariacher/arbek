@@ -35,13 +35,14 @@ class Fourmi(val anode: ANode) {
     if (listeDesCarresReniflables.isEmpty) {
       avanceAPeuPresCommeAvant
       if ((triggerTrace) & (!lc.isEmpty)) {
-        myErrPrintIt(tribu, anode, "d%.2f".format(direction), compteurDansLesPheromones)
+        myErrPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
       }
       compteurDansLesPheromones = 0
     } else {
-      val lfedges = listeDesCarresReniflables.map(c => {
+      val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
+      val lfedges = listeDesCarresPasDejaParcourus.map(c => {
         val e = new Edge(c.fn, anode)
-        e.attraction = Math.min(c.hasPheromone(tribu), 2)
+        e.attraction = Math.min(c.hasPheromone(tribu), 5)
         e
       })
       val oldnode = new Node(anode.x, anode.y)
@@ -51,7 +52,6 @@ class Fourmi(val anode: ANode) {
           "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
           listeDesCarresReniflables.length)
 
-        val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
         myPrintln("      ", listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
           lfedges.mkString("-------  e{", ",", "}"))
       }
