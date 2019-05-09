@@ -19,7 +19,7 @@ class Fourmi(val anode: ANode) {
   var direction: Double = .0
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
-  var log = List[(Int, Int, FourmiStateMachine)]()
+  var logxys = List[(Int, Int, FourmiStateMachine)]()
   var index: Int = _
   val distributionAvecPheromone = new UniformRealDistribution()
   var oldDistance = .0
@@ -31,15 +31,15 @@ class Fourmi(val anode: ANode) {
 
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c => anode.pasLoin(c.XY) < influenceDesPheromones & c.hasPheromone(tribu) > 0)
+    val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
-    if (listeDesCarresReniflables.isEmpty) {
+    if (listeDesCarresPasDejaParcourus.isEmpty) {
       avanceAPeuPresCommeAvant
       if ((triggerTrace) & (!lc.isEmpty)) {
-        myErrPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
+        myErrPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
       }
       compteurDansLesPheromones = 0
     } else {
-      val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       val lfedges = listeDesCarresPasDejaParcourus.map(c => {
         val e = new Edge(c.fn, anode)
         e.attraction = Math.min(c.hasPheromone(tribu), 5)
@@ -61,8 +61,11 @@ class Fourmi(val anode: ANode) {
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
+      if (anode.dist(oldnode) < 0.00001) {
+        myErrPrintDln(toString + " Stationnaire!")
+      }
       if (triggerTrace) {
-        myPrintDln(tribu, anode, "d%.2f".format(direction), "\n")
+        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), "\n")
       }
     }
   }
@@ -85,8 +88,8 @@ class Fourmi(val anode: ANode) {
       myErrPrintIt(toString, index, compteurDansLesPheromones, estALaFourmiliere, state)
     } else {
       index -= 1
-      anode.x = log.apply(index)._1
-      anode.y = log.apply(index)._2
+      anode.x = logxys.apply(index)._1
+      anode.y = logxys.apply(index)._2
       val c = tbx.findCarre(anode.x, anode.y)
       c.updatePheromone(tribu)
     }
@@ -103,7 +106,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(500)) {
+        if (aDetecteLaNourriture(700)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
@@ -118,7 +121,7 @@ class Fourmi(val anode: ANode) {
         }*/
         if (aDetecteLaNourriture(10)) {
           state = FourmiStateMachine.retourne
-          index = log.length - 2
+          index = logxys.length - 2
         }
       case FourmiStateMachine.retourne =>
         if ((rembobine == 0) || (estALaFourmiliere)) {
@@ -127,7 +130,7 @@ class Fourmi(val anode: ANode) {
           }
           if ((index == 1) & (!estALaFourmiliere)) {
             myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
-            myPrintDln(log.map(z => (z._1, z._2)).mkString(", "))
+            myPrintDln(logxys.map(z => (z._1, z._2)).mkString(", "))
             val l = 0
             //anode.selected = true
           } else if (estRevenueALaFourmiliere > 0) {
@@ -139,7 +142,8 @@ class Fourmi(val anode: ANode) {
           }
           state = FourmiStateMachine.cherche
           direction = direction * (-1) // essaye de reprendre le meme chemin
-          log = List((anode.x.toInt, anode.y.toInt, state))
+          logxys = List((anode.x.toInt, anode.y.toInt, state))
+          logcarres = List(tbx.findCarre(anode.x, anode.y))
           estRevenueALaFourmiliere += 1
         }
       case _ => myErrPrintD(state + "\n")
@@ -154,7 +158,7 @@ class Fourmi(val anode: ANode) {
     var fourmiL = 0
     var fourmiH = 0
     g.setColor(tribu.c.color)
-    log.foreach(p => {
+    logxys.foreach(p => {
       p._3 match {
         case FourmiStateMachine.cherche =>
           pheronomeD = 2
@@ -181,7 +185,7 @@ class Fourmi(val anode: ANode) {
       g.setColor(Color.black)
     }
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
-    log = log :+ (anode.x.toInt, anode.y.toInt, state)
+    logxys = logxys :+ (anode.x.toInt, anode.y.toInt, state)
     if (triggerTrace) {
       myPrintDln(toString, state)
     }

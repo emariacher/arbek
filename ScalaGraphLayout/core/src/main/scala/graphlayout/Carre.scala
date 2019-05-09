@@ -49,7 +49,10 @@ class Carre(val rc: RowCol) {
 
   def isLast() = (rc == tbx.maxRC.moinsUn)
 
-  def evapore = depotPheromones.sortBy(_.ph).reverse.take(2).filter(_.ph > Depot.evapore).foreach(_.evapore) // les 3eme pheronome sont gommes par les 2 premiers
+  def evapore = {
+    depotPheromones.foreach(_.evapore)
+    depotPheromones = depotPheromones.filter(_.ph > Depot.evapore).sortBy(_.ph).reverse.take(2) // le 3eme depot de pheromone est gomme par les 2 premiers
+  }
 
   def paint(g: Graphics2D) {
     depotPheromones.sortBy(_.ph).reverse.foreach(d => {
