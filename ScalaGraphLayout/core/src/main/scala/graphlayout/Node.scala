@@ -71,6 +71,11 @@ class Node(var x: Double, var y: Double) {
     slidingAverageDeltay
   }
 
+  def moveTo(n: Node): Unit = {
+    x = n.x
+    y = n.y
+  }
+
   def getID: String = "[%.0f,%.0f]".format(x, y)
 
   def paint(g: Graphics2D) = {}

@@ -6,7 +6,7 @@ package graphlayout
 object Depot {
   val valeurDepot = 100.0
   val display = valeurDepot / 10
-  val evaporation = 0.995
+  val evaporation = 0.999
   val evapore = 2 // plus assez de pheronome pour que ca ait un effet
 }
 
