@@ -2,6 +2,7 @@ package graphlayout
 
 import java.awt.Graphics2D
 
+import graphlayout.Tableaux.tbx
 import kebra.MyLog._
 
 class Edge(val from: Node, val to: Node) {
@@ -57,16 +58,15 @@ class Edge(val from: Node, val to: Node) {
     //MyLog.myPrintln(toString)
     val oldto = new Node(to)
     val oldfrom = new Node(from)
-    val signdiff = getSign(diff)
-    val dx = (dist._2 * Math.min(attraction, Math.abs(to.x - from.x)))
-    val dy = (dist._3 * Math.min(attraction, Math.abs(to.y - from.y)))
+    val dx = (getSign(from.x - to.x) * Math.min(attraction, Math.abs(to.x - from.x)))
+    val dy = (getSign(from.y - to.y) * Math.min(attraction, Math.abs(to.y - from.y)))
     myAssert2(dx.isNaN, false)
     myAssert2(dy.isNaN, false)
+    myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
     from.update(from.x - dx, from.y - dy, Math.sqrt((dx * dx) + (dy * dy)))
-    /*myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
-    myPrintIt(dx, dy)*/
+    myPrintIt(getSign(to.x - from.x), dx, getSign(to.y - from.y), dy)
     to.update(to.x + dx, to.y + dy, Math.sqrt((dx * dx) + (dy * dy)))
-    //myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
+    myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
     checkInRange(oldto, oldfrom, to, from)
   }
 

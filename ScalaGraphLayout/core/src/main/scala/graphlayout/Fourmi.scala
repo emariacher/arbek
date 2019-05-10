@@ -141,7 +141,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(700)) {
+        if (aDetecteLaNourriture(300)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
