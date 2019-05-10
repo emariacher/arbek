@@ -2,7 +2,6 @@ package graphlayout
 
 import java.awt.Graphics2D
 
-import graphlayout.Tableaux.tbx
 import kebra.MyLog._
 
 class Edge(val from: Node, val to: Node) {
@@ -31,8 +30,8 @@ class Edge(val from: Node, val to: Node) {
   def checkInRange(to: Node, from: Node, tonew: Node, fromnew: Node) = {
     val lx = List(to.x, from.x, tonew.x, fromnew.x).sorted
     val ly = List(to.y, from.y, tonew.y, fromnew.y).sorted
-    myPrintDln(to, from, tonew, fromnew)
-    myPrintDln(lx.map("%.2f".format(_)).mkString("lx{", ",", "}"), ly.map("%.2f".format(_)).mkString("ly{", ",", "}"))
+    /*myPrintDln(to, from, tonew, fromnew)
+    myPrintDln(lx.map("%.2f".format(_)).mkString("lx{", ",", "}"), ly.map("%.2f".format(_)).mkString("ly{", ",", "}"))*/
     myAssert2(lx.tail.contains(tonew.x), true)
     myAssert2(lx.reverse.tail.contains(tonew.x), true)
     myAssert2(lx.tail.contains(fromnew.x), true)
@@ -45,28 +44,29 @@ class Edge(val from: Node, val to: Node) {
 
   def opTimize = { // quand il y a un lien, trouve la bonne distance
     diff = len - dist._1
+    val signdiff = getSign(diff)
     val inc = Math.abs(diff) / 3
     val dx = (dist._2 * inc)
     val dy = (dist._3 * inc)
     //myPrintIt(toString, len, diff, "%02f  %02f %02f".format(inc, dx, dy))
-    from.update(from.x - (getSign(diff) * from.updateAverageX(dx)), from.y - (getSign(diff) * from.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
-    to.update(to.x + (getSign(diff) * to.updateAverageX(dx)), to.y + (getSign(diff) * to.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
+    from.update(from.x - (signdiff * from.updateAverageX(dx)), from.y - (signdiff * from.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
+    to.update(to.x + (signdiff * to.updateAverageX(dx)), to.y + (signdiff * to.updateAverageY(dy)), Math.sqrt((dx * dx) + (dy * dy)))
   }
 
   def rassemble = { // quand il y a un lien, rassemble
     //MyLog.myPrintln(toString)
     val oldto = new Node(to)
     val oldfrom = new Node(from)
-    diff = len - dist._1
+    val signdiff = getSign(diff)
     val dx = (dist._2 * Math.min(attraction, Math.abs(to.x - from.x)))
     val dy = (dist._3 * Math.min(attraction, Math.abs(to.y - from.y)))
     myAssert2(dx.isNaN, false)
     myAssert2(dy.isNaN, false)
-    from.update(from.x - (getSign(diff) * dx), from.y - (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
-    myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
-    myPrintIt(dist, len, diff, getSign(diff), dx, dy)
-    to.update(to.x + (getSign(diff) * dx), to.y + (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
-    myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
+    from.update(from.x - dx, from.y - dy, Math.sqrt((dx * dx) + (dy * dy)))
+    /*myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
+    myPrintIt(dx, dy)*/
+    to.update(to.x + dx, to.y + dy, Math.sqrt((dx * dx) + (dy * dy)))
+    //myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
     checkInRange(oldto, oldfrom, to, from)
   }
 

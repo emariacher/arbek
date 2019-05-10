@@ -10,7 +10,6 @@ import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
-  val DetecteLaFourmiliere = 100.0
   val CEstLaFourmiliere = 10.0
   var fourmiliere: Fourmiliere = _
   var estRevenueALaFourmiliere = 0
@@ -56,9 +55,7 @@ class Fourmi(val anode: ANode) {
         myPrintln("      ", listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
           lfedges.mkString("-------  e{", ",", "}"))
       }
-      lfedges.foreach(_.getDist)
-      //lfedges.foreach(_.opTimize) // ou rassemble
-      lfedges.foreach(_.rassemble) // ou optimize
+      lfedges.foreach(_.rassemble)
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
@@ -74,8 +71,6 @@ class Fourmi(val anode: ANode) {
   }
 
   def estALaFourmiliere = anode.pasLoin(fourmiliere.centre) < CEstLaFourmiliere
-
-  def voitLaFourmiliere = anode.pasLoin(fourmiliere.centre) < DetecteLaFourmiliere
 
   def avanceAPeuPresCommeAvant = {
     direction = new NormalDistribution(direction, 0.1).sample
@@ -152,9 +147,6 @@ class Fourmi(val anode: ANode) {
           oldDistance = anode.dist(jnode)
           direction = anode.getNodeDirection(jnode)
         }
-      case FourmiStateMachine.vaMaison =>
-        avanceDroit
-        AuxAlentoursDeLaFourmiliere(L_)
       case FourmiStateMachine.detecte =>
         avanceDroit
         val newDistance = anode.dist(jnode)
@@ -167,10 +159,7 @@ class Fourmi(val anode: ANode) {
           index = logxys.length - 2
         }
       case FourmiStateMachine.retourne =>
-        if (voitLaFourmiliere) {
-          state = FourmiStateMachine.vaMaison
-          direction = anode.getNodeDirection(fourmiliere.centre)
-        } else AuxAlentoursDeLaFourmiliere(L_)
+        AuxAlentoursDeLaFourmiliere(L_)
       case _ => myErrPrintD(state + "\n")
     }
     redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
@@ -225,7 +214,6 @@ object FourmiStateMachine {
   val cherche = FourmiStateMachine("cherche")
   val detecte = FourmiStateMachine("detecte")
   val retourne = FourmiStateMachine("retourne")
-  val vaMaison = FourmiStateMachine("vaMaison")
 }
 
 
