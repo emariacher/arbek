@@ -2,6 +2,7 @@ package graphlayout
 
 import java.awt.Graphics2D
 
+import graphlayout.Tableaux.tbx
 import kebra.MyLog._
 
 class Edge(val from: Node, val to: Node) {
@@ -27,6 +28,20 @@ class Edge(val from: Node, val to: Node) {
     dist
   }
 
+  def checkInRange(to: Node, from: Node, tonew: Node, fromnew: Node) = {
+    val lx = List(to.x, from.x, tonew.x, fromnew.x).sorted
+    val ly = List(to.y, from.y, tonew.y, fromnew.y).sorted
+    myPrintDln(to, from, tonew, fromnew)
+    myPrintDln(lx.map("%.2f".format(_)).mkString("lx{", ",", "}"), ly.map("%.2f".format(_)).mkString("ly{", ",", "}"))
+    myAssert2(lx.tail.contains(tonew.x), true)
+    myAssert2(lx.reverse.tail.contains(tonew.x), true)
+    myAssert2(lx.tail.contains(fromnew.x), true)
+    myAssert2(lx.reverse.tail.contains(fromnew.x), true)
+    myAssert2(ly.tail.contains(tonew.y), true)
+    myAssert2(ly.reverse.tail.contains(tonew.y), true)
+    myAssert2(ly.tail.contains(fromnew.y), true)
+    myAssert2(ly.reverse.tail.contains(fromnew.y), true)
+  }
 
   def opTimize = { // quand il y a un lien, trouve la bonne distance
     diff = len - dist._1
@@ -40,14 +55,19 @@ class Edge(val from: Node, val to: Node) {
 
   def rassemble = { // quand il y a un lien, rassemble
     //MyLog.myPrintln(toString)
+    val oldto = new Node(to)
+    val oldfrom = new Node(from)
     diff = len - dist._1
-    val dx = (dist._2 * attraction)
-    val dy = (dist._3 * attraction)
-    if ((dx.isNaN) || (dy.isNaN)) {
-      myErrPrintIt(toString, dx.isNaN, dy.isNaN)
-    }
+    val dx = (dist._2 * Math.min(attraction, Math.abs(to.x - from.x)))
+    val dy = (dist._3 * Math.min(attraction, Math.abs(to.y - from.y)))
+    myAssert2(dx.isNaN, false)
+    myAssert2(dy.isNaN, false)
     from.update(from.x - (getSign(diff) * dx), from.y - (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
+    myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
+    myPrintIt(dist, len, diff, getSign(diff), dx, dy)
     to.update(to.x + (getSign(diff) * dx), to.y + (getSign(diff) * dy), Math.sqrt((dx * dx) + (dy * dy)))
+    myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
+    checkInRange(oldto, oldfrom, to, from)
   }
 
   def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum

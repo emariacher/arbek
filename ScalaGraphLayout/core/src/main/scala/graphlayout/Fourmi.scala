@@ -117,16 +117,20 @@ class Fourmi(val anode: ANode) {
         myPrintIt("\nLigne: ", ouiMaisDOu, toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
       }
       if ((index == 1) & (!estALaFourmiliere)) {
-        myErrPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+        myErrPrintIt("\nLigne: ", ouiMaisDOu, toString, index, estALaFourmiliere, fourmiliere.centre,
+
+          "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
         myPrintDln(logxys.map(z => (z._1, z._2)).mkString(", "))
         val l = 0
         //anode.selected = true
       } else if (estRevenueALaFourmiliere > 0) {
-        myPrintDln("Ici!", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+        myPrintDln("Ici!", toString, index, estALaFourmiliere, fourmiliere.centre,
+          "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
       }
       if (tbx.graph.triggerTraceNotAlreadyActivated) {
         triggerTrace = true
-        myPrintIt("\n", toString, index, estALaFourmiliere, fourmiliere.centre, "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+        myPrintIt("\nLigne: ", ouiMaisDOu, toString, index, estALaFourmiliere, fourmiliere.centre,
+          "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
       }
       state = FourmiStateMachine.cherche
       anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
@@ -142,7 +146,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(300)) {
+        if (aDetecteLaNourriture(700)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)

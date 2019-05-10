@@ -19,6 +19,8 @@ class Node(var x: Double, var y: Double) {
 
   def this(coord: (Double, Double)) = this(coord._1, coord._2)
 
+  def this(n: Node) = this(n.x, n.y)
+
   override def toString: String = "[%.0f,%.0f]".format(x, y)
 
   override def equals(any: Any): Boolean = {
