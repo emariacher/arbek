@@ -45,6 +45,8 @@ class Carre(val rc: RowCol) {
 
   }
 
+  def egal(c: Carre): Boolean = c.fn.x == fn.x & c.fn.y == fn.y
+
   def getDepot(tribu: Tribu) = depotPheromones.filter(_.tribu == tribu).map(_.ph).sum
 
   def isLast() = (rc == tbx.maxRC.moinsUn)

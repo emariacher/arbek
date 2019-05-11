@@ -13,7 +13,7 @@ class Fourmi(val anode: ANode) {
   val CEstLaFourmiliere = 10.0
   var fourmiliere: Fourmiliere = _
   var estRevenueALaFourmiliere = 0
-  val influenceDesPheromones = 40.0
+  val influenceDesPheromones = 60.0
   val angleDeReniflage = (Math.PI * 4 / 5)
   val tribu = anode.tribu
   var direction: Double = .0
@@ -27,6 +27,7 @@ class Fourmi(val anode: ANode) {
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
   var tourneEnRond = 0
+  var lastlogcarre = new Carre(0, 0)
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
 
@@ -36,8 +37,10 @@ class Fourmi(val anode: ANode) {
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
-      if ((triggerTrace) & (!lc.isEmpty)) {
-        myErrPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
+      if ((triggerTrace) & (!listeDesCarresReniflables.isEmpty)) {
+        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction),"\n    ",
+          listeDesCarresReniflables.mkString("r{", ",", "}"), listeDesCarresReniflables.length,"\n    ",
+          listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length)
       }
       compteurDansLesPheromones = 0
     } else {
@@ -100,21 +103,20 @@ class Fourmi(val anode: ANode) {
     anode.y += Math.cos(direction) * 3
   }
 
-  def rembobine = {
-    if (index < 1) {
-      myErrPrintIt(toString, index, compteurDansLesPheromones, estALaFourmiliere, state)
-    } else {
-      index -= 1
-      anode.x = logxys.apply(index)._1
-      anode.y = logxys.apply(index)._2
-      val c = tbx.findCarre(anode.x, anode.y)
-      if (c == null) {
-        myErrPrintDln(toString)
-      } else {
-        c.updatePheromone(tribu)
-      }
+  def rembobine: Int = {
+    myAssert3(index < 1, false, toString + " " + index)
+    index -= 1
+    anode.x = logxys.apply(index)._1
+    anode.y = logxys.apply(index)._2
+    val c = tbx.findCarre(anode.x, anode.y)
+    myAssert3(c == null, false, toString)
+    c.updatePheromone(tribu)
+    logxys.take(index).indexWhere(logitem => logitem._1 == anode.x && logitem._2 == anode.y) match {
+      case x if x > -1 =>
+        myErrPrintDln("Going back taking a shortcut! ", anode, x, index)
+        x // prend un raccourci si jamais t'es deja passe par la
+      case _ => index
     }
-    index
   }
 
   def redirige(largeur: Int, hauteur: Int, border: Int, rnd: Random): Unit = {
@@ -217,10 +219,14 @@ class Fourmi(val anode: ANode) {
       g.setColor(Color.black)
     }
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
-    logxys = logxys :+ (anode.x.toInt, anode.y.toInt, state)
-    if (triggerTrace) {
-      myPrintDln(toString, state)
+    val c = tbx.findCarre(anode.x, anode.y)
+    if (!c.egal(lastlogcarre)) {
+      logxys = logxys :+ (c.fn.x.toInt, c.fn.y.toInt, state)
+      lastlogcarre = c
     }
+    /*if (triggerTrace) {
+      myPrintDln(toString, state)
+    }*/
   }
 }
 

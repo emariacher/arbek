@@ -2,8 +2,6 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
-import scala.swing.Label
-
 class ANode(val tribu: Tribu) extends Node {
   var selected = false
   var log = List[(Int, Int)]()
@@ -24,19 +22,5 @@ class ANode(val tribu: Tribu) extends Node {
     g.drawOval(x.toInt, y.toInt, 10, 10)
     log = log :+ (x.toInt, y.toInt)
   }
-}
-
-case class Tribu private(c: Couleur) {
-  var label = new Label {
-    text = "*"
-    foreground = c.color
-  }
-}
-
-object Tribu {
-  val tribus = List(new Tribu(new Couleur("orange")))
-  /*val tribus = List(new Tribu(new Couleur("orange")), new Tribu(new Couleur("vertFonce")),
-    new Tribu(new Couleur("bleu")), new Tribu(new Couleur("rouge")), new Tribu(new Couleur("violet")),
-    new Tribu(new Couleur("bleuClair")))*/
 }
 
