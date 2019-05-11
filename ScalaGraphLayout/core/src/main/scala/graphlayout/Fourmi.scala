@@ -54,7 +54,7 @@ class Fourmi(val anode: ANode) {
       })
       val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
         val e = new Edge(c.fn, anode)
-        e.attraction = Math.min(c.hasPheromone(tribu),
+        e.attraction = Math.max(c.hasPheromone(tribu),
           10 + tourneEnRond + (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length)
         ) // quand ca tourne en rond, force la sortie
         e
