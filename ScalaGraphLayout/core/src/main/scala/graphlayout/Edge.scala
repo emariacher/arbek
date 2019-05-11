@@ -16,15 +16,11 @@ class Edge(val from: Node, val to: Node) {
 
   def getNodesString = List(from.getID, to.getID).sortBy(_.hashCode)
 
-  def getSign(d: Double) = {
-    if (d > 0) 1.0
-    else -1.0
-  }
 
   def getDist = {
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
-    dist = (Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)), getSign(deltaX), getSign(deltaY))
+    dist = (Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)), Math.signum(deltaX), Math.signum(deltaY))
     dist
   }
 
@@ -45,7 +41,7 @@ class Edge(val from: Node, val to: Node) {
 
   def opTimize = { // quand il y a un lien, trouve la bonne distance
     diff = len - dist._1
-    val signdiff = getSign(diff)
+    val signdiff = Math.signum(diff)
     val inc = Math.abs(diff) / 3
     val dx = (dist._2 * inc)
     val dy = (dist._3 * inc)
@@ -58,13 +54,13 @@ class Edge(val from: Node, val to: Node) {
     //MyLog.myPrintln(toString)
     val oldto = new Node(to)
     val oldfrom = new Node(from)
-    val dx = (getSign(from.x - to.x) * Math.min(attraction, Math.abs(to.x - from.x)))
-    val dy = (getSign(from.y - to.y) * Math.min(attraction, Math.abs(to.y - from.y)))
+    val dx = (Math.signum(from.x - to.x) * Math.min(attraction, Math.abs(to.x - from.x)))
+    val dy = (Math.signum(from.y - to.y) * Math.min(attraction, Math.abs(to.y - from.y)))
     myAssert2(dx.isNaN, false)
     myAssert2(dy.isNaN, false)
     myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
     from.update(from.x - dx, from.y - dy, Math.sqrt((dx * dx) + (dy * dy)))
-    myPrintIt(getSign(to.x - from.x), dx, getSign(to.y - from.y), dy)
+    myPrintIt(Math.signum(to.x - from.x), dx, Math.signum(to.y - from.y), dy)
     to.update(to.x + dx, to.y + dy, Math.sqrt((dx * dx) + (dy * dy)))
     myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
     checkInRange(oldto, oldfrom, to, from)
