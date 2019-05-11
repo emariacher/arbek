@@ -26,6 +26,7 @@ class Fourmi(val anode: ANode) {
   var triggerTrace = true
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
+  var tourneEnRond = 0
 
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
 
@@ -33,31 +34,44 @@ class Fourmi(val anode: ANode) {
     val listeDesCarresReniflables = lc.filter(c => anode.pasLoin(c.XY) < influenceDesPheromones & c.hasPheromone(tribu) > 0)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
-    if (listeDesCarresPasDejaParcourus.isEmpty) {
+    if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
       if ((triggerTrace) & (!lc.isEmpty)) {
         myErrPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
       }
       compteurDansLesPheromones = 0
     } else {
-      val lfedges = listeDesCarresPasDejaParcourus.map(c => {
+      val lfedges1 = listeDesCarresReniflables.map(c => {
         val e = new Edge(c.fn, anode)
-        e.attraction = Math.min(c.hasPheromone(tribu), 5)
+        e.attraction = Math.min(c.hasPheromone(tribu), 1) // quand meme un peu (1) attire par les carres deja parcourus
         e
       })
+      val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
+        val e = new Edge(c.fn, anode)
+        e.attraction = Math.min(c.hasPheromone(tribu),
+          10 + tourneEnRond + (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length)
+        ) // quand ca tourne en rond, force la sortie
+        e
+      })
+      if (listeDesCarresPasDejaParcourus.isEmpty) {
+        tourneEnRond += 1
+      } else {
+        tourneEnRond = 0
+      }
       val oldnode = new Node(anode.x, anode.y)
       if (triggerTrace) {
         myErrPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
         myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
           "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
           listeDesCarresReniflables.length)
-
         myPrintln("      ", listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
-          lfedges.mkString("-------  e{", ",", "}"))
+          lfedges2.mkString("-------  e{", ",", "}"))
       }
-      lfedges.foreach(_.rassemble)
-      Edge.checkInside("" + (anode, listeDesCarresPasDejaParcourus.map(_.fn).mkString("{", ",", "}")),
-        listeDesCarresPasDejaParcourus.map(_.fn) :+ oldnode, anode)
+      lfedges1.foreach(_.rassemble)
+      myPrintDln("***********************************")
+      lfedges2.foreach(_.rassemble)
+      Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
+        listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
@@ -67,7 +81,7 @@ class Fourmi(val anode: ANode) {
         avanceAPeuPresCommeAvant
       }
       if (triggerTrace) {
-        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), "\n")
+        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), tourneEnRond, "\n")
         val l = 1
       }
     }
@@ -136,6 +150,7 @@ class Fourmi(val anode: ANode) {
       logxys = List((anode.x.toInt, anode.y.toInt, state))
       logcarres = List(tbx.findCarre(anode.x, anode.y))
       estRevenueALaFourmiliere += 1
+      tourneEnRond = 0
     }
 
   }
@@ -144,7 +159,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(600)) {
+        if (aDetecteLaNourriture(300)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
