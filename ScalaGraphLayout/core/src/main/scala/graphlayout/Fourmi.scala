@@ -56,7 +56,8 @@ class Fourmi(val anode: ANode) {
           lfedges.mkString("-------  e{", ",", "}"))
       }
       lfedges.foreach(_.rassemble)
-      Edge.checkInside("" + anode + L_, listeDesCarresPasDejaParcourus.map(_.fn) :+ oldnode, anode)
+      Edge.checkInside("" + (anode, listeDesCarresPasDejaParcourus.map(_.fn).mkString("{", ",", "}")),
+        listeDesCarresPasDejaParcourus.map(_.fn) :+ oldnode, anode)
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
