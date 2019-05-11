@@ -61,7 +61,7 @@ class Edge(val from: Node, val to: Node) {
     from.update(from.x - dx, from.y - dy, Math.sqrt((dx * dx) + (dy * dy)))
     //myPrintIt(Math.signum(to.x - from.x), dx, Math.signum(to.y - from.y), dy)
     to.update(to.x + dx, to.y + dy, Math.sqrt((dx * dx) + (dy * dy)))
-    myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
+    //myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
     Edge.checkInside("" +to + L_,List(oldto, oldfrom), to)
     Edge.checkInside("" +from + L_,List(oldto, oldfrom), from)
   }

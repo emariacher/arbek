@@ -13,7 +13,7 @@ class Fourmi(val anode: ANode) {
   val CEstLaFourmiliere = 10.0
   var fourmiliere: Fourmiliere = _
   var estRevenueALaFourmiliere = 0
-  val influenceDesPheromones = 60.0
+  val influenceDesPheromones = 40.0
   val angleDeReniflage = (Math.PI * 4 / 5)
   val tribu = anode.tribu
   var direction: Double = .0
@@ -32,15 +32,18 @@ class Fourmi(val anode: ANode) {
   override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
 
   def avance(lc: List[Carre]) = {
-    val listeDesCarresReniflables = lc.filter(c => anode.pasLoin(c.XY) < influenceDesPheromones & c.hasPheromone(tribu) > 0)
+    val listeDesCarresReniflables = lc.filter(c =>
+      anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, tourneEnRond * tourneEnRond) & c.hasPheromone(tribu) > 0)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
-      if ((triggerTrace) & (!listeDesCarresReniflables.isEmpty)) {
-        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction),"\n    ",
-          listeDesCarresReniflables.mkString("r{", ",", "}"), listeDesCarresReniflables.length,"\n    ",
-          listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length)
+      if (!listeDesCarresReniflables.isEmpty) {
+        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction)
+          // , "\n    ",listeDesCarresReniflables.mkString("r{", ",", "}"), listeDesCarresReniflables.length
+          // , "\n    ",listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length
+          , listeDesCarresReniflables.length, listeDesCarresPasDejaParcourus.length
+        )
       }
       compteurDansLesPheromones = 0
     } else {
@@ -62,14 +65,12 @@ class Fourmi(val anode: ANode) {
         tourneEnRond = 0
       }
       val oldnode = new Node(anode.x, anode.y)
-      if (triggerTrace) {
-        myErrPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
-        myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
-          "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
-          listeDesCarresReniflables.length)
-        myPrintln("      ", listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
-          lfedges2.mkString("-------  e{", ",", "}"))
-      }
+      myErrPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
+      myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
+        "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
+        listeDesCarresReniflables.length)
+      myPrintln("      ", listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
+        lfedges2.mkString("-------  e{", ",", "}"))
       lfedges1.foreach(_.rassemble)
       myPrintDln("***********************************")
       lfedges2.foreach(_.rassemble)
@@ -83,10 +84,7 @@ class Fourmi(val anode: ANode) {
         direction = tbx.rnd.nextDouble() * Math.PI * 2
         avanceAPeuPresCommeAvant
       }
-      if (triggerTrace) {
-        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), tourneEnRond, "\n")
-        val l = 1
-      }
+      myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), tourneEnRond, "\n")
     }
   }
 
@@ -114,9 +112,10 @@ class Fourmi(val anode: ANode) {
     logxys.take(index).indexWhere(logitem => logitem._1 == anode.x && logitem._2 == anode.y) match {
       case x if x > -1 =>
         myErrPrintDln("Going back taking a shortcut! ", anode, x, index)
-        x // prend un raccourci si jamais t'es deja passe par la
-      case _ => index
+        index = x // prend un raccourci si jamais t'es deja passe par la
+      case _ =>
     }
+    index
   }
 
   def redirige(largeur: Int, hauteur: Int, border: Int, rnd: Random): Unit = {
@@ -154,7 +153,6 @@ class Fourmi(val anode: ANode) {
       estRevenueALaFourmiliere += 1
       tourneEnRond = 0
     }
-
   }
 
   def doZeJob(lc: List[Carre]): Unit = {
