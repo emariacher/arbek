@@ -5,6 +5,19 @@ import java.awt.Graphics2D
 import graphlayout.Tableaux.tbx
 import kebra.MyLog._
 
+object Edge {
+  def checkInside(msg: String, ln: List[Node], nn: Node) = {
+    val lx = (ln.map(_.x) :+ nn.x).sorted
+    val ly = (ln.map(_.y) :+ nn.y).sorted
+    /*myPrintDln(to, from, tonew, fromnew)
+    myPrintDln(lx.map("%.2f".format(_)).mkString("lx{", ",", "}"), ly.map("%.2f".format(_)).mkString("ly{", ",", "}"))*/
+    myAssert3(lx.tail.contains(nn.x), true, msg)
+    myAssert3(lx.reverse.tail.contains(nn.x), true, msg)
+    myAssert3(ly.tail.contains(nn.y), true, msg)
+    myAssert3(ly.reverse.tail.contains(nn.y), true, msg)
+  }
+}
+
 class Edge(val from: Node, val to: Node) {
   var len = .0
   var diff = .0
@@ -24,20 +37,6 @@ class Edge(val from: Node, val to: Node) {
     dist
   }
 
-  def checkInRange(to: Node, from: Node, tonew: Node, fromnew: Node) = {
-    val lx = List(to.x, from.x, tonew.x, fromnew.x).sorted
-    val ly = List(to.y, from.y, tonew.y, fromnew.y).sorted
-    /*myPrintDln(to, from, tonew, fromnew)
-    myPrintDln(lx.map("%.2f".format(_)).mkString("lx{", ",", "}"), ly.map("%.2f".format(_)).mkString("ly{", ",", "}"))*/
-    myAssert2(lx.tail.contains(tonew.x), true)
-    myAssert2(lx.reverse.tail.contains(tonew.x), true)
-    myAssert2(lx.tail.contains(fromnew.x), true)
-    myAssert2(lx.reverse.tail.contains(fromnew.x), true)
-    myAssert2(ly.tail.contains(tonew.y), true)
-    myAssert2(ly.reverse.tail.contains(tonew.y), true)
-    myAssert2(ly.tail.contains(fromnew.y), true)
-    myAssert2(ly.reverse.tail.contains(fromnew.y), true)
-  }
 
   def opTimize = { // quand il y a un lien, trouve la bonne distance
     diff = len - dist._1
@@ -60,10 +59,11 @@ class Edge(val from: Node, val to: Node) {
     myAssert2(dy.isNaN, false)
     myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
     from.update(from.x - dx, from.y - dy, Math.sqrt((dx * dx) + (dy * dy)))
-    myPrintIt(Math.signum(to.x - from.x), dx, Math.signum(to.y - from.y), dy)
+    //myPrintIt(Math.signum(to.x - from.x), dx, Math.signum(to.y - from.y), dy)
     to.update(to.x + dx, to.y + dy, Math.sqrt((dx * dx) + (dy * dy)))
     myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
-    checkInRange(oldto, oldfrom, to, from)
+    Edge.checkInside("" +to + L_,List(oldto, oldfrom), to)
+    Edge.checkInside("" +from + L_,List(oldto, oldfrom), from)
   }
 
   def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum

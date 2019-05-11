@@ -198,11 +198,16 @@ object MyLog {
     if (f1rst.indexOf("scala") == 0) {
       f1rst = ""
     } else {
-      f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
+      f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "")
+        .replaceAll("List", "").replaceAll("java\\.lang\\.", "")
     }
-    val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
-    //reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice + " ---> " + c.Expr[String](Literal(Constant(namez))).splice))
-    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
+    val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "")
+      .replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
+      .replaceAll("java\\.lang\\.", "")
+    //reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + " " + c.Expr[String](Literal(Constant(s2cond)))
+    // .splice + " ---> " + linecode.splice + " ---> " + c.Expr[String](Literal(Constant(namez))).splice))
+    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez)))
+      .splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
   }
 
   def myPrintIt(linecode: Any): Any = macro mprintx
@@ -214,10 +219,14 @@ object MyLog {
     if (f1rst.indexOf("scala") == 0) {
       f1rst = ""
     } else {
-      f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
+      f1rst = f1rst.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "")
+        .replaceAll("List", "").replaceAll("java\\.lang\\.", "")
     }
-    val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
-    reify(myErrPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
+    val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "")
+      .replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
+      .replaceAll("java\\.lang\\.", "")
+    reify(myErrPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez)))
+      .splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
   }
 
   def myErrPrintIt(linecode: Any): Any = macro meprintx
@@ -339,9 +348,11 @@ object MyLog {
     reify({
       if (act.splice != exp.splice) {
         try {
-          throw new Exception("AssertionError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice + "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
+          throw new Exception("AssertionError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice +
+            "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice)
         } catch {
-          case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList.filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  "));
+          case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList
+            .filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  "));
             sys.exit
         }
       }
@@ -349,6 +360,40 @@ object MyLog {
   }
 
   def myAssert2(act: Any, exp: Any): Unit = macro assert2
+
+  def assert3(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any], msg: c.Expr[String]): c.Expr[Unit] = {
+
+    import c.universe._
+
+    //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
+    val namez = "deprecated"
+    /*val namez = (c.enclosingClass match {
+      case clazz@ClassDef(_, _, _, _) => clazz.symbol.asClass.name
+      case module@ModuleDef(_, _, _) => module.symbol.asModule.name
+      case _ => "" // not inside a class or a module. package object, REPL, somewhere else weird
+    }).toString*/
+
+    //val paramRep = show(s.tree)
+    //c.Expr(q"""println($paramRep + " = " + $s)""")
+
+
+    val actm = act.tree.toString.replaceAll(namez + "\\.this\\.", "")
+    val expm = exp.tree.toString.replaceAll(namez + "\\.this\\.", "")
+    reify({
+      if (act.splice != exp.splice) {
+        try {
+          throw new Exception("AssertionError: " + c.Expr[String](Literal(Constant(actm))).splice + "[" + act.splice +
+            "]==[" + exp.splice + "]" + c.Expr[String](Literal(Constant(expm))).splice + "{" + msg.splice + "}")
+        } catch {
+          case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList
+            .filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  "));
+            sys.exit
+        }
+      }
+    })
+  }
+
+  def myAssert3(act: Any, exp: Any, msg: String): Unit = macro assert3
 
   // get current line in source code
   def L_ : Int = macro lineImpl
@@ -427,7 +472,8 @@ object MyLog {
 
   def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
-  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
+  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---")
+    .map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
   def toFileAndDisplay(fileName: String, htmlString: String): Unit = {
     val filo = new File(fileName)

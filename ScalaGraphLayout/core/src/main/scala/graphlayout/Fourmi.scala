@@ -56,6 +56,7 @@ class Fourmi(val anode: ANode) {
           lfedges.mkString("-------  e{", ",", "}"))
       }
       lfedges.foreach(_.rassemble)
+      Edge.checkInside("" + anode + L_, listeDesCarresPasDejaParcourus.map(_.fn) :+ oldnode, anode)
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
@@ -66,6 +67,7 @@ class Fourmi(val anode: ANode) {
       }
       if (triggerTrace) {
         myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), "\n")
+        val l = 1
       }
     }
   }
@@ -109,10 +111,10 @@ class Fourmi(val anode: ANode) {
   def AuxAlentoursDeLaFourmiliere(ouiMaisDOu: Int) = {
     if ((rembobine == 0) || (estALaFourmiliere)) {
       if (triggerTrace) {
-        myPrintIt("\nLigne: ", ouiMaisDOu, toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
+        myPrintIt("\nLigne: " + ouiMaisDOu, toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
       }
       if ((index == 1) & (!estALaFourmiliere)) {
-        myErrPrintIt("\nLigne: ", ouiMaisDOu, toString, index, estALaFourmiliere, fourmiliere.centre,
+        myErrPrintIt("\nLigne: " + ouiMaisDOu, toString, index, estALaFourmiliere, fourmiliere.centre,
 
           "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
         myPrintDln(logxys.map(z => (z._1, z._2)).mkString(", "))
@@ -141,7 +143,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(300)) {
+        if (aDetecteLaNourriture(600)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
