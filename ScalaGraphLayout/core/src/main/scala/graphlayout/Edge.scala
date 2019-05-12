@@ -57,7 +57,7 @@ class Edge(val from: Node, val to: Node) {
     val dy = (Math.signum(from.y - to.y) * Math.min(attraction, Math.abs(to.y - from.y)))
     myAssert2(dx.isNaN, false)
     myAssert2(dy.isNaN, false)
-    myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
+    //myPrintDln("         avant " + to, tbx.findCarre(to.x, to.y), from, tbx.findCarre(from.x, from.y))
     from.update(from.x - dx, from.y - dy, Math.sqrt((dx * dx) + (dy * dy)))
     //myPrintIt(Math.signum(to.x - from.x), dx, Math.signum(to.y - from.y), dy)
     to.update(to.x + dx, to.y + dy, Math.sqrt((dx * dx) + (dy * dy)))

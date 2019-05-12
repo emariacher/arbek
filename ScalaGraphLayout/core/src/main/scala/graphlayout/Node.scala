@@ -31,13 +31,11 @@ class Node(var x: Double, var y: Double) {
   }
 
   def update(ux: Double, uy: Double, umouvement: Double) {
-    if ((ux.isNaN) || (uy.isNaN)) {
-      myErrPrintIt(toString, ux.isNaN, uy.isNaN)
-    } else {
-      x = ux
-      y = uy
-      mouvement = umouvement
-    }
+    myAssert2(ux.isNaN, false)
+    myAssert2(uy.isNaN, false)
+    x = ux
+    y = uy
+    mouvement = umouvement
   }
 
   def dist(n: Node) = {
@@ -46,14 +44,9 @@ class Node(var x: Double, var y: Double) {
     Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
   }
 
-  def getSign(d: Double) = {
-    if (d > 0) 1
-    else -1
-  }
-
   def updateAverageX(dx: Double) = {
     slidingAverageDeltax = (((slidingAverageMultiplier * slidingAverageDeltaxOld) + dx)) / (slidingAverageMultiplier + 1)
-    if (getSign(slidingAverageDeltax) != getSign(slidingAverageDeltaxOld)) {
+    if (Math.signum(slidingAverageDeltax) != Math.signum(slidingAverageDeltaxOld)) {
       slidingAverageDeltax = slidingAverageDeltax / 2
     } else if (Math.abs(slidingAverageDeltax - slidingAverageDeltaxOld) < 0.2) {
       slidingAverageDeltax = slidingAverageDeltax / 4
@@ -64,7 +57,7 @@ class Node(var x: Double, var y: Double) {
 
   def updateAverageY(dy: Double) = {
     slidingAverageDeltay = (((slidingAverageMultiplier * slidingAverageDeltayOld) + dy)) / (slidingAverageMultiplier + 1)
-    if (getSign(slidingAverageDeltay) != getSign(slidingAverageDeltayOld)) {
+    if (Math.signum(slidingAverageDeltay) != Math.signum(slidingAverageDeltayOld)) {
       slidingAverageDeltay = slidingAverageDeltay / 2
     } else if (Math.abs(slidingAverageDeltay - slidingAverageDeltayOld) < 0.2) {
       slidingAverageDeltay = slidingAverageDeltay / 4

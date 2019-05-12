@@ -10,7 +10,7 @@ import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
-  val CEstLaFourmiliere = 10.0
+  val CEstLaFourmiliere = 20.0
   var fourmiliere: Fourmiliere = _
   var estRevenueALaFourmiliere = 0
   val influenceDesPheromones = 40.0
@@ -23,7 +23,7 @@ class Fourmi(val anode: ANode) {
   var index: Int = _
   val distributionAvecPheromone = new UniformRealDistribution()
   var oldDistance = .0
-  var triggerTrace = true
+  var triggerTrace = false
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
   var tourneEnRond = 0
@@ -33,12 +33,12 @@ class Fourmi(val anode: ANode) {
 
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c =>
-      anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, tourneEnRond * tourneEnRond) & c.hasPheromone(tribu) > 0)
+      anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, (tourneEnRond * tourneEnRond) + 1) & c.hasPheromone(tribu) > 0)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
-      if (!listeDesCarresReniflables.isEmpty) {
+      if ((triggerTrace) & (!listeDesCarresReniflables.isEmpty)) {
         myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction)
           // , "\n    ",listeDesCarresReniflables.mkString("r{", ",", "}"), listeDesCarresReniflables.length
           // , "\n    ",listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length
@@ -65,14 +65,16 @@ class Fourmi(val anode: ANode) {
         tourneEnRond = 0
       }
       val oldnode = new Node(anode.x, anode.y)
-      myErrPrintIt("\n", tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction))
-      myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
-        "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
-        listeDesCarresReniflables.length)
-      myPrintln("      ", listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
-        lfedges2.mkString("-------  e{", ",", "}"))
+      if (triggerTrace) {
+        myErrPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), " d%.2f".format(direction))
+        myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
+          "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
+          listeDesCarresReniflables.length)
+        myPrintln("      ", listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
+          lfedges2.mkString("-------  e{", ",", "}"))
+      }
       lfedges1.foreach(_.rassemble)
-      myPrintDln("***********************************")
+      //myPrintDln("***********************************")
       lfedges2.foreach(_.rassemble)
       Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
         listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
@@ -80,11 +82,13 @@ class Fourmi(val anode: ANode) {
       logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
       if (anode.dist(oldnode) < 0.00001) {
-        myErrPrintDln(toString + " Stationnaire!")
         direction = tbx.rnd.nextDouble() * Math.PI * 2
+        myErrPrintDln(toString + " d%.2f  Stationnaire! ".format(direction) + tourneEnRond)
         avanceAPeuPresCommeAvant
       }
-      myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), tourneEnRond, "\n")
+      if (triggerTrace) {
+        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), tourneEnRond, "\n")
+      }
     }
   }
 
@@ -111,7 +115,7 @@ class Fourmi(val anode: ANode) {
     c.updatePheromone(tribu)
     logxys.take(index).indexWhere(logitem => logitem._1 == anode.x && logitem._2 == anode.y) match {
       case x if x > -1 =>
-        myErrPrintDln("Going back taking a shortcut! ", anode, x, index)
+        myPrintDln("Going back taking a shortcut! " + toString, index + " --> " + x)
         index = x // prend un raccourci si jamais t'es deja passe par la
       case _ =>
     }
@@ -125,45 +129,28 @@ class Fourmi(val anode: ANode) {
   }
 
   def AuxAlentoursDeLaFourmiliere(ouiMaisDOu: Int) = {
-    if ((rembobine == 0) || (estALaFourmiliere)) {
-      if (triggerTrace) {
-        myPrintIt("\nLigne: " + ouiMaisDOu, toString, index, estALaFourmiliere, estRevenueALaFourmiliere)
-      }
-      if ((index == 1) & (!estALaFourmiliere)) {
-        myErrPrintIt("\nLigne: " + ouiMaisDOu, toString, index, estALaFourmiliere, fourmiliere.centre,
-
-          "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
-        myPrintDln(logxys.map(z => (z._1, z._2)).mkString(", "))
-        val l = 0
-        //anode.selected = true
-      } else if (estRevenueALaFourmiliere > 0) {
-        myPrintDln("Ici!", toString, index, estALaFourmiliere, fourmiliere.centre,
-          "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
-      }
-      if (tbx.graph.triggerTraceNotAlreadyActivated) {
-        triggerTrace = true
-        myPrintIt("\nLigne: ", ouiMaisDOu, toString, index, estALaFourmiliere, fourmiliere.centre,
-          "%.02f, ".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
-      }
-      state = FourmiStateMachine.cherche
-      anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
-      direction = direction * (-1) // essaye de reprendre le meme chemin
-      logxys = List((anode.x.toInt, anode.y.toInt, state))
-      logcarres = List(tbx.findCarre(anode.x, anode.y))
-      estRevenueALaFourmiliere += 1
-      tourneEnRond = 0
-    }
+    myPrintDln("\nLigne: " + ouiMaisDOu + "A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
+      "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+    state = FourmiStateMachine.cherche
+    anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
+    direction = direction * (-1) // essaye de reprendre le meme chemin
+    logxys = List((anode.x.toInt, anode.y.toInt, state))
+    logcarres = List(tbx.findCarre(anode.x, anode.y))
+    estRevenueALaFourmiliere += 1
+    tourneEnRond = 0
   }
 
   def doZeJob(lc: List[Carre]): Unit = {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(300)) {
+        if (aDetecteLaNourriture(200)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
           direction = anode.getNodeDirection(jnode)
+        } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
+          AuxAlentoursDeLaFourmiliere(L_)
         }
       case FourmiStateMachine.detecte =>
         avanceDroit
@@ -177,8 +164,10 @@ class Fourmi(val anode: ANode) {
           index = logxys.length - 2
         }
       case FourmiStateMachine.retourne =>
-        AuxAlentoursDeLaFourmiliere(L_)
-      case _ => myErrPrintD(state + "\n")
+        if ((rembobine == 0) || (estALaFourmiliere)) {
+          AuxAlentoursDeLaFourmiliere(L_)
+        }
+      case _ => myErrPrintDln(state)
     }
     redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
   }
