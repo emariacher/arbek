@@ -29,7 +29,7 @@ class Fourmi(val anode: ANode) {
   var tourneEnRond = 0
   var lastlogcarre = new Carre(0, 0)
 
-  override def toString = "[%.0f,%.0f]".format(anode.x, anode.y) + tribu
+  override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y,logxys.length) + tribu
 
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c =>
