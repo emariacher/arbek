@@ -29,9 +29,12 @@ class Fourmi(val anode: ANode) {
   var tourneEnRond = 0
   var lastlogcarre = new Carre(0, 0)
 
-  override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y,logxys.length) + tribu
+  override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu
 
   def avance(lc: List[Carre]) = {
+    if (logcarres.length > 50) {
+      logcarres = List[Carre]()
+    }
     val listeDesCarresReniflables = lc.filter(c =>
       anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, (tourneEnRond * tourneEnRond) + 1) & c.hasPheromone(tribu) > 0)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
@@ -129,7 +132,7 @@ class Fourmi(val anode: ANode) {
   }
 
   def AuxAlentoursDeLaFourmiliere(ouiMaisDOu: Int) = {
-    myPrintDln("\nLigne: " + ouiMaisDOu + "A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
+    myPrintDln("Ligne: " + ouiMaisDOu + " A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
       "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
     state = FourmiStateMachine.cherche
     anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
