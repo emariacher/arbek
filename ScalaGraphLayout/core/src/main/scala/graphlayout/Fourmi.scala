@@ -12,7 +12,6 @@ import scala.util.Random
 class Fourmi(val anode: ANode) {
   val CEstLaFourmiliere = 20.0
   var fourmiliere: Fourmiliere = _
-  var estRevenueALaFourmiliere = 0
   val influenceDesPheromones = 40.0
   val angleDeReniflage = (Math.PI * 4 / 5)
   val tribu = anode.tribu
@@ -32,7 +31,8 @@ class Fourmi(val anode: ANode) {
   override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu
 
   def avance(lc: List[Carre]) = {
-    if (logcarres.length > 50) {
+    if ((logcarres.length > 50) | (logxys.length % 200 == 0)) { // remets les compeurs de temps en temps, ca a pas l'air de faire de mal
+      myPrintIt(toString, logcarres.length, logxys.length)
       logcarres = List[Carre]()
     }
     val listeDesCarresReniflables = lc.filter(c =>
@@ -86,7 +86,9 @@ class Fourmi(val anode: ANode) {
       compteurDansLesPheromones += 1
       if (anode.dist(oldnode) < 0.00001) {
         direction = tbx.rnd.nextDouble() * Math.PI * 2
-        myErrPrintDln(toString + " d%.2f  Stationnaire! ".format(direction) + tourneEnRond)
+        /*myErrPrintDln(toString + " d%.2f  Stationnaire! ".format(direction) + tourneEnRond,
+          lfedges1.mkString("\n--- e1r{", ",", "}"),
+          lfedges2.mkString("\n--- e2n{", ",", "}"))*/
         avanceAPeuPresCommeAvant
       }
       if (triggerTrace) {
@@ -133,13 +135,13 @@ class Fourmi(val anode: ANode) {
 
   def AuxAlentoursDeLaFourmiliere(ouiMaisDOu: Int) = {
     myPrintDln("Ligne: " + ouiMaisDOu + " A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
-      "%.02f".format(anode.pasLoin(fourmiliere.centre)), estRevenueALaFourmiliere)
+      "%.02f".format(anode.pasLoin(fourmiliere.centre)))
     state = FourmiStateMachine.cherche
     anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
     direction = direction * (-1) // essaye de reprendre le meme chemin
     logxys = List((anode.x.toInt, anode.y.toInt, state))
     logcarres = List(tbx.findCarre(anode.x, anode.y))
-    estRevenueALaFourmiliere += 1
+    fourmiliere.retour(ouiMaisDOu)
     tourneEnRond = 0
   }
 

@@ -27,7 +27,7 @@ class Agregats extends GraphAbstract {
   })
 
   var listeDesAgregats: List[(Tribu, List[List[ANode]])] = _
-  var listeDesFourmilieres= List[Fourmiliere]()
+  var listeDesFourmilieres = List[Fourmiliere]()
   var lCoins: List[FixedNode] = _
   var ledgesJaffe = List[Edge]()
   var lnoedgesJaffe = List[Edge]()
@@ -56,8 +56,8 @@ class Agregats extends GraphAbstract {
       listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
       lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
     }
-    listeDesAgregats.foreach(a => a._1.label.text = ", %d/%.0f".format(
-      lfourmi.filter(_.anode.tribu == a._1).map(_.estRevenueALaFourmiliere).sum,
+    listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
+      listeDesFourmilieres.map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_.tribu == a._1).map(_.ph).sum).sum)
     )
 
