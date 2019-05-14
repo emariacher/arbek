@@ -11,7 +11,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 20
+  val number = 3
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
@@ -57,7 +57,7 @@ class Agregats extends GraphAbstract {
       lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
     }
     listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
-      listeDesFourmilieres.map(_.retoursFourmiliere.mkString("[", ",", "]")),
+      listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_.tribu == a._1).map(_.ph).sum).sum)
     )
 
