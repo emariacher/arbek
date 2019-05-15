@@ -9,9 +9,8 @@
 *.export
 *.class
 */project/project/
-*/project/target/
-*/target/
-*/.idea
+**/target
+**/.idea
 *.exe
 *.o
 *.bin
@@ -20,12 +19,4 @@
 *.PNG
 *.db
 #*#
-labyrinthe_et_fourmis/fourmis_sbt/*/target/*
-elliptique_sbt/*/target/*
-MasterMind/*/target/*
-carte1/*/target/*
-PageBlanche_sbt/*/target/*
-labyrinthe_et_fourmis/ScalaGraphLayout/*/target/*
-labyrinthe_et_fourmis/ScalaGraphLayout/target/*
-labyrinthe_et_fourmis/ScalaGraphLayout/.idea/*
 
