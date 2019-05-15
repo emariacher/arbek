@@ -1,0 +1,192 @@
+package cadransolaire
+import scala.collection.immutable.ListSet
+import kebra.MyLog._
+
+object MyStatistics {
+	def getPearsonCorrelation(pairs: List[(Double,Double)]): Double = {
+			val xypairs = pairs.map(new XY(_))
+					var sum_sq = new XY(0D, 0D)
+			var sum_coproduct = 0D
+			var mean = xypairs.head
+
+			var i = 2
+			xypairs.tail.foreach((p: (XY))=> {
+				val sweep: Double =(i-1)/i
+						val delta = p-mean
+						sum_sq += delta * delta * sweep
+						sum_coproduct += delta.x * delta.y * sweep
+						mean += delta/i								
+			})
+
+			val pop_sd_x = math.sqrt(sum_sq.x/pairs.size)
+			val pop_sd_y = math.sqrt(sum_sq.y/pairs.size)
+			val cov_x_y = sum_coproduct / pairs.size
+			cov_x_y / (pop_sd_x*pop_sd_y)
+	}
+
+	def inc(min: Double, step: Double, max: Double): Array[Double] = {
+			assume(max > min,"max > min")
+			assume((max-min)>step,"(max-min)>step")
+			assume(step>0.0,"step>0.0")
+			var l = List[Double]()
+			var v = min+step
+			l = l :+ min
+			while(v<max) {
+				l = l :+ v
+						v += step
+			}
+			l = l :+ max
+					l.toArray
+	}
+}
+
+class LinearRegression(val pairs: List[(Double,Double)]) { 
+	var s = ""
+			val size = pairs.size
+			s += "pairs = " + pairs
+
+			// first pass: read in data, compute xbar and ybar
+			val sums = pairs.foldLeft(new X_X2_Y(0D,0D,0D))(_ + new X_X2_Y(_))
+			val bars = (sums.x / size, sums.y / size)
+
+			// second pass: compute summary statistics
+			val sumstats = pairs.foldLeft(new X2_Y2_XY(0D,0D,0D))(_ + new X2_Y2_XY(_, bars))
+
+			val beta1 = sumstats.xy / sumstats.x2
+			val beta0 = bars._2 - (beta1 * bars._1)
+			val betas = (beta0, beta1)
+			val func = new BetaFunction(beta1, beta0)
+
+	// analyze results
+	val correlation = pairs.foldLeft(new RSS_SSR(0D,0D))(_ + RSS_SSR.build(_, bars, func.func))
+	val R2 = correlation.ssr / sumstats.y2
+	val svar = correlation.rss / (size - 2)
+	val svar1 = svar / sumstats.x2
+	val svar0 = ( svar / size ) + ( bars._1 * bars._1 * svar1)
+	val svar0bis = svar * sums.x2 / (size * sumstats.x2)
+
+	s += "\n  "+toString
+	s += "\n    R2                 = " + R2
+	s += "\n    std error of beta_1 = " + Math.sqrt(svar1)
+	s += "\n    std error of beta_0 = " + Math.sqrt(svar0)
+	s += "\n    std error of beta_0 = " + Math.sqrt(svar0bis)
+	s += "\n    SSTO = " + sumstats.y2
+	s += "\n    SSE  = " + correlation.rss
+	s += "\n    SSR  = " + correlation.ssr + "\n"
+
+	override def toString: String = "y = " + ("%4.3f" format beta1) + " * x + " + ("%4.3f" format beta0) + " r2: "+("%1.3f" format R2)
+
+
+
+
+}
+
+class Correlation(val pairs: List[(Double,Double)], fit: Function) {
+	var s = ""
+			val size = pairs.size
+			s += "pairs = " + pairs
+
+			// first pass: read in data, compute xbar and ybar
+			val sums = pairs.foldLeft(new X_X2_Y(0D,0D,0D))(_ + new X_X2_Y(_))
+			val bars = (sums.x / size, sums.y / size)
+
+			// second pass: compute summary statistics
+			val sumstats = pairs.foldLeft(new X2_Y2_XY(0D,0D,0D))(_ + new X2_Y2_XY(_, bars))
+
+			// analyze results
+			val correlation = pairs.foldLeft(new RSS_SSR(0D,0D))(_ + RSS_SSR.build(_, bars, fit.func))
+			val R2 = correlation.ssr / sumstats.y2
+
+			s += "\n  "+fit
+			s += "\n    R2  = " + R2
+			s += "\n    SSTO = " + sumstats.y2
+			s += "\n    SSE  = " + correlation.rss
+			s += "\n    SSR  = " + correlation.ssr + "\n"
+
+			override def toString: String = fit + " r2: "+("%1.3f" format R2)
+
+}
+
+object RSS_SSR {
+	def build(p: (Double,Double), bars: (Double,Double), fit: (Double) => Double): RSS_SSR = {
+			val fitResult = fit(p._1)
+					val rss = (fitResult-p._2) * (fitResult-p._2)
+					val ssr = (fitResult-bars._2) * (fitResult-bars._2)
+					new RSS_SSR(rss, ssr)
+	}
+}
+
+class RSS_SSR(val rss: Double, val ssr: Double) {
+	def +(p: RSS_SSR): RSS_SSR = new RSS_SSR(rss+p.rss, ssr+p.ssr)
+}
+
+class X_X2_Y(val x: Double, val x2: Double, val y: Double) {
+	def this(p: (Double,Double)) = this(p._1, p._1*p._1, p._2)
+			def +(p: X_X2_Y): X_X2_Y = new X_X2_Y(x+p.x,x2+p.x2,y+p.y)
+}
+
+class X2_Y2_XY(val x2: Double, val y2: Double, val xy: Double) {
+	def this(p: (Double,Double), bars: (Double,Double)) = this((p._1-bars._1)*(p._1-bars._1), (p._2-bars._2)*(p._2-bars._2),(p._1-bars._1)*(p._2-bars._2))
+			def this(p: XY, bars: XY) = this((p.x-bars.x)*(p.x-bars.x), (p.y-bars.y)*(p.y-bars.y),(p.x-bars.x)*(p.y-bars.y))
+			def +(p: X2_Y2_XY): X2_Y2_XY = new X2_Y2_XY(x2+p.x2,y2+p.y2,xy+p.xy)
+}
+
+class XY(val x: Double, val y: Double) {
+	val hypot = math.sqrt((x*x)+(y*y))
+
+			def this(p: (Double,Double)) = this(p._1,p._2)
+			def +(p: XY): XY = new XY(x+p.x,y+p.y)
+	def -(p: XY): XY = new XY(x-p.x,y-p.y)
+	def *(p: XY): XY = new XY(x*p.x,y*p.y)
+	def *(i: Double): XY = new XY(x*i,y*i)
+	def /(i: Double): XY = new XY(x/i,y/i)
+	override def toString: String = ("(x: %4.3f" format x)+(", y: %4.3f)" format y)
+	def inBounds(bounds :(Double,Double,Double,Double)): Boolean = {
+		val xmin = bounds._1
+				val xmax = bounds._2
+				val ymin = bounds._3
+				val ymax = bounds._4 
+				assume(xmax > xmin,"xmax > xmin")
+		assume(ymax > ymin,"ymax > ymin")
+		(x>xmin)&(x<xmax)&(y>ymin)&(y<ymax)
+	}
+
+	def getBetaFunction(angle: Double): BetaFunction = {
+				val betaFunction = new BetaFunction(math.tan(angle.toRadians), y - (x*math.tan(angle.toRadians)))
+//		L.myPrintDln(toString+" -- "+(" %4.3f" format angle)+"deg--- "+betaFunction.toString)
+		betaFunction
+	}
+	
+	def getAngle: Double = math.toDegrees(-math.atan2(x,y))
+
+}
+
+class X2plusY2(val x2plusy2: Double) {
+	def this(p: XY, bars: XY) = this(((p.x-bars.x)*(p.x-bars.x)) + ((p.y-bars.y)*(p.y-bars.y)))
+			def +(p: X2plusY2): X2plusY2 = new X2plusY2(x2plusy2+p.x2plusy2)
+}
+
+object QuadraticRoots {
+	def solve(a:Double, b:Double, c:Double): List[(Double, Double)]={
+			// solve ax2 + bx + c = 0
+			assume(a!=0.0)
+
+			var roots = ListSet[(Double, Double)]()
+			val d = b*b-4.0*a*c
+			val aa = a+a
+			val minmax = new XY(-b/aa,-d/(aa+aa))
+
+			if (d < 0.0) {  // complex roots
+				val re= -b/aa;
+				val im = math.sqrt(-d)/aa;
+				roots =  roots + ((re, im)) + ((re, -im))
+			} else { // real roots
+				val re=if (b < 0.0) (-b+math.sqrt(d))/aa else (-b -math.sqrt(d))/aa
+						roots =  roots + ((re,0.0)) + ((c/(a*re),0.0))
+			}	
+			myPrintDln("%2.2f x2 + %2.2f x + %2.2f = 0 ".format(a,b,c)+
+					roots.map((p: (Double,Double)) => ("(re: %4.3f" format p._1)+(if(d<0.0) {", im: %4.3f)" format p._2} else {")"}))+
+					" min or max: "+minmax)
+					roots.toList
+	}
+}
