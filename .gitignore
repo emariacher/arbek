@@ -20,10 +20,10 @@
 *.PNG
 *.db
 #*#
-fourmis_sbt/*/target/*
+labyrinthe_et_fourmis/fourmis_sbt/*/target/*
 elliptique_sbt/*/target/*
 MasterMind/*/target/*
 carte1/*/target/*
 PageBlanche_sbt/*/target/*
-ScalaGraphLayout/*/target/*
+labyrinthe_et_fourmis/ScalaGraphLayout/*/target/*
 
