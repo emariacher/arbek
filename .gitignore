@@ -26,4 +26,6 @@ MasterMind/*/target/*
 carte1/*/target/*
 PageBlanche_sbt/*/target/*
 labyrinthe_et_fourmis/ScalaGraphLayout/*/target/*
+labyrinthe_et_fourmis/ScalaGraphLayout/target/*
+labyrinthe_et_fourmis/ScalaGraphLayout/.idea/*
 
