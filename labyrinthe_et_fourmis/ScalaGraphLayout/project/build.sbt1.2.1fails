@@ -1,4 +1,4 @@
-
+logLevel := Level.Debug
 
 val buildSettings = Seq(
   ThisBuild / organization := "org.scalamacros",
