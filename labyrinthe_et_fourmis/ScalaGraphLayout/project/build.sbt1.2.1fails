@@ -10,12 +10,12 @@ val buildSettings = Seq(
 )
 
 
-lazy val fourmis_sbt_root = (project in file("."))
+lazy val scalagraphlayout = (project in file("."))
   .aggregate(macros, core)
   .dependsOn(macros, core)
   .settings(
     buildSettings,
-    name := "fourmis_sbt_root",
+    name := "scalagraphlayout",
     run := run in Compile in core
   )
 
