@@ -22,7 +22,8 @@ object MyBuild extends Build {
     "ScalaGraphLayout",
     file("."),
     settings = buildSettings ++ Seq(
-      run <<= run in Compile in core)
+      logLevel := Level.Debug,
+      run := run in Compile in core)
   ) aggregate(macros, core)
 
   lazy val macros: Project = Project(
@@ -30,6 +31,7 @@ object MyBuild extends Build {
     file("macros"),
     settings = buildSettings ++ Seq(
       libraryDependencies <+= (scalaVersion) ("org.scala-lang" % "scala-reflect" % _),
+      logLevel := Level.Debug,
       libraryDependencies := {
         CrossVersion.partialVersion(scalaVersion.value) match {
           // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
@@ -79,7 +81,7 @@ object MyBuild extends Build {
             // or just libraryDependencies.value if you don't depend on scala-swing
             libraryDependencies.value :+ "org.scala-lang" % "scala-swing" % scalaVersion.value
         }
-      }
+      },logLevel := Level.Debug
     )
   ) dependsOn (macros)
 }
