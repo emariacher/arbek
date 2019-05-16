@@ -9,6 +9,7 @@ object BuildSettings {
     crossScalaVersions := Seq("2.12.6", "2.13.0-M5"),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
+    logLevel := Level.Debug,
     scalacOptions ++= Seq("-feature", "-deprecation")
   )
 }
@@ -17,7 +18,6 @@ object MyBuild extends Build {
 
   import BuildSettings._
 
-  set logLevel := Level.Debug
   lazy val root: Project = Project(
     "ScalaGraphLayout",
     file("."),
