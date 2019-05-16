@@ -17,6 +17,7 @@ object MyBuild extends Build {
 
   import BuildSettings._
 
+  set logLevel := Level.Debug
   lazy val root: Project = Project(
     "ScalaGraphLayout",
     file("."),
