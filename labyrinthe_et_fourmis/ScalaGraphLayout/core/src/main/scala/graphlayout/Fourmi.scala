@@ -131,7 +131,7 @@ class Fourmi(val anode: ANode) {
     c.updatePheromone(tribu)
     logxys.take(index).indexWhere(logitem => logitem._1 == anode.x && logitem._2 == anode.y) match {
       case x if x > -1 =>
-        myPrintDln("Going back taking a shortcut! " + toString, index + " --> " + x)
+        //myPrintDln("Going back taking a shortcut! " + toString, index + " --> " + x)
         index = x // prend un raccourci si jamais t'es deja passe par la
       case _ =>
     }
@@ -160,7 +160,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(300)) {
+        if (aDetecteLaNourriture(500)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
