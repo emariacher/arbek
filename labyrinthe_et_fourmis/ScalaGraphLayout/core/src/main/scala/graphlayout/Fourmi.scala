@@ -50,7 +50,9 @@ class Fourmi(val anode: ANode) {
       }
       compteurDansLesPheromones = 0
     } else {
-      val lfedges1 = listeDesCarresReniflables.map(c => {
+      val lfedges1 = listeDesCarresReniflables
+        .filter(_.hasPheromone(tribu) > listeDesCarresReniflables.length) // si il y a beaucoup de carres reniflables, prends ceux qui ont le plus de pheromones
+        .map(c => {
         val e = new Edge(c.fn, anode)
         e.attraction = Math.min(c.hasPheromone(tribu), 1) // quand meme un peu (1) attire par les carres deja parcourus
         e
@@ -134,8 +136,8 @@ class Fourmi(val anode: ANode) {
   }
 
   def AuxAlentoursDeLaFourmiliere(ouiMaisDOu: Int) = {
-    myPrintDln("Ligne: " + ouiMaisDOu + " A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
-      "%.02f".format(anode.pasLoin(fourmiliere.centre)))
+    myPrintDln(Console.BOLD + "Ligne: " + ouiMaisDOu + " A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
+      "%.02f".format(anode.pasLoin(fourmiliere.centre)) + Console.RESET)
     state = FourmiStateMachine.cherche
     anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
     direction = direction * (-1) // essaye de reprendre le meme chemin
