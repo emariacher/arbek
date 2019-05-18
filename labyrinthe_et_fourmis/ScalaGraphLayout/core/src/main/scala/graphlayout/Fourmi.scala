@@ -25,14 +25,15 @@ class Fourmi(val anode: ANode) {
   var triggerTrace = false
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
+  var compteurPasDansLesPheromones = 0
   var tourneEnRond = 0
   var lastlogcarre = new Carre(0, 0)
 
   override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu
 
   def avance(lc: List[Carre]) = {
-    if ((logcarres.length > 50) | (logxys.length % 200 == 0)) { // remets les compeurs de temps en temps, ca a pas l'air de faire de mal
-      myPrintIt(toString, logcarres.length, logxys.length)
+    if (compteurPasDansLesPheromones % 202 > 200) { // remets les compeurs de temps en temps, ca a pas l'air de faire de mal
+      myPrintIt(toString, compteurPasDansLesPheromones)
       logcarres = List[Carre]()
     }
     val listeDesCarresReniflables = lc.filter(c =>
@@ -49,6 +50,7 @@ class Fourmi(val anode: ANode) {
         )
       }
       compteurDansLesPheromones = 0
+      compteurPasDansLesPheromones += 1
     } else {
       val lfedges1 = listeDesCarresReniflables
         .filter(_.hasPheromone(tribu) > listeDesCarresReniflables.length) // si il y a beaucoup de carres reniflables, prends ceux qui ont le plus de pheromones
@@ -86,6 +88,7 @@ class Fourmi(val anode: ANode) {
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
       compteurDansLesPheromones += 1
+      compteurPasDansLesPheromones = 0
       if (anode.dist(oldnode) < 0.00001) {
         direction = tbx.rnd.nextDouble() * Math.PI * 2
         /*myErrPrintDln(toString + " d%.2f  Stationnaire! ".format(direction) + tourneEnRond,

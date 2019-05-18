@@ -11,7 +11,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 3
+  val number = 4
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
@@ -49,7 +49,7 @@ class Agregats extends GraphAbstract {
       listeDesFourmilieres = listeDesAgregats.map(lln => lln._2.map(ln => (lln._1, ln))).flatten.map(fm => {
         (fm._1, new FixedNode(fm._2.map(_.x).sum / fm._2.length, fm._2.map(_.y).sum / fm._2.length), fm._2)
       }).map(fm => new Fourmiliere(fm._1, fm._2, fm._3.map(an => lfourmi.filter(_.anode == an).head)))
-      MyLog.myPrintIt(listeDesFourmilieres.mkString("[\n  ", "\n  ", "\n]"))
+      MyLog.myPrintIt(Console.BLUE + listeDesFourmilieres.mkString("[\n  ", "\n  ", "\n]") + Console.RESET)
       listeDesFourmilieres.foreach(_.faisSavoirAuxFourmisQuEllesFontPartieDeLaFourmiliere)
     } else {
       listCarreAvecPheronome.foreach(_.evapore)
@@ -140,7 +140,7 @@ class Agregats extends GraphAbstract {
         lnoedges.foreach(e => e.repulsion -= 1)
         compteurDeCompteur = 0
         if (!ledges.isEmpty & !lnoedges.isEmpty) {
-          MyLog.myPrintD("Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n")
+          MyLog.myPrintD(Console.GREEN + "Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n" + Console.RESET)
         }
       }
       StateMachine.rassemble
