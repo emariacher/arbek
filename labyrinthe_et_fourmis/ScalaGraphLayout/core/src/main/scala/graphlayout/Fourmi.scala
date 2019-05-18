@@ -32,7 +32,7 @@ class Fourmi(val anode: ANode) {
   override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu
 
   def avance(lc: List[Carre]) = {
-    if (compteurPasDansLesPheromones % 202 > 200) { // remets les compeurs de temps en temps, ca a pas l'air de faire de mal
+    if ((compteurPasDansLesPheromones % 202 > 200) & (!logcarres.isEmpty)) { // remets les compeurs de temps en temps, ca a pas l'air de faire de mal
       myPrintIt(toString, compteurPasDansLesPheromones)
       logcarres = List[Carre]()
     }
@@ -42,9 +42,9 @@ class Fourmi(val anode: ANode) {
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
-      if ((triggerTrace) & (!listeDesCarresReniflables.isEmpty)) {
-        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction)
-          // , "\n    ",listeDesCarresReniflables.mkString("r{", ",", "}"), listeDesCarresReniflables.length
+      if (compteurDansLesPheromones > 0) {
+        myPrintDln(toString, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction)
+          // , "\n    ",listeDesCarresReniflables.mkString("\n    r{", ",", "}"), listeDesCarresReniflables.length
           // , "\n    ",listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length
           , listeDesCarresReniflables.length, listeDesCarresPasDejaParcourus.length
         )
@@ -52,6 +52,12 @@ class Fourmi(val anode: ANode) {
       compteurDansLesPheromones = 0
       compteurPasDansLesPheromones += 1
     } else {
+      if (compteurPasDansLesPheromones > 300) {
+        myPrintIt("\n" + Console.MAGENTA + toString, compteurPasDansLesPheromones, tourneEnRond,
+          listeDesCarresReniflables.mkString("\n    r{", ",", "}"), listeDesCarresReniflables.length,
+          listeDesCarresPasDejaParcourus.mkString(Console.CYAN + "\n    n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
+          Console.RESET)
+      }
       val lfedges1 = listeDesCarresReniflables
         .filter(_.hasPheromone(tribu) > listeDesCarresReniflables.length) // si il y a beaucoup de carres reniflables, prends ceux qui ont le plus de pheromones
         .map(c => {
@@ -72,7 +78,7 @@ class Fourmi(val anode: ANode) {
         tourneEnRond = 0
       }
       val oldnode = new Node(anode.x, anode.y)
-      if (triggerTrace) {
+      if (compteurPasDansLesPheromones > 300) {
         myErrPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), " d%.2f".format(direction))
         myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
           "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
@@ -139,8 +145,8 @@ class Fourmi(val anode: ANode) {
   }
 
   def AuxAlentoursDeLaFourmiliere(ouiMaisDOu: Int) = {
-    myPrintDln(Console.BOLD + "Ligne: " + ouiMaisDOu + " A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
-      "%.02f".format(anode.pasLoin(fourmiliere.centre)) + Console.RESET)
+    /*myPrintDln(Console.BOLD + "Ligne: " + ouiMaisDOu + " A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
+      "%.02f".format(anode.pasLoin(fourmiliere.centre)) + Console.RESET)*/
     state = FourmiStateMachine.cherche
     anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
     direction = direction * (-1) // essaye de reprendre le meme chemin
