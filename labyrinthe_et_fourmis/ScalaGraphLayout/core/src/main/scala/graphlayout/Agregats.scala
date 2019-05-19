@@ -58,7 +58,7 @@ class Agregats extends GraphAbstract {
     }
     listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
       listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
-      listCarreAvecPheronome.map(_.depotPheromones.filter(_.tribu == a._1).map(_.ph).sum).sum)
+      listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)
     )
 
     StateMachine.travaille

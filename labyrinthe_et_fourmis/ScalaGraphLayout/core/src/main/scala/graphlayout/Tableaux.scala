@@ -4,7 +4,6 @@ import java.awt.Dimension
 import java.util.Calendar
 
 import graphlayout.Tableaux.tbx
-import kebra._
 
 import scala.collection.immutable._
 import scala.util.Random
@@ -20,14 +19,10 @@ object Tableaux {
 class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val origin: Dimension, val graph: GraphAbstract) {
   val maxRow = maxRC.r
   val maxCol = maxRC.c
-  //val seeds = List(0, -1258712602, -2003116831, -2000188942, -2003116831, -1172155944) // valeurs interessantes pour un 10X10
-  val seeds = (0 until 11).toList :+ (-1171074276)
-  // valeurs interessantes pour un 20X20
   val maxWorkers = 5
   val mperfs = scala.collection.mutable.Map.empty[Int, List[Double]]
   var state = StateMachine.reset
   var oldstate = StateMachine.reset
-  var seedIndex = 0
   var seed: Int = _
   var rnd: Random = _
   var ts = 0
@@ -56,16 +51,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     ts += 1
   }
 
-  def getNextSeed: Int = {
-    seedIndex += 1
-    if (seedIndex < seeds.size) {
-      seeds.apply(seedIndex - 1)
-    } else {
-      Calendar.getInstance.getTimeInMillis.toInt
-    }
-  }
-
-
+  def getNextSeed: Int = Calendar.getInstance.getTimeInMillis.toInt
+ 
   def findCarre(rc2f: RowCol): Carre = {
     var z = lc.find(_.rc.equals(rc2f))
     if (z.isEmpty) {

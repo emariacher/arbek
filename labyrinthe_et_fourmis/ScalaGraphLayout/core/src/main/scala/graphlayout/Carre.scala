@@ -13,7 +13,7 @@ class Carre(val rc: RowCol) {
 
   val row = rc.r
   val col = rc.c
-  var depotPheromones = List[Depot]()
+  var depotPheromones = scala.collection.mutable.Map[Tribu, Double]()
   val XY = {
     val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
     val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
@@ -27,39 +27,23 @@ class Carre(val rc: RowCol) {
   override def toString: String = "{r" + row + ", c" + col + "}"
 
   def updatePheromone(tribu: Tribu) = {
-    var z = depotPheromones.find(_.tribu == tribu)
-    if (z.isEmpty) {
-      depotPheromones = depotPheromones :+ new Depot(Depot.valeurDepot, tribu)
-    } else {
-      z.head.update(Depot.valeurDepot)
-    }
+    depotPheromones(tribu) = depotPheromones.getOrElse(tribu, .0) + Depot.valeurDepot
   }
 
-  def hasPheromone(tribu: Tribu) = {
-    var z = depotPheromones.find(_.tribu == tribu)
-    if (z.isEmpty) {
-      .0
-    } else {
-      z.head.ph
-    }
-
-  }
+  def hasPheromone(tribu: Tribu) = depotPheromones.getOrElse(tribu, .0)
 
   def egal(c: Carre): Boolean = c.fn.x == fn.x & c.fn.y == fn.y
 
-  def getDepot(tribu: Tribu) = depotPheromones.filter(_.tribu == tribu).map(_.ph).sum
-
-  def isLast() = (rc == tbx.maxRC.moinsUn)
-
   def evapore = {
-    depotPheromones.foreach(_.evapore)
-    depotPheromones = depotPheromones.filter(_.ph > Depot.evapore).sortBy(_.ph).reverse.take(2) // le 3eme depot de pheromone est gomme par les 2 premiers
+    depotPheromones = depotPheromones.map(depot => (depot._1, depot._2 * Depot.evaporation))
+    val moyennePheromones = depotPheromones.values.sum / depotPheromones.toList.length
+    depotPheromones = depotPheromones.filter(_._2 > Depot.evapore).filter(_._2 > moyennePheromones - 0.01) // les gros depots de pheromone gomment les petits
   }
 
   def paint(g: Graphics2D) {
-    depotPheromones.sortBy(_.ph).reverse.foreach(d => {
-      g.setColor(d.tribu.c.color)
-      val radius = Math.max((d.ph / Depot.display).toInt, 2)
+    depotPheromones.foreach(d => {
+      g.setColor(d._1.c.color)
+      val radius = Math.max((d._2 / Depot.display).toInt, 2)
       g.drawRect(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
       //g.drawString(depotPheromones.map(_.toString).mkString("[", ",", "]"), XY._1.toInt - 3, XY._2.toInt - 3)
     })

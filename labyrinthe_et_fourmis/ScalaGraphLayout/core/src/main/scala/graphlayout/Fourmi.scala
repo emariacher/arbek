@@ -31,13 +31,14 @@ class Fourmi(val anode: ANode) {
 
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c =>
-      anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, (tourneEnRond * tourneEnRond) + 1) & c.hasPheromone(tribu) > 0)
+      anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, tourneEnRond * tourneEnRond) & c.hasPheromone(tribu) > 0)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
       compteurDansLesPheromones = 0
       compteurPasDansLesPheromones += 1
+      if (compteurPasDansLesPheromones > 30) tourneEnRond = 0
       logcarres = List[Carre]()
     } else {
       if (compteurPasDansLesPheromones > 300) {
@@ -56,7 +57,8 @@ class Fourmi(val anode: ANode) {
       val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
         val e = new Edge(c.fn, anode)
         e.attraction = Math.max(c.hasPheromone(tribu),
-          10 + tourneEnRond + (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length)
+          10 + (tourneEnRond * tourneEnRond) +
+            (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length) * 20
         ) // quand ca tourne en rond, force la sortie
         e
       })
@@ -148,7 +150,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(300)) {
+        if (aDetecteLaNourriture(200)) {
           state = FourmiStateMachine.detecte
           direction = anode.getNodeDirection(jnode)
         } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
