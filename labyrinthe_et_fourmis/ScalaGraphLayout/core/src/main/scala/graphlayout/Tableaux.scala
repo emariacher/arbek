@@ -52,7 +52,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   }
 
   def getNextSeed: Int = Calendar.getInstance.getTimeInMillis.toInt
- 
+
   def findCarre(rc2f: RowCol): Carre = {
     var z = lc.find(_.rc.equals(rc2f))
     if (z.isEmpty) {
