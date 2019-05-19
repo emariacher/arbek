@@ -61,6 +61,7 @@ class Carre(val rc: RowCol) {
       g.setColor(d.tribu.c.color)
       val radius = Math.max((d.ph / Depot.display).toInt, 2)
       g.drawRect(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
+      //g.drawString(depotPheromones.map(_.toString).mkString("[", ",", "]"), XY._1.toInt - 3, XY._2.toInt - 3)
     })
   }
 

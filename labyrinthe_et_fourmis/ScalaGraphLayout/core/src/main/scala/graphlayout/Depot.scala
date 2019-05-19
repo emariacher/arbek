@@ -14,4 +14,6 @@ class Depot(var ph: Double, val tribu: Tribu) {
   def update(d: Double) = ph += d
 
   def evapore = ph = ph * Depot.evaporation
+
+  override def toString: String = " %s/%.0f".format(tribu, ph)
 }

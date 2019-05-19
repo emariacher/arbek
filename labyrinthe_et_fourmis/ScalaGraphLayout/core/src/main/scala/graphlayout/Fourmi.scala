@@ -150,19 +150,12 @@ class Fourmi(val anode: ANode) {
         avance(lc)
         if (aDetecteLaNourriture(300)) {
           state = FourmiStateMachine.detecte
-          //myPrintIt(tribu)
-          oldDistance = anode.dist(jnode)
           direction = anode.getNodeDirection(jnode)
         } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
           AuxAlentoursDeLaFourmiliere(L_)
         }
       case FourmiStateMachine.detecte =>
         avanceDroit
-        val newDistance = anode.dist(jnode)
-        /*if ((newDistance > oldDistance) && (triggerTrace)) {
-          myErrPrintDln(tribu, "od %.1f, nd %.1f, d %.02f, ".format(oldDistance, newDistance, direction))
-          triggerTrace = false
-        }*/
         if (aDetecteLaNourriture(10)) {
           state = FourmiStateMachine.retourne
           index = logxys.length - 2
