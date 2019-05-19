@@ -20,8 +20,6 @@ class Fourmi(val anode: ANode) {
   var state: FourmiStateMachine = FourmiStateMachine.cherche
   var logxys = List[(Int, Int, FourmiStateMachine)]()
   var index: Int = _
-  val distributionAvecPheromone = new UniformRealDistribution()
-  var oldDistance = .0
   var triggerTrace = false
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
@@ -32,25 +30,15 @@ class Fourmi(val anode: ANode) {
   override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu
 
   def avance(lc: List[Carre]) = {
-    if ((compteurPasDansLesPheromones % 202 > 200) & (!logcarres.isEmpty)) { // remets les compeurs de temps en temps, ca a pas l'air de faire de mal
-      myPrintIt(toString, compteurPasDansLesPheromones)
-      logcarres = List[Carre]()
-    }
     val listeDesCarresReniflables = lc.filter(c =>
       anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, (tourneEnRond * tourneEnRond) + 1) & c.hasPheromone(tribu) > 0)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
-      if (compteurDansLesPheromones > 0) {
-        myPrintDln(toString, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction)
-          // , "\n    ",listeDesCarresReniflables.mkString("\n    r{", ",", "}"), listeDesCarresReniflables.length
-          // , "\n    ",listeDesCarresPasDejaParcourus.mkString("n{", ",", "}"), listeDesCarresPasDejaParcourus.length
-          , listeDesCarresReniflables.length, listeDesCarresPasDejaParcourus.length
-        )
-      }
       compteurDansLesPheromones = 0
       compteurPasDansLesPheromones += 1
+      logcarres = List[Carre]()
     } else {
       if (compteurPasDansLesPheromones > 300) {
         myPrintIt("\n" + Console.MAGENTA + toString, compteurPasDansLesPheromones, tourneEnRond,
@@ -160,7 +148,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
-        if (aDetecteLaNourriture(500)) {
+        if (aDetecteLaNourriture(300)) {
           state = FourmiStateMachine.detecte
           //myPrintIt(tribu)
           oldDistance = anode.dist(jnode)
