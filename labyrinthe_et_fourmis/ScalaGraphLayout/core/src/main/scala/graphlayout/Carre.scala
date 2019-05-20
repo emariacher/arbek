@@ -28,9 +28,9 @@ class Carre(val rc: RowCol) {
 
   def dist(c: Carre) = fn.dist(c.fn)
 
-  def updatePheromone(tribu: Tribu) = {
-    depotPheromones(tribu) = depotPheromones.getOrElse(tribu, .0) + Depot.valeurDepot
-  }
+  def milieu(c: Carre): Carre = tbx.findCarre(fn.x + ((c.fn.x - fn.x) / 2), fn.y + ((c.fn.y - fn.y) / 2))
+
+  def updatePheromone(tribu: Tribu) = depotPheromones(tribu) = depotPheromones.getOrElse(tribu, .0) + Depot.valeurDepot
 
   def hasPheromone(tribu: Tribu) = depotPheromones.getOrElse(tribu, .0)
 

@@ -146,10 +146,14 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
-    val ldistances = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1), l.head._2)).filter(_._1 > 30)
+    val lissage = 30
+    val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+      l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > lissage)
+    val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
     myPrintDln(Console.BLUE + toString + Console.RESET)
-    myPrintDln(Console.BOLD + logxys.mkString("\n--- lc{", ",", "}") + Console.RESET)
-    myPrintDln(ldistances.mkString("\n--- ld>30{", ",", "}"))
+    myPrintln(Console.BOLD + logxys.zipWithIndex.mkString("--- lxys{", ",", "}") + Console.RESET)
+    myPrintln(lsauts.mkString("--- ld>" + lissage + "{" + Console.MAGENTA, Console.RESET + "," + Console.MAGENTA, Console.RESET + "}"))
+    myPrintln(llissage.mkString("--- ls{" + Console.BLUE, Console.RESET + "," + Console.BLUE, Console.RESET + "}"))
   }
 
   def doZeJob(lc: List[Carre]): Unit = {
