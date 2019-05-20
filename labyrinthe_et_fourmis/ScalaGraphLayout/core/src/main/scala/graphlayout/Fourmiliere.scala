@@ -2,7 +2,10 @@ package graphlayout
 
 import java.awt.Graphics2D
 
+import graphlayout.Tableaux.tbx
+
 class Fourmiliere(val tribu: Tribu, val centre: FixedNode, val lfourmi: List[Fourmi]) {
+  val c = tbx.findCarre(centre.x, centre.y)
   var retoursFourmiliere = scala.collection.mutable.Map[Int, Int]()
 
   def faisSavoirAuxFourmisQuEllesFontPartieDeLaFourmiliere = lfourmi.foreach(_.fourmiliere = this)

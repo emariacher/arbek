@@ -26,6 +26,8 @@ class Carre(val rc: RowCol) {
 
   override def toString: String = "{r" + row + ", c" + col + "}"
 
+  def dist(c: Carre) = fn.dist(c.fn)
+
   def updatePheromone(tribu: Tribu) = {
     depotPheromones(tribu) = depotPheromones.getOrElse(tribu, .0) + Depot.valeurDepot
   }
