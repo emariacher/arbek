@@ -30,6 +30,8 @@ class Node(var x: Double, var y: Double) {
     }
   }
 
+  def egal(n: Node): Boolean = (n.x == x & n.y == y)
+
   def update(ux: Double, uy: Double, umouvement: Double) {
     myAssert2(ux.isNaN, false)
     myAssert2(uy.isNaN, false)

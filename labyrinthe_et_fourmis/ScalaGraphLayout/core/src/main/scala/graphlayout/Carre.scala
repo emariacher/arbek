@@ -34,7 +34,7 @@ class Carre(val rc: RowCol) {
 
   def hasPheromone(tribu: Tribu) = depotPheromones.getOrElse(tribu, .0)
 
-  def egal(c: Carre): Boolean = c.fn.x == fn.x & c.fn.y == fn.y
+  def egal(c: Carre): Boolean = c.fn.egal(fn)
 
   def evapore = {
     depotPheromones = depotPheromones.map(depot => (depot._1, depot._2 * Depot.evaporation))
@@ -53,7 +53,11 @@ class Carre(val rc: RowCol) {
 
   def getVoisins(lc: List[Carre]) = lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
 
-  def getVoisins = tbx.lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
+  def get9Voisins = tbx.lc.filter((cf: Carre) => Math.abs(cf.row - row) <= 1 | Math.abs(cf.col - col) <= 1)
+
+  def get8Voisins = get9Voisins.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) != 0)
+
+  def getVoisins = get9Voisins.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
 
   def getLeftCarre = tbx.lc.find((cf: Carre) => cf.row == row && cf.col == col - 1).getOrElse(null)
 
