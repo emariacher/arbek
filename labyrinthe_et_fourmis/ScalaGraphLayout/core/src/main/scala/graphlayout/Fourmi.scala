@@ -155,10 +155,12 @@ class Fourmi(val anode: ANode) {
     myPrintDln(Console.BLUE + toString + Console.RESET)
     myPrintln(Console.BOLD + logxys.length, logxys.zipWithIndex.mkString("--- avant lxys{", ",", "}") + Console.RESET)
     myPrintln(lsauts.mkString("--- ld>" + lissage + "{" + Console.MAGENTA, Console.RESET + "," + Console.MAGENTA, Console.RESET + "}"))
-    myPrintln(llissage.mkString("--- ls{" + Console.BLUE, Console.RESET + "," + Console.BLUE, Console.RESET + "}"))
+    //myPrintln(llissage.mkString("--- ls{" + Console.BLUE, Console.RESET + "," + Console.BLUE, Console.RESET + "}"))
     if (!llissage.isEmpty) {
-      val toBeInserted = llissage.head
-      logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
+      llissage.reverse.foreach(toBeInserted => {
+        myPrintln(toBeInserted)
+        logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
+      })
       myPrintln(logxys.length, logxys.mkString("--- apres lxys{", ",", "}\n"))
     }
   }
