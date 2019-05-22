@@ -27,7 +27,9 @@ class Fourmi(val anode: ANode) {
   var tourneEnRond = 0
   var lastlogcarre = new Carre(0, 0)
 
-  override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu
+  def carre = tbx.findCarre(anode.x, anode.y)
+
+  override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu + carre
 
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c =>
@@ -69,7 +71,7 @@ class Fourmi(val anode: ANode) {
       }
       val oldnode = new Node(anode.x, anode.y)
       /*if (compteurPasDansLesPheromones > 300) {
-        myErrPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), " d%.2f".format(direction))
+        myErrPrintDln(tribu, anode, carre, " d%.2f".format(direction))
         myPrintln(listeDesCarresReniflables.map(c => (c, c.XYInt,
           "ph%.0f".format(c.hasPheromone(tribu)), "di%.2f".format(anode.pasLoin(c.XY)))).mkString("r{", ",", "}"),
           listeDesCarresReniflables.length)
@@ -82,7 +84,7 @@ class Fourmi(val anode: ANode) {
       Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
         listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
       direction = oldnode.getNodeDirection(anode)
-      logcarres = (logcarres :+ tbx.findCarre(anode.x, anode.y)).distinct
+      logcarres = (logcarres :+ carre).distinct
       compteurDansLesPheromones += 1
       compteurPasDansLesPheromones = 0
       if (anode.dist(oldnode) < 0.00001) {
@@ -93,7 +95,7 @@ class Fourmi(val anode: ANode) {
         avanceAPeuPresCommeAvant
       }
       if (triggerTrace) {
-        myPrintDln(tribu, anode, tbx.findCarre(anode.x, anode.y), "d%.2f".format(direction), tourneEnRond, "\n")
+        myPrintDln(tribu, anode, carre, "d%.2f".format(direction), tourneEnRond, "\n")
       }
     }
   }
@@ -151,9 +153,14 @@ class Fourmi(val anode: ANode) {
       l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > lissage)
     val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
     myPrintDln(Console.BLUE + toString + Console.RESET)
-    myPrintln(Console.BOLD + logxys.zipWithIndex.mkString("--- lxys{", ",", "}") + Console.RESET)
+    myPrintln(Console.BOLD + logxys.length, logxys.zipWithIndex.mkString("--- avant lxys{", ",", "}") + Console.RESET)
     myPrintln(lsauts.mkString("--- ld>" + lissage + "{" + Console.MAGENTA, Console.RESET + "," + Console.MAGENTA, Console.RESET + "}"))
     myPrintln(llissage.mkString("--- ls{" + Console.BLUE, Console.RESET + "," + Console.BLUE, Console.RESET + "}"))
+    if (!llissage.isEmpty) {
+      val toBeInserted = llissage.head
+      logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
+      myPrintln(logxys.length, logxys.mkString("--- apres lxys{", ",", "}\n"))
+    }
   }
 
   def doZeJob(lc: List[Carre]): Unit = {
@@ -221,10 +228,9 @@ class Fourmi(val anode: ANode) {
       g.setColor(Color.black)
     }
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
-    val c = tbx.findCarre(anode.x, anode.y)
-    if (!c.egal(lastlogcarre)) {
-      logxys = logxys :+ (c, state)
-      lastlogcarre = c
+    if (!carre.egal(lastlogcarre)) {
+      logxys = logxys :+ (carre, state)
+      lastlogcarre = carre
     }
     /*if (triggerTrace) {
       myPrintDln(toString, state)
@@ -240,6 +246,7 @@ object FourmiStateMachine {
   val cherche = FourmiStateMachine("cherche")
   val detecte = FourmiStateMachine("detecte")
   val retourne = FourmiStateMachine("retourne")
+  val lisse = FourmiStateMachine("lisse")
 }
 
 
