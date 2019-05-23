@@ -18,6 +18,7 @@ class Fourmi(val anode: ANode) {
   var direction: Double = .0
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
+  var previousState = state
   var logxys = List[(Carre, FourmiStateMachine)]()
   var index: Int = _
   var triggerTrace = false
@@ -115,7 +116,7 @@ class Fourmi(val anode: ANode) {
 
   def rembobine: Int = {
     myAssert3(index < 1, false, toString + " " + index)
-    myAssert3(index < logxys.length, true, toString + " " + index + "<" + logxys.length)
+    myAssert3(index < logxys.length, true, toString + " " + index + "<" + logxys.length + " " + previousState)
     index -= 1
     val c = logxys.apply(index)._1
     anode.moveTo(c.fn)
@@ -159,6 +160,7 @@ class Fourmi(val anode: ANode) {
   }
 
   def doZeJob(lc: List[Carre]): Unit = {
+    previousState = state
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
