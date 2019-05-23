@@ -115,6 +115,7 @@ class Fourmi(val anode: ANode) {
 
   def rembobine: Int = {
     myAssert3(index < 1, false, toString + " " + index)
+    myAssert3(index < logxys.length, true, toString + " " + index + "<" + logxys.length)
     index -= 1
     val c = logxys.apply(index)._1
     anode.moveTo(c.fn)
@@ -152,17 +153,9 @@ class Fourmi(val anode: ANode) {
     val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
       l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > lissage)
     val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
-    myPrintDln(Console.BLUE + toString + Console.RESET)
-    myPrintln(Console.BOLD + logxys.length, logxys.zipWithIndex.mkString("--- avant lxys{", ",", "}") + Console.RESET)
-    myPrintln(lsauts.mkString("--- ld>" + lissage + "{" + Console.MAGENTA, Console.RESET + "," + Console.MAGENTA, Console.RESET + "}"))
-    //myPrintln(llissage.mkString("--- ls{" + Console.BLUE, Console.RESET + "," + Console.BLUE, Console.RESET + "}"))
-    if (!llissage.isEmpty) {
-      llissage.reverse.foreach(toBeInserted => {
-        myPrintln(toBeInserted)
-        logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
-      })
-      myPrintln(logxys.length, logxys.mkString("--- apres lxys{", ",", "}\n"))
-    }
+    llissage.reverse.foreach(toBeInserted => {
+      logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
+    })
   }
 
   def doZeJob(lc: List[Carre]): Unit = {
