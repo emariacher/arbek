@@ -126,7 +126,7 @@ class Fourmi(val anode: ANode) {
     myAssert3(c == null, false, toString)
     c.updatePheromone(tribu)
     logxys.take(index).indexWhere(logitem => logitem._1.egal(c)) match {
-    //logxys.take(index).indexWhere(logitem => logitem._1.get9Voisins.contains(c)) match {
+      //logxys.take(index).indexWhere(logitem => logitem._1.get9Voisins.contains(c)) match {
       case x if x > -1 =>
         //myPrintDln("Going back taking a shortcut! " + toString, index + " --> " + x)
         index = x // prend un raccourci si jamais t'es deja passe par la
@@ -154,13 +154,24 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
-    val lissage = 30
-    val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
-      l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > lissage)
-    val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
-    llissage.reverse.foreach(toBeInserted => {
-      logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
-    })
+    { // sauts trop grands
+      val lissage = 30
+      val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+        l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > lissage)
+      val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
+      llissage.reverse.foreach(toBeInserted => {
+        logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
+      })
+    }
+    { // simplifie les amas de pheromones
+      myPrintDln(logxys.mkString("xys{", ",", "}"), logxys.length)
+      val log4voisins = logxys.map(c => c._1.get8Voisins.filter(v => logxys.contains(v))).filter(lc => lc.length > 2)
+      myPrintDln(logxys.map(c => (Console.RED + c._1 + Console.RESET, c._1.get8Voisins)).mkString(
+        "4va{\n  " + Console.BLUE, Console.RESET + "\n  ," + Console.BLUE, Console.RESET + "}"))
+      myPrintDln(logxys.map(c => c._1.get8Voisins.filter(v => logxys.contains(v))).filter(!_.isEmpty).mkString(
+        "4vb{\n  " + Console.MAGENTA, Console.RESET + "\n  ," + Console.MAGENTA, Console.RESET + "}"))
+      myPrintDln(log4voisins.mkString("4vc{", ",", "}\n"))
+    }
   }
 
   def doZeJob(lc: List[Carre]): Unit = {

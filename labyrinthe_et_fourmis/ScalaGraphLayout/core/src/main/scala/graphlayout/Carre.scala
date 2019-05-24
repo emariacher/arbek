@@ -53,7 +53,7 @@ class Carre(val rc: RowCol) {
 
   def getVoisins(lc: List[Carre]) = lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
 
-  def get9Voisins = tbx.lc.filter((cf: Carre) => Math.abs(cf.row - row) <= 1 | Math.abs(cf.col - col) <= 1)
+  def get9Voisins = tbx.lc.filter((cf: Carre) => Math.abs(cf.row - row) <= 1 & Math.abs(cf.col - col) <= 1)
 
   def get8Voisins = get9Voisins.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) != 0)
 
