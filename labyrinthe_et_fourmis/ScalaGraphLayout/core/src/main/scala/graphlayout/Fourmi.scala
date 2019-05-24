@@ -116,13 +116,17 @@ class Fourmi(val anode: ANode) {
 
   def rembobine: Int = {
     myAssert3(index < 1, false, toString + " " + index)
-    myAssert3(index < logxys.length, true, toString + " " + index + "<" + logxys.length + " " + previousState)
+    //myAssert3(index < logxys.length, true, toString + " " + index + "<" + logxys.length + " " + previousState)
+    if (index > logxys.length) {
+      myErrPrintDln(toString + " " + index + "<" + logxys.length + " " + previousState)
+    }
     index -= 1
     val c = logxys.apply(index)._1
     anode.moveTo(c.fn)
     myAssert3(c == null, false, toString)
     c.updatePheromone(tribu)
     logxys.take(index).indexWhere(logitem => logitem._1.egal(c)) match {
+    //logxys.take(index).indexWhere(logitem => logitem._1.get9Voisins.contains(c)) match {
       case x if x > -1 =>
         //myPrintDln("Going back taking a shortcut! " + toString, index + " --> " + x)
         index = x // prend un raccourci si jamais t'es deja passe par la
@@ -164,6 +168,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.cherche =>
         avance(lc)
+        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
         if (aDetecteLaNourriture(200)) {
           state = FourmiStateMachine.detecte
           direction = anode.getNodeDirection(jnode)
@@ -177,13 +182,15 @@ class Fourmi(val anode: ANode) {
           lisseLeRetour
           index = logxys.length - 2
         }
+        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
       case FourmiStateMachine.retourne =>
         if ((rembobine == 0) || (estALaFourmiliere)) {
           state = AuxAlentoursDeLaFourmiliere(L_)
         }
+        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
       case _ => myErrPrintDln(state)
     }
-    redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
+
   }
 
   def aDetecteLaNourriture(limitDetection: Double) = (anode.dist(jnode) < limitDetection)

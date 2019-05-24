@@ -11,7 +11,7 @@ import scala.util.Random
 class Agregats extends GraphAbstract {
   var MouseState = MouseStateMachine.reset
   var nearestNode: ANode = _
-  val number = 20
+  val number = 4
   var compteurDAgregatsFormes = 0
   var compteurDAgregatsFormesOld = 0
   var compteurDeCompteur = 0 // Le nombre d'agregats de taille egale a number evolue t'il?
