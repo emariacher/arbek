@@ -164,13 +164,12 @@ class Fourmi(val anode: ANode) {
       })
     }
     { // simplifie les amas de pheromones
-      myPrintDln(logxys.mkString("xys{", ",", "}"), logxys.length)
-      val log4voisins = logxys.map(c => c._1.get8Voisins.filter(v => logxys.exists(_._1.egal(v)))).filter(_.length > 2)
-      myPrintDln(logxys.map(c => (Console.RED + c._1 + Console.RESET, c._1.get8Voisins)).mkString(
+      val log4voisins = logxys.map(c => (c._1, c._1.get8Voisins.filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
+      /*myPrintDln(logxys.map(c => (Console.RED + c._1 + Console.RESET, c._1.get8Voisins)).mkString(
         "4va{\n  " + Console.BLUE, Console.RESET + "\n  ," + Console.BLUE, Console.RESET + "}"))
       myPrintDln(logxys.map(c => c._1.get8Voisins.filter(v => logxys.exists(_._1.egal(v)))).filter(!_.isEmpty).mkString(
-        "4vb{\n  " + Console.MAGENTA, Console.RESET + "\n  ," + Console.MAGENTA, Console.RESET + "}"))
-      myPrintDln(log4voisins.mkString(
+        "4vb{\n  " + Console.MAGENTA, Console.RESET + "\n  ," + Console.MAGENTA, Console.RESET + "}"))*/
+      myPrintDln(log4voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2)).mkString(
         "4vc{\n  " + Console.GREEN, Console.RESET + "\n  ," + Console.GREEN, Console.RESET + "}"))
     }
   }
