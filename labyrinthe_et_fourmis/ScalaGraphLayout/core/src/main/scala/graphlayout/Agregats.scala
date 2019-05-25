@@ -56,6 +56,13 @@ class Agregats extends GraphAbstract {
       listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
       lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
     }
+    var lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
+    lfourmi.foreach(f => {
+      f.lcompteurState.foreach(s => {
+        lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
+      })
+    })
+    tbx.zp.lbl.text = lcompteurState.mkString("", ",", "")
     listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
       listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)

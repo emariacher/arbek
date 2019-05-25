@@ -25,6 +25,7 @@ class Fourmi(val anode: ANode) {
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
   var compteurPasDansLesPheromones = 0
+  var lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
   var tourneEnRond = 0
   var lastlogcarre = new Carre(0, 0)
 
@@ -43,6 +44,7 @@ class Fourmi(val anode: ANode) {
       compteurPasDansLesPheromones += 1
       if (compteurPasDansLesPheromones > 30) tourneEnRond = 0
       logcarres = List[Carre]()
+      state = FourmiStateMachine.cherche
     } else {
       /*if (compteurPasDansLesPheromones > 300) {
         myPrintIt("\n" + Console.MAGENTA + toString, compteurPasDansLesPheromones, tourneEnRond,
@@ -67,8 +69,10 @@ class Fourmi(val anode: ANode) {
       })
       if (listeDesCarresPasDejaParcourus.isEmpty) {
         tourneEnRond += 1
+        state = FourmiStateMachine.tourneEnRond
       } else {
         tourneEnRond = 0
+        state = FourmiStateMachine.surlaTrace
       }
       val oldnode = new Node(anode.x, anode.y)
       /*if (compteurPasDansLesPheromones > 300) {
@@ -154,7 +158,7 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
-    { // sauts trop grands
+    { // sauts trop grands / rajoute quand il n'y en a pas assez
       val lissage = 30
       val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > lissage)
@@ -163,7 +167,7 @@ class Fourmi(val anode: ANode) {
         logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
       })
     }
-    { // simplifie les amas de pheromones
+    { // simplifie les amas de pheromones / enleve quand il y en a trop
       val log4voisins = logxys.map(c => (c._1, c._1.get8Voisins.filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
       /*myPrintDln(logxys.map(c => (Console.RED + c._1 + Console.RESET, c._1.get8Voisins)).mkString(
         "4va{\n  " + Console.BLUE, Console.RESET + "\n  ," + Console.BLUE, Console.RESET + "}"))
@@ -178,6 +182,24 @@ class Fourmi(val anode: ANode) {
     previousState = state
     state match {
       case FourmiStateMachine.cherche =>
+        avance(lc)
+        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
+        if (aDetecteLaNourriture(200)) {
+          state = FourmiStateMachine.detecte
+          direction = anode.getNodeDirection(jnode)
+        } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
+          state = AuxAlentoursDeLaFourmiliere(L_)
+        }
+      case FourmiStateMachine.surlaTrace =>
+        avance(lc)
+        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
+        if (aDetecteLaNourriture(200)) {
+          state = FourmiStateMachine.detecte
+          direction = anode.getNodeDirection(jnode)
+        } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
+          state = AuxAlentoursDeLaFourmiliere(L_)
+        }
+      case FourmiStateMachine.tourneEnRond =>
         avance(lc)
         redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
         if (aDetecteLaNourriture(200)) {
@@ -201,7 +223,7 @@ class Fourmi(val anode: ANode) {
         redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
       case _ => myErrPrintDln(state)
     }
-
+    lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
   }
 
   def aDetecteLaNourriture(limitDetection: Double) = (anode.dist(jnode) < limitDetection)
@@ -219,6 +241,14 @@ class Fourmi(val anode: ANode) {
     logxys.foreach(p => {
       p._2 match {
         case FourmiStateMachine.cherche =>
+          pheronomeD = 2
+          fourmiL = 7
+          fourmiH = 12
+        case FourmiStateMachine.surlaTrace =>
+          pheronomeD = 2
+          fourmiL = 7
+          fourmiH = 12
+        case FourmiStateMachine.tourneEnRond =>
           pheronomeD = 2
           fourmiL = 7
           fourmiH = 12
@@ -259,6 +289,8 @@ case class FourmiStateMachine private(state: String) {
 
 object FourmiStateMachine {
   val cherche = FourmiStateMachine("cherche")
+  val surlaTrace = FourmiStateMachine("surlaTrace")
+  val tourneEnRond = FourmiStateMachine("tourneEnRond")
   val detecte = FourmiStateMachine("detecte")
   val retourne = FourmiStateMachine("retourne")
   val lisse = FourmiStateMachine("lisse")
