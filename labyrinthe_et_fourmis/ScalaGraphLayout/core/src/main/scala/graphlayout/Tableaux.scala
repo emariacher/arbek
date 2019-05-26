@@ -45,6 +45,8 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         state = graph.ouestlajaffe
       case StateMachine.travaille =>
         state = graph.travaille
+      case StateMachine.croisiere =>
+        state = graph.travaille
       case StateMachine.reset => state = graph.reset
       case _ =>
     }
@@ -73,6 +75,7 @@ object StateMachine {
   val rassemble = StateMachine("rassemble")
   val ouestlajaffe = StateMachine("ouEstLaJaffe")
   val travaille = StateMachine("travaille")
+  val croisiere = StateMachine("croisiere")
   val reset = StateMachine("reset")
 }
 

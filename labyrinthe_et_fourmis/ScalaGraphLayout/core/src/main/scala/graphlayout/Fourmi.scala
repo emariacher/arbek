@@ -145,14 +145,14 @@ class Fourmi(val anode: ANode) {
     }
   }
 
-  def AuxAlentoursDeLaFourmiliere(ouiMaisDOu: Int): FourmiStateMachine = {
+  def AuxAlentoursDeLaFourmiliere: FourmiStateMachine = {
     /*myPrintDln(Console.BOLD + "Ligne: " + ouiMaisDOu + " A la fourmiliere !", toString, index, estALaFourmiliere, fourmiliere.centre,
       "%.02f".format(anode.pasLoin(fourmiliere.centre)) + Console.RESET)*/
     anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
     direction = direction * (-1) // essaye de reprendre le meme chemin
     logxys = List((fourmiliere.c, state))
     logcarres = List(fourmiliere.c)
-    fourmiliere.retour(ouiMaisDOu)
+    fourmiliere.retour(state)
     tourneEnRond = 0
     FourmiStateMachine.cherche
   }
@@ -187,7 +187,7 @@ class Fourmi(val anode: ANode) {
       state = FourmiStateMachine.detecte
       direction = anode.getNodeDirection(jnode)
     } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
-      state = AuxAlentoursDeLaFourmiliere(L_)
+      state = AuxAlentoursDeLaFourmiliere
     }
   }
 
@@ -207,7 +207,7 @@ class Fourmi(val anode: ANode) {
         redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
       case FourmiStateMachine.retourne =>
         if ((rembobine == 0) || (estALaFourmiliere)) {
-          state = AuxAlentoursDeLaFourmiliere(L_)
+          state = AuxAlentoursDeLaFourmiliere
         }
         redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
       case _ => myErrPrintDln(state)
