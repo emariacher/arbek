@@ -158,6 +158,17 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
+    { // simplifie les amas de pheromones / enleve quand il y en a trop
+      val log8voisins = logxys.map(c => (c._1, c._1.get8Voisins
+        .filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
+      myPrintDln(log8voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2))
+        .mkString("4vc{\n  ", Console.RESET + "\n  ,", Console.RESET + "}"))
+      val log8voisins_1 = log8voisins.map(_._1)
+      val log8voisins_2 = log8voisins.map(_._2).flatten
+      val lvaenlever = log8voisins_2.filter(v => !log8voisins_1.contains(v))
+      myPrintDln(lvaenlever
+        .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))
+    }
     { // sauts trop grands / rajoute quand il n'y en a pas assez
       val lissage = 30
       val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
@@ -167,47 +178,25 @@ class Fourmi(val anode: ANode) {
         logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
       })
     }
-    { // simplifie les amas de pheromones / enleve quand il y en a trop
-      val log4voisins = logxys.map(c => (c._1, c._1.get8Voisins.filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
-      /*myPrintDln(logxys.map(c => (Console.RED + c._1 + Console.RESET, c._1.get8Voisins)).mkString(
-        "4va{\n  " + Console.BLUE, Console.RESET + "\n  ," + Console.BLUE, Console.RESET + "}"))
-      myPrintDln(logxys.map(c => c._1.get8Voisins.filter(v => logxys.exists(_._1.egal(v)))).filter(!_.isEmpty).mkString(
-        "4vb{\n  " + Console.MAGENTA, Console.RESET + "\n  ," + Console.MAGENTA, Console.RESET + "}"))*/
-      myPrintDln(log4voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2)).mkString(
-        "4vc{\n  " + Console.GREEN, Console.RESET + "\n  ," + Console.GREEN, Console.RESET + "}"))
+  }
+
+  def cherche(lc: List[Carre]) = {
+    avance(lc)
+    redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
+    if (aDetecteLaNourriture(200)) {
+      state = FourmiStateMachine.detecte
+      direction = anode.getNodeDirection(jnode)
+    } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
+      state = AuxAlentoursDeLaFourmiliere(L_)
     }
   }
 
   def doZeJob(lc: List[Carre]): Unit = {
     previousState = state
     state match {
-      case FourmiStateMachine.cherche =>
-        avance(lc)
-        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
-        if (aDetecteLaNourriture(200)) {
-          state = FourmiStateMachine.detecte
-          direction = anode.getNodeDirection(jnode)
-        } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
-          state = AuxAlentoursDeLaFourmiliere(L_)
-        }
-      case FourmiStateMachine.surlaTrace =>
-        avance(lc)
-        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
-        if (aDetecteLaNourriture(200)) {
-          state = FourmiStateMachine.detecte
-          direction = anode.getNodeDirection(jnode)
-        } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
-          state = AuxAlentoursDeLaFourmiliere(L_)
-        }
-      case FourmiStateMachine.tourneEnRond =>
-        avance(lc)
-        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
-        if (aDetecteLaNourriture(200)) {
-          state = FourmiStateMachine.detecte
-          direction = anode.getNodeDirection(jnode)
-        } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
-          state = AuxAlentoursDeLaFourmiliere(L_)
-        }
+      case FourmiStateMachine.cherche => cherche(lc)
+      case FourmiStateMachine.surlaTrace => cherche(lc)
+      case FourmiStateMachine.tourneEnRond => cherche(lc)
       case FourmiStateMachine.detecte =>
         avanceDroit
         if (aDetecteLaNourriture(10)) {
@@ -284,7 +273,7 @@ class Fourmi(val anode: ANode) {
 }
 
 case class FourmiStateMachine private(state: String) {
-  override def toString = "FourmiState_" + state
+  override def toString = "FS_" + state
 }
 
 object FourmiStateMachine {
