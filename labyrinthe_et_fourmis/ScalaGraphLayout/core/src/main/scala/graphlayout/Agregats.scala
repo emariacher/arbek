@@ -62,13 +62,16 @@ class Agregats extends GraphAbstract {
         lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
       })
     })
-    tbx.zp.lbl.text = lcompteurState.mkString("", ",", "")
+    tbx.zp.lbl.text = tbx.state + lcompteurState.mkString(" ", ",", "")
     listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
       listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)
     )
-
-    StateMachine.travaille
+    if (listeDesFourmilieres.filter(!_.recoitDeLaJaffe).isEmpty) {
+      StateMachine.croisiere
+    } else {
+      StateMachine.travaille
+    }
   }
 
   var countOuEstLaJaffe = 0
@@ -298,6 +301,8 @@ class Agregats extends GraphAbstract {
       case StateMachine.ouestlajaffe =>
         lnodes.foreach(_.paint(g))
       case StateMachine.travaille =>
+        lfourmi.foreach(_.paint(g))
+      case StateMachine.croisiere =>
         lfourmi.foreach(_.paint(g))
       case _ =>
     }

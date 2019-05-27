@@ -119,7 +119,10 @@ class Fourmi(val anode: ANode) {
   }
 
   def rembobine: Int = {
-    myAssert3(index < 1, false, toString + " " + index)
+    //myAssert3(index < 1, false, toString + " " + index)
+    if (index < 1) {
+      myErrPrintDln(toString + " " + index + " " + previousState)
+    }
     //myAssert3(index < logxys.length, true, toString + " " + index + "<" + logxys.length + " " + previousState)
     if (index > logxys.length) {
       myErrPrintDln(toString + " " + index + "<" + logxys.length + " " + previousState)
