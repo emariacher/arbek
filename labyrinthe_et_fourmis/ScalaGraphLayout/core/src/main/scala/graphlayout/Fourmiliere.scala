@@ -15,13 +15,6 @@ class Fourmiliere(val tribu: Tribu, val centre: FixedNode, val lfourmi: List[Fou
 
   def recoitDeLaJaffe = retoursFourmiliere.getOrElse(FourmiStateMachine.retourne, 0) != 0
 
-  def resetCompteurs = retoursFourmiliere = scala.collection.mutable.Map[FourmiStateMachine, Int]()
-
-  def resetAllButCompteur(state: FourmiStateMachine) = {
-    resetCompteurs
-    retour(state)
-  }
-
   override def toString = tribu + " " + centre + " " + lfourmi.mkString("{", ",", "}")
 
   def paint(g: Graphics2D) {

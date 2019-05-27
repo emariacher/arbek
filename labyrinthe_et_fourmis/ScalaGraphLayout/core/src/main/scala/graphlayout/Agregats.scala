@@ -3,7 +3,7 @@ package graphlayout
 import java.awt.Graphics2D
 
 import graphlayout.Tableaux.tbx
-import kebra.MyLog
+import kebra.MyLog._
 
 import scala.math.{max, min}
 import scala.util.Random
@@ -45,11 +45,11 @@ class Agregats extends GraphAbstract {
         f.direction = tbx.rnd.nextDouble() * Math.PI * 2
         f.jnode = ljaffe.filter(_.tribu == f.anode.tribu).head
       })
-      MyLog.myPrintIt(lfourmi.find(_.anode.selected))
+      myPrintIt(lfourmi.find(_.anode.selected))
       listeDesFourmilieres = listeDesAgregats.map(lln => lln._2.map(ln => (lln._1, ln))).flatten.map(fm => {
         (fm._1, new FixedNode(fm._2.map(_.x).sum / fm._2.length, fm._2.map(_.y).sum / fm._2.length), fm._2)
       }).map(fm => new Fourmiliere(fm._1, fm._2, fm._3.map(an => lfourmi.filter(_.anode == an).head)))
-      MyLog.myPrintIt(Console.BLUE + listeDesFourmilieres.mkString("[\n  ", "\n  ", "\n]") + Console.RESET)
+      myPrintIt(Console.BLUE + listeDesFourmilieres.mkString("[\n  ", "\n  ", "\n]") + Console.RESET)
       listeDesFourmilieres.foreach(_.faisSavoirAuxFourmisQuEllesFontPartieDeLaFourmiliere)
     } else {
       listCarreAvecPheronome.foreach(_.evapore)
@@ -67,10 +67,23 @@ class Agregats extends GraphAbstract {
       listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)
     )
-    if (listeDesFourmilieres.filter(!_.recoitDeLaJaffe).isEmpty) {
-      StateMachine.croisiere
+    if (tbx.state == StateMachine.travaille) {
+      if (listeDesFourmilieres.filter(!_.recoitDeLaJaffe).isEmpty) {
+        myErrPrintDln(tbx.state, lcompteurState.mkString(" ", ",", ""))
+        lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
+        lfourmi.foreach(f => {
+          f.lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
+          f.lcompteurState.foreach(s => {
+            lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
+          })
+        })
+        myErrPrintDln(StateMachine.croisiere, lcompteurState.mkString(" ", ",", ""))
+        StateMachine.croisiere
+      } else {
+        StateMachine.travaille
+      }
     } else {
-      StateMachine.travaille
+      StateMachine.croisiere
     }
   }
 
@@ -117,7 +130,7 @@ class Agregats extends GraphAbstract {
     lnoedges.filter(_.getDist._1 < 500).foreach(_.ecarte) // occupe toi seulement d'ecarter potentiellement les noeuds si ils a moins de 500 l'un de l'autre
     lnodes.foreach(_.remetsDansLeTableau(tbx.zp.largeur, tbx.zp.hauteur, 10))
     if (nearestNode != null) {
-      MyLog.myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
+      myPrintln("/%.2f".format(nearestNode.slidingAverageDeltax), "/%.2f".format(nearestNode.slidingAverageDeltay))
     }
 
     listeDesAgregats = Tribu.tribus.map(t => (t, listeAgregats(t, 100)))
@@ -150,7 +163,7 @@ class Agregats extends GraphAbstract {
         lnoedges.foreach(e => e.repulsion -= 1)
         compteurDeCompteur = 0
         if (!ledges.isEmpty & !lnoedges.isEmpty) {
-          MyLog.myPrintD(Console.GREEN + "Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n" + Console.RESET)
+          myPrintD(Console.GREEN + "Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n" + Console.RESET)
         }
       }
       StateMachine.rassemble
@@ -244,10 +257,10 @@ class Agregats extends GraphAbstract {
               }
               nearestNode = nearestFNode._1
               nearestNode.selected = true
-              MyLog.myPrintIt(mouse, nearestNode)
+              myPrintIt(mouse, nearestNode)
               MouseState = MouseStateMachine.drag
             } else {
-              MyLog.myPrintIt(lnodes.map(n => (n, n.pasLoin(mouse._2.toDouble, mouse._3.toDouble))).sortBy(_._2).mkString)
+              myPrintIt(lnodes.map(n => (n, n.pasLoin(mouse._2.toDouble, mouse._3.toDouble))).sortBy(_._2).mkString)
             }
           case _ => //MyLog.myPrintIt(mouse)
         }

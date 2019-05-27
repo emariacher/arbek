@@ -20,7 +20,7 @@ class Fourmi(val anode: ANode) {
   var state: FourmiStateMachine = FourmiStateMachine.cherche
   var previousState = state
   var logxys = List[(Carre, FourmiStateMachine)]()
-  var index: Int = _
+  var indexlog: Int = _
   var triggerTrace = false
   var logcarres = List[Carre]()
   var compteurDansLesPheromones = 0
@@ -119,27 +119,21 @@ class Fourmi(val anode: ANode) {
   }
 
   def rembobine: Int = {
-    //myAssert3(index < 1, false, toString + " " + index)
-    if (index < 1) {
-      myErrPrintDln(toString + " " + index + " " + previousState)
-    }
-    //myAssert3(index < logxys.length, true, toString + " " + index + "<" + logxys.length + " " + previousState)
-    if (index > logxys.length) {
-      myErrPrintDln(toString + " " + index + "<" + logxys.length + " " + previousState)
-    }
-    index -= 1
-    val c = logxys.apply(index)._1
+    myAssert3(indexlog < 1, false, toString + " " + indexlog)
+    myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length + " " + previousState)
+    indexlog -= 1
+    val c = logxys.apply(indexlog)._1
     anode.moveTo(c.fn)
     myAssert3(c == null, false, toString)
     c.updatePheromone(tribu)
-    logxys.take(index).indexWhere(logitem => logitem._1.egal(c)) match {
+    logxys.take(indexlog).indexWhere(logitem => logitem._1.egal(c)) match {
       //logxys.take(index).indexWhere(logitem => logitem._1.get9Voisins.contains(c)) match {
       case x if x > -1 =>
         //myPrintDln("Going back taking a shortcut! " + toString, index + " --> " + x)
-        index = x // prend un raccourci si jamais t'es deja passe par la
+        indexlog = x // prend un raccourci si jamais t'es deja passe par la
       case _ =>
     }
-    index
+    indexlog
   }
 
   def redirige(largeur: Int, hauteur: Int, border: Int, rnd: Random): Unit = {
@@ -154,6 +148,7 @@ class Fourmi(val anode: ANode) {
     anode.moveTo(fourmiliere.centre) // teleporte toi au centre de la fourmiliere
     direction = direction * (-1) // essaye de reprendre le meme chemin
     logxys = List((fourmiliere.c, state))
+    indexlog = 0
     logcarres = List(fourmiliere.c)
     fourmiliere.retour(state)
     tourneEnRond = 0
@@ -164,22 +159,26 @@ class Fourmi(val anode: ANode) {
     { // simplifie les amas de pheromones / enleve quand il y en a trop
       val log8voisins = logxys.map(c => (c._1, c._1.get8Voisins
         .filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
-      myPrintDln(log8voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2))
-        .mkString("4vc{\n  ", Console.RESET + "\n  ,", Console.RESET + "}"))
+      /*myPrintDln(log8voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2))
+        .mkString("4vc{\n  ", Console.RESET + "\n  ,", Console.RESET + "}"))*/
       val log8voisins_1 = log8voisins.map(_._1)
       val log8voisins_2 = log8voisins.map(_._2).flatten
       val lvaenlever = log8voisins_2.filter(v => !log8voisins_1.contains(v))
-      myPrintDln(lvaenlever
-        .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))
+      /*myPrintDln(lvaenlever
+        .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))*/
     }
     { // sauts trop grands / rajoute quand il n'y en a pas assez
       val lissage = 30
       val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > lissage)
-      val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
-      llissage.reverse.foreach(toBeInserted => {
-        logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
-      })
+      if (!lsauts.isEmpty) {
+        val oldlength = logxys.length
+        val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
+        llissage.reverse.foreach(toBeInserted => {
+          logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
+        })
+        myPrintDln(toString + " <-- " + oldlength)
+      }
     }
   }
 
@@ -205,7 +204,7 @@ class Fourmi(val anode: ANode) {
         if (aDetecteLaNourriture(10)) {
           state = FourmiStateMachine.retourne
           lisseLeRetour
-          index = logxys.length - 2
+          indexlog = logxys.length - 2
         }
         redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
       case FourmiStateMachine.retourne =>
