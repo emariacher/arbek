@@ -19,6 +19,7 @@ class Fourmi(val anode: ANode) {
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
   var previousState = state
+  var stateCompteur = 0
   var logxys = List[(Carre, FourmiStateMachine)]()
   var indexlog: Int = _
   var triggerTrace = false
@@ -72,7 +73,7 @@ class Fourmi(val anode: ANode) {
         state = FourmiStateMachine.tourneEnRond
       } else {
         tourneEnRond = 0
-        state = FourmiStateMachine.surlaTrace
+        state = FourmiStateMachine.surLaTrace
       }
       val oldnode = new Node(anode.x, anode.y)
       /*if (compteurPasDansLesPheromones > 300) {
@@ -119,8 +120,8 @@ class Fourmi(val anode: ANode) {
   }
 
   def rembobine: Int = {
-    myAssert3(indexlog < 1, false, toString + " " + indexlog)
-    myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length + " " + previousState)
+    myAssert3(indexlog < 1, false, toString + " " + indexlog + " " + previousState + "[" + stateCompteur + "]")
+    myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length + " " + previousState + "[" + stateCompteur + "]")
     indexlog -= 1
     val c = logxys.apply(indexlog)._1
     anode.moveTo(c.fn)
@@ -197,7 +198,7 @@ class Fourmi(val anode: ANode) {
     previousState = state
     state match {
       case FourmiStateMachine.cherche => cherche(lc)
-      case FourmiStateMachine.surlaTrace => cherche(lc)
+      case FourmiStateMachine.surLaTrace => cherche(lc)
       case FourmiStateMachine.tourneEnRond => cherche(lc)
       case FourmiStateMachine.detecte =>
         avanceDroit
@@ -215,6 +216,12 @@ class Fourmi(val anode: ANode) {
       case _ => myErrPrintDln(state)
     }
     lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
+    if (previousState != state) {
+      stateCompteur = 0
+    } else {
+      stateCompteur += 1
+    }
+
   }
 
   def aDetecteLaNourriture(limitDetection: Double) = (anode.dist(jnode) < limitDetection)
@@ -235,7 +242,7 @@ class Fourmi(val anode: ANode) {
           pheronomeD = 2
           fourmiL = 7
           fourmiH = 12
-        case FourmiStateMachine.surlaTrace =>
+        case FourmiStateMachine.surLaTrace =>
           pheronomeD = 2
           fourmiL = 7
           fourmiH = 12
@@ -275,12 +282,12 @@ class Fourmi(val anode: ANode) {
 }
 
 case class FourmiStateMachine private(state: String) {
-  override def toString = "FS_" + state
+  override def toString = state
 }
 
 object FourmiStateMachine {
   val cherche = FourmiStateMachine("cherche")
-  val surlaTrace = FourmiStateMachine("surlaTrace")
+  val surLaTrace = FourmiStateMachine("surLaTrace")
   val tourneEnRond = FourmiStateMachine("tourneEnRond")
   val detecte = FourmiStateMachine("detecte")
   val retourne = FourmiStateMachine("retourne")
