@@ -63,10 +63,15 @@ class Agregats extends GraphAbstract {
       })
     })
     tbx.zp.lbl.text = tbx.state + lcompteurState.mkString(" ", ",", "")
-    listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
+    /*listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
       listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)
-    )
+    )*/
+    listeDesAgregats.foreach(a => a._1.label.text = ",%.0f".format({
+      val lc = listCarreAvecPheronome.filter(!_.depotPheromones.filter(_._1 == a._1).isEmpty)
+      lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length
+    }))
+
     if (tbx.state == StateMachine.travaille) {
       if (listeDesFourmilieres.filter(!_.recoitDeLaJaffe).isEmpty) {
         myErrPrintDln(tbx.state, lcompteurState.mkString(" ", ",", ""))

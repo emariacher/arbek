@@ -177,7 +177,7 @@ class Fourmi(val anode: ANode) {
         llissage.reverse.foreach(toBeInserted => {
           logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
         })
-        myPrintDln(toString + " <-- " + oldlength)
+        //myPrintDln(toString + " <-- " + oldlength)
       }
     }
   }
