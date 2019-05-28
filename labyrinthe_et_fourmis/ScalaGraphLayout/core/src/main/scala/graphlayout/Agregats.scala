@@ -66,12 +66,17 @@ class Agregats extends GraphAbstract {
     /*listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
       listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)
-    )*/
+    )
     listeDesAgregats.foreach(a => a._1.label.text = ",%.0f".format({
       val lc = listCarreAvecPheronome.filter(!_.depotPheromones.filter(_._1 == a._1).isEmpty)
       lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length
-    }))
+    }))*/
 
+    val listeDesMoyennesDePheromones = listeDesAgregats.map(a => {
+      val lc = listCarreAvecPheronome.filter(!_.depotPheromones.filter(_._1 == a._1).isEmpty)
+      (a, lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length, lc.length)
+    })
+    listeDesMoyennesDePheromones.foreach(z => z._1._1.label.text = ",%.0f/%d".format(z._2, z._3))
     if (tbx.state == StateMachine.travaille) {
       if (listeDesFourmilieres.filter(!_.recoitDeLaJaffe).isEmpty) {
         myErrPrintDln(tbx.state, lcompteurState.mkString(" ", ",", ""))
@@ -87,6 +92,12 @@ class Agregats extends GraphAbstract {
       } else {
         StateMachine.travaille
       }
+    } else if (listeDesMoyennesDePheromones.sortBy(_._2).tail.filter(_._2 < 100).isEmpty) { // arrete quand presque toutes les fourmilieres sont bien approvisionnees
+      listeDesAgregats.foreach(a => myErrPrintln(", %s/%.0f".format(
+        listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
+        listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)))
+      listeDesMoyennesDePheromones.foreach(z => myErrPrintln("%s %.0f/%d".format(z._1, z._2, z._3)))
+      StateMachine.reset
     } else {
       StateMachine.croisiere
     }
