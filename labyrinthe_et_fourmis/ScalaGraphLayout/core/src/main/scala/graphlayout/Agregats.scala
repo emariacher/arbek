@@ -208,6 +208,15 @@ class Agregats extends GraphAbstract {
   }
 
   def reset: StateMachine = {
+    listeDesAgregats = List.empty[(Tribu, List[List[ANode]])]
+    listeDesFourmilieres = List[Fourmiliere]()
+    lCoins = List.empty[FixedNode]
+    ledgesJaffe = List[Edge]()
+    lnoedgesJaffe = List[Edge]()
+    ljaffe = List.empty[JNode]
+    lfourmi = List.empty[Fourmi]
+    listCarreAvecPheronome = List[Carre]()
+
     tbx.seed = tbx.getNextSeed
     tbx.rnd = new Random(tbx.seed)
     lnodes.foreach(n => {
