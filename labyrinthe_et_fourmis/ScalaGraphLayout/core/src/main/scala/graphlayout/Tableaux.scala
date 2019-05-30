@@ -28,7 +28,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var ts = 0
   var lc = List.empty[Carre]
 
-  var ltimestamps = List[Long](0)
+  var ltimestamps = scala.collection.mutable.Map[StateMachine, Int]()
   var t_startAkka: Calendar = _
   var nrOfWorkers = 4
 
@@ -50,6 +50,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
       case StateMachine.reset => state = graph.reset
       case _ =>
     }
+    ltimestamps(state) = ltimestamps.getOrElse(state, 0) + 1
     ts += 1
   }
 
@@ -68,7 +69,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
 }
 
 case class StateMachine private(state: String) {
-  override def toString = "State_" + state
+  override def toString = state
 }
 
 object StateMachine {

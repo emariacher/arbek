@@ -122,7 +122,8 @@ class Fourmi(val anode: ANode) {
   def rembobine: Int = {
     myAssert3(indexlog < 1, false, toString + " " + indexlog + " " + previousState + "[" + stateCompteur + "]")
     myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length +
-      " " + previousState + "[" + stateCompteur + "]--> "+ state)
+      " " + previousState + "[" + stateCompteur + "]" + fourmiliere.retoursFourmiliere.mkString("", ", ", "\n") +
+      logxys.mkString(","))
     indexlog -= 1
     val c = logxys.apply(indexlog)._1
     anode.moveTo(c.fn)

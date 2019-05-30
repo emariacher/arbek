@@ -45,11 +45,11 @@ class Agregats extends GraphAbstract {
         f.direction = tbx.rnd.nextDouble() * Math.PI * 2
         f.jnode = ljaffe.filter(_.tribu == f.anode.tribu).head
       })
-      myPrintIt(lfourmi.find(_.anode.selected))
+      //myPrintIt(lfourmi.find(_.anode.selected))
       listeDesFourmilieres = listeDesAgregats.map(lln => lln._2.map(ln => (lln._1, ln))).flatten.map(fm => {
         (fm._1, new FixedNode(fm._2.map(_.x).sum / fm._2.length, fm._2.map(_.y).sum / fm._2.length), fm._2)
       }).map(fm => new Fourmiliere(fm._1, fm._2, fm._3.map(an => lfourmi.filter(_.anode == an).head)))
-      myPrintIt(Console.BLUE + listeDesFourmilieres.mkString("[\n  ", "\n  ", "\n]") + Console.RESET)
+      //myPrintIt(Console.BLUE + listeDesFourmilieres.mkString("[\n  ", "\n  ", "\n]") + Console.RESET)
       listeDesFourmilieres.foreach(_.faisSavoirAuxFourmisQuEllesFontPartieDeLaFourmiliere)
     } else {
       listCarreAvecPheronome.foreach(_.evapore)
@@ -74,12 +74,12 @@ class Agregats extends GraphAbstract {
 
     val listeDesMoyennesDePheromones = listeDesAgregats.map(a => {
       val lc = listCarreAvecPheronome.filter(!_.depotPheromones.filter(_._1 == a._1).isEmpty)
-      (a, lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length, lc.length)
+      (a._1, lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length, lc.length)
     })
-    listeDesMoyennesDePheromones.foreach(z => z._1._1.label.text = ",%.0f/%d".format(z._2, z._3))
+    listeDesMoyennesDePheromones.foreach(z => z._1.label.text = ",%.0f/%d".format(z._2, z._3))
     if (tbx.state == StateMachine.travaille) {
       if (listeDesFourmilieres.filter(!_.recoitDeLaJaffe).isEmpty) {
-        myErrPrintDln(tbx.state, lcompteurState.mkString(" ", ",", ""))
+        //myErrPrintDln(tbx.state, lcompteurState.mkString(" ", ",", ""))
         lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
         lfourmi.foreach(f => {
           f.lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
@@ -87,19 +87,20 @@ class Agregats extends GraphAbstract {
             lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
           })
         })
-        myErrPrintDln(StateMachine.croisiere, lcompteurState.mkString(" ", ",", ""))
         StateMachine.croisiere
       } else {
-        tbx.ts = 0 // keep timeStamp at 0 as long as all ant hills have not been reached at least once
         StateMachine.travaille
       }
-    } else if (listeDesMoyennesDePheromones.sortBy(_._2).tail.filter(d => !d._2.isNaN & d._2 < 120).isEmpty) {
+    } else if ((listeDesMoyennesDePheromones.filter(d => d._2.isNaN).isEmpty) &
+      (listeDesMoyennesDePheromones.sortBy(_._2).tail.filter(_._2 < 120).isEmpty)) {
       // reset quand presque toutes les fourmilieres sont bien approvisionnees
-      listeDesAgregats.foreach(a => myErrPrintDln(tbx.state, ", %s/%.0f".format(a._1 + " " +
+      /*listeDesAgregats.foreach(a => myErrPrintDln(tbx.state, ", %s/%.0f".format(a._1 + " " +
         listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
-        listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)))
-      listeDesMoyennesDePheromones.foreach(z => myErrPrintln("  %s %.0f/%d".format(z._1, z._2, z._3)))
-      myErrPrintDln(tbx.ts, listeDesFourmilieres.map(_.retoursFourmiliere.get(FourmiStateMachine.retourne)).mkString("", ", ", ""))
+        listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)))*/
+      myErrPrintDln(listeDesMoyennesDePheromones.sortBy(_._2).map(z => "%s %.0f/%d".format(z._1, z._2, z._3)).mkString("", ", ", ""))
+      myErrPrintln(tbx.ltimestamps.mkString("", ", ", ""))
+      myErrPrintln(listeDesFourmilieres.map(_.retoursFourmiliere.get(FourmiStateMachine.retourne)).mkString("  ", ", ", ""))
+      myErrPrintln(lcompteurState.mkString(" ", ",", ""))
       StateMachine.reset
     } else {
       StateMachine.croisiere
@@ -182,7 +183,8 @@ class Agregats extends GraphAbstract {
         lnoedges.foreach(e => e.repulsion -= 1)
         compteurDeCompteur = 0
         if (!ledges.isEmpty & !lnoedges.isEmpty) {
-          myPrintD(Console.GREEN + "Aidons la Nature! attraction = " + ledges.head.attraction + ", repulsion = " + lnoedges.head.repulsion + "\n" + Console.RESET)
+          myPrintD(Console.GREEN + tbx.state + " Aidons la Nature! attraction = " + ledges.head.attraction
+            + ", repulsion = " + lnoedges.head.repulsion + "\n" + Console.RESET)
         }
       }
       StateMachine.rassemble
@@ -219,6 +221,7 @@ class Agregats extends GraphAbstract {
     ljaffe = List.empty[JNode]
     lfourmi = List.empty[Fourmi]
     listCarreAvecPheronome = List[Carre]()
+    tbx.ltimestamps = scala.collection.mutable.Map[StateMachine, Int]()
 
     tbx.seed = tbx.getNextSeed
     tbx.rnd = new Random(tbx.seed)
