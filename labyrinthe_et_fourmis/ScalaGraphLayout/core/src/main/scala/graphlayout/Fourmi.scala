@@ -121,7 +121,8 @@ class Fourmi(val anode: ANode) {
 
   def rembobine: Int = {
     myAssert3(indexlog < 1, false, toString + " " + indexlog + " " + previousState + "[" + stateCompteur + "]")
-    myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length + " " + previousState + "[" + stateCompteur + "]")
+    myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length +
+      " " + previousState + "[" + stateCompteur + "]--> "+ state)
     indexlog -= 1
     val c = logxys.apply(indexlog)._1
     anode.moveTo(c.fn)
@@ -206,8 +207,9 @@ class Fourmi(val anode: ANode) {
           state = FourmiStateMachine.retourne
           lisseLeRetour
           indexlog = logxys.length - 2
+        } else {
+          redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
         }
-        redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
       case FourmiStateMachine.retourne =>
         if ((rembobine == 0) || (estALaFourmiliere)) {
           state = AuxAlentoursDeLaFourmiliere

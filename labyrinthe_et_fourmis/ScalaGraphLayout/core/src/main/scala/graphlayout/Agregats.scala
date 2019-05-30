@@ -62,7 +62,7 @@ class Agregats extends GraphAbstract {
         lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
       })
     })
-    tbx.zp.lbl.text = tbx.state + lcompteurState.mkString(" ", ",", "")
+    tbx.zp.lbl.text = tbx.ts + " " + tbx.state + lcompteurState.mkString(" ", ",", "")
     /*listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
       listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
       listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)
@@ -90,13 +90,16 @@ class Agregats extends GraphAbstract {
         myErrPrintDln(StateMachine.croisiere, lcompteurState.mkString(" ", ",", ""))
         StateMachine.croisiere
       } else {
+        tbx.ts = 0 // keep timeStamp at 0 as long as all ant hills have not been reached at least once
         StateMachine.travaille
       }
-    } else if (listeDesMoyennesDePheromones.sortBy(_._2).tail.filter(_._2 < 100).isEmpty) { // arrete quand presque toutes les fourmilieres sont bien approvisionnees
-      listeDesAgregats.foreach(a => myErrPrintln(", %s/%.0f".format(
+    } else if (listeDesMoyennesDePheromones.sortBy(_._2).tail.filter(d => !d._2.isNaN & d._2 < 120).isEmpty) {
+      // reset quand presque toutes les fourmilieres sont bien approvisionnees
+      listeDesAgregats.foreach(a => myErrPrintDln(tbx.state, ", %s/%.0f".format(a._1 + " " +
         listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
         listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)))
-      listeDesMoyennesDePheromones.foreach(z => myErrPrintln("%s %.0f/%d".format(z._1, z._2, z._3)))
+      listeDesMoyennesDePheromones.foreach(z => myErrPrintln("  %s %.0f/%d".format(z._1, z._2, z._3)))
+      myErrPrintDln(tbx.ts, listeDesFourmilieres.map(_.retoursFourmiliere.get(FourmiStateMachine.retourne)).mkString("", ", ", ""))
       StateMachine.reset
     } else {
       StateMachine.croisiere
