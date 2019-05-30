@@ -34,6 +34,7 @@ class Agregats extends GraphAbstract {
   var ljaffe = List.empty[JNode]
   var lfourmi = List.empty[Fourmi]
   var listCarreAvecPheronome = List[Carre]()
+  val limiteArrete = 120
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
@@ -92,13 +93,13 @@ class Agregats extends GraphAbstract {
         StateMachine.travaille
       }
     } else if ((listeDesMoyennesDePheromones.filter(d => d._2.isNaN).isEmpty) &
-      (listeDesMoyennesDePheromones.sortBy(_._2).tail.filter(_._2 < 120).isEmpty)) {
+      (listeDesMoyennesDePheromones.sortBy(_._2).tail.filter(_._2 < limiteArrete).isEmpty)) {
       // reset quand presque toutes les fourmilieres sont bien approvisionnees
       /*listeDesAgregats.foreach(a => myErrPrintDln(tbx.state, ", %s/%.0f".format(a._1 + " " +
         listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
         listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)))*/
       myErrPrintDln(listeDesMoyennesDePheromones.sortBy(_._2).map(z => "%s %.0f/%d".format(z._1, z._2, z._3)).mkString("", ", ", ""))
-      myErrPrintln(tbx.ltimestamps.mkString("", ", ", ""))
+      myErrPrintln(limiteArrete, tbx.ltimestamps.mkString("", ", ", ""))
       myErrPrintln(listeDesFourmilieres.map(_.retoursFourmiliere.get(FourmiStateMachine.retourne)).mkString("  ", ", ", ""))
       myErrPrintln(lcompteurState.mkString(" ", ",", ""))
       StateMachine.reset
