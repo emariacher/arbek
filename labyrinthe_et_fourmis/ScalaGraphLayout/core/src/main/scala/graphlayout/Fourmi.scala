@@ -10,10 +10,7 @@ import scala.collection.immutable.List
 import scala.util.Random
 
 class Fourmi(val anode: ANode) {
-  val CEstLaFourmiliere = 20.0
   var fourmiliere: Fourmiliere = _
-  val influenceDesPheromones = 40.0
-  val angleDeReniflage = (Math.PI * 4 / 5)
   val tribu = anode.tribu
   var direction: Double = .0
   var jnode: JNode = _
@@ -36,9 +33,9 @@ class Fourmi(val anode: ANode) {
 
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c =>
-      anode.pasLoin(c.XY) < Math.max(influenceDesPheromones, tourneEnRond * tourneEnRond) & c.hasPheromone(tribu) > 0)
+      anode.pasLoin(c.XY) < Math.max(ParametresPourFourmi.influenceDesPheromones, tourneEnRond * tourneEnRond) & c.hasPheromone(tribu) > 0)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
-      .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < angleDeReniflage)
+      .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < ParametresPourFourmi.angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > 10) {
       avanceAPeuPresCommeAvant
       compteurDansLesPheromones = 0
@@ -106,7 +103,7 @@ class Fourmi(val anode: ANode) {
     }
   }
 
-  def estALaFourmiliere = anode.pasLoin(fourmiliere.centre) < CEstLaFourmiliere
+  def estALaFourmiliere = anode.pasLoin(fourmiliere.centre) < ParametresPourFourmi.CEstLaFourmiliere
 
   def avanceAPeuPresCommeAvant = {
     direction = new NormalDistribution(direction, 0.1).sample
@@ -122,8 +119,9 @@ class Fourmi(val anode: ANode) {
   def rembobine: Int = {
     myAssert3(indexlog < 1, false, toString + " " + indexlog + " " + previousState + "[" + stateCompteur + "]")
     myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length +
-      " " + previousState + "[" + stateCompteur + "]" + fourmiliere.retoursFourmiliere.mkString("", ", ", "\n") +
-      logxys.mkString(","))
+      " " + previousState + "[" + stateCompteur + "] fmcentre[" + fourmiliere.centre + "] " + fourmiliere.retoursFourmiliere.mkString("rf(", ", ", ")\n") +
+      logxys.mkString("  logxys(", ", ", ")\n")
+    )
     indexlog -= 1
     val c = logxys.apply(indexlog)._1
     anode.moveTo(c.fn)
