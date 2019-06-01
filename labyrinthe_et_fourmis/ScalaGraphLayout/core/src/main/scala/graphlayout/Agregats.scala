@@ -171,14 +171,13 @@ class Agregats extends GraphAbstract {
         ln.head.toString2.toDouble
       }).sum
     }).sum.toInt
-    val stabilisationRassemble = 100
-    agitationMoyenne = ((agitationMoyenne * stabilisationRassemble) + agitation) / (stabilisationRassemble + 1)
+    agitationMoyenne = ((agitationMoyenne * ParametresPourFourmi.stabilisationRassemble) + agitation) / (ParametresPourFourmi.stabilisationRassemble + 1)
     tbx.zp.lbl.text = tbx.zp.lbl.text + "[" + compteurDAgregatsFormes + "," + compteurDeCompteur + "] " + agitationMoyenne
-    if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > stabilisationRassemble)
+    if ((agitationMoyenne < (Tribu.tribus.length * 3)) & (compteurDeCompteur > ParametresPourFourmi.stabilisationRassemble)
       & (listeDesAgregats.count(_._2.length == 1) > Math.min(2, listeDesAgregats.length - 1))) {
       StateMachine.ouestlajaffe
     } else {
-      if (compteurDeCompteur > stabilisationRassemble) {
+      if (compteurDeCompteur > ParametresPourFourmi.stabilisationRassemble) {
         ledges.foreach(e => e.attraction += 1)
         lnoedges.foreach(e => e.repulsion -= 1)
         compteurDeCompteur = 0
