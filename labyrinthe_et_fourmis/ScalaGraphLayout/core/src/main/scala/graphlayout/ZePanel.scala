@@ -22,6 +22,9 @@ class ZeActor extends Actor {
     case slider: (String, Int) =>
       tbx.graph.doZeSliderJob(slider)
       context.setReceiveTimeout(tbx.graph.slider_timeout millisecond)
+    case "stop" =>
+      LL.l.myErrPrintDln("stop")
+      MyLog.myAssert2(true,false)
     case "step" =>
       LL.l.myErrPrintDln("step")
       ZePanel.zp.repaint

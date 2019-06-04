@@ -11,6 +11,7 @@ import scala.swing.{Label, Slider, _}
 class UI(graph: GraphAbstract) extends SimpleSwingApplication {
   val titre = "graphlayout."
   val buttonStepLbl = "step"
+  val buttonStopLbl = "stop"
   val labelLbl = "Idle Label"
   newMyLL(this.getClass.getName, new File("out\\cowabunga"), "htm", true)
 
@@ -42,6 +43,9 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
     val buttonStep = new Button {
       text = buttonStepLbl
     }
+    val buttonStop = new Button {
+      text = buttonStopLbl
+    }
     val label = new Label {
       text = labelLbl
     }
@@ -59,6 +63,7 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
       contents += ZePanel.zp
       contents += new BoxPanel(Orientation.Horizontal) {
         contents += sliderpp
+        contents += buttonStop
         contents += buttonStep
       }
       contents += new BoxPanel(Orientation.Horizontal) {
@@ -77,7 +82,7 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
         case _ => MyLog.myPrintIt("Ici!")
       }
     }
-    listenTo(sliderpp, sliderAttraction, sliderRepulsion, buttonStep)
+    listenTo(sliderpp, sliderAttraction, sliderRepulsion, buttonStop, buttonStep)
     reactions += {
       case ValueChanged(b) => ZePanel.za ! (b.name, b.asInstanceOf[Slider].value)
       case ButtonClicked(b) => ZePanel.za ! b.text
