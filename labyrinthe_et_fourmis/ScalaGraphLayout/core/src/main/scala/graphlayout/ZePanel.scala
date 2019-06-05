@@ -23,7 +23,8 @@ class ZeActor extends Actor {
       tbx.graph.doZeSliderJob(slider)
       context.setReceiveTimeout(tbx.graph.slider_timeout millisecond)
     case "stop" =>
-      LL.l.myErrPrintDln("stop")
+      MyLog.myErrPrintln("stop")
+      tbx.graph.resultat.printlog1
       MyLog.myAssert2(true,false)
     case "step" =>
       LL.l.myErrPrintDln("step")

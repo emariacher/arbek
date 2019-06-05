@@ -34,7 +34,6 @@ class Agregats extends GraphAbstract {
   var ljaffe = List.empty[JNode]
   var lfourmi = List.empty[Fourmi]
   var listCarreAvecPheronome = List[Carre]()
-  val resultat = new Resultat
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/

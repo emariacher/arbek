@@ -19,6 +19,7 @@ class Resultat {
   }
 
   def printlog1 = {
+    myPrintD("ici!\n")
     myErrPrintDln(cpt, ltimestamps.mkString("", ", ", ""))
     myErrPrintln(lretourne.mkString("  ", ", ", ""))
     myErrPrintln(lcompteurState.mkString(" ", ",", ""))

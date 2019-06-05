@@ -4,6 +4,7 @@ import java.awt.Graphics2D
 
 abstract class GraphAbstract {
   var slider_timeout = 1
+  val resultat = new Resultat
 
   def reset: StateMachine
 
