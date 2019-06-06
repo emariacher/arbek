@@ -4,24 +4,42 @@ import kebra.MyLog._
 
 class Resultat {
   var cpt = 0
-  var ltimestamps = scala.collection.mutable.Map[StateMachine, Int]()
-  var lretourne = List.empty[Int]
-  var lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
+  var ltimestamps = List[scala.collection.mutable.Map[StateMachine, Int]]()
+  var lretourne = List.empty[List[Int]]
+  var lcompteurState = List[scala.collection.mutable.Map[FourmiStateMachine, Int]]()
 
   def log1(lts: scala.collection.mutable.Map[StateMachine, Int]
            , lr: List[Int]
            , lcpts: scala.collection.mutable.Map[FourmiStateMachine, Int]
           ) = {
-    ltimestamps = lts
-    lretourne = lr
-    lcpts.foreach(kv => lcompteurState(kv._1) = ((lcompteurState.getOrElse(kv._1, 0) * cpt) + kv._2) / (cpt + 1))
+    ltimestamps = ltimestamps :+ lts
+    lretourne = lretourne :+ lr
+    lcompteurState = lcompteurState :+ lcpts
+    //lcpts.foreach(kv => lcompteurState(kv._1) = ((lcompteurState.getOrElse(kv._1, 0) * cpt) + kv._2) / (cpt + 1))
     cpt += 1
   }
 
   def printlog1 = {
-    myPrintD("ici!\n")
-    myErrPrintDln(cpt, ltimestamps.mkString("", ", ", ""))
+    myPrintD(Console.GREEN + "ici!\n" + Console.RESET)
+    myErrPrintDln(cpt, ltimestamps.mkString("", "\n  ", ""))
+    myErrPrintln(lretourne.mkString("  ", "\n  ", ""))
+    myErrPrintln(lcompteurState.mkString("  ", "\n  ", ""))
+  }
+
+  def printFinalLog1 = {
+    myPrintD(Console.BLUE + "ici!\n" + Console.RESET)
+    val ltsflatten = ltimestamps.flatten
+    var lts = ltsflatten.map(_._1).distinct.map(k => {
+      ltsflatten.filter(_._1 == k)
+      (k, ltsflatten.filter(_._1 == k).map(_._2).sum / cpt)
+    })
+    myErrPrintDln(cpt, lts.mkString("", ", ", ""))
     myErrPrintln(lretourne.mkString("  ", ", ", ""))
-    myErrPrintln(lcompteurState.mkString(" ", ",", ""))
+    val lcsflatten = lcompteurState.flatten
+    var lcs = lcsflatten.map(_._1).distinct.map(k => {
+      lcsflatten.filter(_._1 == k)
+      (k, lcsflatten.filter(_._1 == k).map(_._2).sum / cpt)
+    })
+    myErrPrintln(lcs.mkString(" ", ",", ""))
   }
 }
