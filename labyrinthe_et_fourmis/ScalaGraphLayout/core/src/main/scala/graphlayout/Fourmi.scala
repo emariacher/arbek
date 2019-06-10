@@ -304,6 +304,7 @@ object FourmiStateMachine {
   val detecte = FourmiStateMachine("detecte")
   val retourne = FourmiStateMachine("retourne")
   val lisse = FourmiStateMachine("lisse")
+  val ratioTourneEnRondSurLaTrace = FourmiStateMachine("ratioTourneEnRondSurLaTrace")
 }
 
 

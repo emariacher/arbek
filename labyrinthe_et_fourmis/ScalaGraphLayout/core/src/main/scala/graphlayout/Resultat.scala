@@ -6,7 +6,7 @@ class Resultat {
   var cpt = 0
   var ltimestamps = List[scala.collection.mutable.Map[StateMachine, Int]]()
   var lretourne = List.empty[List[Int]]
-  var lcompteurState = List[scala.collection.mutable.Map[FourmiStateMachine, Int]]()
+  var lcompteurState = List[scala.collection.mutable.Map[FourmiStateMachine, Double]]()
 
   def log1(lts: scala.collection.mutable.Map[StateMachine, Int]
            , lr: List[Int]
@@ -14,7 +14,9 @@ class Resultat {
           ) = {
     ltimestamps = ltimestamps :+ lts
     lretourne = lretourne :+ lr
-    lcompteurState = lcompteurState :+ lcpts
+    val lcpts2 = lcpts.map(kv => (kv._1, kv._2.toDouble))
+    lcpts2(FourmiStateMachine.ratioTourneEnRondSurLaTrace) = lcpts2.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcpts2.getOrElse(FourmiStateMachine.surLaTrace, 0.0)
+    lcompteurState = lcompteurState :+ lcpts2
     //lcpts.foreach(kv => lcompteurState(kv._1) = ((lcompteurState.getOrElse(kv._1, 0) * cpt) + kv._2) / (cpt + 1))
     cpt += 1
   }
@@ -27,7 +29,7 @@ class Resultat {
   }
 
   def printFinalLog1 = {
-    myPrintD(Console.BLUE + "ici!\n" + Console.RESET)
+    myPrintD(Console.BLUE + "la!\n" + Console.RESET)
     val ltsflatten = ltimestamps.flatten
     var lts = ltsflatten.map(_._1).distinct.map(k => {
       ltsflatten.filter(_._1 == k)
@@ -39,7 +41,10 @@ class Resultat {
     var lcs = lcsflatten.map(_._1).distinct.map(k => {
       lcsflatten.filter(_._1 == k)
       (k, lcsflatten.filter(_._1 == k).map(_._2).sum / cpt)
-    })
+    }).toMap
     myErrPrintln(lcs.mkString(" ", ",", ""))
+    myPrintIt(lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
+      lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0), lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
+      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0))
   }
 }
