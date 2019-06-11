@@ -45,6 +45,6 @@ class Resultat {
     myErrPrintln(lcs.mkString(" ", ",", ""))
     myPrintIt(lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
       lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0), lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
-      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0))
+      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0))
   }
 }

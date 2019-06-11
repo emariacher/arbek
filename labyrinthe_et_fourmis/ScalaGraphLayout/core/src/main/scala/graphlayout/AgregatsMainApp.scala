@@ -15,9 +15,10 @@ case class Tribu private(c: Couleur) {
 }
 
 object Tribu {
-  val tribus = List(new Tribu(new Couleur("rouge")), new Tribu(new Couleur("vertFonce")), new Tribu(new Couleur("violet")))
-  /*val tribus = List(new Tribu(new Couleur("orange")), new Tribu(new Couleur("vertFonce")),
-    new Tribu(new Couleur("bleu")), new Tribu(new Couleur("rouge")), new Tribu(new Couleur("violet")),
-    new Tribu(new Couleur("bleuClair")))*/
+  val tribus =
+  //List(new Tribu(new Couleur("rouge")), new Tribu(new Couleur("vertFonce")), new Tribu(new Couleur("violet")))
+    List(new Tribu(new Couleur("orange")), new Tribu(new Couleur("vertFonce")),
+      new Tribu(new Couleur("bleu")), new Tribu(new Couleur("rouge")), new Tribu(new Couleur("violet")),
+      new Tribu(new Couleur("bleuClair")))
 }
 
