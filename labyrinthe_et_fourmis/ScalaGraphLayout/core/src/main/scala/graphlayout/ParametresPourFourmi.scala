@@ -22,6 +22,26 @@ object ParametresPourFourmi {
 
 
   def printStuff = {
-    myPrintIt(getClass.getDeclaredFields.toList.mkString("\n  "))
+    type Tint = Int
+    val lfields = getClass.getDeclaredFields.toList
+    lfields.foreach(f => myPrintDln("" + f.toString + " [" + f.getType + "]"))
+    lfields.foreach(f => {
+      f.setAccessible(true)
+      myPrintDln("" + f.toString + " [" + f.getType + "]")
+      if (f.getType.toString == "int") {
+        myPrintDln("" + f.toString + " [" + f.get(this) + "]")
+        //myPrintDln("" + f.toString + " [" + f.asInstanceOf[Int] + "]")
+      }
+    })
   }
+
+  /*
+  https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
+  https://stackoverflow.com/questions/19386964/i-want-to-get-the-type-of-a-variable-at-runtime
+  def printParams = classOf[ParametresPourFourmi].getDeclaredFields foreach { field =>
+
+    field.setAccessible(true)
+    myPrintDln(field.get(this))
+  }
+  */
 }
