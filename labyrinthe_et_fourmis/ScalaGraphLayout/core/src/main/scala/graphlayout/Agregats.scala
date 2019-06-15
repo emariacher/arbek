@@ -94,9 +94,6 @@ class Agregats extends GraphAbstract {
     } else if ((listeDesMoyennesDePheromones.filter(d => d._2.isNaN).isEmpty) &
       (listeDesMoyennesDePheromones.sortBy(_._2).filter(_._2 < ParametresPourFourmi.limiteArrete).length
         < (Tribu.tribus.length / 2))) {
-      myPrintIt("\n", (listeDesMoyennesDePheromones.filter(d => d._2.isNaN).isEmpty),
-        listeDesMoyennesDePheromones.sortBy(_._2).filter(_._2 < ParametresPourFourmi.limiteArrete).length
-        , (Tribu.tribus.length / 2), listeDesMoyennesDePheromones.sortBy(_._2))
       // reset quand presque toutes les fourmilieres sont bien approvisionnees
       /*listeDesAgregats.foreach(a => myErrPrintDln(tbx.state, ", %s/%.0f".format(a._1 + " " +
         listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),

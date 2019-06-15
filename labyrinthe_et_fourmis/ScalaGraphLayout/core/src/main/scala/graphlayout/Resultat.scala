@@ -42,8 +42,8 @@ class Resultat {
       lcsflatten.filter(_._1 == k)
       (k, lcsflatten.filter(_._1 == k).map(_._2).sum / cpt)
     }).toMap
-    myErrPrintln(lcs.mkString(" ", ",", ""))
-    myPrintIt(lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
+    myErrPrintDln(lcs.mkString(" ", ",", ""))
+    myPrintIt("\n",lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
       lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0), lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
       lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0))
   }

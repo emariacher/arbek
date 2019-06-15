@@ -1,5 +1,7 @@
 package graphlayout
 
+import kebra.MyLog._
+
 object ParametresPourFourmi {
   var nombreDefourmisParTribu = 4
   var limiteArrete = 120
@@ -17,4 +19,9 @@ object ParametresPourFourmi {
   var avanceAPeuPresCommeAvantVitesse = 2
   var avanceDroitVitesse = 3
   var sautsTropGrandsLissage = 30
+
+
+  def printStuff = {
+    myPrintIt(getClass.getDeclaredFields.toList.mkString("\n  "))
+  }
 }
