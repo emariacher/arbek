@@ -23,7 +23,7 @@ object ParametresPourFourmi {
   var avanceAPeuPresCommeAvantVitesse = 2
   var avanceDroitVitesse = 3
   var sautsTropGrandsLissage = 30
-
+  var simplifieLissage = 1
 
   def printStuff = { // https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
     getClass.getDeclaredFields.toList.foreach(f => {

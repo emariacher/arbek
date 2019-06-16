@@ -168,7 +168,7 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
-    { // simplifie les amas de pheromones / enleve quand il y en a trop
+    if (ParametresPourFourmi.simplifieLissage > 0) { // simplifie les amas de pheromones / enleve quand il y en a trop
       val log8voisins = logxys.map(c => (c._1, c._1.get8Voisins
         .filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
       /*myPrintDln(log8voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2))
@@ -179,7 +179,7 @@ class Fourmi(val anode: ANode) {
       /*myPrintDln(lvaenlever
         .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))*/
     }
-    { // sauts trop grands / rajoute quand il n'y en a pas assez
+    if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
       val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       if (!lsauts.isEmpty) {
