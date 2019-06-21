@@ -7,7 +7,7 @@ import kebra.MyLog._
 
 class Resultat {
   var filestatsname = L.working_directory + "log" + File.separatorChar + "filestats.res"
-  var filestats = new MyFile(filestatsname)
+  var filestats = new MyFile(filestatsname, true)
   var cpt = 0
   var ltimestamps = List[scala.collection.mutable.Map[StateMachine, Int]]()
   var lretourne = List.empty[List[Int]]
@@ -52,8 +52,8 @@ class Resultat {
       lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0), lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
       lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0))
 
-    if (!filestats.exists) {
-      filestats.writeFile(ParametresPourFourmi.getFields)
+    if (filestats.length < 2) {
+      filestats.writeFile(ParametresPourFourmi.getFields + "\n")
     }
     filestats.writeFile(ParametresPourFourmi.getValues + "," + (lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
       / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0)) + "," +

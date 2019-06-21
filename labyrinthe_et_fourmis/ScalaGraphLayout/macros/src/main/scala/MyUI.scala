@@ -1,33 +1,27 @@
 package kebra
 
-import java.io.File
-import java.net._
-import java.util.Calendar
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.io.FileOutputStream
-import java.util.Scanner
-import java.io.FileNotFoundException
-import javax.swing.filechooser.FileFilter
-import javax.swing.JFileChooser
-import javax.swing.UIManager
-import javax.swing.JComponent
-import javax.swing.JButton
-import scala.swing._
-import scala.swing.event._
-import java.awt.Color
-import java.awt.Toolkit
+import java.awt.{Color, Toolkit}
 import java.awt.datatransfer.DataFlavor
-import akka.actor.{ActorRef, ActorSystem, Props, Actor, Inbox}
+import java.io.{File, FileOutputStream}
+import java.net._
+import java.util.Scanner
 
-class MyFile(fname: String) extends File(fname) {
+import javax.swing.UIManager
+import javax.swing.filechooser.FileFilter
+
+import scala.swing._
+
+class MyFile(fname: String, append: Boolean) extends File(fname) {
+
+  def this(fname: String) = this(fname, false)
+
   try {
     new FileOutputStream(this).close
   } catch {
     case unknown: Throwable => throw new Exception("File[" + getCanonicalPath + "]: Maybe you did not create the directory...")
   }
 
-  val fos = new FileOutputStream(this)
+  val fos = new FileOutputStream(this, append)
 
   def writeFile(s: String): Unit = {
     fos.write(s.getBytes())

@@ -1,1 +1,2 @@
-graphlayout.ParametresPourFourmi$@6d00a15d, 1, 1828757853, 832636494, 4, 120, 100, 20.0, 40.0, 2.5132741228718345, 30, 10, 10, 20, 0.1, 2, 3, 30, 1,0.22903057224980403,1753.0,7654.0,0.22903057224980403
+MODULE$, version, hash, crcvar, nombreDefourmisParTribu, limiteArrete, stabilisationRassemble, CEstLaFourmiliere, influenceDesPheromones, angleDeReniflage, compteurPasDansLesPheromonesLimite, tourneEnRondLimite, suisLeChemin1, suisLeChemin2, avanceAPeuPresCommeAvantDispersion, avanceAPeuPresCommeAvantVitesse, avanceDroitVitesse, sautsTropGrandsLissage, simplifieLissage
+graphlayout.ParametresPourFourmi$@2ef5e5e3, 1, 787867107, 2794069250, 4, 120, 100, 20.0, 40.0, 2.5132741228718345, 30, 10, 10, 20, 0.1, 2, 3, 30, 1,0.27832663350821013,2042.5,7338.5,0.2533345568926886
