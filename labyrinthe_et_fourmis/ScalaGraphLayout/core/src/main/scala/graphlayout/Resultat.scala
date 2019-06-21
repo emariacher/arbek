@@ -53,7 +53,8 @@ class Resultat {
       lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0))
 
     if (filestats.length < 2) {
-      filestats.writeFile(ParametresPourFourmi.getFields + "\n")
+      filestats.writeFile(ParametresPourFourmi.getFields + ",tourneEnRond/surLaTrace, " +
+        "tourneEnRond, surLaTrace, ratioTourneEnRondSurLaTrace\n")
     }
     filestats.writeFile(ParametresPourFourmi.getValues + "," + (lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
       / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0)) + "," +
