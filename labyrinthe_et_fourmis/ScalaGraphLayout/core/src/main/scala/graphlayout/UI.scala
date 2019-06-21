@@ -14,6 +14,7 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
   val buttonStopLbl = "stop"
   val labelLbl = "Idle Label"
   newMyLL(this.getClass.getName, new File("out\\cowabunga"), "htm", true)
+  graph.resultat = new Resultat
 
   def top = new MainFrame {
     title = titre

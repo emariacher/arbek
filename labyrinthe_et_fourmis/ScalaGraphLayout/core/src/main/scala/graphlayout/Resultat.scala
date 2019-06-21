@@ -1,8 +1,13 @@
 package graphlayout
 
+import java.io.File
+
+import kebra.MyFile
 import kebra.MyLog._
 
 class Resultat {
+  var filestatsname = L.working_directory + "log" + File.separatorChar + "filestats.res"
+  var filestats = new MyFile(filestatsname)
   var cpt = 0
   var ltimestamps = List[scala.collection.mutable.Map[StateMachine, Int]]()
   var lretourne = List.empty[List[Int]]
@@ -43,8 +48,17 @@ class Resultat {
       (k, lcsflatten.filter(_._1 == k).map(_._2).sum / cpt)
     }).toMap
     myErrPrintDln(lcs.mkString(" ", ",", ""))
-    myPrintIt("\n",lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
+    myPrintIt("\n", lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
       lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0), lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0),
       lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0))
+
+    if (!filestats.exists) {
+      filestats.writeFile(ParametresPourFourmi.getFields)
+    }
+    filestats.writeFile(ParametresPourFourmi.getValues + "," + (lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
+      / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0)) + "," +
+      lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) + "," + lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0) + "," +
+      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + "\n")
+    filestats.close
   }
 }
