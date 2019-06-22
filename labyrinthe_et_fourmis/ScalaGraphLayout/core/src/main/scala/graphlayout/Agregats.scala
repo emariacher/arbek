@@ -101,7 +101,6 @@ class Agregats extends GraphAbstract {
       myPrintDln(listeDesMoyennesDePheromones.sortBy(_._2).map(z => "%s %.0f/%d".format(z._1, z._2, z._3)).mkString("", ", ", ""))
       myPrintln(lcompteurState.mkString(" ", ",", ""))
       resultat.log1(tbx.ltimestamps, listeDesFourmilieres.map(_.retoursFourmiliere.getOrElse(FourmiStateMachine.retourne, 0)), lcompteurState)
-      resultat.printlog1
       StateMachine.reset
     } else {
       StateMachine.croisiere
