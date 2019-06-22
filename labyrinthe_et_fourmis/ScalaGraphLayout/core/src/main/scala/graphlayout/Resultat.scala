@@ -1,13 +1,15 @@
 package graphlayout
 
-import java.io.File
+import java.io.{BufferedWriter, File, FileWriter}
 
 import kebra.MyFile
 import kebra.MyLog._
 
 class Resultat {
-  var filestatsname = L.working_directory + "log" + File.separatorChar + "filestats.res"
-  var filestats = new MyFile(filestatsname, true)
+  var filestatsname = L.working_directory + "filestats"
+  var filestats = new MyFile(filestatsname + "res2", true)
+  val fstream = new FileWriter(filestatsname + ".res", true)
+  val outfs = new BufferedWriter(fstream)
   var cpt = 0
   var ltimestamps = List[scala.collection.mutable.Map[StateMachine, Int]]()
   var lretourne = List.empty[List[Int]]
@@ -53,13 +55,22 @@ class Resultat {
       lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0))
 
     if (filestats.length < 2) {
-      filestats.writeFile(ParametresPourFourmi.getFields + ",tourneEnRond/surLaTrace, " +
+      filestats.writeFile("date," + ParametresPourFourmi.getFields + ",tourneEnRond/surLaTrace, " +
         "tourneEnRond, surLaTrace, ratioTourneEnRondSurLaTrace\n")
     }
-    filestats.writeFile(ParametresPourFourmi.getValues + "," + (lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
+    filestats.writeFile(printToday("ddMMMyy_HH_mm") +
+      "," + ParametresPourFourmi.getValues + "," + (lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
       / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0)) + "," +
       lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) + "," + lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0) + "," +
-      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + "\n")
+      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + "\n"
+    )
+    outfs.write(printToday("ddMMMyy_HH_mm") +
+      "," + ParametresPourFourmi.getValues + "," + (lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
+      / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0)) + "," +
+      lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) + "," + lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0) + "," +
+      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + "\n"
+    )
     filestats.close
+    outfs.close
   }
 }
