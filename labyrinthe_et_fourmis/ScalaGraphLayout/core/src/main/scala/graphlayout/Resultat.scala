@@ -1,15 +1,11 @@
 package graphlayout
 
-import java.io.{BufferedWriter, File, FileWriter}
-
 import kebra.MyFile
 import kebra.MyLog._
 
 class Resultat {
-  var filestatsname = L.working_directory + "filestats"
-  val fstream = new FileWriter(filestatsname + ".res", true)
-  val outfs = new BufferedWriter(fstream)
-  var filestats = new MyFile(filestatsname + "res2", true)
+  var filestatsname = L.working_directory + "filestats.aaa"
+  var filestats = new MyFile(filestatsname, true)
   var cpt = 0
   var ltimestamps = List[scala.collection.mutable.Map[StateMachine, Int]]()
   var lretourne = List.empty[List[Int]]
@@ -64,13 +60,6 @@ class Resultat {
       lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) + "," + lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0) + "," +
       lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + "\n"
     )
-    outfs.write(printToday("ddMMMyy_HH_mm") +
-      "," + ParametresPourFourmi.getValues + "," + (lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
-      / lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0)) + "," +
-      lcs.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) + "," + lcs.getOrElse(FourmiStateMachine.surLaTrace, 0.0) + "," +
-      lcs.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + "\n"
-    )
     filestats.close
-    outfs.close
   }
 }
