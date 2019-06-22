@@ -14,16 +14,17 @@ class Resultat {
           ) = {
     val lcpts2 = lcpts.map(kv => (kv._1, kv._2.toDouble))
     lcpts2(FourmiStateMachine.ratioTourneEnRondSurLaTrace) = lcpts2.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) / lcpts2.getOrElse(FourmiStateMachine.surLaTrace, 0.0)
-    if (filestats.length < 2) {
+    if ((filestats.length < 2) & (cpt < 1)) {
       filestats.writeFile("date," + ParametresPourFourmi.getFields + ",tourneEnRond/surLaTrace, " +
-        "tourneEnRond, surLaTrace, ratioTourneEnRondSurLaTrace" + lts.map(_._1).mkString(", ") + "\n")
+        "tourneEnRond, surLaTrace, ratioTourneEnRondSurLaTrace" + lts.map(_._1).mkString(", ", ", ", ", ") + "\n")
     }
     filestats.writeFile(printToday("ddMMMyy_HH_mm") +
       "," + ParametresPourFourmi.getValues + "," + (lcpts2.getOrElse(FourmiStateMachine.tourneEnRond, 0.0)
       / lcpts2.getOrElse(FourmiStateMachine.surLaTrace, 1.0)) + "," +
       lcpts2.getOrElse(FourmiStateMachine.tourneEnRond, 0.0) + "," + lcpts2.getOrElse(FourmiStateMachine.surLaTrace, 0.0) + "," +
-      lcpts2.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + lts.map(_._2).mkString(", ") + "\n"
+      lcpts2.getOrElse(FourmiStateMachine.ratioTourneEnRondSurLaTrace, 0.0) + lts.map(_._2).mkString(", ", ", ", ", ") + "\n"
     )
+    myPrintD(Console.GREEN + lts.mkString(", ") + "\n" + Console.RESET)
     cpt += 1
   }
 

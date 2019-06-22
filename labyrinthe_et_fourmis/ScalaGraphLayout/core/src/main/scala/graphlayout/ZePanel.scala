@@ -24,7 +24,6 @@ class ZeActor extends Actor {
       context.setReceiveTimeout(tbx.graph.slider_timeout millisecond)
     case "stop" =>
       MyLog.myErrPrintln("stop")
-      ParametresPourFourmi.printStuff
       tbx.graph.resultat.printFinalLog1
       MyLog.myAssert2(true,false)
     case "step" =>
