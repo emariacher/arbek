@@ -7,9 +7,9 @@ import kebra.MyLog._
 
 class Resultat {
   var filestatsname = L.working_directory + "filestats"
-  var filestats = new MyFile(filestatsname + "res2", true)
   val fstream = new FileWriter(filestatsname + ".res", true)
   val outfs = new BufferedWriter(fstream)
+  var filestats = new MyFile(filestatsname + "res2", true)
   var cpt = 0
   var ltimestamps = List[scala.collection.mutable.Map[StateMachine, Int]]()
   var lretourne = List.empty[List[Int]]

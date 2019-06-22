@@ -516,17 +516,17 @@ object MyLog {
     }
   }
 
-  def copy(from: String, to: MyFile): Unit = {
+  /*def copy(from: String, to: MyFile): Unit = {
     use(new FileInputStream(from)) {
       in =>
         val buffer = new Array[Byte](1024)
         Iterator.continually(in.read(buffer))
           .takeWhile(_ != -1)
           .foreach {
-            to.fos.write(buffer, 0, _)
+            to.outfs.write(buffer, 0, _)
           }
     }
-  }
+  }*/
 
   def copy(from: String): String = {
     var to = ""

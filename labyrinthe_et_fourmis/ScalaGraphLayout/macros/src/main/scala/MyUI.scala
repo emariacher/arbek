@@ -1,8 +1,8 @@
 package kebra
 
-import java.awt.{Color, Toolkit}
 import java.awt.datatransfer.DataFlavor
-import java.io.{File, FileOutputStream}
+import java.awt.{Color, Toolkit}
+import java.io.{BufferedWriter, File, FileOutputStream, FileWriter}
 import java.net._
 import java.util.Scanner
 
@@ -15,16 +15,16 @@ class MyFile(fname: String, append: Boolean) extends File(fname) {
 
   def this(fname: String) = this(fname, false)
 
+  var fos: BufferedWriter = null
+
   try {
-    new FileOutputStream(this).close
+    fos = new BufferedWriter(new FileWriter(fname, append))
   } catch {
     case unknown: Throwable => throw new Exception("File[" + getCanonicalPath + "]: Maybe you did not create the directory...")
   }
 
-  val fos = new FileOutputStream(this, append)
-
   def writeFile(s: String): Unit = {
-    fos.write(s.getBytes())
+    fos.write(s)
   }
 
   def close(): Unit = {
