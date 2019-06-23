@@ -171,13 +171,13 @@ class Fourmi(val anode: ANode) {
     if (ParametresPourFourmi.simplifieLissage > 0) { // simplifie les amas de pheromones / enleve quand il y en a trop
       val log8voisins = logxys.map(c => (c._1, c._1.get8Voisins
         .filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
-      /*myPrintDln(log8voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2))
-        .mkString("4vc{\n  ", Console.RESET + "\n  ,", Console.RESET + "}"))*/
+      myPrintDln(log8voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2))
+        .mkString("4vc{\n  ", Console.RESET + "\n  ,", Console.RESET + "}"))
       val log8voisins_1 = log8voisins.map(_._1)
       val log8voisins_2 = log8voisins.map(_._2).flatten
       val lvaenlever = log8voisins_2.filter(v => !log8voisins_1.contains(v))
-      /*myPrintDln(lvaenlever
-        .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))*/
+      myPrintDln(lvaenlever
+        .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))
     }
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
       val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
