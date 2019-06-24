@@ -36,6 +36,8 @@ class Carre(val rc: RowCol) {
 
   def egal(c: Carre): Boolean = c.fn.egal(fn)
 
+  def equivalent(c: Carre): Boolean = row == c.row & col == c.col
+
   def evapore = {
     depotPheromones = depotPheromones.map(depot => (depot._1, depot._2 * Depot.evaporation))
     val moyennePheromones = depotPheromones.values.sum / depotPheromones.toList.length
@@ -67,5 +69,15 @@ class Carre(val rc: RowCol) {
 
   def getDownCarre = tbx.lc.find((cf: Carre) => cf.row == row + 1 && cf.col == col).getOrElse(null)
 
+}
+
+class PatternCarre(lc: List[Carre]) {
+  def similaire(lcac: List[Carre]) = {
+    val rowmin = lcac.map(_.row).min
+    val colmin = lcac.map(_.col).min
+    val lcacnormalise = lcac.map(c => new Carre(c.row - rowmin, c.col - colmin))
+    val lcacnormaliseperpendiculaire = lcac.map(c => new Carre(c.col - colmin, c.row - rowmin))
+    lcacnormalise.filter(c => !lc.contains(c)).isEmpty | lcacnormaliseperpendiculaire.filter(c => !lc.contains(c)).isEmpty
+  }
 }
 
