@@ -3,9 +3,9 @@ package graphlayout
 import java.awt.Graphics2D
 
 import graphlayout.Tableaux._
+import kebra.MyLog._
 
 import scala.collection.immutable.List
-
 
 class Carre(val rc: RowCol) {
 
@@ -71,8 +71,9 @@ class Carre(val rc: RowCol) {
 
 }
 
-class PatternCarre(lc: List[Carre]) {
-  def similaire(lcac: List[Carre]) = {
+class PatternCarre(var lc: List[Carre], var carreAEnlever: Int) {
+  def similaire(lcac: List[Carre]): Boolean = {
+    myAssert2(lc.length, lcac.length)
     val rowmin = lcac.map(_.row).min
     val colmin = lcac.map(_.col).min
     val lcacnormalise = lcac.map(c => new Carre(c.row - rowmin, c.col - colmin))

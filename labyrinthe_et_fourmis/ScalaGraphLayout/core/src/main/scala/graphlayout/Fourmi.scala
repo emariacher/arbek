@@ -180,7 +180,7 @@ class Fourmi(val anode: ANode) {
       /*myPrintDln(logxys.length, lvaenlever
         .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))*/
       logxys = logxys.filter(c => !lvaenlever.contains(c._1))
-      myPrintIt(oldlength, logxys.length)
+      myPrintDln(toString + " <--   trop    -- " + oldlength)
     }
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
       val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
@@ -191,8 +191,19 @@ class Fourmi(val anode: ANode) {
         llissage.reverse.foreach(toBeInserted => {
           logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
         })
-        //myPrintDln(toString + " <-- " + oldlength)
+        myPrintDln(toString + " <--pas assez-- " + oldlength)
       }
+    }
+    if (ParametresPourFourmi.filtrePattern > -1) { // pattern escalier
+      val escalier = new PatternCarre(List(new Carre(0, 0), new Carre(1, 0), new Carre(2, 0), new Carre(2, 1), new Carre(3, 1), new Carre(4, 1)), 3)
+      val oldlength = logxys.length
+      val lslide = logxys.sliding(escalier.lc.length, 1)
+      lslide.foreach(tranche => if (escalier.similaire(tranche.map(_._1))) {
+        myErrPrintDln(tranche.mkString(". "))
+        myAssert2(true, false)
+      })
+      //myPrintDln(lslide.toList.map(_.mkString(". ")).mkString("\n  "))
+      myPrintDln(toString + " <--escalier-- " + oldlength)
     }
   }
 
