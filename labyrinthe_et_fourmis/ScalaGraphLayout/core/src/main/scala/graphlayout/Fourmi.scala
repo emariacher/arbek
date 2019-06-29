@@ -191,7 +191,10 @@ class Fourmi(val anode: ANode) {
         llissage.reverse.foreach(toBeInserted => {
           logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
         })
-        myPrintDln(toString + " <--pas assez-- " + oldlength)
+        /*val lsauts2 = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+          l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
+        myPrintDln(toString + " <--pas assez-- " + oldlength + "[ " + lsauts2.map(_._1).max + " <-- " + lsauts.map(_._1).max + " ]")*/
+        myPrintDln(toString + " <--pas assez-- " + oldlength + "[ " + lsauts.map(_._1).max + " ]")
       }
     }
     if (ParametresPourFourmi.filtrePattern > -1) { // pattern escalier
