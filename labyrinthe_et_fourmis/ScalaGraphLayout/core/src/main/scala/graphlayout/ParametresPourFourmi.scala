@@ -26,6 +26,7 @@ object ParametresPourFourmi {
   var simplifieLissage = 2
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
+  var raccourci = 29
 
   def printStuff = { // https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
     getClass.getDeclaredFields.toList.foreach(f => {

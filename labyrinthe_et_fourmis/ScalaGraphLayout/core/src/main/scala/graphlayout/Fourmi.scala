@@ -137,7 +137,8 @@ class Fourmi(val anode: ANode) {
     anode.moveTo(c.fn)
     myAssert3(c == null, false, toString)
     c.updatePheromone(tribu)
-    logxys.take(indexlog).indexWhere(logitem => logitem._1.egal(c)) match {
+    //logxys.take(indexlog).indexWhere(logitem => logitem._1.egal(c)) match {
+    logxys.take(indexlog).indexWhere(logitem => logitem._1.dist(c) < ParametresPourFourmi.raccourci) match {
       //logxys.take(index).indexWhere(logitem => logitem._1.get9Voisins.contains(c)) match {
       case x if x > -1 =>
         //myPrintDln("Going back taking a shortcut! " + toString, index + " --> " + x)
