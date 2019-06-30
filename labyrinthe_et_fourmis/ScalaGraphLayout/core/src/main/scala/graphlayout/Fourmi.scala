@@ -183,9 +183,9 @@ class Fourmi(val anode: ANode) {
       myPrintDln(toString + " <--   trop    -- " + oldlength)
     }
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
-      val lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+      var lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
-      if (!lsauts.isEmpty) {
+      while (!lsauts.isEmpty) {
         val oldlength = logxys.length
         val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
         llissage.reverse.foreach(toBeInserted => {
@@ -195,6 +195,8 @@ class Fourmi(val anode: ANode) {
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
         myPrintDln(toString + " <--pas assez-- " + oldlength + "[ " + lsauts2.map(_._1).max + " <-- " + lsauts.map(_._1).max + " ]")*/
         myPrintDln(toString + " <--pas assez-- " + oldlength + "[ " + lsauts.map(_._1).max + " ]")
+        lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+          l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       }
     }
     if (ParametresPourFourmi.filtrePattern > -1) { // pattern escalier
