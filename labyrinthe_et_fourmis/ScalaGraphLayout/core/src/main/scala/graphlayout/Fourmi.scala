@@ -204,7 +204,7 @@ class Fourmi(val anode: ANode) {
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       }
     }
-    if (ParametresPourFourmi.filtrePattern > -1) { // pattern escalier
+    /*if (ParametresPourFourmi.filtrePattern > -1) { // pattern escalier
       val escalier = new PatternCarre(List(new Carre(0, 0), new Carre(1, 0), new Carre(2, 0), new Carre(2, 1), new Carre(3, 1), new Carre(4, 1)), 3)
       val oldlength = logxys.length
       val lslide = logxys.sliding(escalier.lc.length, 1)
@@ -214,7 +214,7 @@ class Fourmi(val anode: ANode) {
       })
       //myPrintDln(lslide.toList.map(_.mkString(". ")).mkString("\n  "))
       myPrintDln(toString + " <--escalier-- " + oldlength)
-    }
+    }*/
   }
 
   def cherche(lc: List[Carre]) = {

@@ -23,7 +23,7 @@ object ParametresPourFourmi {
   var avanceAPeuPresCommeAvantVitesse = 2
   var avanceDroitVitesse = 3
   var sautsTropGrandsLissage = 20
-  var simplifieLissage = 10
+  var simplifieLissage = 5
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = 30
