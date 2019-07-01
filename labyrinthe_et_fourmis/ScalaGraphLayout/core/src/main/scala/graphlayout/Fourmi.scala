@@ -137,7 +137,7 @@ class Fourmi(val anode: ANode) {
     anode.moveTo(c.fn)
     myAssert3(c == null, false, toString)
     c.updatePheromone(tribu)
-    //logxys.take(indexlog).indexWhere(logitem => logitem._1.egal(c)) match {
+    /*logxys.take(indexlog).indexWhere(logitem => logitem._1.egal(c)) match {
     logxys.take(indexlog).indexWhere(logitem => logitem._1.dist(c) < ParametresPourFourmi.raccourci) match {
       //logxys.take(index).indexWhere(logitem => logitem._1.get9Voisins.contains(c)) match {
       case x if x > -1 =>
@@ -145,7 +145,7 @@ class Fourmi(val anode: ANode) {
         cptShortcut += 1
         indexlog = x // prend un raccourci si jamais t'es deja passe par la
       case _ =>
-    }
+    }*/
     indexlog
   }
 
@@ -169,18 +169,22 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
-    if (ParametresPourFourmi.simplifieLissage > 1) { // simplifie les amas de pheromones / enleve quand il y en a trop
-      val log8voisins = logxys.map(c => (c._1, c._1.get8Voisins
-        .filter(v => logxys.exists(_._1.egal(v))))).filter(_._2.length > 2)
-      /*myPrintDln(log8voisins.map(z => (Console.RED + z._1 + Console.RESET, z._2))
-        .mkString("4vc{\n  ", Console.RESET + "\n  ,", Console.RESET + "}"))*/
-      val log8voisins_1 = log8voisins.map(_._1)
-      val log8voisins_2 = log8voisins.map(_._2).flatten
-      val lvaenlever = log8voisins_2.filter(v => !log8voisins_1.contains(v))
+    if (ParametresPourFourmi.raccourci > 1) { // detecte les raccourcis
       val oldlength = logxys.length
-      /*myPrintDln(logxys.length, lvaenlever
-        .mkString("4vc{\n  " + Console.GREEN, Console.RESET + ", " + Console.GREEN, Console.RESET + "}"))*/
-      logxys = logxys.filter(c => !lvaenlever.contains(c._1))
+      var zindexlog = logxys.length - 1
+      while (zindexlog > 0) {
+        logxys.take(zindexlog).indexWhere(logitem => logitem._1.dist(logxys.apply(zindexlog)._1) < ParametresPourFourmi.raccourci) match {
+          case x if x > -1 =>
+            cptShortcut += 1
+            zindexlog = x // prend un raccourci si jamais t'es deja passe par la
+          case _ => zindexlog -= 1
+        }
+      }
+      myPrintDln(toString + " <-- raccourci -- " + oldlength)
+    }
+    if (ParametresPourFourmi.simplifieLissage > 1) { // décime!
+      val oldlength = logxys.length
+      logxys = logxys.zipWithIndex.filter(_._2 % ParametresPourFourmi.simplifieLissage == 1).map(_._1)
       myPrintDln(toString + " <--   trop    -- " + oldlength)
     }
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
