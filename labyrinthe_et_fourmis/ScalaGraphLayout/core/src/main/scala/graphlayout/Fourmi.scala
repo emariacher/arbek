@@ -171,15 +171,17 @@ class Fourmi(val anode: ANode) {
   def lisseLeRetour = {
     if (ParametresPourFourmi.raccourci > 1) { // detecte les raccourcis
       val oldlength = logxys.length
-      var zindexlog = logxys.length - 1
-      while (zindexlog > 0) {
-        logxys.take(zindexlog).indexWhere(logitem => logitem._1.dist(logxys.apply(zindexlog)._1) < ParametresPourFourmi.raccourci) match {
-          case x if x > -1 =>
-            cptShortcut += 1
-            zindexlog = x // prend un raccourci si jamais t'es deja passe par la
-          case _ => zindexlog -= 1
-        }
+      var zlength = -1
+      //var logxystemp = List[(Carre, FourmiStateMachine)]()
+      var logxystemp = logxys.reverse.zipWithIndex
+      while (logxystemp.head._2 > zlength) {
+        zlength = logxystemp.head._2
+        val c = logxystemp.head._1._1
+        val lf = logxystemp.filter(_._1._1.dist(c) < ParametresPourFourmi.raccourci)
+        logxystemp = logxystemp.filter(logitem => lf.indexWhere(_._2 == logitem._2) < 0) :+ logxystemp.head
+        val u = 0
       }
+      logxys = logxystemp.map(_._1).reverse
       myPrintDln(toString + " <-- raccourci -- " + oldlength)
     }
     if (ParametresPourFourmi.simplifieLissage > 1) { // décime!
