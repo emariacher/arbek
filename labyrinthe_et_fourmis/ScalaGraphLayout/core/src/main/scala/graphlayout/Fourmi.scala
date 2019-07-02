@@ -175,11 +175,16 @@ class Fourmi(val anode: ANode) {
       //var logxystemp = List[(Carre, FourmiStateMachine)]()
       var logxystemp = logxys.reverse.zipWithIndex
       while (logxystemp.head._2 > zlength) {
+        val avantlength = logxystemp.length
         zlength = logxystemp.head._2
         val c = logxystemp.head._1._1
         val lf = logxystemp.filter(_._1._1.dist(c) < ParametresPourFourmi.raccourci)
         logxystemp = logxystemp.filter(logitem => lf.indexWhere(_._2 == logitem._2) < 0) :+ logxystemp.head
-        val u = 0
+        if (lf.length > 7) {
+          myPrintDln(lf.length, lf.mkString(" - "))
+          myPrintDln(avantlength, logxystemp.length, logxystemp.mkString(" + ") + "\n")
+          val u = 0
+        }
       }
       logxys = logxystemp.map(_._1).reverse
       myPrintDln(toString + " <-- raccourci -- " + oldlength)
