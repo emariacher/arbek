@@ -169,30 +169,34 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
+    myErrPrintDln("****************************************************************************")
     if (ParametresPourFourmi.raccourci > 1) { // detecte les raccourcis
       val oldlength = logxys.length
-      var zlength = -1
       //var logxystemp = List[(Carre, FourmiStateMachine)]()
-      var logxystemp = logxys.reverse.zipWithIndex
-      while (logxystemp.head._2 > zlength) {
+      var logxystemp = logxys.zipWithIndex
+      var indexLogxys = 0
+      while (indexLogxys < logxystemp.length) {
         val avantlength = logxystemp.length
-        zlength = logxystemp.head._2
-        val c = logxystemp.head._1._1
-        val lf = logxystemp.filter(_._1._1.dist(c) < ParametresPourFourmi.raccourci)
-        logxystemp = logxystemp.filter(logitem => lf.indexWhere(_._2 == logitem._2) < 0) :+ logxystemp.head
+        val c = logxystemp.apply(indexLogxys)._1._1
+        myPrintDln(indexLogxys, c, logxystemp.length)
+        val lf = logxystemp.filter(_._1._1.dist(c) < ParametresPourFourmi.raccourci).sortBy(_._2)
+        logxystemp = logxystemp.filter(logitem => logitem._2 <= lf.head._2 | logitem._2 > lf.last._2)
         if (lf.length > 7) {
-          myPrintDln(lf.length, lf.mkString(" - "))
-          myPrintDln(avantlength, logxystemp.length, logxystemp.mkString(" + ") + "\n")
+          myPrintDln("   ", indexLogxys, c, lf.length, lf.head, lf.last, lf.mkString(" - "))
+          myPrintDln("   ", avantlength, logxystemp.length, logxystemp.sortBy(_._2).mkString(" + "))
           val u = 0
         }
+        indexLogxys += 1
       }
-      logxys = logxystemp.map(_._1).reverse
+      logxys = logxystemp.sortBy(_._2).map(_._1)
       myPrintDln(toString + " <-- raccourci -- " + oldlength)
+      myPrintDln(logxys.length, logxys.mkString(" + "))
     }
     if (ParametresPourFourmi.simplifieLissage > 1) { // décime!
       val oldlength = logxys.length
       logxys = logxys.zipWithIndex.filter(_._2 % ParametresPourFourmi.simplifieLissage == 1).map(_._1)
       myPrintDln(toString + " <--   trop    -- " + oldlength)
+      myPrintDln(logxys.length, logxys.mkString(" + "))
     }
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
       var lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
@@ -206,7 +210,8 @@ class Fourmi(val anode: ANode) {
         /*val lsauts2 = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
         myPrintDln(toString + " <--pas assez-- " + oldlength + "[ " + lsauts2.map(_._1).max + " <-- " + lsauts.map(_._1).max + " ]")*/
-        myPrintDln(toString + " <--pas assez-- " + oldlength + "[ " + lsauts.map(_._1).max + " ]")
+        myPrintDln(toString + " <--pas assez-- " + oldlength + "[" + lsauts.map(_._1).max + "] " + ParametresPourFourmi.sautsTropGrandsLissage)
+        myPrintDln(logxys.length, logxys.mkString(" + "))
         lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       }
@@ -227,7 +232,7 @@ class Fourmi(val anode: ANode) {
   def cherche(lc: List[Carre]) = {
     avance(lc)
     redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
-    if (aDetecteLaNourriture(200)) {
+    if (aDetecteLaNourriture(ParametresPourFourmi.limiteDetectionNourriture)) {
       state = FourmiStateMachine.detecte
       direction = anode.getNodeDirection(jnode)
     } else if ((estALaFourmiliere) & (logxys.length > 100)) { // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
