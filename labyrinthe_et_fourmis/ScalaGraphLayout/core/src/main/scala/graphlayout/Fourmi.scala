@@ -170,6 +170,7 @@ class Fourmi(val anode: ANode) {
 
   def lisseLeRetour = {
     myErrPrintDln("****************************************************************************")
+    val fin = logxys.last
     if (ParametresPourFourmi.raccourci > 1) { // detecte les raccourcis
       val oldlength = logxys.length
       //var logxystemp = List[(Carre, FourmiStateMachine)]()
@@ -198,6 +199,9 @@ class Fourmi(val anode: ANode) {
       myPrintDln(toString + " <--   trop    -- " + oldlength)
       myPrintDln(logxys.length, logxys.mkString(" + "))
     }
+    // remet la fourmiliere au dbut et la jaffe a la fin si jamais on simplifie abusivement
+    logxys = (fourmiliere.c, FourmiStateMachine.cherche) :: logxys
+    logxys = logxys :+ fin
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
       var lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
