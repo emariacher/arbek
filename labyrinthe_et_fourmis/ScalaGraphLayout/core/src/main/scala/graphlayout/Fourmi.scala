@@ -171,7 +171,7 @@ class Fourmi(val anode: ANode) {
   def lisseLeRetour = {
     myErrPrintDln("****************************************************************************")
     val fin = logxys.last
-    if (ParametresPourFourmi.raccourci > 1) { // detecte les raccourcis
+    if (ParametresPourFourmi.raccourci > 0) { // detecte les raccourcis
       val oldlength = logxys.length
       //var logxystemp = List[(Carre, FourmiStateMachine)]()
       var logxystemp = logxys.zipWithIndex
@@ -185,37 +185,28 @@ class Fourmi(val anode: ANode) {
       }
       logxys = logxystemp.sortBy(_._2).map(_._1)
       myPrintDln(toString + " <-- raccourci -- " + oldlength)
-      myPrintDln(logxys.length, logxys.mkString(" + "))
     }
-    if (ParametresPourFourmi.simplifieLissage > 1) { // décime!
+    if (ParametresPourFourmi.simplifieLissage > 0) { // décime!
       val oldlength = logxys.length
       logxys = logxys.zipWithIndex.filter(_._2 % ParametresPourFourmi.simplifieLissage == 1).map(_._1)
       myPrintDln(toString + " <--   trop    -- " + oldlength)
-      myPrintDln(logxys.length, logxys.mkString(" + "))
     }
     // remet la fourmiliere au dbut et la jaffe a la fin si jamais on simplifie abusivement
     logxys = (fourmiliere.c, FourmiStateMachine.cherche) :: logxys
     logxys = logxys :+ fin
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
-      var lastmax = .0
+      val oldlength = logxys.length
       var lsauts = logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       while (!lsauts.isEmpty) {
-        val oldlength = logxys.length
         val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
         llissage.reverse.foreach(toBeInserted => {
           logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
         })
-        myPrintDln(toString + " <--pas assez-- " + oldlength + "[" + lsauts.map(_._1).max + "] " + ParametresPourFourmi.sautsTropGrandsLissage)
         lsauts = logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
-        /*myPrintDln(logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
-          l.head._1._1, l.last._1._1, l.head._2)).mkString(" - "))*/
-        if (!lsauts.isEmpty) {
-          lastmax = lsauts.map(_._1).max
-        }
       }
-      myPrintDln(logxys.length, lastmax, ParametresPourFourmi.sautsTropGrandsLissage, logxys.mkString(" + "))
+      myPrintDln(toString + " <--pas assez-- " + oldlength + " " + ParametresPourFourmi.sautsTropGrandsLissage)
     }
   }
 

@@ -5,7 +5,7 @@ import java.util.zip.CRC32
 import kebra.MyLog._
 
 object ParametresPourFourmi {
-  var version = 1
+  var version = 2
   var hash = hashCode()
   var crcvar: Long = 0
   var nombreDefourmisParTribu = 5
@@ -28,6 +28,10 @@ object ParametresPourFourmi {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = 30
+
+  var depotEvaporation = 0.995
+  var depotEvaporeFinal = 4
+  var depotDepotInitial = 100
 
   def printStuff = { // https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
     getClass.getDeclaredFields.toList.foreach(f => {

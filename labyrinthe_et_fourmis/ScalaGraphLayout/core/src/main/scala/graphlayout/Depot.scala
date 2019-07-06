@@ -4,10 +4,10 @@
 package graphlayout
 
 object Depot {
-  val valeurDepot = 100.0
+  val valeurDepot = ParametresPourFourmi.depotDepotInitial
   val display = valeurDepot / 10
-  val evaporation = 0.997
-  val evapore = 2 // plus assez de pheronome pour que ca ait un effet
+  val evaporation = ParametresPourFourmi.depotEvaporation
+  val evapore = ParametresPourFourmi.depotEvaporeFinal // plus assez de pheronome pour que ca ait un effet
 }
 
 class Depot(var ph: Double, val tribu: Tribu) {
