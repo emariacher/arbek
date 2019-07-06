@@ -20,6 +20,6 @@ class Fourmiliere(val tribu: Tribu, val centre: FixedNode, val lfourmi: List[Fou
   def paint(g: Graphics2D) {
     g.setColor(tribu.c.color)
     g.draw3DRect(centre.x.toInt, centre.y.toInt, 20, 20, true)
-    g.drawString(retoursFourmiliere.mkString("[", ",", "]"), centre.x.toInt, centre.y.toInt)
+    g.drawString(retoursFourmiliere.mkString("[", ",", "] ") + c.toString, centre.x.toInt, centre.y.toInt)
   }
 }

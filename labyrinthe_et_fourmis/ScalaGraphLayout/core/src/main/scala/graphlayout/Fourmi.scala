@@ -137,7 +137,7 @@ class Fourmi(val anode: ANode) {
     anode.moveTo(c.fn)
     myAssert3(c == null, false, toString)
     c.updatePheromone(tribu)
-    /*logxys.take(indexlog).indexWhere(logitem => logitem._1.egal(c)) match {
+    /*old trouve les raccourcis
     logxys.take(indexlog).indexWhere(logitem => logitem._1.dist(c) < ParametresPourFourmi.raccourci) match {
       //logxys.take(index).indexWhere(logitem => logitem._1.get9Voisins.contains(c)) match {
       case x if x > -1 =>
@@ -179,14 +179,8 @@ class Fourmi(val anode: ANode) {
       while (indexLogxys < logxystemp.length) {
         val avantlength = logxystemp.length
         val c = logxystemp.apply(indexLogxys)._1._1
-        myPrintDln(indexLogxys, c, logxystemp.length)
         val lf = logxystemp.filter(_._1._1.dist(c) < ParametresPourFourmi.raccourci).sortBy(_._2)
         logxystemp = logxystemp.filter(logitem => logitem._2 <= lf.head._2 | logitem._2 > lf.last._2)
-        if (lf.length > 7) {
-          myPrintDln("   ", indexLogxys, c, lf.length, lf.head, lf.last, lf.mkString(" - "))
-          myPrintDln("   ", avantlength, logxystemp.length, logxystemp.sortBy(_._2).mkString(" + "))
-          val u = 0
-        }
         indexLogxys += 1
       }
       logxys = logxystemp.sortBy(_._2).map(_._1)
@@ -203,7 +197,8 @@ class Fourmi(val anode: ANode) {
     logxys = (fourmiliere.c, FourmiStateMachine.cherche) :: logxys
     logxys = logxys :+ fin
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
-      var lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+      var lastmax = .0
+      var lsauts = logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       while (!lsauts.isEmpty) {
         val oldlength = logxys.length
@@ -211,26 +206,17 @@ class Fourmi(val anode: ANode) {
         llissage.reverse.foreach(toBeInserted => {
           logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
         })
-        /*val lsauts2 = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
-          l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
-        myPrintDln(toString + " <--pas assez-- " + oldlength + "[ " + lsauts2.map(_._1).max + " <-- " + lsauts.map(_._1).max + " ]")*/
         myPrintDln(toString + " <--pas assez-- " + oldlength + "[" + lsauts.map(_._1).max + "] " + ParametresPourFourmi.sautsTropGrandsLissage)
-        myPrintDln(logxys.length, logxys.mkString(" + "))
-        lsauts = logxys.zipWithIndex.sliding(2, 2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+        lsauts = logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
+        /*myPrintDln(logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+          l.head._1._1, l.last._1._1, l.head._2)).mkString(" - "))*/
+        if (!lsauts.isEmpty) {
+          lastmax = lsauts.map(_._1).max
+        }
       }
+      myPrintDln(logxys.length, lastmax, ParametresPourFourmi.sautsTropGrandsLissage, logxys.mkString(" + "))
     }
-    /*if (ParametresPourFourmi.filtrePattern > -1) { // pattern escalier
-      val escalier = new PatternCarre(List(new Carre(0, 0), new Carre(1, 0), new Carre(2, 0), new Carre(2, 1), new Carre(3, 1), new Carre(4, 1)), 3)
-      val oldlength = logxys.length
-      val lslide = logxys.sliding(escalier.lc.length, 1)
-      lslide.foreach(tranche => if (escalier.similaire(tranche.map(_._1))) {
-        myErrPrintDln(tranche.mkString(". "))
-        myAssert2(true, false)
-      })
-      //myPrintDln(lslide.toList.map(_.mkString(". ")).mkString("\n  "))
-      myPrintDln(toString + " <--escalier-- " + oldlength)
-    }*/
   }
 
   def cherche(lc: List[Carre]) = {

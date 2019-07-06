@@ -2,16 +2,22 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
-class JNode(tribu: Tribu) extends ANode(tribu) {
+import graphlayout.Tableaux.tbx
 
-  override def toString: String = "[(%.0f,%.0f) ".format(x, y) + tribu+"]"
+class JNode(tribu: Tribu) extends ANode(tribu) {
+  var c = tbx.findCarre(x, y)
+
+  override def toString: String = "[(%.0f,%.0f) ".format(x, y) + tribu + "]"
 
   override def paint(g: Graphics2D) {
+    c = tbx.findCarre(x, y)
     g.setColor(tribu.c.color)
     g.fillRect(x.toInt, y.toInt, 20, 20)
-    g.setColor(Color.darkGray)
+    g.setColor(Color.black)
     g.drawRect(x.toInt, y.toInt, 20, 20)
-    g.drawRect(x.toInt+2, y.toInt+2, 16, 16)
+    g.drawRect(x.toInt + 2, y.toInt + 2, 16, 16)
+    g.drawString(c.toString, x.toInt, y.toInt)
+
   }
 }
 
