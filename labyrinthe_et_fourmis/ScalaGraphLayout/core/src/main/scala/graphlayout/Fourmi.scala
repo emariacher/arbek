@@ -34,7 +34,7 @@ class Fourmi(val anode: ANode) {
 
   def avance(lc: List[Carre]) = {
     val listeDesCarresReniflables = lc.filter(c =>
-      anode.pasLoin(c.XY) < Math.max(ParametresPourFourmi.influenceDesPheromones, tourneEnRond * tourneEnRond) & c.hasPheromone(tribu) > 0)
+      anode.pasLoin(c.XY) < Math.max(ParametresPourFourmi.influenceDesPheromones, tourneEnRond * tourneEnRond) & c.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal)
     val listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
       .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < ParametresPourFourmi.angleDeReniflage)
     if (listeDesCarresReniflables.isEmpty | tourneEnRond > ParametresPourFourmi.tourneEnRondLimite) {
@@ -45,12 +45,6 @@ class Fourmi(val anode: ANode) {
       logcarres = List[Carre]()
       state = FourmiStateMachine.cherche
     } else {
-      /*if (compteurPasDansLesPheromones > 300) {
-        myPrintIt("\n" + Console.MAGENTA + toString, compteurPasDansLesPheromones, tourneEnRond,
-          listeDesCarresReniflables.mkString("\n    r{", ",", "}"), listeDesCarresReniflables.length,
-          listeDesCarresPasDejaParcourus.mkString(Console.CYAN + "\n    n{", ",", "}"), listeDesCarresPasDejaParcourus.length,
-          Console.RESET)
-      }*/
       val lfedges1 = listeDesCarresReniflables
         .filter(_.hasPheromone(tribu) > listeDesCarresReniflables.length) // si il y a beaucoup de carres reniflables, prends ceux qui ont le plus de pheromones
         .map(c => {
@@ -119,6 +113,7 @@ class Fourmi(val anode: ANode) {
 
 
   def rembobine: Int = {
+    logcarres = List[Carre]()
     myAssert3(indexlog < 1, false, toString + " " + indexlog + " " + previousState + "[" + stateCompteur + "]")
     /*myAssert3(indexlog < logxys.length, true, toString + " " + indexlog + "<" + logxys.length +
       " " + previousState + "[" + stateCompteur + "] fmcentre[" + fourmiliere.c + "] cptShortcut=" + cptShortcut
@@ -170,8 +165,10 @@ class Fourmi(val anode: ANode) {
 
   def lisseLeRetour = {
     myErrPrintDln("****************************************************************************")
-    val fin = logxys.last
+    val jaffeC = logxys.last
+    val fourmiliereC = (fourmiliere.c, FourmiStateMachine.cherche)
     if (ParametresPourFourmi.raccourci > 0) { // detecte les raccourcis
+      var cptRaccourcis = 0
       val oldlength = logxys.length
       //var logxystemp = List[(Carre, FourmiStateMachine)]()
       var logxystemp = logxys.zipWithIndex
@@ -180,25 +177,30 @@ class Fourmi(val anode: ANode) {
         val avantlength = logxystemp.length
         val c = logxystemp.apply(indexLogxys)._1._1
         val lf = logxystemp.filter(_._1._1.dist(c) < ParametresPourFourmi.raccourci).sortBy(_._2)
-        logxystemp = logxystemp.filter(logitem => logitem._2 <= lf.head._2 | logitem._2 > lf.last._2)
+        if (lf.last._2 - lf.head._2 > 10) {
+          cptRaccourcis += 1
+          logxystemp = logxystemp.filter(logitem => logitem._2 <= lf.head._2 | logitem._2 > lf.last._2)
+        }
         indexLogxys += 1
       }
       logxys = logxystemp.sortBy(_._2).map(_._1)
-      myPrintDln(toString + " <-- raccourci -- " + oldlength)
+      myPrintDln(toString + " <-- raccourci -- " + oldlength + " cptRaccourcis=" + cptRaccourcis)
     }
     if (ParametresPourFourmi.simplifieLissage > 0) { // décime!
       val oldlength = logxys.length
       logxys = logxys.zipWithIndex.filter(_._2 % ParametresPourFourmi.simplifieLissage == 1).map(_._1)
       myPrintDln(toString + " <--   trop    -- " + oldlength)
     }
-    // remet la fourmiliere au dbut et la jaffe a la fin si jamais on simplifie abusivement
-    logxys = (fourmiliere.c, FourmiStateMachine.cherche) :: logxys
-    logxys = logxys :+ fin
+    // remet la fourmiliere au début et la jaffe a la fin si jamais on simplifie abusivement
+    logxys = fourmiliereC :: logxys
+    logxys = logxys :+ jaffeC
     if (ParametresPourFourmi.sautsTropGrandsLissage > 0) { // sauts trop grands / rajoute quand il n'y en a pas assez
+      var cptPasAssez = 0
       val oldlength = logxys.length
       var lsauts = logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
         l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       while (!lsauts.isEmpty) {
+        cptPasAssez += 1
         val llissage = lsauts.map(s => (s._2, s._2.milieu(s._3), s._3, s._4))
         llissage.reverse.foreach(toBeInserted => {
           logxys = insert(logxys, toBeInserted._4 + 1, (toBeInserted._2, FourmiStateMachine.lisse))
@@ -206,7 +208,9 @@ class Fourmi(val anode: ANode) {
         lsauts = logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       }
-      myPrintDln(toString + " <--pas assez-- " + oldlength + " " + ParametresPourFourmi.sautsTropGrandsLissage)
+      myPrintDln(toString + " <--pas assez-- " + oldlength + " cptPasAssez=" + cptPasAssez + " max=" +
+        logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
+          l.head._1._1, l.last._1._1, l.head._2)).map(_._1).max)
     }
   }
 
@@ -233,7 +237,7 @@ class Fourmi(val anode: ANode) {
           state = FourmiStateMachine.retourne
           lisseLeRetour
           cptShortcut = 0
-          indexlog = logxys.length - 2
+          indexlog = logxys.length - 1
         } else {
           redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
         }
@@ -299,6 +303,7 @@ class Fourmi(val anode: ANode) {
     } else {
       g.setColor(Color.black)
     }
+    g.drawString(logxys.length + " " + logcarres.length, anode.x.toInt, anode.y.toInt)
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
     if (!carre.egal(lastlogcarre)) {
       logxys = logxys :+ (carre, state)

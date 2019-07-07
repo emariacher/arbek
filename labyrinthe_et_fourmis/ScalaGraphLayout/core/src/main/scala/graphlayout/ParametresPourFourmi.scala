@@ -8,10 +8,10 @@ object ParametresPourFourmi {
   var version = 2
   var hash = hashCode()
   var crcvar: Long = 0
-  var nombreDefourmisParTribu = 5
-  var limiteArrete = 120
+  var nombreDefourmisParTribu = 1
+  var limiteArrete = (sautsTropGrandsLissage * 2) + (nombreDefourmisParTribu * (sautsTropGrandsLissage / 2))
   var stabilisationRassemble = 100
-  var limiteDetectionNourriture = 200
+  var limiteDetectionNourriture = 400
 
   var CEstLaFourmiliere = 20.0
   var influenceDesPheromones = 40.0
@@ -28,6 +28,7 @@ object ParametresPourFourmi {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = 30
+  var limiteArreteLeRun = 200
 
   var depotEvaporation = 0.995
   var depotEvaporeFinal = 4

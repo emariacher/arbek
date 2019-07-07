@@ -34,6 +34,8 @@ class Agregats extends GraphAbstract {
   var ljaffe = List.empty[JNode]
   var lfourmi = List.empty[Fourmi]
   var listCarreAvecPheronome = List[Carre]()
+  var cptOnVaArreter = 0
+  var cptRun = 1
 
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
@@ -62,16 +64,7 @@ class Agregats extends GraphAbstract {
         lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
       })
     })
-    tbx.zp.lbl.text = tbx.ts + " " + tbx.state + lcompteurState.mkString(" ", ",", "")
-    /*listeDesAgregats.foreach(a => a._1.label.text = ", %s/%.0f".format(
-      listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
-      listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)
-    )
-    listeDesAgregats.foreach(a => a._1.label.text = ",%.0f".format({
-      val lc = listCarreAvecPheronome.filter(!_.depotPheromones.filter(_._1 == a._1).isEmpty)
-      lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length
-    }))*/
-
+    tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state + lcompteurState.mkString(" ", ",", "")
     val listeDesMoyennesDePheromones = listeDesAgregats.map(a => {
       val lc = listCarreAvecPheronome.filter(!_.depotPheromones.filter(_._1 == a._1).isEmpty)
       (a._1, lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length, lc.length)
@@ -94,14 +87,21 @@ class Agregats extends GraphAbstract {
     } else if ((listeDesMoyennesDePheromones.filter(d => d._2.isNaN).isEmpty) &
       (listeDesMoyennesDePheromones.sortBy(_._2).filter(_._2 < ParametresPourFourmi.limiteArrete).length
         < (Tribu.tribus.length / 2))) {
-      // reset quand presque toutes les fourmilieres sont bien approvisionnees
-      /*listeDesAgregats.foreach(a => myErrPrintDln(tbx.state, ", %s/%.0f".format(a._1 + " " +
-        listeDesFourmilieres.filter(fm => fm.tribu == a._1).map(_.retoursFourmiliere.mkString("[", ",", "]")),
-        listCarreAvecPheronome.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum)))*/
-      myPrintDln(listeDesMoyennesDePheromones.sortBy(_._2).map(z => "%s %.0f/%d".format(z._1, z._2, z._3)).mkString("", ", ", ""))
-      myPrintln(lcompteurState.mkString(" ", ",", ""))
-      resultat.log1(tbx.ltimestamps, listeDesFourmilieres.map(_.retoursFourmiliere.getOrElse(FourmiStateMachine.retourne, 0)), lcompteurState)
-      StateMachine.reset
+      cptOnVaArreter += 1
+      if (cptOnVaArreter > ParametresPourFourmi.limiteArreteLeRun) {
+        myPrintDln(listeDesMoyennesDePheromones.sortBy(_._2).map(z => "%s %.0f/%d".format(z._1, z._2, z._3)).mkString("", ", ", ""))
+        myPrintln(lcompteurState.mkString(" ", ",", ""))
+        resultat.log1(tbx.ltimestamps, listeDesFourmilieres.map(_.retoursFourmiliere.getOrElse(FourmiStateMachine.retourne, 0)), lcompteurState)
+        cptRun += 1
+        cptOnVaArreter = 0
+        StateMachine.reset
+      } else {
+        if (cptOnVaArreter % 20 == 1) {
+          myPrintIt("On va arrêter! " + cptOnVaArreter)
+        }
+        tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state
+        StateMachine.onVaArreter
+      }
     } else {
       StateMachine.croisiere
     }
@@ -346,6 +346,8 @@ class Agregats extends GraphAbstract {
       case StateMachine.travaille =>
         lfourmi.foreach(_.paint(g))
       case StateMachine.croisiere =>
+        lfourmi.foreach(_.paint(g))
+      case StateMachine.onVaArreter =>
         lfourmi.foreach(_.paint(g))
       case _ =>
     }
