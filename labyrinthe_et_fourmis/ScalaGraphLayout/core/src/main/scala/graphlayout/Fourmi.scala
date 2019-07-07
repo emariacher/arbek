@@ -164,7 +164,6 @@ class Fourmi(val anode: ANode) {
   }
 
   def lisseLeRetour = {
-    myErrPrintDln("****************************************************************************")
     val jaffeC = logxys.last
     val fourmiliereC = (fourmiliere.c, FourmiStateMachine.cherche)
     if (ParametresPourFourmi.raccourci > 0) { // detecte les raccourcis
@@ -184,12 +183,12 @@ class Fourmi(val anode: ANode) {
         indexLogxys += 1
       }
       logxys = logxystemp.sortBy(_._2).map(_._1)
-      myPrintDln(toString + " <-- raccourci -- " + oldlength + " cptRaccourcis=" + cptRaccourcis)
+      selPrint(toString + " <-- raccourci -- " + oldlength + " cptRaccourcis=" + cptRaccourcis)
     }
     if (ParametresPourFourmi.simplifieLissage > 0) { // décime!
       val oldlength = logxys.length
       logxys = logxys.zipWithIndex.filter(_._2 % ParametresPourFourmi.simplifieLissage == 1).map(_._1)
-      myPrintDln(toString + " <--   trop    -- " + oldlength)
+      selPrint(toString + " <--   trop    -- " + oldlength)
     }
     // remet la fourmiliere au début et la jaffe a la fin si jamais on simplifie abusivement
     logxys = fourmiliereC :: logxys
@@ -208,7 +207,7 @@ class Fourmi(val anode: ANode) {
         lsauts = logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
           l.head._1._1, l.last._1._1, l.head._2)).filter(_._1 > ParametresPourFourmi.sautsTropGrandsLissage)
       }
-      myPrintDln(toString + " <--pas assez-- " + oldlength + " cptPasAssez=" + cptPasAssez + " max=" +
+      selPrint(toString + " <--pas assez-- " + oldlength + " cptPasAssez=" + cptPasAssez + " max=" +
         logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
           l.head._1._1, l.last._1._1, l.head._2)).map(_._1).max)
     }
@@ -312,6 +311,12 @@ class Fourmi(val anode: ANode) {
     /*if (triggerTrace) {
       myPrintDln(toString, state)
     }*/
+  }
+
+  def selPrint(a: Any): Unit = {
+    if (anode.selected) {
+      myPrintD(a + "\n")
+    }
   }
 }
 
