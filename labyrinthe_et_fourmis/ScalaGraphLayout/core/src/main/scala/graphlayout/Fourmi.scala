@@ -60,13 +60,10 @@ class Fourmi(val anode: ANode) {
         ) // quand ca tourne en rond, force la sortie
         e
       })
-      if (tbx.graph.triggerTraceNotAlreadyActivated) {
-        anode.selected = true
-      }
-      selPrint(tourneEnRond, listeDesCarresReniflables.mkString("lcr", ", ", ""))
-      selPrint(logcarres.mkString("lc", ", ", ""))
-      selPrint(listeDesCarresPasDejaParcourus.mkString("lpdp", ", ", ""))
       if (listeDesCarresPasDejaParcourus.isEmpty) {
+        if (tbx.graph.triggerTraceNotAlreadyActivated) {
+          anode.selected = true
+        }
         tourneEnRond += 1
         state = FourmiStateMachine.tourneEnRond
       } else {
@@ -98,8 +95,11 @@ class Fourmi(val anode: ANode) {
           lfedges2.mkString("\n--- e2n{", ",", "}"))*/
         avanceAPeuPresCommeAvant
       }
-      if (triggerTrace) {
-        myPrintDln(tribu, anode, carre, "d%.2f".format(direction), tourneEnRond, "\n")
+      if (listeDesCarresPasDejaParcourus.length < 3) {
+        selPrint(tourneEnRond, listeDesCarresReniflables.mkString("lcr", ", ", ""))
+        selPrint(logcarres.mkString("lc", ", ", ""))
+        selPrint(listeDesCarresPasDejaParcourus.mkString("lpdp", ", ", ""))
+        selPrint(tribu, anode, carre, "d%.2f".format(direction), tourneEnRond)
       }
     }
   }
@@ -166,6 +166,7 @@ class Fourmi(val anode: ANode) {
     logcarres = List(fourmiliere.c)
     fourmiliere.retour(state)
     tourneEnRond = 0
+    anode.selected = false
     FourmiStateMachine.cherche
   }
 
@@ -193,7 +194,7 @@ class Fourmi(val anode: ANode) {
     }
     if (ParametresPourFourmi.simplifieLissage > 0) { // décime!
       val oldlength = logxys.length
-      logxys = logxys.zipWithIndex.filter(_._2 % ParametresPourFourmi.simplifieLissage == 1).map(_._1)
+      logxys = logxys.zipWithIndex.filter(_._2 % (ParametresPourFourmi.simplifieLissage + tbx.rnd.nextInt(2)) == 1).map(_._1)
       selPrint(toString + " <--   trop    -- " + oldlength)
     }
     // remet la fourmiliere au début et la jaffe a la fin si jamais on simplifie abusivement
