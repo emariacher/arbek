@@ -60,6 +60,12 @@ class Fourmi(val anode: ANode) {
         ) // quand ca tourne en rond, force la sortie
         e
       })
+      if (tbx.graph.triggerTraceNotAlreadyActivated) {
+        anode.selected = true
+      }
+      selPrint(tourneEnRond, listeDesCarresReniflables.mkString("lcr", ", ", ""))
+      selPrint(logcarres.mkString("lc", ", ", ""))
+      selPrint(listeDesCarresPasDejaParcourus.mkString("lpdp", ", ", ""))
       if (listeDesCarresPasDejaParcourus.isEmpty) {
         tourneEnRond += 1
         state = FourmiStateMachine.tourneEnRond
