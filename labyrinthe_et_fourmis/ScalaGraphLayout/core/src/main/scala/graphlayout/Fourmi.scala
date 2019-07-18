@@ -25,6 +25,7 @@ class Fourmi(val anode: ANode) {
   var compteurPasDansLesPheromones = 0
   var lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
   var tourneEnRond = 0
+  var compteurSinceLastTourneEnRond = 0
   var lastlogcarre = new Carre(0, 0)
   var cptShortcut: Int = _
 
@@ -99,7 +100,7 @@ class Fourmi(val anode: ANode) {
         selPrint(tourneEnRond, listeDesCarresReniflables.mkString("lcr", ", ", ""))
         selPrint(logcarres.mkString("lc", ", ", ""))
         selPrint(listeDesCarresPasDejaParcourus.mkString("lpdp", ", ", ""))
-        selPrint(tribu, anode, carre, "d%.2f".format(direction), tourneEnRond)
+        selPrint(tribu, oldnode, tbx.findCarre(oldnode.x, oldnode.y), " --> ", anode, carre, "d%.2f\n".format(direction))
       }
     }
   }
@@ -233,10 +234,14 @@ class Fourmi(val anode: ANode) {
 
   def doZeJob(lc: List[Carre]): Unit = {
     previousState = state
+    compteurSinceLastTourneEnRond += 1
     state match {
       case FourmiStateMachine.cherche => cherche(lc)
       case FourmiStateMachine.surLaTrace => cherche(lc)
       case FourmiStateMachine.tourneEnRond => cherche(lc)
+        if (tourneEnRond > 5) {
+          compteurSinceLastTourneEnRond = 0
+        }
       case FourmiStateMachine.detecte =>
         avanceDroit
         if (aDetecteLaNourriture(10)) {

@@ -10,7 +10,7 @@ object ParametresPourFourmi {
   var crcvar: Long = 0
   var nombreDefourmisParTribu = 1
   var stabilisationRassemble = 100
-  var limiteDetectionNourriture = 500
+  var limiteDetectionNourriture = 400
 
   var CEstLaFourmiliere = 20.0
   var influenceDesPheromones = 40.0
@@ -33,6 +33,7 @@ object ParametresPourFourmi {
   var depotEvaporation = 0.995
   var depotEvaporeFinal = 4
   var depotDepotInitial = 100
+  var limiteSinceLastTourneEnRond = 1000
 
   def printStuff = { // https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
     getClass.getDeclaredFields.toList.foreach(f => {
