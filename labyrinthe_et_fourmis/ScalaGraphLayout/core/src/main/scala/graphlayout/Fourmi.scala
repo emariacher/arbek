@@ -66,6 +66,7 @@ class Fourmi(val anode: ANode) {
           anode.selected = true
         }
         tourneEnRond += 1
+        carre.compteurTourneEnRond += 1
         avanceAPeuPresCommeAvant
         state = FourmiStateMachine.tourneEnRond
       } else {

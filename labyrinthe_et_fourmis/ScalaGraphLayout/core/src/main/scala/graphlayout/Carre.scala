@@ -23,6 +23,7 @@ class Carre(val rc: RowCol) {
   }
   val XYInt = (XY._1.toInt, XY._2.toInt)
   val fn = new FixedNode(XY)
+  var compteurTourneEnRond = 0
 
   override def toString: String = "{r" + row + ", c" + col + "}"
 
@@ -51,6 +52,9 @@ class Carre(val rc: RowCol) {
       g.drawRect(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
       //g.drawString(depotPheromones.map(_.toString).mkString("[", ",", "]"), XY._1.toInt - 3, XY._2.toInt - 3)
     })
+    if (compteurTourneEnRond > 0) {
+      g.fillRect(XY._1.toInt - 3, XY._2.toInt - 3, compteurTourneEnRond, compteurTourneEnRond)
+    }
   }
 
   def getVoisins(lc: List[Carre]) = lc.filter((cf: Carre) => Math.abs(cf.row - row) + Math.abs(cf.col - col) == 1)
