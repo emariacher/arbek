@@ -66,6 +66,7 @@ class Fourmi(val anode: ANode) {
           anode.selected = true
         }
         tourneEnRond += 1
+        avanceAPeuPresCommeAvant
         state = FourmiStateMachine.tourneEnRond
       } else {
         tourneEnRond = 0
@@ -90,15 +91,15 @@ class Fourmi(val anode: ANode) {
       logcarres = (logcarres :+ carre).distinct
       compteurDansLesPheromones += 1
       compteurPasDansLesPheromones = 0
-      if (carre.dist(tbx.findCarre(oldnode.x, oldnode.y)) < 1) {
+      /*if (carre.dist(tbx.findCarre(oldnode.x, oldnode.y)) < 1) {
         direction = tbx.rnd.nextDouble() * Math.PI * 2
-        /*myErrPrintDln(toString + " d%.2f  Stationnaire! ".format(direction) + tourneEnRond,
+        myErrPrintDln(toString + " d%.2f  Stationnaire! ".format(direction) + tourneEnRond,
           lfedges1.mkString("\n--- e1r{", ",", "}"),
-          lfedges2.mkString("\n--- e2n{", ",", "}"))*/
+          lfedges2.mkString("\n--- e2n{", ",", "}"))
         selPrint(tribu, oldnode, oldcarre, " --> ", anode, carre, "d%.2f\n".format(direction))
         avanceAPeuPresCommeAvant
         selPrint(tribu, oldnode, oldcarre, " --> ", anode, carre, "d%.2f\n".format(direction))
-      }
+      }*/
       if (listeDesCarresPasDejaParcourus.length < 3) {
         selPrint(tourneEnRond, tbx.ts, listeDesCarresReniflables.mkString("lcr", ", ", ""))
         selPrint(logcarres.mkString("lc", ", ", ""))

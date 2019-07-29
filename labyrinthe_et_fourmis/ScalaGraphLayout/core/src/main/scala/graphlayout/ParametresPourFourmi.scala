@@ -5,7 +5,7 @@ import java.util.zip.CRC32
 import kebra.MyLog._
 
 object ParametresPourFourmi {
-  var version = 3
+  var version = 4
   var hash = hashCode()
   var crcvar: Long = 0
   var nombreDefourmisParTribu = 1
