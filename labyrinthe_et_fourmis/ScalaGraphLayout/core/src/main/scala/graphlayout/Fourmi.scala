@@ -67,6 +67,8 @@ class Fourmi(val anode: ANode) {
         }
         tourneEnRond += 1
         carre.compteurTourneEnRond += 1
+        carre.mindir = math.min(carre.mindir, direction)
+        carre.maxdir = math.max(carre.maxdir, direction)
         avanceAPeuPresCommeAvant
         state = FourmiStateMachine.tourneEnRond
       } else {

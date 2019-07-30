@@ -26,14 +26,14 @@ object ParametresPourFourmi {
   var simplifieLissage = 5
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
-  var limiteArrete = (sautsTropGrandsLissage * 2) + (nombreDefourmisParTribu * (sautsTropGrandsLissage / 2))
+  var limiteArrete = (sautsTropGrandsLissage * 2) + (nombreDefourmisParTribu * (sautsTropGrandsLissage / 3))
   var raccourci = 30
   var limiteArreteLeRun = 200
 
   var depotEvaporation = 0.995
   var depotEvaporeFinal = 4
   var depotDepotInitial = 100
-  var limiteSinceLastTourneEnRond = 1000
+  var limiteSinceLastTourneEnRond = 500
 
   def printStuff = { // https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
     getClass.getDeclaredFields.toList.foreach(f => {

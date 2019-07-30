@@ -24,6 +24,8 @@ class Carre(val rc: RowCol) {
   val XYInt = (XY._1.toInt, XY._2.toInt)
   val fn = new FixedNode(XY)
   var compteurTourneEnRond = 0
+  var mindir = 100.0
+  var maxdir = -100.0
 
   override def toString: String = "{r" + row + ", c" + col + "}"
 
@@ -53,7 +55,8 @@ class Carre(val rc: RowCol) {
       //g.drawString(depotPheromones.map(_.toString).mkString("[", ",", "]"), XY._1.toInt - 3, XY._2.toInt - 3)
     })
     if (compteurTourneEnRond > 0) {
-      g.fillRect(XY._1.toInt - 3, XY._2.toInt - 3, compteurTourneEnRond, compteurTourneEnRond)
+      //g.fillRect(XY._1.toInt - 3, XY._2.toInt - 3, compteurTourneEnRond, compteurTourneEnRond)
+      g.drawString(compteurTourneEnRond + " m%.2f M%.2f".format(mindir, maxdir), XY._1.toInt - 3, XY._2.toInt - 3)
     }
   }
 

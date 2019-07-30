@@ -84,10 +84,10 @@ class Agregats extends GraphAbstract {
       } else {
         StateMachine.travaille
       }
-    } else if (((listeDesMoyennesDePheromones.filter(d => d._2.isNaN).isEmpty) &
+    } else if (((listeDesMoyennesDePheromones.filter(d => d._2.isNaN).length < (Tribu.tribus.length / 3)) &
       (listeDesMoyennesDePheromones.sortBy(_._2).filter(_._2 < ParametresPourFourmi.limiteArrete).length
         < (Tribu.tribus.length / 2)))
-      | (lfourmi.filter(_.compteurSinceLastTourneEnRond < ParametresPourFourmi.limiteSinceLastTourneEnRond).isEmpty)) {
+      | (lfourmi.filter(_.compteurSinceLastTourneEnRond < ParametresPourFourmi.limiteSinceLastTourneEnRond).length < (Tribu.tribus.length / 3))) {
       cptOnVaArreter += 1
       if (cptOnVaArreter > ParametresPourFourmi.limiteArreteLeRun) {
         myPrintDln(listeDesMoyennesDePheromones.sortBy(_._2).map(z => "%s %.0f/%d".format(z._1, z._2, z._3)).mkString("", ", ", ""))
@@ -98,7 +98,7 @@ class Agregats extends GraphAbstract {
         StateMachine.reset
       } else {
         if (cptOnVaArreter % 20 == 1) {
-          myPrintIt("On va arrêter! " + cptOnVaArreter + lfourmi.map(_.compteurSinceLastTourneEnRond).mkString(" [", ",", "]"))
+          myPrintln("On va arrêter! " + cptOnVaArreter + lfourmi.map(_.compteurSinceLastTourneEnRond).mkString(" [", ",", "]"))
         }
         tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state
         StateMachine.onVaArreter
