@@ -54,7 +54,6 @@ class Agregats extends GraphAbstract {
       //myPrintIt(Console.BLUE + listeDesFourmilieres.mkString("[\n  ", "\n  ", "\n]") + Console.RESET)
       listeDesFourmilieres.foreach(_.faisSavoirAuxFourmisQuEllesFontPartieDeLaFourmiliere)
     } else {
-      listCarreAvecPheronome.foreach(_.evapore)
       var filterond = 0
       if (!listCarreAvecPheronome.isEmpty) {
         filterond = listCarreAvecPheronome.map(_.compteurTourneEnRond).max - 10
