@@ -1,6 +1,6 @@
 package graphlayout
 
-import java.awt.Graphics2D
+import java.awt.{Color, Graphics2D}
 
 import graphlayout.Tableaux._
 import kebra.MyLog._
@@ -56,7 +56,12 @@ class Carre(val rc: RowCol) {
     })
     if (compteurTourneEnRond > 0) {
       //g.fillRect(XY._1.toInt - 3, XY._2.toInt - 3, compteurTourneEnRond, compteurTourneEnRond)
-      g.drawString(compteurTourneEnRond + " m%.2f M%.2f".format(mindir, maxdir), XY._1.toInt - 3, XY._2.toInt - 3)
+      if (mindir != maxdir) {
+        g.drawString(compteurTourneEnRond + " m%.2f M%.2f".format(mindir, maxdir), XY._1.toInt - 3, XY._2.toInt - 3)
+      } else {
+        g.setColor(Color.black)
+        g.drawString(compteurTourneEnRond + " %.2f".format(mindir), XY._1.toInt - 3, XY._2.toInt - 3)
+      }
     }
   }
 
