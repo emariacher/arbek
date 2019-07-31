@@ -41,10 +41,13 @@ class Carre(val rc: RowCol) {
 
   def equivalent(c: Carre): Boolean = row == c.row & col == c.col
 
-  def evapore = {
+  var compteurTourneEnRondLimit = 0
+
+  def evapore(filterond: Int) = {
     depotPheromones = depotPheromones.map(depot => (depot._1, depot._2 * Depot.evaporation))
     val moyennePheromones = depotPheromones.values.sum / depotPheromones.toList.length
     depotPheromones = depotPheromones.filter(_._2 > Depot.evapore).filter(_._2 > moyennePheromones - 0.01) // les gros depots de pheromone gomment les petits
+    compteurTourneEnRondLimit = filterond
   }
 
   def paint(g: Graphics2D) {
@@ -54,7 +57,7 @@ class Carre(val rc: RowCol) {
       g.drawRect(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
       //g.drawString(depotPheromones.map(_.toString).mkString("[", ",", "]"), XY._1.toInt - 3, XY._2.toInt - 3)
     })
-    if (compteurTourneEnRond > 0) {
+    if (compteurTourneEnRond > compteurTourneEnRondLimit) {
       //g.fillRect(XY._1.toInt - 3, XY._2.toInt - 3, compteurTourneEnRond, compteurTourneEnRond)
       if (mindir != maxdir) {
         g.drawString(compteurTourneEnRond + " m%.2f M%.2f".format(mindir, maxdir), XY._1.toInt - 3, XY._2.toInt - 3)
