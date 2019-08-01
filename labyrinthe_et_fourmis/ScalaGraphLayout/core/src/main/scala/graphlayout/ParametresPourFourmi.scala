@@ -8,9 +8,9 @@ object ParametresPourFourmi {
   var version = 4
   var hash = hashCode()
   var crcvar: Long = 0
-  var nombreDefourmisParTribu = 4
+  var nombreDefourmisParTribu = 1
   var stabilisationRassemble = 100
-  var limiteDetectionNourriture = 200
+  var limiteDetectionNourriture = 400
 
   var CEstLaFourmiliere = 20.0
   var influenceDesPheromones = 40.0

@@ -57,7 +57,7 @@ class Carre(val rc: RowCol) {
       g.drawRect(XY._1.toInt - 3, XY._2.toInt - 3, radius, radius)
       //g.drawString(depotPheromones.map(_.toString).mkString("[", ",", "]"), XY._1.toInt - 3, XY._2.toInt - 3)
     })
-    if (compteurTourneEnRond > compteurTourneEnRondLimit) {
+    if ((compteurTourneEnRond > compteurTourneEnRondLimit) & (math.abs(mindir - maxdir) < 15)) {
       //g.fillRect(XY._1.toInt - 3, XY._2.toInt - 3, compteurTourneEnRond, compteurTourneEnRond)
       if (mindir != maxdir) {
         g.drawString(compteurTourneEnRond + " m%.2f M%.2f".format(mindir, maxdir), XY._1.toInt - 3, XY._2.toInt - 3)
