@@ -21,11 +21,7 @@ class Fourmi(val anode: ANode) {
   var indexlog: Int = _
   var triggerTrace = false
   var logcarres = List[Carre]()
-  var compteurDansLesPheromones = 0
-  var compteurPasDansLesPheromones = 0
   var lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
-  var tourneEnRond = 0
-  var compteurSinceLastTourneEnRond = 0
   var lastlogcarre = new Carre(0, 0)
   var cptShortcut: Int = _
 
@@ -38,9 +34,6 @@ class Fourmi(val anode: ANode) {
     val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
     if (lc.isEmpty) {
       avanceAPeuPresCommeAvant
-      compteurDansLesPheromones = 0
-      compteurPasDansLesPheromones += 1
-      if (compteurPasDansLesPheromones > ParametresPourFourmi.compteurPasDansLesPheromonesLimite) tourneEnRond = 0
       logcarres = List[Carre]()
       state = FourmiStateMachine.cherche
     } else {
@@ -51,12 +44,18 @@ class Fourmi(val anode: ANode) {
         listeDesCarresReniflables = lc.filter(c =>
           anode.pasLoin(c.XY) < limiteReniflage & c.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal)
         listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
-        limiteReniflage += 10
+        limiteReniflage += ParametresPourFourmi.increment
+      }
+      if (limiteReniflage - ParametresPourFourmi.increment > ParametresPourFourmi.influenceDesPheromones) {
+        selPrint(tribu, oldnode, oldcarre, " --> ", anode, carre, "d%.2f\n".format(direction))
+        state = FourmiStateMachine.tourneEnRond
+      } else {
+        state = FourmiStateMachine.cherche
       }
       val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
         val e = new Edge(c.fn, anode)
         e.attraction = Math.max(c.hasPheromone(tribu),
-          ParametresPourFourmi.suisLeChemin1 + (tourneEnRond * tourneEnRond) +
+          ParametresPourFourmi.suisLeChemin1 +
             (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length) * ParametresPourFourmi.suisLeChemin2
         ) // quand ca tourne en rond, force la sortie
         e
@@ -67,14 +66,6 @@ class Fourmi(val anode: ANode) {
         listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ carre).distinct
-      compteurDansLesPheromones += 1
-      compteurPasDansLesPheromones = 0
-      if (listeDesCarresPasDejaParcourus.length < 3) {
-        selPrint(tourneEnRond, tbx.ts, listeDesCarresReniflables.mkString("lcr", ", ", ""))
-        selPrint(logcarres.mkString("lc", ", ", ""))
-        selPrint(listeDesCarresPasDejaParcourus.mkString("lpdp", ", ", ""))
-        selPrint(tribu, oldnode, oldcarre, " --> ", anode, carre, "d%.2f\n".format(direction))
-      }
     }
   }
 
@@ -139,7 +130,6 @@ class Fourmi(val anode: ANode) {
     indexlog = 0
     logcarres = List(fourmiliere.c)
     fourmiliere.retour(state)
-    tourneEnRond = 0
     anode.selected = false
     FourmiStateMachine.cherche
   }
@@ -211,14 +201,10 @@ class Fourmi(val anode: ANode) {
 
   def doZeJob(lc: List[Carre]): Unit = {
     previousState = state
-    compteurSinceLastTourneEnRond += 1
     state match {
       case FourmiStateMachine.cherche => cherche(lc)
       case FourmiStateMachine.surLaTrace => cherche(lc)
       case FourmiStateMachine.tourneEnRond => cherche(lc)
-        if (tourneEnRond > 5) {
-          compteurSinceLastTourneEnRond = 0
-        }
       case FourmiStateMachine.detecte =>
         avanceDroit
         if (aDetecteLaNourriture(10)) {
