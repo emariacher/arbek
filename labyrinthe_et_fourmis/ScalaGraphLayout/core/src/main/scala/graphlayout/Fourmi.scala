@@ -35,35 +35,34 @@ class Fourmi(val anode: ANode) {
     if (lc.isEmpty) {
       avanceAPeuPresCommeAvant
       logcarres = List[Carre]()
-      state = FourmiStateMachine.cherche
     } else {
       var limiteReniflage = ParametresPourFourmi.influenceDesPheromones
       var listeDesCarresReniflables = List[Carre]()
       var listeDesCarresPasDejaParcourus = List[Carre]()
-      while (listeDesCarresPasDejaParcourus.isEmpty) {
+      while (listeDesCarresPasDejaParcourus.isEmpty
+        & limiteReniflage - ParametresPourFourmi.increment < ParametresPourFourmi.influenceDesPheromones) {
         listeDesCarresReniflables = lc.filter(c =>
           anode.pasLoin(c.XY) < limiteReniflage & c.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal)
         listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
         limiteReniflage += ParametresPourFourmi.increment
       }
-      if (limiteReniflage - ParametresPourFourmi.increment > ParametresPourFourmi.influenceDesPheromones) {
-        selPrint(tribu, oldnode, oldcarre, " --> ", anode, carre, "d%.2f\n".format(direction))
-        state = FourmiStateMachine.tourneEnRond
+      if (listeDesCarresPasDejaParcourus.isEmpty) {
+        avanceAPeuPresCommeAvant
       } else {
-        state = FourmiStateMachine.cherche
+        val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
+          val e = new Edge(c.fn, anode)
+          e.attraction = Math.max(c.hasPheromone(tribu),
+            ParametresPourFourmi.suisLeChemin1 +
+              (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length) * ParametresPourFourmi.suisLeChemin2
+          ) // quand ca tourne en rond, force la sortie
+          e
+        })
+        //myPrintDln("***********************************")
+        lfedges2.foreach(_.rassemble)
+        Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
+          listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
       }
-      val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
-        val e = new Edge(c.fn, anode)
-        e.attraction = Math.max(c.hasPheromone(tribu),
-          ParametresPourFourmi.suisLeChemin1 +
-            (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length) * ParametresPourFourmi.suisLeChemin2
-        ) // quand ca tourne en rond, force la sortie
-        e
-      })
-      //myPrintDln("***********************************")
-      lfedges2.foreach(_.rassemble)
-      Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
-        listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
+      state = FourmiStateMachine.cherche
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ carre).distinct
     }
@@ -228,7 +227,7 @@ class Fourmi(val anode: ANode) {
     } else {
       stateCompteur += 1
     }
-
+    //myPrintDln(toString, previousState + " -> " + state, stateCompteur)
   }
 
   def aDetecteLaNourriture(limitDetection: Double) = (anode.dist(jnode) < limitDetection)

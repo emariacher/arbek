@@ -9,7 +9,7 @@ object ParametresPourFourmi {
   var version = 5
   var hash = hashCode()
   var crcvar: Long = 0
-  var nombreDefourmisParTribu = 1
+  var nombreDefourmisParTribu = 2
   var stabilisationRassemble = 100
   var limiteDetectionNourriture = 400
 
