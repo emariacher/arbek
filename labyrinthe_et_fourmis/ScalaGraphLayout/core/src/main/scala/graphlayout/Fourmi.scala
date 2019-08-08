@@ -36,7 +36,7 @@ class Fourmi(val anode: ANode) {
       avanceAPeuPresCommeAvant
       logcarres = List[Carre]()
     } else {
-      var limiteReniflage = ParametresPourFourmi.influenceDesPheromones
+      var limiteReniflage = 10
       var listeDesCarresReniflables = List[Carre]()
       var listeDesCarresPasDejaParcourus = List[Carre]()
       while (listeDesCarresPasDejaParcourus.isEmpty
