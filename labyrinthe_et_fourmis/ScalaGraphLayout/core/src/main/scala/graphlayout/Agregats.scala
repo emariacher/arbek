@@ -100,7 +100,8 @@ class Agregats extends GraphAbstract {
         StateMachine.reset
       } else {
         if (cptOnVaArreter % 20 == 1) {
-          myPrintln("On va arrêter! " + cptOnVaArreter)
+          myPrintln("On va arrêter! " + cptOnVaArreter + listeDesFourmilieres.map(f =>
+            f.toString + "{" + f.retoursFourmiliere.map(_._2).sum + "}").mkString("\n  "))
         }
         tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state
         StateMachine.onVaArreter

@@ -11,7 +11,7 @@ object ParametresPourFourmi {
   var crcvar: Long = 0
   var nombreDefourmisParTribu = 5
   var stabilisationRassemble = 100
-  var limiteDetectionNourriture = 400
+  var limiteDetectionNourriture = 200
 
   var CEstLaFourmiliere = 20.0
   var influenceDesPheromones = 40.0
