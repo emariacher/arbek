@@ -11,27 +11,12 @@ object ParametresPourFourmi {
   var crcvar: Long = 0
   var nombreDefourmisParTribu = 5
   var stabilisationRassemble = 100
-  var limiteDetectionNourriture = 200
 
-  var CEstLaFourmiliere = 20.0
-  var influenceDesPheromones = 40.0
-  var angleDeReniflage = (Math.PI * 4 / 5)
-  var suisLeChemin1 = 10
-  var suisLeChemin2 = 20
-  var avanceAPeuPresCommeAvantDispersion = .1
-  var avanceAPeuPresCommeAvantVitesse = 2
-  var avanceDroitVitesse = 3
-  var sautsTropGrandsLissage: Int = 15
-  var simplifieLissage = 5
-  var filtrePattern = 0
-  var sautsTropGrandsLissageAlgo = 2
-  var raccourci = influenceDesPheromones
   var limiteArreteLeRun = 200
 
   var depotEvaporation = 0.995
   var depotEvaporeFinal = 4
   var depotDepotInitial = 100
-  var increment = 10
 
   def printStuff = { // https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
     getClass.getDeclaredFields.toList.foreach(f => {
