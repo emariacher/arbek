@@ -39,6 +39,7 @@ class Fourmi(val anode: ANode) {
   var raccourci = influenceDesPheromones
   var limiteDetectionNourriture = 200
   var increment = 10
+  var plusAssezDEnergie = 1500
 
   def carre = tbx.findCarre(anode.x, anode.y)
 
@@ -201,6 +202,7 @@ class Fourmi(val anode: ANode) {
   def doZeJob(lc: List[Carre]): Unit = {
     previousState = state
     state match {
+      case FourmiStateMachine.mort =>
       case FourmiStateMachine.cherche => cherche(lc)
       case FourmiStateMachine.surLaTrace => cherche(lc)
       case FourmiStateMachine.tourneEnRond => cherche(lc)
@@ -227,6 +229,9 @@ class Fourmi(val anode: ANode) {
     } else {
       stateCompteur += 1
     }
+    if (stateCompteur > plusAssezDEnergie) {
+      state = FourmiStateMachine.mort
+    }
     //myPrintDln(toString, previousState + " -> " + state, stateCompteur)
   }
 
@@ -244,6 +249,10 @@ class Fourmi(val anode: ANode) {
     g.setColor(tribu.c.color)
     logxys.foreach(p => {
       p._2 match {
+        case FourmiStateMachine.mort =>
+          pheronomeD = 2
+          fourmiL = 5
+          fourmiH = 8
         case FourmiStateMachine.cherche =>
           pheronomeD = 2
           fourmiL = 7
@@ -276,7 +285,7 @@ class Fourmi(val anode: ANode) {
     } else {
       g.setColor(Color.black)
     }
-    g.drawString(logxys.length + " " + logcarres.length, anode.x.toInt, anode.y.toInt)
+    g.drawString("" + stateCompteur, anode.x.toInt, anode.y.toInt)
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
     if (!carre.egal(lastlogcarre)) {
       logxys = logxys :+ (carre, state)
@@ -306,6 +315,7 @@ object FourmiStateMachine {
   val retourne = FourmiStateMachine("retourne")
   val lisse = FourmiStateMachine("lisse")
   val ratioTourneEnRondSurLaTrace = FourmiStateMachine("ratioTourneEnRondSurLaTrace")
+  val mort = FourmiStateMachine("mort")
 }
 
 

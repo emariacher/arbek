@@ -6,7 +6,7 @@ import kebra.MyLog._
 
 object ParametresPourFourmi {
 
-  var version = 6
+  var version = 7
   var hash = hashCode()
   var crcvar: Long = 0
   var nombreDefourmisParTribu = 5
