@@ -40,7 +40,17 @@ class Agregats extends GraphAbstract {
   /*MyLog.myPrintIt(ledges.mkString("\n -"))
   MyLog.myPrintIt(lnoedges.mkString("\n %"))*/
 
+  def finDuRun: Boolean = {
+    (listeDesFourmilieres.map(_.retoursFourmiliere.map(_._2).sum).sum / ParametresPourFourmi.nombreDefourmisParTribu > 10) |
+      (lfourmi.count(_.state == FourmiStateMachine.mort) > (lfourmi.length * 3 / 4))
+  }
+
   def travaille: StateMachine = {
+    if (tbx.ts % 1000 == 0) {
+      myPrintln(tbx.ts + " " + listeDesFourmilieres.map(f =>
+        f.tribu.c.couleur + " {" + f.retoursFourmiliere.map(_._2).sum + "}").mkString("\n  ", "\n  ", "\n  ")
+        + lfourmi.count(_.state == FourmiStateMachine.mort) + " vs " + lfourmi.length)
+    }
     if (lfourmi.isEmpty) {
       lfourmi = lnodes.map(n => new Fourmi(n))
       lfourmi.foreach(f => {
@@ -70,38 +80,18 @@ class Agregats extends GraphAbstract {
       })
     })
     tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state + lcompteurState.mkString(" ", ",", " - ")
-    val listeDesMoyennesDePheromones = listeDesAgregats.map(a => {
-      val lc = listCarreAvecPheronome.filter(!_.depotPheromones.filter(_._1 == a._1).isEmpty)
-      (a._1, lc.map(_.depotPheromones.filter(_._1 == a._1).values.sum).sum / lc.length, lc.length)
-    })
-    listeDesMoyennesDePheromones.foreach(z => z._1.label.text = ",%.0f/%d".format(z._2, z._3))
-    if (tbx.state == StateMachine.travaille) {
-      if (listeDesFourmilieres.filter(!_.recoitDeLaJaffe).isEmpty) {
-        //myErrPrintDln(tbx.state, lcompteurState.mkString(" ", ",", ""))
-        lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
-        lfourmi.foreach(f => {
-          f.lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
-          f.lcompteurState.foreach(s => {
-            lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
-          })
-        })
-        StateMachine.croisiere
-      } else {
-        StateMachine.travaille
-      }
-    } else if (listeDesFourmilieres.map(_.retoursFourmiliere.map(_._2).sum).sum / ParametresPourFourmi.nombreDefourmisParTribu > 5) {
+    if (finDuRun) {
       cptOnVaArreter += 1
       if (cptOnVaArreter > ParametresPourFourmi.limiteArreteLeRun) {
-        myPrintDln(listeDesMoyennesDePheromones.sortBy(_._2).map(z => "%s %.0f/%d".format(z._1, z._2, z._3)).mkString("", ", ", ""))
-        myPrintln(lcompteurState.mkString(" ", ",", ""))
         resultat.log1(tbx.ltimestamps, listeDesFourmilieres.map(_.retoursFourmiliere.getOrElse(FourmiStateMachine.retourne, 0)), lcompteurState)
         cptRun += 1
         cptOnVaArreter = 0
         StateMachine.reset
       } else {
         if (cptOnVaArreter % 20 == 1) {
-          myPrintln("On va arrêter! " + cptOnVaArreter + listeDesFourmilieres.map(f =>
-            f.toString + "{" + f.retoursFourmiliere.map(_._2).sum + "}").mkString("\n  "))
+          myPrintln("On va arrêter! " + cptOnVaArreter + " " + listeDesFourmilieres.map(f =>
+            f.tribu.c.couleur + " {" + f.retoursFourmiliere.map(_._2).sum + "}").mkString("\n  ", "\n  ", "\n  ")
+            + lfourmi.count(_.state == FourmiStateMachine.mort) + " vs " + lfourmi.length)
         }
         tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state
         StateMachine.onVaArreter
