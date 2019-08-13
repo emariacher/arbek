@@ -15,7 +15,7 @@ object ParametresPourFourmi {
   var limiteArreteLeRun = 200
 
   var depotEvaporation = 0.995
-  var depotEvaporeFinal = 4
+  var depotEvaporeFinal = 6
   var depotDepotInitial = 100
 
   def printStuff = { // https://stackoverflow.com/questions/6756442/scala-class-declared-fields-and-access-modifiers
