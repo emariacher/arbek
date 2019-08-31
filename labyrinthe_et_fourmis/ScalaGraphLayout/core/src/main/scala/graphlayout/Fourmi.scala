@@ -287,9 +287,13 @@ class Fourmi(val anode: ANode) {
     }
     g.drawString("" + stateCompteur, anode.x.toInt, anode.y.toInt)
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
-    if (!carre.egal(lastlogcarre)) {
-      logxys = logxys :+ (carre, state)
-      lastlogcarre = carre
+    if (carre != null) {
+      if (!carre.egal(lastlogcarre)) {
+        logxys = logxys :+ (carre, state)
+        lastlogcarre = carre
+      }
+    } else {
+      myErrPrintDln("[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu)
     }
     /*if (triggerTrace) {
       myPrintDln(toString, state)
