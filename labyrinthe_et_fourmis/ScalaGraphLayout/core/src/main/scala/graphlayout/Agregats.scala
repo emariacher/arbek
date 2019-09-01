@@ -22,7 +22,7 @@ class Agregats extends GraphAbstract {
   val lnodes = ltribus.flatten
   var ledges = ltribus.map(tl => tl.combinations(2)).flatten.map(c => new AEdge(c.head, c.last))
   val lzedges = ledges.map(_.getNodes.map(_.getID).sortBy(_.hashCode))
-  val lnoedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
+  var lnoedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
     new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
   })
 
@@ -33,6 +33,7 @@ class Agregats extends GraphAbstract {
   var lnoedgesJaffe = List[Edge]()
   var ljaffe = List.empty[JNode]
   var lfourmi = List.empty[Fourmi]
+  var ldeadNodes = List.empty[ANode]
   var listCarreAvecPheronome = List[Carre]()
   var cptOnVaArreter = 0
   var cptRun = 1
@@ -46,6 +47,8 @@ class Agregats extends GraphAbstract {
   }
 
   def travaille: StateMachine = {
+    ldeadNodes = lfourmi.filter(_.state==FourmiStateMachine.mort).map(_.anode)
+    lnoedges = lnoedges.filter(e => ldeadNodes.intersect(e.getNodes).isEmpty)
     if (tbx.ts % 1000 == 0) {
       myPrintln(tbx.ts + " " + listeDesFourmilieres.map(f =>
         f.tribu.c.couleur + " {" + f.retoursFourmiliere.map(_._2).sum + "}").mkString("\n  ", "\n  ", "\n  ")

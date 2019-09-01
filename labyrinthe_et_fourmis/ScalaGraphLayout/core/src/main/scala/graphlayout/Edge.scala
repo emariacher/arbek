@@ -29,7 +29,6 @@ class Edge(val from: Node, val to: Node) {
 
   def getNodesString = List(from.getID, to.getID).sortBy(_.hashCode)
 
-
   def getDist = {
     val deltaX = to.x - from.x
     val deltaY = to.y - from.y
