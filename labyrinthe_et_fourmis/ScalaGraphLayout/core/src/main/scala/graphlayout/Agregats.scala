@@ -47,7 +47,7 @@ class Agregats extends GraphAbstract {
   }
 
   def travaille: StateMachine = {
-    ldeadNodes = lfourmi.filter(_.state==FourmiStateMachine.mort).map(_.anode)
+    ldeadNodes = lfourmi.filter(_.state == FourmiStateMachine.mort).map(_.anode)
     lnoedges = lnoedges.filter(e => ldeadNodes.intersect(e.getNodes).isEmpty)
     if (tbx.ts % 1000 == 0) {
       myPrintln(tbx.ts + " " + listeDesFourmilieres.map(f =>
@@ -219,6 +219,9 @@ class Agregats extends GraphAbstract {
     lfourmi = List.empty[Fourmi]
     listCarreAvecPheronome = List[Carre]()
     tbx.ltimestamps = scala.collection.mutable.Map[StateMachine, Int]()
+    lnoedges = lnodes.map(_.getID).combinations(2).map(_.sortBy(_.hashCode)).toList.filter(e => lzedges.filter(_.mkString == e.mkString).isEmpty).map(c => {
+      new AEdge(lnodes.filter(_.getID == c.head).head, lnodes.filter(_.getID == c.last).head)
+    })
 
     tbx.seed = tbx.getNextSeed
     tbx.rnd = new Random(tbx.seed)
