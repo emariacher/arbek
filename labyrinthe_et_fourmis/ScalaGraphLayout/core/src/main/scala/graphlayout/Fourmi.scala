@@ -207,7 +207,7 @@ class Fourmi(val anode: ANode) {
       case FourmiStateMachine.surLaTrace => cherche(lc)
       case FourmiStateMachine.tourneEnRond => cherche(lc)
       case FourmiStateMachine.detecte =>
-        avanceDroit
+        cherche(lc)
         if (aDetecteLaNourriture(10)) {
           state = FourmiStateMachine.retourne
           lisseLeRetour
