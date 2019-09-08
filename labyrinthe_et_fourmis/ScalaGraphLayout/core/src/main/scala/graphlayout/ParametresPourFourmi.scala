@@ -6,11 +6,12 @@ import kebra.MyLog._
 
 object ParametresPourFourmi {
 
-  var version = 7
+  var version = 8
   var hash = hashCode()
   var crcvar: Long = 0
   var nombreDefourmisParTribu = 5
   var stabilisationRassemble = 100
+  var angleDeReniflage = (Math.PI * 1 / 5)
 
   var limiteArreteLeRun = 200
 

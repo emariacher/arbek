@@ -54,7 +54,8 @@ class Fourmi(val anode: ANode) {
     } else {
       var limiteReniflage = 10
       var listeDesCarresReniflables = List[Carre]()
-      var listeDesCarresPasDejaParcourus = List[Carre]()
+      var listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
+        .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < ParametresPourFourmi.angleDeReniflage)
       while (listeDesCarresPasDejaParcourus.isEmpty
         & limiteReniflage - increment < influenceDesPheromones) {
         listeDesCarresReniflables = lc.filter(c =>
