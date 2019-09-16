@@ -57,11 +57,11 @@ class Fourmi(val anode: ANode) {
       var listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
         .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < ParametresPourFourmi.angleDeReniflage)
       while (listeDesCarresPasDejaParcourus.isEmpty
-        & limiteReniflage - increment < influenceDesPheromones) {
+        & limiteReniflage < influenceDesPheromones) {
         listeDesCarresReniflables = lc.filter(c =>
           anode.pasLoin(c.XY) < limiteReniflage & c.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal)
         listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
-        limiteReniflage += increment
+        limiteReniflage += 1
       }
       if (listeDesCarresPasDejaParcourus.isEmpty) {
         avanceAPeuPresCommeAvant
