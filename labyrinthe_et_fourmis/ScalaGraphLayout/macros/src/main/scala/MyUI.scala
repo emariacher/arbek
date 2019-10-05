@@ -216,7 +216,9 @@ class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[Str
     new ZeParameters((key, value) :: pairs)
   }
 
-  override def -(key: String): ZeParameters = new ZeParameters(pairs.filterNot(_._1 == key))
+  def removed(key: String): Map[String,kebra.MyParameter] =  null
+
+  def updated[V1 >: kebra.MyParameter](key: String, value: V1): Map[String,V1] = null
 
   /** ** Minimal map stuff end ****/
 
