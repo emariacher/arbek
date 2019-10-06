@@ -166,7 +166,7 @@ class Agregats extends GraphAbstract {
     compteurDAgregatsFormesOld = compteurDAgregatsFormes
     agitation = listeDesAgregats.map(lln => {
       lln._2.map(ln => {
-        ln.head.toString2.toDouble
+        ln.head.mouvement
       }).sum
     }).sum.toInt
     agitationMoyenne = ((agitationMoyenne * ParametresPourFourmi.stabilisationRassemble) + agitation) / (ParametresPourFourmi.stabilisationRassemble + 1)
