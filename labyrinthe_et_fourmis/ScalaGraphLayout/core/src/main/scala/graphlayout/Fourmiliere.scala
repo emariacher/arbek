@@ -15,9 +15,9 @@ class Fourmiliere(val tribu: Tribu, val centre: FixedNode, val lfourmi: List[Fou
 
   def recoitDeLaJaffe = retoursFourmiliere.getOrElse(FourmiStateMachine.retourne, 0) != 0
 
-  override def toString = tribu + " " + centre + " " + lfourmi.mkString("{", ",", "}")
+  override def toString = tribu.toString + " " + centre + " " + lfourmi.mkString("{", ",", "}")
 
-  def paint(g: Graphics2D) {
+  def paint(g: Graphics2D): Unit = {
     g.setColor(tribu.c.color)
     g.draw3DRect(centre.x.toInt, centre.y.toInt, 20, 20, true)
     g.drawString(retoursFourmiliere.mkString("[", ",", "] ") + c.toString, centre.x.toInt, centre.y.toInt)

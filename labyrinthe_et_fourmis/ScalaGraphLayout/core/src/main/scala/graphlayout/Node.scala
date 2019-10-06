@@ -32,7 +32,7 @@ class Node(var x: Double, var y: Double) {
 
   def egal(n: Node): Boolean = (n.x == x & n.y == y)
 
-  def update(ux: Double, uy: Double, umouvement: Double) {
+  def update(ux: Double, uy: Double, umouvement: Double): Unit = {
     myAssert2(ux.isNaN, false)
     myAssert2(uy.isNaN, false)
     x = ux
@@ -109,8 +109,8 @@ class Node(var x: Double, var y: Double) {
     val atan = Math.atan(deltaX / deltaY)
     val atan2 = Math.atan2(deltaX, deltaY)
     if ((atan.isNaN) || (atan2.isNaN)) {
-/*      myErrPrintIt("\n", toString, "xy(%.02f,%.02f)".format(xy._1, xy._2), "dxy(%.02f,%.02f)".format(deltaX, deltaY),
-        "[a %.02f, a2 %.02f]".format(atan, atan2))*/
+      /*      myErrPrintIt("\n", toString, "xy(%.02f,%.02f)".format(xy._1, xy._2), "dxy(%.02f,%.02f)".format(deltaX, deltaY),
+              "[a %.02f, a2 %.02f]".format(atan, atan2))*/
       Math.PI / 2
     } else if (atan == atan2) {
       atan

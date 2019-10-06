@@ -2,14 +2,14 @@ package graphlayout
 
 import java.awt.{Color, Graphics2D}
 
-class GNode(val lbl: String) extends Node{
+class GNode(val lbl: String) extends Node {
   override def toString: String = "{" + lbl + "}"
 
   override def hashCode: Int = lbl.hashCode
 
   override def getID = lbl
 
-  override def paint(g: Graphics2D) {
+  override def paint(g: Graphics2D): Unit = {
     val w = g.getFontMetrics.stringWidth(lbl) + 10
     val h = g.getFontMetrics.getHeight() + 4
     g.setColor(Color.orange)

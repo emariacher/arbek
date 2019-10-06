@@ -9,7 +9,7 @@ class JNode(tribu: Tribu) extends ANode(tribu) {
 
   override def toString: String = "[(%.0f,%.0f) ".format(x, y) + tribu + "]"
 
-  override def paint(g: Graphics2D) {
+  override def paint(g: Graphics2D): Unit = {
     c = tbx.findCarre(x, y)
     g.setColor(tribu.c.color)
     g.fillRect(x.toInt, y.toInt, 20, 20)

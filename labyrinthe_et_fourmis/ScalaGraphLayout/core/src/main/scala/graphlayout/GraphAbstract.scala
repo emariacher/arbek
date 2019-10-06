@@ -21,5 +21,5 @@ abstract class GraphAbstract {
 
   def triggerTraceNotAlreadyActivated: Boolean
 
-  def paint(g: Graphics2D)
+  def paint(g: Graphics2D): Unit
 }

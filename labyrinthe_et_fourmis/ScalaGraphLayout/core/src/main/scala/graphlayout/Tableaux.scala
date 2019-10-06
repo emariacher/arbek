@@ -11,7 +11,7 @@ import scala.util.Random
 object Tableaux {
   var tbx: Tableaux = _
 
-  def newTbx(zp: ZePanel, maxRC: RowCol, size: Dimension, origin: Dimension, graph: GraphAbstract) {
+  def newTbx(zp: ZePanel, maxRC: RowCol, size: Dimension, origin: Dimension, graph: GraphAbstract): Unit = {
     tbx = new Tableaux(zp, maxRC, size, origin, graph)
   }
 }
@@ -33,7 +33,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   var nrOfWorkers = 4
 
 
-  def doZeJob(command: String, graphic: Boolean) {
+  def doZeJob(command: String, graphic: Boolean): Unit = {
     //l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
     if (graphic) {
       zp.lbl.text = "Seed: " + seed + ", TimeStamp: " + ts + " " + state
