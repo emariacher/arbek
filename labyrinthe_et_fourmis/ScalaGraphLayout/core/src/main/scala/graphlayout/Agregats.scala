@@ -50,7 +50,7 @@ class Agregats extends GraphAbstract {
     ldeadNodes = lfourmi.filter(_.state == FourmiStateMachine.mort).map(_.anode)
     lnoedges = lnoedges.filter(e => ldeadNodes.intersect(e.getNodes).isEmpty)
     if (tbx.ts % 1000 == 0) {
-      myPrintln(tbx.ts + " " + listeDesFourmilieres.map(f =>
+      myPrintln(tbx.ts.toString + " " + listeDesFourmilieres.map(f =>
         f.tribu.c.couleur + " {" + f.retoursFourmiliere.map(_._2).sum + "}").mkString("\n  ", "\n  ", "\n  ")
         + lfourmi.count(_.state == FourmiStateMachine.mort) + " vs " + lfourmi.length)
     }
@@ -83,7 +83,7 @@ class Agregats extends GraphAbstract {
         lcompteurState(s._1) = lcompteurState.getOrElse(s._1, 0) + s._2
       })
     })
-    tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state + lcompteurState.mkString(" ", ",", " - ")
+    tbx.zp.lbl.text = tbx.ts.toString + " " + cptRun + " " + tbx.state + lcompteurState.mkString(" ", ",", " - ")
     if (finDuRun) {
       cptOnVaArreter += 1
       if (cptOnVaArreter > ParametresPourFourmi.limiteArreteLeRun) {
@@ -97,7 +97,7 @@ class Agregats extends GraphAbstract {
             f.tribu.c.couleur + " {" + f.retoursFourmiliere.map(_._2).sum + "}").mkString("\n  ", "\n  ", "\n  ")
             + lfourmi.count(_.state == FourmiStateMachine.mort) + " vs " + lfourmi.length)
         }
-        tbx.zp.lbl.text = tbx.ts + " " + cptRun + " " + tbx.state
+        tbx.zp.lbl.text = tbx.ts.toString + " " + cptRun + " " + tbx.state
         StateMachine.onVaArreter
       }
     } else {
@@ -252,7 +252,7 @@ class Agregats extends GraphAbstract {
   def lePlusProche(coord: (Double, Double), ln: List[Node], tribu: Tribu) = {
     val coin = ln.sortBy(n => {
       val e = new Edge(n, new FixedNode(coord))
-      e.getDist
+      e.getDist._1
     }).head
     val jn = new JNode(tribu)
     //jn.update(coord._1, coord._2, .0)
@@ -281,7 +281,7 @@ class Agregats extends GraphAbstract {
       case MouseStateMachine.reset =>
         mouse._1 match {
           case "MouseP" =>
-            val nearestFNode = lnodes.map(n => (n, n.pasLoin(mouse._2.toDouble, mouse._3.toDouble))).sortBy(_._2).head
+            val nearestFNode = lnodes.map(n => (n, n.pasLoin(mouse._2.toDouble, mouse._3.toDouble))).sortBy(_._2.doubleValue).head
             if (nearestFNode._2 < 80) {
               if (nearestNode != null) {
                 nearestNode.selected = false

@@ -184,7 +184,7 @@ class Fourmi(val anode: ANode) {
       }
       selPrint(toString + " <--pas assez-- " + oldlength + " cptPasAssez=" + cptPasAssez + " max=" +
         logxys.zipWithIndex.sliding(2).toList.map(l => (l.head._1._1.dist(l.last._1._1),
-          l.head._1._1, l.last._1._1, l.head._2)).map(_._1).max)
+          l.head._1._1, l.last._1._1, l.head._2)).map(_._1).max(Ordering.Double.TotalOrdering))
     }
   }
 
@@ -243,7 +243,7 @@ class Fourmi(val anode: ANode) {
     front ++ values ++ back
   }
 
-  def paint(g: Graphics2D) {
+  def paint(g: Graphics2D)  : Unit ={
     var pheronomeD = 0
     var fourmiL = 0
     var fourmiH = 0
@@ -303,7 +303,7 @@ class Fourmi(val anode: ANode) {
 
   def selPrint(a: Any): Unit = {
     if (anode.selected) {
-      myPrintD(a + "\n")
+      myPrintD(a.toString + "\n")
     }
   }
 }
