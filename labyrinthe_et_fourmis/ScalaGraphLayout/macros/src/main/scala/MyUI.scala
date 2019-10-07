@@ -199,7 +199,7 @@ class getUrlFromClipboard {
     url = new URL(clipboard)
     source = scala.io.Source.fromURL(url)
   } catch {
-    case e: Exception => throw new Exception(e + " [" + clipboard + "]")
+    case e: Exception => throw new Exception(e.toString + " [" + clipboard + "]")
   }
 }
 
@@ -216,9 +216,9 @@ class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[Str
     new ZeParameters((key, value) :: pairs)
   }
 
-  def removed(key: String): Map[String,kebra.MyParameter] =  null
+  def removed(key: String): Map[String, kebra.MyParameter] = null
 
-  def updated[V1 >: kebra.MyParameter](key: String, value: V1): Map[String,V1] = null
+  def updated[V1 >: kebra.MyParameter](key: String, value: V1): Map[String, V1] = null
 
   /** ** Minimal map stuff end ****/
 

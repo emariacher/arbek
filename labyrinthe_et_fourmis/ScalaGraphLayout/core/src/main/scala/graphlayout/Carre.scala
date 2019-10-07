@@ -50,7 +50,7 @@ class Carre(val rc: RowCol) {
     compteurTourneEnRondLimit = filterond
   }
 
-  def paint(g: Graphics2D) {
+  def paint(g: Graphics2D): Unit = {
     depotPheromones.foreach(d => {
       g.setColor(d._1.c.color)
       val radius = Math.max((d._2 / Depot.display).toInt, 2)
@@ -60,10 +60,10 @@ class Carre(val rc: RowCol) {
     if ((compteurTourneEnRond > compteurTourneEnRondLimit) & (math.abs(mindir - maxdir) < 15)) {
       //g.fillRect(XY._1.toInt - 3, XY._2.toInt - 3, compteurTourneEnRond, compteurTourneEnRond)
       if (mindir != maxdir) {
-        g.drawString(compteurTourneEnRond + " m%.2f M%.2f".format(mindir, maxdir), XY._1.toInt - 3, XY._2.toInt - 3)
+        g.drawString(compteurTourneEnRond.toString + " m%.2f M%.2f".format(mindir, maxdir), XY._1.toInt - 3, XY._2.toInt - 3)
       } else {
         g.setColor(Color.black)
-        g.drawString(compteurTourneEnRond + " %.2f".format(mindir), XY._1.toInt - 3, XY._2.toInt - 3)
+        g.drawString(compteurTourneEnRond.toString + " %.2f".format(mindir), XY._1.toInt - 3, XY._2.toInt - 3)
       }
     }
   }
