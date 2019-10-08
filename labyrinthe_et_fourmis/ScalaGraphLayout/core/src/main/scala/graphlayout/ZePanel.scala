@@ -19,13 +19,13 @@ class ZeActor extends Actor {
   def receive = {
     case ReceiveTimeout =>
       if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout", true)
-    case slider: (String, Int) =>
+    case slider: (String, Int)@unchecked =>
       tbx.graph.doZeSliderJob(slider)
       context.setReceiveTimeout(tbx.graph.slider_timeout millisecond)
     case "stop" =>
       MyLog.myErrPrintln("stop")
       tbx.graph.resultat.printFinalLog1
-      MyLog.myAssert2(true,false)
+      MyLog.myAssert2(true, false)
     case "step" =>
       LL.l.myErrPrintDln("step")
       ZePanel.zp.repaint
@@ -34,7 +34,7 @@ class ZeActor extends Actor {
     case "bloque" =>
       //l.myErrPrintDln("bloque")
       tbx.doZeJob("bloque", true)
-    case mouse: (String, Int, Int) =>
+    case mouse: (String, Int, Int)@unchecked =>
       tbx.graph.doZeMouseJob(mouse)
   }
 }
