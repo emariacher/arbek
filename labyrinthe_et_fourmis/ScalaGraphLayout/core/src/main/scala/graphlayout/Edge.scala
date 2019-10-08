@@ -7,8 +7,8 @@ import kebra.MyLog._
 
 object Edge {
   def checkInside(msg: String, ln: List[Node], nn: Node) = {
-    val lx = (ln.map(_.x) :+ nn.x).sorted
-    val ly = (ln.map(_.y) :+ nn.y).sorted
+    val lx = (ln.map(_.x) :+ nn.x).sorted(Ordering.Double.TotalOrdering)
+    val ly = (ln.map(_.y) :+ nn.y).sorted(Ordering.Double.TotalOrdering)
     /*myPrintDln(to, from, tonew, fromnew)
     myPrintDln(lx.map("%.2f".format(_)).mkString("lx{", ",", "}"), ly.map("%.2f".format(_)).mkString("ly{", ",", "}"))*/
     myAssert3(lx.tail.contains(nn.x), true, msg)
@@ -61,8 +61,8 @@ class Edge(val from: Node, val to: Node) {
     //myPrintIt(Math.signum(to.x - from.x), dx, Math.signum(to.y - from.y), dy)
     to.update(to.x + dx, to.y + dy, Math.sqrt((dx * dx) + (dy * dy)))
     //myPrintDln("         apres " + to, tbx.findCarre(to.x, to.y))
-    Edge.checkInside("" +to + L_,List(oldto, oldfrom), to)
-    Edge.checkInside("" +from + L_,List(oldto, oldfrom), from)
+    Edge.checkInside("" + to + L_, List(oldto, oldfrom), to)
+    Edge.checkInside("" + from + L_, List(oldto, oldfrom), from)
   }
 
   def ecarte = { // quand il n'y a pas de lien, ecarte toi au maximum
@@ -95,5 +95,5 @@ class Edge(val from: Node, val to: Node) {
     to.update(tox, toy, Math.sqrt((dx * dx) + (dy * dy)))
   }
 
-  def paint(g: Graphics2D) {}
+  def paint(g: Graphics2D): Unit = {}
 }

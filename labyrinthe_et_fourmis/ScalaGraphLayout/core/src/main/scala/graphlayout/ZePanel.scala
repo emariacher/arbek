@@ -44,7 +44,7 @@ object ZePanel {
   var za: ActorRef = _
   implicit val system = MyLog.system
 
-  def newZePanel(lbl: Label, maxRC: RowCol, graph: GraphAbstract) {
+  def newZePanel(lbl: Label, maxRC: RowCol, graph: GraphAbstract) = {
     zp = new ZePanel(lbl, maxRC, graph)
     za = system.actorOf(Props[ZeActor], "zePanelActor")
   }
@@ -61,7 +61,7 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val graph: GraphAbstract) exten
   val origin = new Dimension(0, 0)
   newTbx(this, maxRC, preferredSize, origin, graph)
 
-  override def paint(g: Graphics2D) {
+  override def paint(g: Graphics2D) = {
     g.setColor(Color.white)
     g.fillRect(0, 0, largeur, hauteur)
 
