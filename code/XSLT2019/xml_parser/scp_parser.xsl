@@ -174,7 +174,7 @@ zobi
 											</xsl:choose>
 											<xsl:choose>											
 												<xsl:when test="position() = 3 and $sizeTable3 = 8">
-													 BYTE2 
+													  <!--/td> </tr> <tr> <td colspan="3" align="center"--> BYTE2 
 												</xsl:when>
 												<xsl:when test="position() = 3 and $sizeTable3 = 16">
 													 BYTE3 
