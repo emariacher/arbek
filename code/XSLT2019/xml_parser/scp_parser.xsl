@@ -139,20 +139,6 @@
 <!--	************	Table containing all field	********		-->
 zobi
 						<xsl:variable name="sizeTable" select="read/response/field/@size"/>
-						 +[<xsl:value-of select="$sizeTable"/>]+
-						zobu
-						<xsl:for-each select="read/response/field">
-						<xsl:value-of select="@size"/>,
-						</xsl:for-each>
-						-[<xsl:value-of select = "sum(read/response/field/@size)" />]-
-						%[<xsl:value-of select = "sum($sizeTable)" />]%
-						2[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 2)])" />]
-						3[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 3)])" />]
-						4[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 4)])" />]
-						5[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 5)])" />]
-						6[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 6)])" />]
-						7[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 7)])" />]
-						8[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 8)])" />]
 						<xsl:variable name="sizeTable3" select="sum($sizeTable[position() >= 1 and not(position() > 3)])"/>
 						<xsl:variable name="sizeTable4" select="sum($sizeTable[position() >= 1 and not(position() > 4)])"/>
 						<xsl:variable name="sizeTable5" select="sum($sizeTable[position() >= 1 and not(position() > 5)])"/>
