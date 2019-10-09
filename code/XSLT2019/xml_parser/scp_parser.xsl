@@ -5,7 +5,7 @@
     exclude-result-prefixes="xs math"
     expand-text="yes"
     version="3.0">
-    <xsl:output method = "text" indent = "yes" />
+    <!--xsl:output method = "text" indent = "yes" /-->
 
 <xsl:template match="/">
     <html>
@@ -145,7 +145,14 @@ zobi
 						<xsl:value-of select="@size"/>,
 						</xsl:for-each>
 						-[<xsl:value-of select = "sum(read/response/field/@size)" />]-
-						%[<xsl:value-of select = "sum($sizeTable)" />]%[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 2)])" />]
+						%[<xsl:value-of select = "sum($sizeTable)" />]%
+						2[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 2)])" />]
+						3[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 3)])" />]
+						4[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 4)])" />]
+						5[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 5)])" />]
+						6[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 6)])" />]
+						7[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 7)])" />]
+						8[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 8)])" />]
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
 							<xsl:choose>
