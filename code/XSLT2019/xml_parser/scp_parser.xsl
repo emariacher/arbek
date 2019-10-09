@@ -145,6 +145,7 @@ zobi
 						<xsl:value-of select="@size"/>,
 						</xsl:for-each>
 						-[<xsl:value-of select = "sum(read/response/field/@size)" />]-
+						%[<xsl:value-of select = "sum($sizeTable)" />]%[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 2)])" />]
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
 							<xsl:choose>
