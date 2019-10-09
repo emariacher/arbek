@@ -188,13 +188,16 @@ zobi
 											</xsl:choose>
 											<xsl:choose>											
 												<xsl:when test="position() = 3 and $sizeTable3 = 8">
-													 BYTE3! 
+													 BYTE2 
+												</xsl:when>
+												<xsl:when test="position() = 3 and $sizeTable3 = 16">
+													 BYTE3 
 												</xsl:when>
 												<xsl:when test="position() = 4 and $sizeTable4 = 8">
-													 BYTE4! 
+													 BYTE2 
 												</xsl:when>
 												<xsl:when test="position() = 5 and $sizeTable5 = 8">
-													 BYTE5! 
+													 BYTE2 
 												</xsl:when>
 											</xsl:choose>
 											</td>
