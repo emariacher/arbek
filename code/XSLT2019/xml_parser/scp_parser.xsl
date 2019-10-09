@@ -5,11 +5,7 @@
     exclude-result-prefixes="xs math"
     expand-text="yes"
     version="3.0">
-    <xsl:mode streamable="yes" use-accumulators="#all" on-no-match="shallow-skip"/>
-
-    <xsl:accumulator name="row-count" as="xs:integer" initial-value="0" streamable="yes">
-        <xsl:accumulator-rule match="row" select="$value + 1"/>
-    </xsl:accumulator>
+    <xsl:output method = "text" indent = "yes" />
 
 <xsl:template match="/">
     <html>
@@ -20,11 +16,6 @@
         <h1>SCP protocol
 			<xsl:value-of select="concat(protocol/parameter_set/@name,' ',protocol/parameter_set/@major, '.', protocol/parameter_set/@minor)"/> 
 		</h1>
-        <xsl:for-each select="protocol/frame">
-			<scp_param_desc> ___________________________________________________________________________________________________________________________ </scp_param_desc>
-		    <scp_param_title> parameter <xsl:value-of select="concat(@parameter,' : ',@name)"/> </scp_param_title>
-			<scp_param_desc> <xsl:value-of select = "@description" /> </scp_param_desc>			
-		</xsl:for-each>		
 <!--	************	SCP parameter Fields	************		-->
         <xsl:for-each select="protocol/frame">
 			<scp_param_desc> ___________________________________________________________________________________________________________________________ </scp_param_desc>
@@ -146,6 +137,14 @@
 
 <!--	************	Read Response Field		************		-->
 <!--	************	Table containing all field	********		-->
+zobi
+						<xsl:variable name="sizeTable" select="read/response/field/@size"/>
+						 +[<xsl:value-of select="$sizeTable"/>]+
+						zobu
+						<xsl:for-each select="read/response/field">
+						<xsl:value-of select="@size"/>,
+						</xsl:for-each>
+						-[<xsl:value-of select = "sum(read/response/field/@size)" />]-
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
 							<xsl:choose>

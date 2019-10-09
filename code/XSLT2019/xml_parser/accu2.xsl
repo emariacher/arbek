@@ -10,13 +10,14 @@
     
     <xsl:output indent="yes"/>
 
-    <xsl:accumulator name="row-count" as="xs:integer" initial-value="0" streamable="yes">
-        <xsl:accumulator-rule match="row" select="$value + 1"/>
+    <xsl:accumulator name="artist-count" as="xs:integer" initial-value="0" streamable="yes">
+        <xsl:accumulator-rule match="artist" select="$value + 1"/>
     </xsl:accumulator>
     
 <xsl:template match="/">
 <html> 
 <body>
+<xsl:variable name="i" select="111"/>
   <h2>My CD Collection</h2>
   <table border="1">
     <tr bgcolor="#9acd32">
@@ -30,6 +31,11 @@
     </tr>
     </xsl:for-each>
   </table>
+  
+  zorg
+  <xsl:value-of select="$i"/>
+  <xsl:value-of select="{accumulator-before('artist-count')}"/>
+  zarg
 </body>
 </html>
 </xsl:template>
