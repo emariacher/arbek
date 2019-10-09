@@ -154,7 +154,8 @@ zobi
 						7[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 7)])" />]
 						8[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 8)])" />]
 						<xsl:variable name="sizeTable3" select="sum($sizeTable[position() >= 1 and not(position() > 3)])"/>
-						 +sizeTable3[<xsl:value-of select="$sizeTable3"/>]+
+						<xsl:variable name="sizeTable4" select="sum($sizeTable[position() >= 1 and not(position() > 4)])"/>
+						<xsl:variable name="sizeTable5" select="sum($sizeTable[position() >= 1 and not(position() > 5)])"/>
 
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
@@ -176,14 +177,27 @@ zobi
 										<tr>
 											<td> <xsl:value-of select="@name"/> </td>
 											<td> <xsl:value-of select="@type"/> </td>
-											<xsl:choose>
+											<td>
+											<xsl:choose>											
 												<xsl:when test="@type = 'boolean'">
-													<td> 1 </td>
+													 1 
 												</xsl:when>
 												<xsl:otherwise>
-													<td> <xsl:value-of select="@size"/> - <!--xsl:value-of select="accumulator-before('row-count')"/--></td>
+													 <xsl:value-of select="@size"/>
 												</xsl:otherwise>
 											</xsl:choose>
+											<xsl:choose>											
+												<xsl:when test="position() = 3 and $sizeTable3 = 8">
+													 BYTE3! 
+												</xsl:when>
+												<xsl:when test="position() = 4 and $sizeTable4 = 8">
+													 BYTE4! 
+												</xsl:when>
+												<xsl:when test="position() = 5 and $sizeTable5 = 8">
+													 BYTE5! 
+												</xsl:when>
+											</xsl:choose>
+											</td>
 										</tr>
 									</xsl:when>
 									<xsl:when test="name() = 'sequence'">
