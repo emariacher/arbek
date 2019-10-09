@@ -153,6 +153,9 @@ zobi
 						6[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 6)])" />]
 						7[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 7)])" />]
 						8[<xsl:value-of select = "sum($sizeTable[position() >= 1 and not(position() > 8)])" />]
+						<xsl:variable name="sizeTable3" select="sum($sizeTable[position() >= 1 and not(position() > 3)])"/>
+						 +sizeTable3[<xsl:value-of select="$sizeTable3"/>]+
+
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
 							<xsl:choose>
