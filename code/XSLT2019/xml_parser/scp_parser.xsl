@@ -172,22 +172,22 @@ zobi
 													 <xsl:value-of select="@size"/>
 												</xsl:otherwise>
 											</xsl:choose>
-											<xsl:choose>											
-												<xsl:when test="position() = 3 and $sizeTable3 = 8">
-													  <!--/td> </tr> <tr> <td colspan="3" align="center"--> BYTE2 
-												</xsl:when>
-												<xsl:when test="position() = 3 and $sizeTable3 = 16">
-													 BYTE3 
-												</xsl:when>
-												<xsl:when test="position() = 4 and $sizeTable4 = 8">
-													 BYTE2 
-												</xsl:when>
-												<xsl:when test="position() = 5 and $sizeTable5 = 8">
-													 BYTE2 
-												</xsl:when>
-											</xsl:choose>
 											</td>
 										</tr>
+											<xsl:choose>											
+												<xsl:when test="position() = 3 and $sizeTable3 = 8">
+													  <tr> <td colspan="3" align="center"> BYTE2</td> </tr>  
+												</xsl:when>
+												<xsl:when test="position() = 3 and $sizeTable3 = 16">
+													 <tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
+												</xsl:when>
+												<xsl:when test="position() = 4 and $sizeTable4 = 8">
+													 <tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
+												</xsl:when>
+												<xsl:when test="position() = 5 and $sizeTable5 = 8">
+													 <tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
+												</xsl:when>
+											</xsl:choose>
 									</xsl:when>
 									<xsl:when test="name() = 'sequence'">
 										<tr>
