@@ -270,6 +270,11 @@
 <!--	************	Read Response Field		************		-->
 <!--	************	Table containing all field	********		-->
 						<xsl:variable name="sizeTablerf" select="read/response/field/@size"/>
+						<xsl:variable name="sizeTabler1" select="sum($sizeTablerf[not(position() > 1)])"/>
+						<xsl:variable name="sizeTabler2" select="sum($sizeTablerf[not(position() > 2)])"/>
+						<xsl:variable name="sizeTabler3" select="sum($sizeTablerf[not(position() > 3)])"/>
+						<!--xsl:variable name="sizeTablerfstring" select="concat($sizeTabler1,'+',$sizeTabler1 div 8 ,'=',$sizeTabler1 mod 8)"/-->
+						<xsl:variable name="sizeTablerfstring" select="concat($sizeTabler1,'+',$sizeTabler1)"/>
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
 							<xsl:choose>
