@@ -10,7 +10,7 @@
               <xsl:template name = "bytesplit" >
                <xsl:param name = "sizeTable" />
                <xsl:param name = "pos" />
-  [xsl:value-of select = "$sizeTable" /> - <xsl:value-of select = "$pos" />]
+  [<xsl:value-of select = "$sizeTable" /> - <xsl:value-of select = "$pos" />]
           </xsl:template>
 
 
@@ -179,8 +179,8 @@ zobi
 													 <xsl:value-of select="@size"/>
 													 
 													 <xsl:call-template name="bytesplit">
-      <xsl:with-param name="sizeTable" select = "sizeTable" />
-      <xsl:with-param name="pos" select = "3" />
+      <xsl:with-param name="sizeTable"><xsl:value-of select="sum($sizeTable[not(position() > 3)])"/></xsl:with-param>
+      <xsl:with-param name="pos" select = "position()" />
     </xsl:call-template>
 												</xsl:otherwise>
 											</xsl:choose>
