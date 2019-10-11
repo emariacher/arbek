@@ -23,6 +23,32 @@
                <xsl:param name = "pos" />
                -
 	<xsl:choose>											
+		<xsl:when test="$pos = 1">
+			<xsl:choose>											
+				<xsl:when test="$sizeTable1 = 8">
+					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
+				</xsl:when>
+				<xsl:when test="$sizeTable1 = 16">
+					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
+					</xsl:when>
+				<xsl:when test="$sizeTable1 = 24">
+					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
+				</xsl:when>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$pos = 2">
+			<xsl:choose>											
+				<xsl:when test="$sizeTable2 = 8">
+					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
+				</xsl:when>
+				<xsl:when test="$sizeTable2 = 16">
+					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
+					</xsl:when>
+				<xsl:when test="$sizeTable2 = 24">
+					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
+				</xsl:when>
+			</xsl:choose>
+		</xsl:when>
 		<xsl:when test="$pos = 3">
 			<xsl:choose>											
 				<xsl:when test="$sizeTable3 = 8">
