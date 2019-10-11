@@ -22,36 +22,27 @@
                <xsl:param name = "sizeTable13" />
                <xsl:param name = "pos" />
                -
-               <!--tr> <td colspan="3" align="center"> [<xsl:value-of select = "$sizeTable1" /> - <xsl:value-of select = "$sizeTable2" /> - 
-  <xsl:value-of select = "$sizeTable3" /> - <xsl:value-of select = "$sizeTable4" /> - <xsl:value-of select = "$sizeTable5" /> - 
-  <xsl:value-of select = "$pos" />]</td> </tr-->
-											<xsl:choose>											
-												<xsl:when test="$pos = 1 and $sizeTable1 = 8">
-													  <tr> <td colspan="3" align="center"> BYTE1</td> </tr>  
-												</xsl:when>
-												<xsl:when test="$pos = 2 and $sizeTable2 = 8">
-													  <tr> <td colspan="3" align="center"> BYTE1</td> </tr>  
-												</xsl:when>
-												<xsl:when test="$pos = 3">
-												<xsl:choose>											
-												<xsl:when test="$sizeTable3 = 8">
-													  <tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-													  </xsl:when>
-												<xsl:when test="$sizeTable3 = 16">
-													  <tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
-													  </xsl:when>
-												<xsl:when test="$sizeTable3 = 24">
-													  <tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
-													  </xsl:when>
-											</xsl:choose>
-												</xsl:when>
-												<xsl:when test="$pos = 4 and $sizeTable4 = 8">
-													 <tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-												</xsl:when>
-												<xsl:when test="$pos = 5 and $sizeTable5 = 8">
-													 <tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-												</xsl:when>
-											</xsl:choose>
+	<xsl:choose>											
+		<xsl:when test="$pos = 3">
+			<xsl:choose>											
+				<xsl:when test="$sizeTable3 = 8">
+					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
+				</xsl:when>
+				<xsl:when test="$sizeTable3 = 16">
+					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
+					</xsl:when>
+				<xsl:when test="$sizeTable3 = 24">
+					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
+				</xsl:when>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$pos = 4 and $sizeTable4 = 8">
+			 <tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
+		</xsl:when>
+		<xsl:when test="$pos = 5 and $sizeTable5 = 8">
+			 <tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
+		</xsl:when>
+	</xsl:choose>
           </xsl:template>
 
 
