@@ -6,6 +6,13 @@
     expand-text="yes"
     version="3.0">
     <!--xsl:output method = "text" indent = "yes" /-->
+    
+              <xsl:template name = "bytesplit" >
+               <xsl:param name = "sizeTable" />
+               <xsl:param name = "pos" />
+  [xsl:value-of select = "$sizeTable" /> - <xsl:value-of select = "$pos" />]
+          </xsl:template>
+
 
 <xsl:template match="/">
     <html>
@@ -170,6 +177,11 @@ zobi
 												</xsl:when>
 												<xsl:otherwise>
 													 <xsl:value-of select="@size"/>
+													 
+													 <xsl:call-template name="bytesplit">
+      <xsl:with-param name="sizeTable" select = "sizeTable" />
+      <xsl:with-param name="pos" select = "3" />
+    </xsl:call-template>
 												</xsl:otherwise>
 											</xsl:choose>
 											</td>
