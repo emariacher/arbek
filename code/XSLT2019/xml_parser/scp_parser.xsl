@@ -274,7 +274,7 @@
 						<xsl:variable name="sizeTabler2" select="sum($sizeTablerf[not(position() > 2)])"/>
 						<xsl:variable name="sizeTabler3" select="sum($sizeTablerf[not(position() > 3)])"/>
 						<!--xsl:variable name="sizeTablerfstring" select="concat($sizeTabler1,'+',$sizeTabler1 div 8 ,'=',$sizeTabler1 mod 8)"/-->
-						<xsl:variable name="sizeTablerfstring" select="concat($sizeTabler1,'+',$sizeTabler1)"/>
+						<xsl:variable name="sizeTablerfstring" select="concat($sizeTabler1,'+',$sizeTabler1 mod 8,'=',$sizeTabler1 div 8)"/>
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
 							<xsl:choose>
@@ -301,7 +301,7 @@
 													 1 
 												</xsl:when>
 												<xsl:otherwise>
-													 <xsl:value-of select="@size"/>
+													 <xsl:value-of select="@size"/> - <xsl:value-of select="$sizeTablerfstring"/>
 													 
 													 
 												</xsl:otherwise>
