@@ -192,7 +192,7 @@
 										<xsl:variable name="posf" select = "position()" />
 										<xsl:choose>											
 											<xsl:when test="sum($sizeTablerf[not(position() > $posf)]) mod 8 = 0">
-												<tr> <td colspan="3" align="center"> BYTE<xsl:value-of select="sum($sizeTablerf[not(position() > $posf)]) div 8"/></td> </tr> 
+												<tr> <td colspan="8" align="center"> BYTE<xsl:value-of select="sum($sizeTablerf[not(position() > $posf)]) div 8"/></td> </tr> 
 											</xsl:when>
 										</xsl:choose>
 									</xsl:when>
