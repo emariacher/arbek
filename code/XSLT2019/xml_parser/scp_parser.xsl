@@ -7,122 +7,6 @@
     version="3.0">
     <!--xsl:output method = "text" indent = "yes" /-->
     
-              <xsl:template name = "bytesplit" >
-               <xsl:param name = "sizeTable" />
-               <xsl:param name = "sizeTable1" />
-               <xsl:param name = "sizeTable2" />
-               <xsl:param name = "sizeTable3" />
-               <xsl:param name = "sizeTable4" />
-               <xsl:param name = "sizeTable5" />
-               <xsl:param name = "sizeTable7" />
-               <xsl:param name = "sizeTable8" />
-               <xsl:param name = "sizeTable9" />
-               <xsl:param name = "sizeTable10" />
-               <xsl:param name = "sizeTable11" />
-               <xsl:param name = "sizeTable12" />
-               <xsl:param name = "sizeTable13" />
-               <xsl:param name = "pos" />
-               -
-	<xsl:choose>											
-		<xsl:when test="$pos = 1">
-			<xsl:choose>											
-				<xsl:when test="$sizeTable1 = 8">
-					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable1 = 16">
-					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
-					</xsl:when>
-				<xsl:when test="$sizeTable1 = 24">
-					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable1 = 32">
-					<tr> <td colspan="3" align="center"> BYTE4</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable1 = 64">
-					<tr> <td colspan="3" align="center"> BYTE8</td> </tr> 
-				</xsl:when>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$pos = 2">
-			<xsl:choose>											
-				<xsl:when test="$sizeTable2 = 8">
-					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable2 = 16">
-					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
-					</xsl:when>
-				<xsl:when test="$sizeTable2 = 24">
-					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable2 = 32">
-					<tr> <td colspan="3" align="center"> BYTE4</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable2 = 64">
-					<tr> <td colspan="3" align="center"> BYTE8</td> </tr> 
-				</xsl:when>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$pos = 3">
-			<xsl:choose>											
-				<xsl:when test="$sizeTable3 = 8">
-					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable3 = 16">
-					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
-					</xsl:when>
-				<xsl:when test="$sizeTable3 = 24">
-					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable3 = 32">
-					<tr> <td colspan="3" align="center"> BYTE4</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable3 = 64">
-					<tr> <td colspan="3" align="center"> BYTE8</td> </tr> 
-				</xsl:when>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$pos = 4">
-			<xsl:choose>											
-				<xsl:when test="$sizeTable4 = 8">
-					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable4 = 16">
-					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
-					</xsl:when>
-				<xsl:when test="$sizeTable4 = 24">
-					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable4 = 32">
-					<tr> <td colspan="3" align="center"> BYTE4</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable4 = 64">
-					<tr> <td colspan="3" align="center"> BYTE8</td> </tr> 
-				</xsl:when>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$pos = 5">
-			<xsl:choose>											
-				<xsl:when test="$sizeTable5 = 8">
-					<tr> <td colspan="3" align="center"> BYTE1</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable5 = 16">
-					<tr> <td colspan="3" align="center"> BYTE2</td> </tr> 
-					</xsl:when>
-				<xsl:when test="$sizeTable5 = 24">
-					<tr> <td colspan="3" align="center"> BYTE3</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable5 = 32">
-					<tr> <td colspan="3" align="center"> BYTE4</td> </tr> 
-				</xsl:when>
-				<xsl:when test="$sizeTable5 = 64">
-					<tr> <td colspan="3" align="center"> BYTE8</td> </tr> 
-				</xsl:when>
-			</xsl:choose>
-		</xsl:when>
-	</xsl:choose>
-          </xsl:template>
-
-
 <xsl:template match="/">
     <html>
     <head>
@@ -518,6 +402,7 @@
 
 <!--	************	Write Response Field		************		-->
 <!--	************	Table containing all field	********		-->
+<xsl:variable name="sizeTablewf" select="write/response/field/@size"/>
 						<table>
 							<tr> <th colspan="3"> <scptitle> Write Response </scptitle> </th> </tr>
 							<xsl:choose>
@@ -547,6 +432,12 @@
 												</xsl:otherwise>
 											</xsl:choose>
 										</tr>
+										<xsl:variable name="posf" select = "position()" />
+										<xsl:choose>											
+											<xsl:when test="sum($sizeTablewf[not(position() > $posf)]) mod 8 = 0">
+												<tr> <td colspan="3" align="center"> BYTE<xsl:value-of select="sum($sizeTablewf[not(position() > $posf)]) div 8"/></td> </tr> 
+											</xsl:when>
+										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="name() = 'sequence'">
 										<tr>
