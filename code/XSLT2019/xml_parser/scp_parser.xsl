@@ -175,20 +175,19 @@
 								<xsl:choose>
 									<xsl:when test="name() = 'field'">
 										<tr>
-											<td> <xsl:value-of select="@name"/> </td>
-											<td> <xsl:value-of select="@type"/> </td>
-											<td>
+											<!--td> <xsl:value-of select="@name"/> </td>
+											<td> <xsl:value-of select="@type"/> </td-->
 											<xsl:choose>											
 												<xsl:when test="@type = 'boolean'">
-													 1 
+													 <td colspan="1" align="center"> <xsl:value-of select="@name"/></td> 
 												</xsl:when>
 												<xsl:otherwise>
-													 <xsl:value-of select="@size"/>
-													 
-													 
+													 <xsl:element name = "td" >
+													 <xsl:attribute name = "colspan" ><xsl:value-of select="@size"/></xsl:attribute>
+													 <xsl:value-of select="@name"/>
+													 </xsl:element>
 												</xsl:otherwise>
 											</xsl:choose>
-											</td>
 										</tr>
 										<xsl:variable name="posf" select = "position()" />
 										<xsl:choose>											
