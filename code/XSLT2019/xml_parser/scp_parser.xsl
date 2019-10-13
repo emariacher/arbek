@@ -184,7 +184,7 @@
 												<xsl:otherwise>
 													 <xsl:element name = "td" >
 													 <xsl:attribute name = "colspan" ><xsl:value-of select="@size"/></xsl:attribute>
-													 <xsl:value-of select="@name"/>
+													 <xsl:value-of select="@name"/> - <xsl:value-of select="@size"/>
 													 </xsl:element>
 												</xsl:otherwise>
 											</xsl:choose>
