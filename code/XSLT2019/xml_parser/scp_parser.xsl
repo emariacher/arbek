@@ -175,23 +175,12 @@
 												</xsl:otherwise>
 											</xsl:choose>
 										</tr>
-										<xsl:call-template name="bytesplit">
-      <xsl:with-param name="sizeTable"><xsl:value-of select="$sizeTablerqf"/></xsl:with-param>
-      <xsl:with-param name="sizeTable1"><xsl:value-of select="sum($sizeTablerqf[not(position() > 1)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable2"><xsl:value-of select="sum($sizeTablerqf[not(position() > 2)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable3"><xsl:value-of select="sum($sizeTablerqf[not(position() > 3)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable4"><xsl:value-of select="sum($sizeTablerqf[not(position() > 4)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable5"><xsl:value-of select="sum($sizeTablerqf[not(position() > 5)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable6"><xsl:value-of select="sum($sizeTablerqf[not(position() > 6)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable7"><xsl:value-of select="sum($sizeTablerqf[not(position() > 7)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable8"><xsl:value-of select="sum($sizeTablerqf[not(position() > 8)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable9"><xsl:value-of select="sum($sizeTablerqf[not(position() > 9)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable10"><xsl:value-of select="sum($sizeTablerqf[not(position() > 10)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable11"><xsl:value-of select="sum($sizeTablerqf[not(position() > 11)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable12"><xsl:value-of select="sum($sizeTablerqf[not(position() > 12)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable13"><xsl:value-of select="sum($sizeTablerqf[not(position() > 13)])"/></xsl:with-param>
-      <xsl:with-param name="pos" select = "position()" />
-    </xsl:call-template>
+										<xsl:variable name="posf" select = "position()" />
+										<xsl:choose>											
+											<xsl:when test="sum($sizeTablerqf[not(position() > $posf)]) mod 8 = 0">
+												<tr> <td colspan="3" align="center"> BYTE<xsl:value-of select="sum($sizeTablerqf[not(position() > $posf)]) div 8"/></td> </tr> 
+											</xsl:when>
+										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="name() = 'sequence'">
 										<tr>
@@ -272,14 +261,6 @@
 <!--	************	Read Response Field		************		-->
 <!--	************	Table containing all field	********		-->
 						<xsl:variable name="sizeTablerf" select="read/response/field/@size"/>
-						<xsl:variable name="sizeTabler1" select="sum($sizeTablerf[not(position() > 1)])"/>
-						<xsl:variable name="sizeTabler2" select="sum($sizeTablerf[not(position() > 2)])"/>
-						<xsl:variable name="sizeTabler3" select="sum($sizeTablerf[not(position() > 3)])"/>
-						<!--xsl:variable name="sizeTablerfstring" select="concat($sizeTabler1,'+',$sizeTabler1 div 8 ,'=',$sizeTabler1 mod 8)"/-->
-						<xsl:variable name="sizeTablerfstring" select="concat($sizeTabler1,'+',$sizeTabler1 mod 8,'=',floor($sizeTabler1 div 8)
-						,',',$sizeTabler2,'+',$sizeTabler2 mod 8,'=',floor($sizeTabler2 div 8)
-						,',',$sizeTabler3,'+',$sizeTabler3 mod 8,'=',floor($sizeTabler3 div 8)
-						)"/>
 						<table>
 							<tr> <th colspan="3"> <scptitle> Read Response </scptitle> </th> </tr>
 							<xsl:choose>
@@ -306,41 +287,19 @@
 													 1 
 												</xsl:when>
 												<xsl:otherwise>
-													 <xsl:value-of select="@size"/> - <xsl:value-of select="$sizeTablerfstring"/>
+													 <xsl:value-of select="@size"/>
 													 
 													 
 												</xsl:otherwise>
 											</xsl:choose>
 											</td>
 										</tr>
-											<xsl:call-template name="bytesplit">
-      <xsl:with-param name="sizeTable"><xsl:value-of select="$sizeTablerf"/></xsl:with-param>
-      <xsl:with-param name="sizeTable1"><xsl:value-of select="sum($sizeTablerf[not(position() > 1)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable2"><xsl:value-of select="sum($sizeTablerf[not(position() > 2)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable3"><xsl:value-of select="sum($sizeTablerf[not(position() > 3)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable4"><xsl:value-of select="sum($sizeTablerf[not(position() > 4)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable5"><xsl:value-of select="sum($sizeTablerf[not(position() > 5)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable6"><xsl:value-of select="sum($sizeTablerf[not(position() > 6)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable7"><xsl:value-of select="sum($sizeTablerf[not(position() > 7)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable8"><xsl:value-of select="sum($sizeTablerf[not(position() > 8)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable9"><xsl:value-of select="sum($sizeTablerf[not(position() > 9)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable10"><xsl:value-of select="sum($sizeTablerf[not(position() > 10)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable11"><xsl:value-of select="sum($sizeTablerf[not(position() > 11)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable12"><xsl:value-of select="sum($sizeTablerf[not(position() > 12)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable13"><xsl:value-of select="sum($sizeTablerf[not(position() > 13)])"/></xsl:with-param>
-      <xsl:with-param name="pos" select = "position()" />
-    </xsl:call-template>
-    
-    <xsl:variable name="posf" select = "position()" />
-    			<xsl:choose>											
-				<xsl:when test="sum($sizeTablerf[not(position() > $posf)]) mod 8 = 0">
-					<tr> <td colspan="3" align="center"> BYTE1 new <xsl:value-of select="sum($sizeTablerf[not(position() > $posf)]) div 8"/></td> </tr> 
-				</xsl:when>
-				</xsl:choose>
-
-    
-    
-    
+										<xsl:variable name="posf" select = "position()" />
+										<xsl:choose>											
+											<xsl:when test="sum($sizeTablerf[not(position() > $posf)]) mod 8 = 0">
+												<tr> <td colspan="3" align="center"> BYTE<xsl:value-of select="sum($sizeTablerf[not(position() > $posf)]) div 8"/></td> </tr> 
+											</xsl:when>
+										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="name() = 'sequence'">
 										<tr>
@@ -474,23 +433,12 @@
 												</xsl:otherwise>
 											</xsl:choose>
 										</tr>
-										<xsl:call-template name="bytesplit">
-      <xsl:with-param name="sizeTable"><xsl:value-of select="$sizeTablewqf"/></xsl:with-param>
-      <xsl:with-param name="sizeTable1"><xsl:value-of select="sum($sizeTablewqf[not(position() > 1)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable2"><xsl:value-of select="sum($sizeTablewqf[not(position() > 2)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable3"><xsl:value-of select="sum($sizeTablewqf[not(position() > 3)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable4"><xsl:value-of select="sum($sizeTablewqf[not(position() > 4)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable5"><xsl:value-of select="sum($sizeTablewqf[not(position() > 5)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable6"><xsl:value-of select="sum($sizeTablewqf[not(position() > 6)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable7"><xsl:value-of select="sum($sizeTablewqf[not(position() > 7)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable8"><xsl:value-of select="sum($sizeTablewqf[not(position() > 8)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable9"><xsl:value-of select="sum($sizeTablewqf[not(position() > 9)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable10"><xsl:value-of select="sum($sizeTablewqf[not(position() > 10)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable11"><xsl:value-of select="sum($sizeTablewqf[not(position() > 11)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable12"><xsl:value-of select="sum($sizeTablewqf[not(position() > 12)])"/></xsl:with-param>
-      <xsl:with-param name="sizeTable13"><xsl:value-of select="sum($sizeTablewqf[not(position() > 13)])"/></xsl:with-param>
-      <xsl:with-param name="pos" select = "position()" />
-    </xsl:call-template>
+										<xsl:variable name="posf" select = "position()" />
+										<xsl:choose>											
+											<xsl:when test="sum($sizeTablewqf[not(position() > $posf)]) mod 8 = 0">
+												<tr> <td colspan="3" align="center"> BYTE<xsl:value-of select="sum($sizeTablewqf[not(position() > $posf)]) div 8"/></td> </tr> 
+											</xsl:when>
+										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="name() = 'sequence'">
 										<tr>
