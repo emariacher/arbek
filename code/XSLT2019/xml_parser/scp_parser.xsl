@@ -8,6 +8,7 @@
     <!--xsl:output method = "text" indent = "yes" /-->
     
               <xsl:template name = "bytesplit" >
+               <xsl:param name = "sizeTable" />
                <xsl:param name = "sizeTable1" />
                <xsl:param name = "sizeTable2" />
                <xsl:param name = "sizeTable3" />
@@ -175,6 +176,7 @@
 											</xsl:choose>
 										</tr>
 										<xsl:call-template name="bytesplit">
+      <xsl:with-param name="sizeTable"><xsl:value-of select="$sizeTablerqf"/></xsl:with-param>
       <xsl:with-param name="sizeTable1"><xsl:value-of select="sum($sizeTablerqf[not(position() > 1)])"/></xsl:with-param>
       <xsl:with-param name="sizeTable2"><xsl:value-of select="sum($sizeTablerqf[not(position() > 2)])"/></xsl:with-param>
       <xsl:with-param name="sizeTable3"><xsl:value-of select="sum($sizeTablerqf[not(position() > 3)])"/></xsl:with-param>
@@ -312,6 +314,7 @@
 											</td>
 										</tr>
 											<xsl:call-template name="bytesplit">
+      <xsl:with-param name="sizeTable"><xsl:value-of select="$sizeTablerf"/></xsl:with-param>
       <xsl:with-param name="sizeTable1"><xsl:value-of select="sum($sizeTablerf[not(position() > 1)])"/></xsl:with-param>
       <xsl:with-param name="sizeTable2"><xsl:value-of select="sum($sizeTablerf[not(position() > 2)])"/></xsl:with-param>
       <xsl:with-param name="sizeTable3"><xsl:value-of select="sum($sizeTablerf[not(position() > 3)])"/></xsl:with-param>
@@ -461,6 +464,7 @@
 											</xsl:choose>
 										</tr>
 										<xsl:call-template name="bytesplit">
+      <xsl:with-param name="sizeTable"><xsl:value-of select="$sizeTablewqf"/></xsl:with-param>
       <xsl:with-param name="sizeTable1"><xsl:value-of select="sum($sizeTablewqf[not(position() > 1)])"/></xsl:with-param>
       <xsl:with-param name="sizeTable2"><xsl:value-of select="sum($sizeTablewqf[not(position() > 2)])"/></xsl:with-param>
       <xsl:with-param name="sizeTable3"><xsl:value-of select="sum($sizeTablewqf[not(position() > 3)])"/></xsl:with-param>
