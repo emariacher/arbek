@@ -171,10 +171,11 @@
 									<tr> <td colspan="3" align="center"> No data </td> </tr>
 								</xsl:otherwise>
 							</xsl:choose>
+							<tr>
 							<xsl:for-each select="read/response/*">
 								<xsl:choose>
 									<xsl:when test="name() = 'field'">
-										<tr>
+										
 											<!--td> <xsl:value-of select="@name"/> </td>
 											<td> <xsl:value-of select="@type"/> </td-->
 											<xsl:choose>											
@@ -188,7 +189,6 @@
 													 </xsl:element>
 												</xsl:otherwise>
 											</xsl:choose>
-										</tr>
 										<xsl:variable name="posf" select = "position()" />
 										<xsl:choose>											
 											<xsl:when test="sum($sizeTablerf[not(position() > $posf)]) mod 8 = 0">
@@ -218,6 +218,8 @@
 									</xsl:when>
 								</xsl:choose>
 							</xsl:for-each>
+										</tr>
+							
 						</table>
 <!--	************	Detailed description of all fields	********		-->
 						<xsl:for-each select="read/response/*">
