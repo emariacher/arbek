@@ -330,6 +330,17 @@
       <xsl:with-param name="sizeTable13"><xsl:value-of select="sum($sizeTablerf[not(position() > 13)])"/></xsl:with-param>
       <xsl:with-param name="pos" select = "position()" />
     </xsl:call-template>
+    
+    <xsl:variable name="posf" select = "position()" />
+    			<xsl:choose>											
+				<xsl:when test="sum($sizeTablerf[not(position() > 1)]) = 8">
+					<tr> <td colspan="3" align="center"> BYTE1 new</td> </tr> 
+				</xsl:when>
+				</xsl:choose>
+
+    
+    
+    
 									</xsl:when>
 									<xsl:when test="name() = 'sequence'">
 										<tr>
