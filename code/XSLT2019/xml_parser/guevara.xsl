@@ -6,16 +6,23 @@
     <zob><xsl:value-of select="@name"/></zob>
     <xsl:for-each select="Packet">
 		<xsl:element name = "frame">
-			<xsl:attribute name = "parameter" ><xsl:value-of select="@name"/></xsl:attribute>
-			<xsl:attribute name = "name" ><xsl:value-of select="@file"/></xsl:attribute>
 			<xsl:attribute name = "description" ><xsl:value-of select="@comment"/></xsl:attribute>
+			<xsl:attribute name = "name" ><xsl:value-of select="@file"/></xsl:attribute>
+			<xsl:attribute name = "parameter" ><xsl:value-of select="@name"/></xsl:attribute>
 			<xsl:element name = "{//@typerw}">
 				<xsl:element name = "{//@typersq}">
-					<xsl:for-each select="Enum/Value">
+					<xsl:for-each select="Enum">
 						<xsl:element name = "field">
-							<xsl:attribute name = "type" >enumerable</xsl:attribute>
-							<xsl:attribute name = "name" ><xsl:value-of select="@name"/></xsl:attribute>							
 							<xsl:attribute name = "description" ><xsl:value-of select="@comment"/></xsl:attribute>
+							<xsl:attribute name = "name" ><xsl:value-of select="@name"/></xsl:attribute>							
+							<xsl:attribute name = "type" >enumerate</xsl:attribute>
+							<xsl:for-each select="Value">
+								<xsl:element name = "enumerator">
+									<xsl:attribute name = "description" ><xsl:value-of select="@comment"/></xsl:attribute>
+									<xsl:attribute name = "name" ><xsl:value-of select="@name"/></xsl:attribute>							
+									<xsl:value-of select="text()"/>
+								</xsl:element>
+							</xsl:for-each>
 						</xsl:element>
 					</xsl:for-each>
 				</xsl:element>
