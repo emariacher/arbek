@@ -28,19 +28,20 @@ efficiently encode data for little or big endian architectures.">
         	<Value name="excessive_variations_in_heater_measurements" comment="excessive variations in heater measurements">10</Value>
         </Enum>
         <Data name="end_of_heat_reason" enum="end_of_heat_reasons" encodedType="bitEnum4" comment="The end of heat reason gives the reason of end of heat" default="0"/>
-                <Enum  name="wet_stick_selected" comment="The wet stick selected Enum is set if the wet stick heat profile is selected" encodedType="bitEnum41" default="0">
+                <Enum  name="wet_stick_selecteds" comment="The wet stick selected Enum is set if the wet stick heat profile is selected">
                     <Value name="standard_heat_profile_selected" comment="standard heat profile selected">0</Value>
                     <Value name="wet_stick_heat_profile_selected" comment="wet stick heat profile selected">1</Value>
                 </Enum>
-                <Enum  name="duty_cycle_fault" comment="The duty cycle fault Enum gives the duty cycle fault state" size="1" default="0">
+        <Data name="wet_stick_selected" enum="wet_stick_selecteds" encodedType="bitEnum1" comment="The end of heat reason gives the reason of end of heat" default="0"/>
+                <Enum  name="duty_cycle_fault" comment="The duty cycle fault Enum gives the duty cycle fault state">
                     <Value name="no_duty_cycle_fault" comment="no duty cycle fault">0</Value>
                     <Value name="unexpected_duty_cycle_variations" comment="unexpected duty cycle variations">1</Value>
                 </Enum>
-                <Enum  name="read" comment="The read Enum gives the already read state" size="1" default="0">
+                <Enum  name="read" comment="The read Enum gives the already read state">
                     <Value name="new_information" comment="new information">0</Value>
                     <Value name="information_already_read" comment="information already read">1</Value>
                 </Enum>
-                <Enum  name="intensive_puffing" comment="The intensive puffing Enum gives the pre overheating state" size="1" default="0">
+                <Enum  name="intensive_puffing" comment="The intensive puffing Enum gives the pre overheating state">
                     <Value name="no_intensive_puffing_detected" comment="no intensive puffing detected">0</Value>
                     <Value name="intensive_puffing_detected" comment="intensive puffing detected">1</Value>
                 </Enum>
