@@ -38,11 +38,11 @@
 				<xsl:element name = "{//@typersq}">
 					<xsl:for-each select="Enum">
 						<xsl:variable name="enumName"><xsl:value-of select="@name"/></xsl:variable>
-						<xsl:variable name="encType"><xsl:value-of select="parent::Data[@enum = $enumName]/encodedType"/></xsl:variable>
+						<xsl:variable name="encType"><xsl:value-of select="../Data[@enum = $enumName]/@encodedType"/></xsl:variable>
 						<xsl:element name = "field">
 							<xsl:attribute name = "default" ><xsl:value-of select="@default"/></xsl:attribute>
 							<xsl:attribute name = "size" >
-								<xsl:value-of select="$enumName"/> - <xsl:value-of select="@encType"/> - 
+								<xsl:value-of select="$enumName"/> - <xsl:value-of select="@encType"/> - <xsl:value-of select="../Data/@encodedType"/>
 								<!--xsl:variable name="myVariable">
 									<xsl:call-template name="string-replace-all">
 										<xsl:with-param name="text" select="@encodedType" />
