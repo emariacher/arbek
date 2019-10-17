@@ -27,7 +27,7 @@ efficiently encode data for little or big endian architectures.">
         	<Value name="ambient_temperature_too_high" comment="ambient temperature too high">9</Value>
         	<Value name="excessive_variations_in_heater_measurements" comment="excessive variations in heater measurements">10</Value>
         </Enum>
-        <Data name="end_of_heat_reason" enum="end_of_heat_reasons" encodedType="bitEnum4" comment="The end of heat reason gives the reason of end of heat"/>
+        <Data name="end_of_heat_reason" enum="end_of_heat_reasons" encodedType="bitEnum4" comment="The end of heat reason gives the reason of end of heat" default="0"/>
                 <Enum  name="wet_stick_selected" comment="The wet stick selected Enum is set if the wet stick heat profile is selected" encodedType="bitEnum41" default="0">
                     <Value name="standard_heat_profile_selected" comment="standard heat profile selected">0</Value>
                     <Value name="wet_stick_heat_profile_selected" comment="wet stick heat profile selected">1</Value>
