@@ -6,6 +6,7 @@ import java.util.Calendar
 import java.util.Date
 import java.text.SimpleDateFormat
 
+import scala.collection.immutable.NumericRange
 import scala.math.BigInt
 
 object Euler {
@@ -30,9 +31,9 @@ object Euler {
 
   def powl(pn: BigInt, n: Int): BigInt = {
     val div = 40
-    val z2 = new Range(1, (n / div) + 1, 1).toList.map((i: Int) => pn).product
-    val z4 = new Range(1, (n % div) + 1, 1).toList.map((i: Int) => pn).product
-    val z5 = new Range(1, div + 1, 1).toList.map((i: Int) => z2).product
+    val z2 = new NumericRange(1, (n / div) + 1, 1, true).toList.map((i: Int) => pn).product
+    val z4 = new NumericRange(1, (n % div) + 1, 1, true).toList.map((i: Int) => pn).product
+    val z5 = new NumericRange(1, div + 1, 1, true).toList.map((i: Int) => z2).product
     if (n % div == 0) {
       z5
     } else {

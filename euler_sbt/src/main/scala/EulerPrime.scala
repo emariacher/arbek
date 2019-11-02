@@ -3,6 +3,7 @@
  */
 
 import scala.collection.immutable.TreeSet
+import scala.collection.immutable.NumericRange
 
 object EulerPrime {
   //  val premiers1000000 = (new CheckEulerPrime(1000000,1000)).premiers
@@ -46,10 +47,10 @@ class EulerPrime(val top: BigInt, val inc: Int) {
   var premiersForCompute = TreeSet[BigInt]()
   val sqtop = Euler.sqrt(top) + 1
   assume(sqtop * sqtop > top)
-  assume((new Range(0, 10, 1)).last == 9)
-  assume((new Range(1, 11, 2)).last == 9)
+  assume((new NumericRange(0, 10, 1, false)).last == 9)
+  assume((new NumericRange(1, 11, 2, false)).last == 9)
   assume(top % inc == 0)
-  val main = new Range(0, (top / inc).toInt, 1)
+  val main = new NumericRange(0, (top / inc).toInt, 1, true)
 
   def init1er4compute = {
     inc match {
@@ -69,7 +70,7 @@ class EulerPrime(val top: BigInt, val inc: Int) {
       var end = inc + start
 
       //				val sqend = Math.sqrt(end).toInt+1
-      var range = TreeSet[BigInt]() ++ (new Range(start, end, 2)).toList.map(BigInt(_))
+      var range = TreeSet[BigInt]() ++ (new NumericRange(start, end, 2, true)).toList.map(BigInt(_))
       //println("range: "+range)
       premiersForCompute.foreach((premier: BigInt) => {
         range = range.filter(_ % premier != 0)
@@ -104,7 +105,7 @@ class EulerPrime(val top: BigInt, val inc: Int) {
     })
     premiersForCompute = premiers
     assert(top % inc == 0)
-    premiers = premiersForCompute ++ (1 to (top / inc).toInt - 1).par.map(mi => {
+    premiers = premiersForCompute ++ (1 to (top / inc).toInt - 1).map(mi => {
       val base = mi * inc
       val premiersForCompute2 = premiersForCompute.toList.takeWhile(_.toDouble < Math.sqrt(base + inc.toDouble) + 1)
       val plength = premiersForCompute2.length

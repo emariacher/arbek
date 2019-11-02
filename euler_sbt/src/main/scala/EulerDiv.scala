@@ -2,6 +2,7 @@
  * Created by mariachere on 26.05.2015.
  */
 import scala.collection.immutable.TreeSet
+import scala.collection.immutable.NumericRange
 
 class EulerDiv(bi: BigInt) {
   var primes = List[BigInt]()
@@ -39,7 +40,7 @@ class EulerDiv(bi: BigInt) {
 }
 
 class EulerDivisors(val l: List[BigInt]) {
-  val range = new Range(1, l.size, 1).toList
+  val range = new NumericRange(1, l.size, 1, true).toList
   def this(ed: EulerDiv) = this(ed.primes)
   val divisors = range.foldLeft(List[List[BigInt]]())(_ ++ l.combinations(_)).map(_.product).distinct.sorted
   val primesUnique = TreeSet[BigInt]() ++ l
@@ -47,13 +48,13 @@ class EulerDivisors(val l: List[BigInt]) {
 }
 
 class EulerDivisors3(l: List[BigInt]) {
-  val range = new Range(1, l.size + 1, 1).toList
+  val range = new NumericRange(1, l.size + 1, 1, true).toList
   val divisors = range.foldLeft(List[List[BigInt]]())(_ ++ l.combinations(_)).map(_.product).distinct.sorted
   val primesUnique = TreeSet[BigInt]() ++ l
 }
 
 class EulerDivisors2(val l: List[BigInt], val bi: BigInt) {
-  val range = new Range(1, l.size, 1).toList
+  val range = new NumericRange(1, l.size, 1, true).toList
   val result = range.find((i: Int) => l.combinations(i).toList.map(_.product).contains(bi))
   var found = false
   result match {
