@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../xml_parser/scp_parser.xsl"?>
+<protocol name="scp" version="1">
+    <parameter_set name="p1_holder" major="1" minor="3" id="2"/>
+    <frame parameter="0x80" name="conversion_factor" description="The control application sends this message to retrieve conversion factors.">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="heater_current_factor" description="The heater current factor field contains the factor to convert ADC units to Amperes." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="heater_current" description="heater current" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="battery_voltage_factor" description="The battery voltage factor field contains the factor to convert ADC units to Volts." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="T1" description="The T1 field contains the ambient temperature calibration point 1 in degree C." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="T2" description="The T2 field contains the ambient temperature calibration point 2 in degree C." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="ADC1" description="The ADC1 field contains the ambient temperature calibration point 1 in ADC unit." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="ADC2" description="The ADC2 field contains the ambient temperature calibration point 2 in ADC unit." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="CALR1" description="The CALR1 field contains the heater calibration point 1 in 1/1024 or 1/1092 of Ohm." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="CALR2" description="The CALR2 field contains the heater calibration point 2 in 1/1024 or 1/1092 of Ohm." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="CALR3" description="The CALR3 field contains the heater calibration point 3 in 1/1024 or 1/1092 of Ohm." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="CALT1" description="The CALT1 field contains the heater calibration point 1 in 1/4 of degree C." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="CALT2" description="The CALT2 field contains the heater calibration point 1 in 1/4 of degree C." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="CALT3" description="The CALT3 field contains the heater calibration point 1 in 1/4 of degree C." size="8" min="0" max="255" default="0"/>
+            </response>
+        </read>
+    </frame>
+    <frame parameter="0x81" name="holder_status" description="The control application sends the read variant of this message to query holder application status; the write variant changes some system status according to mask field.">
+        <read>
+            <request/>
+            <response>
+                <field type="enumerate" name="battery" description="battery" size="2" default="0">
+                    <enumerator name="battery_charged" description="battery charged">0</enumerator>
+                    <enumerator name="battery_in_charge" description="battery in charge">1</enumerator>
+                    <enumerator name="charging_required" description="charging required">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="media" description="media" size="2" default="0">
+                    <enumerator name="no_media" description="no media">0</enumerator>
+                    <enumerator name="media_inserted" description="media inserted">1</enumerator>
+                    <enumerator name="media_depleted" description="media depleted">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="heating" description="heating" size="2" default="0">
+                    <enumerator name="heating_and_cleaning_off" description="heating and cleaning off">0</enumerator>
+                    <enumerator name="heating" description="heating">1</enumerator>
+                    <enumerator name="reserved" description="reserved">2</enumerator>
+                    <enumerator name="cleaning" description="cleaning">3</enumerator>
+                </field>
+                <field type="enumerate" name="clean_due" description="clean due" size="2" default="0">
+                    <enumerator name="no_clean_due_heating_available" description="no clean due heating available">0</enumerator>
+                    <enumerator name="clean_warn_heating_available" description="clean warn heating available">1</enumerator>
+                    <enumerator name="clean_due_heating_not_available" description="clean due heating not available">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="system_defect" description="system defect" size="1" default="0">
+                    <enumerator name="system_ok" description="system ok">0</enumerator>
+                    <enumerator name="general_system_failure" description="general system failure">1</enumerator>
+                </field>
+                <field type="enumerate" name="ambient_temperature" description="ambient temperature" size="2" default="0">
+                    <enumerator name="ambient_temperature_in_range" description="ambient temperature in range">0</enumerator>
+                    <enumerator name="ambient_temperature_too_low" description="ambient temperature too low">1</enumerator>
+                    <enumerator name="ambient_temperature_too_high" description="ambient temperature too high">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="uinteger" name="reserved" description="unused" size="5" min="0" max="31" default="0"/>
+                <field type="uinteger" name="mask" description="mask" size="16" min="0" max="65535" default="2047"/>
+            </response>
+        </read>
+        <write>
+            <request>
+                <field type="enumerate" name="battery" description="battery" size="2" default="0">
+                    <enumerator name="battery_charged" description="battery charged">0</enumerator>
+                    <enumerator name="battery_in_charge" description="battery in charge">1</enumerator>
+                    <enumerator name="charging_required" description="charging required">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="media" description="media" size="2" default="0">
+                    <enumerator name="no_media" description="no media">0</enumerator>
+                    <enumerator name="media_inserted" description="media inserted">1</enumerator>
+                    <enumerator name="media_depleted" description="media depleted">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="heating" description="heating" size="2" default="0">
+                    <enumerator name="heating_and_cleaning_off" description="heating and cleaning off">0</enumerator>
+                    <enumerator name="heating" description="heating">1</enumerator>
+                    <enumerator name="reserved" description="reserved">2</enumerator>
+                    <enumerator name="cleaning" description="cleaning">3</enumerator>
+                </field>
+                <field type="uinteger" name="clean_due_reserved" description="clean due [RO]" size="2" min="0" max="0" default="0"/>
+                <field type="uinteger" name="system_defect_reserved" description="system defect [RO]" size="1" min="0" max="0" default="0"/>
+                <field type="uinteger" name="ambient_temperature_reserved" description="ambient temperature [RO]" size="2" min="0" max="0" default="0"/>
+                <field type="uinteger" name="reserved" description="unused" size="5" min="0" max="0" default="0"/>
+                <field type="mask" name="mask" description="mask,it gives the meaningful bits in status" size="16" default="0">
+                    <group name="set_battery_charge_state" description="set battery charge state">3</group>
+                    <group name="set_media_inserted_removed_state" description="set media inserted removed state">12</group>
+                    <group name="set_heat_clean_state" description="set heat clean state">48</group>
+                </field>
+            </request>
+            <response>
+                <field type="enumerate" name="battery" description="battery" size="2" default="0">
+                    <enumerator name="battery_charged" description="battery charged">0</enumerator>
+                    <enumerator name="battery_in_charge" description="battery in charge">1</enumerator>
+                    <enumerator name="charging_required" description="charging required">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="media" description="media" size="2" default="0">
+                    <enumerator name="no_media" description="no media">0</enumerator>
+                    <enumerator name="media_inserted" description="media inserted">1</enumerator>
+                    <enumerator name="media_depleted" description="media depleted">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="heating" description="heating" size="2" default="0">
+                    <enumerator name="heating_and_cleaning_off" description="heating and cleaning off">0</enumerator>
+                    <enumerator name="heating" description="heating">1</enumerator>
+                    <enumerator name="reserved" description="reserved">2</enumerator>
+                    <enumerator name="cleaning" description="cleaning">3</enumerator>
+                </field>
+                <field type="enumerate" name="clean_due" description="clean due" size="2" default="0">
+                    <enumerator name="no_clean_due_heating_available" description="no clean due heating available">0</enumerator>
+                    <enumerator name="clean_warn_heating_available" description="clean warn heating available">1</enumerator>
+                    <enumerator name="clean_due_heating_not_available" description="clean due heating not available">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="enumerate" name="system_defect" description="system defect" size="1" default="0">
+                    <enumerator name="system_ok" description="system ok">0</enumerator>
+                    <enumerator name="general_system_failure" description="general system failure">1</enumerator>
+                </field>
+                <field type="enumerate" name="ambient_temperature" description="ambient temperature" size="3" default="0">
+                    <enumerator name="ambient_temperature_in_range" description="ambient temperature in range">0</enumerator>
+                    <enumerator name="ambient_temperature_too_low" description="ambient temperature too low">1</enumerator>
+                    <enumerator name="ambient_temperature_too_high" description="ambient temperature too high">2</enumerator>
+                    <enumerator name="reserved" description="reserved">3</enumerator>
+                </field>
+                <field type="uinteger" name="reserved" description="unused" size="5" min="0" max="31" default="0"/>
+                <field type="uinteger" name="mask" description="mask" size="16" min="0" max="65535" default="2047"/>
+            </response>
+        </write>
+    </frame>
+    <frame parameter="0x82" name="detailed_system_error" description="The control application sends this message to retrieve detailed errors when system defect bit is set in Holder status (0x081) [RW]">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="errors" description="The errors field is a bit field of errors set by the application; see application implementation document for details." size="32" min="0" max="4294967295" default="0"/>
+            </response>
+        </read>
+    </frame>
+    <frame parameter="0x83" name="battery_status" description="The control application sends this message to retrieve battery status information.">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="battery_voltage" description="The battery voltage field gives the voltage at heater bounds in ADC units." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="battery_temperature" description="The battery temperature field gives the battery temperature in ADC units." size="16" min="0" max="65535" default="0"/>
+            </response>
+        </read>
+    </frame>
+    <frame parameter="0x84" name="working_environment" description="The control application sends this message to retrieve working environment.">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="ambient_temperature" description="The ambient temperature field gives the ambient temperature in ADC units." size="16" min="0" max="65535" default="0"/>
+            </response>
+        </read>
+    </frame>
+    <frame parameter="0x85" name="holder_usage_data" description="The control application sends this message to retrieve Holder usage data (last inhalation experience information).">
+        <read>
+            <request/>
+            <response>
+                <field type="enumerate" name="end_of_heat_reason" description="The end of heat reason gives the reason of end of heat" size="4" default="0">
+                    <enumerator name="no_data" description="no data">0</enumerator>
+                    <enumerator name="heating_in_progress" description="heating in progress">1</enumerator>
+                    <enumerator name="end_of_profile_reached" description="end of profile reached">2</enumerator>
+                    <enumerator name="user_action" description="user action">3</enumerator>
+                    <enumerator name="heater_temperature_above_limit" description="heater temperature above limit">4</enumerator>
+                    <enumerator name="heater_power_out_of_range" description="heater power out of range">5</enumerator>
+                    <enumerator name="low_battery_voltage" description="low battery voltage">6</enumerator>
+                    <enumerator name="system_fault" description="system fault">7</enumerator>
+                    <enumerator name="puff_limitation" description="puff limitation">8</enumerator>
+                    <enumerator name="ambient_temperature_too_high" description="ambient temperature too high">9</enumerator>
+                    <enumerator name="excessive_variations_in_heater_measurements" description="excessive variations in heater measurements">10</enumerator>
+                </field>
+                <field type="enumerate" name="wet_stick_selected" description="The wet stick selected field is set if the wet stick heat profile is selected" size="1" default="0">
+                    <enumerator name="standard_heat_profile_selected" description="standard heat profile selected">0</enumerator>
+                    <enumerator name="wet_stick_heat_profile_selected" description="wet stick heat profile selected">1</enumerator>
+                </field>
+                <field type="enumerate" name="duty_cycle_fault" description="The duty cycle fault field gives the duty cycle fault state" size="1" default="0">
+                    <enumerator name="no_duty_cycle_fault" description="no duty cycle fault">0</enumerator>
+                    <enumerator name="unexpected_duty_cycle_variations" description="unexpected duty cycle variations">1</enumerator>
+                </field>
+                <field type="enumerate" name="read" description="The read field gives the already read state" size="1" default="0">
+                    <enumerator name="new_information" description="new information">0</enumerator>
+                    <enumerator name="information_already_read" description="information already read">1</enumerator>
+                </field>
+                <field type="enumerate" name="intensive_puffing" description="The intensive puffing field gives the pre overheating state" size="1" default="0">
+                    <enumerator name="no_intensive_puffing_detected" description="no intensive puffing detected">0</enumerator>
+                    <enumerator name="intensive_puffing_detected" description="intensive puffing detected">1</enumerator>
+                </field>
+                <field type="uinteger" name="puff_count" description="The puff count field gives the number of detected puffs." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="synchronize_time" description="The synchronize time field gives the last synchronize time from epoch in seconds." size="32" min="0" max="4294967295" default="0"/>
+                <field type="uinteger" name="start_heating_time" description="The start heating time field gives the start heating time from synchronize time in seconds." size="24" min="0" max="16777215" default="0"/>
+                <field type="uinteger" name="heating_duration" description="The heating duration field gives the heating duration in seconds." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="energy_consumed" description="The energy consumed field contains the energy consumed during inhalation experience in Joules." size="16" min="0" max="65535" default="0"/>
+            </response>
+        </read>
+        <write>
+            <request/>
+            <response/>
+        </write>
+    </frame>
+    <frame parameter="0x86" name="holder_life_data" description="The control application sends this message to retrieve holder statistics from its start of life.">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="number_of_inhalation_experiences" description="The number of inhalation experiences field gives the total number of inhalation experiences." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="number_of_cleaning" description="The number of cleaning field gives the total number of started cleaning (completed or not)." size="16" min="0" max="65535" default="0"/>
+                <field type="uinteger" name="total_energy_consumed_during_heating" description="The total energy consumed during heating field gives the energy consumed during all inhalation experiences in Joules." size="32" min="0" max="4294967295" default="0"/>
+                <field type="uinteger" name="total_energy_consumed_during_cleaning" description="The total energy consumed during cleaning field gives the energy consumed during all cleanings in Joules." size="32" min="0" max="4294967295" default="0"/>
+            </response>
+        </read>
+    </frame>
+    <frame parameter="0x87" name="availability_status" description="The control application sends this message to retrieve holder inhalation experience availability.">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="inhalation_experiences_from_last_cleaning" description="The inhalation experiences from last cleaning field gives the number of inhalation experiences since the last cleaning." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="inhalation_experiences_to_next_cleaning" description="The inhalation experiences to next cleaning field gives the number of remaining inhalation experiences until next cleaning is due." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="aging_battery_counter" description="The aging battery counter field shows the number of consecutive heating events (inhalation experiences or cleaning) stopped due to low battery voltage." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="aging_battery_threshold" description="The aged battery threshold field gives the value of aging battery counter at which the battery is considered to be aged. To maintain compatibility with previous protocol versions, the value 0 is interpreted as a threshold of 16." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="inhalation_experience_when_fully_charged" description="The inhalation experiences when fully charged field gives the number of inhalation experiences supported by a fully charged battery." size="8" min="0" max="31" default="0"/>
+                <field type="uinteger" name="inhalation_experience_at_current_state_of_charge" description="The inhalation experiences at current state of charge (SOC) field gives the number of remaining inhalation experiences at current state of charge (SOC)." size="8" min="0" max="31" default="0"/>
+            </response>
+        </read>
+    </frame>
+    <frame parameter="0x89" name="heating_profile" description="The host sends this message to set/retrieve the heating profile in the device." implementation="optional">
+        <read>
+            <request/>
+            <response>
+                <field type="enumerate" name="heating_profile" description="The heating profile field gives the type of selected profile." size="16" default="1">
+                    <enumerator name="C28" description="C28">1</enumerator>
+                    <enumerator name="330C_golden" description="330C golden">2</enumerator>
+                    <enumerator name="485C_cleaning" description="485C cleaning">32769</enumerator>
+                    <enumerator name="measure_only" description="measure only">61440</enumerator>
+                    <enumerator name="SSC_raw_control" description="SSC raw control (this value can only be set if calibration data are empty)">65535</enumerator>
+                </field>
+            </response>
+        </read>
+        <write>
+            <request>
+                <field type="enumerate" name="heating_profile" description="The heating profile field gives the type of selected profile." size="16" default="1">
+                    <enumerator name="C28" description="C28">1</enumerator>
+                    <enumerator name="330C_golden" description="330C golden">2</enumerator>
+                    <enumerator name="485C_cleaning" description="485C cleaning">32769</enumerator>
+                    <enumerator name="measure_only" description="measure only">61440</enumerator>
+                    <enumerator name="SSC_raw_control" description="SSC raw control (this value can only be set if calibration data are empty)">65535</enumerator>
+                </field>
+            </request>
+            <response/>
+        </write>
+    </frame>
+    <frame parameter="0x8A" name="heater_resistance_target" description="The host sends this message to set/retrieve the target heater resistance in the device. Access allowed in RW only if Heating profile (0x089) [RW] command is set to 0xFFFF." implementation="optional">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="target_resistance" description="The target resistance field gives the target heater resistance ratio (vs Reference R) in unit 1/65536." size="16" min="0" max="65535" default="0"/>
+            </response>
+        </read>
+        <write>
+            <request>
+                <field type="uinteger" name="target_resistance" description="The target resistance field gives the target heater resistance ratio (vs Reference R) in unit 1/65536." size="16" min="0" max="65535" default="0"/>
+            </request>
+            <response/>
+        </write>
+    </frame>
+    <frame parameter="0x8B" name="extended_holder_usage_data" description="The control application sends this message to retrieve puff time stamps stored in device." implementation="optional">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="puff_time_stamp_1" description="The puff time stamp fields contains the offset from the start heating time field described in section 3.6.2 in 2 seconds units." size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_2" description="puff time stamp 2" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_3" description="puff time stamp 3" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_4" description="puff time stamp 4" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_5" description="puff time stamp 5" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_6" description="puff time stamp 6" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_7" description="puff time stamp 7" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_8" description="puff time stamp 8" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_9" description="puff time stamp 9" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_10" description="puff time stamp 10" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_11" description="puff time stamp 11" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_12" description="puff time stamp 12" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_13" description="puff time stamp 13" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_14" description="puff time stamp 14" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_15" description="puff time stamp 15" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_16" description="puff time stamp 16" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_17" description="puff time stamp 17" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_18" description="puff time stamp 18" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_19" description="puff time stamp 19" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_20" description="puff time stamp 20" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_21" description="puff time stamp 21" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_22" description="puff time stamp 22" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_23" description="puff time stamp 23" size="8" min="0" max="255" default="0"/>
+                <field type="uinteger" name="puff_time_stamp_24" description="puff time stamp 24" size="8" min="0" max="255" default="0"/>
+            </response>
+            <response_detailed_error>
+                <enumerator name="no_data_available" description="no data available">1</enumerator>
+            </response_detailed_error>
+        </read>
+    </frame>
+    <frame parameter="0x8C" name="haptic_profile" description="The host sends this message to set/retrieve the haptic profile in the device." implementation="optional">
+        <read>
+            <request/>
+            <response>
+                <field type="enumerate" name="haptic_profile" description="The haptic profile field gives the type of selected profile." size="8" default="0">
+                    <enumerator name="haptic_feedback_profile_off" description="haptic feedback profile off">0</enumerator>
+                    <enumerator name="legacy_haptic_feedback_profile_on" description="legacy haptic feedback profile on">3</enumerator>
+                    <enumerator name="virbator_always_activated_during_communication_with_scp_manager_for_MT_only" description="virbator always activated during communication with scp manager for MT only">8</enumerator>
+                    <enumerator name="virbator_always_activated_during_communication_with_scp_manager" description="virbator always activated during communication with scp manager">9</enumerator>
+                    <enumerator name="programmable_haptic_profile_activated" description="programmable haptic profile activated">16</enumerator>
+                </field>
+                <field type="uinteger" name="warn_near_end_of_heat_haptic_delay" description="The warn near end of heat haptic delay field gives the vibration delay after the near end of heat puff detection warning in 1/10th seconds units." size="8" min="0" max="255" default="0"/>
+                <choice name="haptic_profile" discriminator="haptic_profile">
+                    <alt tag="8">
+                        <field type="uinteger" name="haptic_power_in_duty_cycle" description="haptic power in duty cycle" size="16" min="0" max="65535" default="0"/>
+                    </alt>
+                    <alt tag="16">
+                        <field type="enumerate" name="beginning_of_pre_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                        <field type="enumerate" name="end_of_pre_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                        <field type="enumerate" name="beginning_of_near_end_of_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                        <field type="enumerate" name="end_of_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                    </alt>
+                </choice>
+            </response>
+        </read>
+        <write>
+            <request>
+                <field type="enumerate" name="haptic_profile" description="The haptic profile field gives the type of selected profile." size="8" default="0">
+                    <enumerator name="haptic_feedback_profile_off" description="haptic feedback profile off">0</enumerator>
+                    <enumerator name="legacy_haptic_feedback_profile_on" description="legacy haptic feedback profile on">3</enumerator>
+                    <enumerator name="virbator_always_activated_during_communication_with_scp_manager_for_MT_only" description="virbator always activated during communication with scp manager for MT only">8</enumerator>
+                    <enumerator name="virbator_always_activated_during_communication_with_scp_manager" description="virbator always activated during communication with scp manager">9</enumerator>
+                    <enumerator name="programmable_haptic_profile_activated" description="programmable haptic profile activated">16</enumerator>
+                </field>
+                <field type="uinteger" name="warn_near_end_of_heat_haptic_delay" description="The warn near end of heat haptic delay field gives the vibration delay after the near end of heat puff detection warning in 1/10th seconds units." size="8" min="0" max="255" default="0"/>
+                <choice name="haptic_profile" discriminator="haptic_profile">
+                    <alt tag="8">
+                        <field type="uinteger" name="haptic_power_in_duty_cycle" description="haptic power in duty cycle" size="16" min="0" max="65535" default="0"/>
+                    </alt>
+                    <alt tag="16">
+                        <field type="enumerate" name="beginning_of_pre_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                        <field type="enumerate" name="end_of_pre_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                        <field type="enumerate" name="beginning_of_near_end_of_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                        <field type="enumerate" name="end_of_heating_phase_haptic_feedback" description="The haptic config field gives the type of selected haptic feedback, for each heating phase or event." size="4" default="0">
+                            <enumerator name="no_haptic_feedback" description="no haptic feedback">0</enumerator>
+                            <enumerator name="one_vibration_pulse_feedback" description="one vibration pulse feedback">1</enumerator>
+                            <enumerator name="two_vibration_pulses_feedback" description="two vibration pulses feedback">2</enumerator>
+                            <enumerator name="fade_vibration" description="fade vibration">3</enumerator>
+                        </field>
+                    </alt>
+                </choice>
+            </request>
+            <response/>
+        </write>
+    </frame>
+    <frame parameter="0x8D" name="battery_charging" description="The host sends this message to retrieve battery charging information or set the charging current limit." implementation="optional">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="charging_current" description="The charging current field gives the selected charging current limit in mA units." size="16" min="0" max="65535" default="0"/>
+                <field type="enumerate" name="mode" description="The mode field describes the charging mode used by the holder." size="1" default="0">
+                    <enumerator name="passive_charging" description="passive charging, the charger applies the CC/CV algorithm">0</enumerator>
+                    <enumerator name="active_charging" description="active charging, the charger supplies a fixed voltage, the holder applies the CC/CV algorithm.">1</enumerator>
+                </field>
+                <field type="uinteger" name="charging_voltage" description="The charging voltage field indicates the following voltage values in mV (with bit 0 implicitly set to 0)." size="15" min="0" max="32767" default="0"/>
+            </response>
+        </read>
+        <write>
+            <request>
+                <field type="uinteger" name="charging_current" description="The charging current limit field gives the charging current limit in mA units. This limit remains active until the next end of charging process or disconnection from the charger." size="16" min="0" max="65535" default="0"/>
+            </request>
+            <response/>
+        </write>
+    </frame>
+    <frame parameter="0x8E" name="extended_haptic_profile" description="The host sends this message to set/retrieve extended haptic profile in the device." implementation="optional">
+        <read>
+            <request>
+                <field type="enumerate" name="feature" description="feature" size="8" default="0">
+                    <enumerator name="holder_charger_done" description="holder charger done">0</enumerator>
+                </field>
+            </request>
+            <response>
+                <field type="enumerate" name="feature" description="feature" size="8" default="0">
+                    <enumerator name="holder_charger_done" description="holder charger done">0</enumerator>
+                </field>
+                <field type="uinteger" name="duration_1" description="The duration k field gives duration of phase k in 1/10 seconds unit." size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_1" description="The on/off field define the purpose of the duration k" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_2" description="duration 2" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_2" description="on off 2" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_3" description="duration 3" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_3" description="on off 3" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_4" description="duration 4" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_4" description="on off 4" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_5" description="duration 5" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_5" description="on off 5" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_6" description="duration 6" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_6" description="on off 6" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_7" description="duration 7" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_7" description="on off 7" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_8" description="duration 8" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_8" description="on off 8" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_9" description="duration 9" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_9" description="on off 9" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_10" description="duration 10" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_10" description="on off 10" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_11" description="duration 11" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_11" description="on off 11" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_12" description="duration 12" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_12" description="on off 12" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_13" description="duration 13" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_13" description="on off 13" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+            </response>
+        </read>
+        <write>
+            <request>
+                <field type="enumerate" name="feature" description="feature" size="8" default="0">
+                    <enumerator name="holder_charger_done" description="holder charger done">0</enumerator>
+                </field>
+                <field type="uinteger" name="duration_1" description="The duration k field gives duration of phase k in 1/10 seconds unit." size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_1" description="The on/off field define the purpose of the duration k" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_2" description="duration 2" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_2" description="on off 2" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_3" description="duration 3" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_3" description="on off 3" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_4" description="duration 4" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_4" description="on off 4" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_5" description="duration 5" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_5" description="on off 5" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_6" description="duration 6" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_6" description="on off 6" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_7" description="duration 7" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_7" description="on off 7" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_8" description="duration 8" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_8" description="on off 8" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_9" description="duration 9" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_9" description="on off 9" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_10" description="duration 10" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_10" description="on off 10" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_11" description="duration 11" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_11" description="on off 11" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_12" description="duration 12" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_12" description="on off 12" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_13" description="duration 13" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_13" description="on off 13" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+            </request>
+            <response/>
+        </write>
+    </frame>
+    <frame parameter="0x8F" name="instant_on_haptic_feedback" description="The host sends this message to set/retrieve the instant on haptic feedback in the device." implementation="optional">
+        <read>
+            <request/>
+            <response>
+                <field type="uinteger" name="duration_1" description="The duration k field gives duration of phase k in 1/10 seconds unit." size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_1" description="The on/off field define the purpose of the duration k" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_2" description="duration 2" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_2" description="on off 2" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_3" description="duration 3" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_3" description="on off 3" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_4" description="duration 4" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_4" description="on off 4" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_5" description="duration 5" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_5" description="on off 5" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_6" description="duration 6" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_6" description="on off 6" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_7" description="duration 7" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_7" description="on off 7" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_8" description="duration 8" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_8" description="on off 8" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_9" description="duration 9" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_9" description="on off 9" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_10" description="duration 10" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_10" description="on off 10" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_11" description="duration 11" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_11" description="on off 11" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_12" description="duration 12" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_12" description="on off 12" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_13" description="duration 13" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_13" description="on off 13" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+            </response>
+        </read>
+        <write>
+            <request>
+                <field type="uinteger" name="duration_1" description="The duration k field gives duration of phase k in 1/10 seconds unit." size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_1" description="The on/off field define the purpose of the duration k" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_2" description="duration 2" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_2" description="on off 2" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_3" description="duration 3" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_3" description="on off 3" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_4" description="duration 4" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_4" description="on off 4" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_5" description="duration 5" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_5" description="on off 5" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_6" description="duration 6" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_6" description="on off 6" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_7" description="duration 7" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_7" description="on off 7" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_8" description="duration 8" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_8" description="on off 8" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_9" description="duration 9" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_9" description="on off 9" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_10" description="duration 10" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_10" description="on off 10" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_11" description="duration 11" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_11" description="on off 11" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_12" description="duration 12" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_12" description="on off 12" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+                <field type="uinteger" name="duration_13" description="duration 13" size="7" min="0" max="127" default="0"/>
+                <field type="enumerate" name="on_off_13" description="on off 13" size="1" default="0">
+                    <enumerator name="off" description="off">0</enumerator>
+                    <enumerator name="on" description="on">1</enumerator>
+                </field>
+            </request>
+            <response/>
+        </write>
+    </frame>
+</protocol>
