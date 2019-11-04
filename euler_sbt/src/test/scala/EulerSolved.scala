@@ -15,7 +15,7 @@ class EulerSolved extends FlatSpec with Matchers {
       ((n + a) * n) + b
     }
 
-    def rangeFrom(a: Int, b: Int): Stream[Int] = a #:: rangeFrom(b, 1 + b)
+    def rangeFrom(a: Int, b: Int): LazyList[Int] = a #:: rangeFrom(b, 1 + b)
 
     def getprimesFrom(a: Int, b: Int): List[(Int, Int)] = {
       val r = rangeFrom(0, 1)
@@ -158,7 +158,7 @@ class EulerSolved extends FlatSpec with Matchers {
       doubleSquares.find(ds => {
         val index = premiers.indexOf(odc - ds)
         if (index > 0) {
-          println(odc + "-" + ds + "==" + premiers.apply(index))
+          println(odc.toString + "-" + ds + "==" + premiers.apply(index))
         }
         index > 0
       }).isEmpty
@@ -238,7 +238,7 @@ class EulerSolved extends FlatSpec with Matchers {
     var probableHead = possibleHead diff possibleLast
     println(probableHead)
 
-    var headCouples = probableHead.mkString("", "", "").combinations(2).map(_.permutations).flatten.toList
+    var headCouples = probableHead.mkString("", "", "").toSeq.combinations(2).map(_.toSeq.permutations).flatten.toList
     println(headCouples)
 
     var first = headCouples.map(c => {
@@ -287,7 +287,7 @@ class EulerSolved extends FlatSpec with Matchers {
         }
         println("probableHead " + probableHead)
         if (probableHead.length > 1) {
-          headCouples = probableHead.mkString("", "", "").combinations(2).map(_.permutations).flatten.toList
+          headCouples = probableHead.mkString("", "", "").toSeq.combinations(2).map(_.toSeq.permutations).flatten.toList
           println(headCouples)
 
           first = headCouples.map(c => {
@@ -574,20 +574,20 @@ class EulerSolved extends FlatSpec with Matchers {
 
     def lexleft(s: String): Int = {
       //println("        ", s, s.sliding(2).toList, s.sliding(2).toList.map(s2 => (s2, s2.last > s2.head)))
-      s.sliding(2).toList.count(s2 => {
+      s.toSeq.sliding(2).toList.count(s2 => {
         s2.last > s2.head
       })
     }
 
     def calcule1(m: Int, n: Int): BigInt = {
       val s = az.substring(0, m)
-      val scomb = s.combinations(n).toList
+      val scomb = s.toSeq.combinations(n).toList
       //println(scomb)
       val z1 = scomb.map(s2 => {
-        val sperm = s2.permutations.toList
+        val sperm = s2.toSeq.permutations.toList
         //println("  ", sperm)
         val z2 = BigInt(sperm.map(s3 => {
-          val z3 = lexleft(s3)
+          val z3 = lexleft(s3.toString)
           //println("    z3", s3, z3)
           z3
         }).count(_ == 1))
