@@ -57,7 +57,7 @@ class EulerPrime(val top: BigInt, val inc: Int) {
       case 100 => premiersForCompute = TreeSet(2, 3, 5, 7, 11)
       case 1000 => premiersForCompute = TreeSet(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)
       case 10000 => premiersForCompute = TreeSet(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101)
-      case _ => require(false, inc + " not allowed!")
+      case _ => require(false, inc.toString + " not allowed!")
     }
   }
 

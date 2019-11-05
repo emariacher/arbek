@@ -106,17 +106,17 @@ class EulerMain extends FlatSpec with Matchers {
 
     }*/
 
-    YesV(37, 151, 607) should be === true
-    YesV(71, 83, 97) should be === true
-    Yes(2, 5, 11) should be === true
-    Yes(2, 5, 13) should be === false
-    Yes(31, 47, 71) should be === true
-    Yes(31, 53, 71) should be === false
-    Yes(2, 6, 11) should be === false
-    Yes(5, 2, 11) should be === false
-    Yes2(List(5, 2, 11)) should be === true
+    YesV(37, 151, 607) shouldEqual true
+    YesV(71, 83, 97) shouldEqual true
+    Yes(2, 5, 11) shouldEqual true
+    Yes(2, 5, 13) shouldEqual false
+    Yes(31, 47, 71) shouldEqual true
+    Yes(31, 53, 71) shouldEqual false
+    Yes(2, 6, 11) shouldEqual false
+    Yes(5, 2, 11) shouldEqual false
+    Yes2(List(5, 2, 11)) shouldEqual true
     println("********************************")
-    S(100) should be === 1035
+    S(100) shouldEqual 1035
     /*S2(100, 19) should be === 1035
     S(200) should be === S2(200, 43)
     T(100)
@@ -130,7 +130,7 @@ class EulerMain extends FlatSpec with Matchers {
 
     var result = 0
     println("Euler518[" + result + "]")
-    result should be === 0
+    result shouldEqual 0
 
   }
 }

@@ -77,9 +77,9 @@ object Euler {
     }
   }
 
-  def rangeStream(a: BigInt, b: BigInt): Stream[BigInt] = a #:: rangeStream(b, 1 + b)
+  def rangeStream(a: BigInt, b: BigInt): LazyList[BigInt] = a #:: rangeStream(b, 1 + b)
 
-  def stream_zero_a_linfini: Stream[BigInt] = rangeStream(0, 1)
+  def stream_zero_a_linfini: LazyList[BigInt] = rangeStream(0, 1)
 
   def factorielle(n: BigInt): BigInt = {
     /*n match {

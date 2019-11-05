@@ -33,9 +33,9 @@ class EulerDiv(bi: BigInt) {
     }
   })
   if (primes.isEmpty) {
-    require(bi < (premiers.last * premiers.last), bi + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
+    require(bi < (premiers.last * premiers.last), bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
   } else {
-    require(bic < (premiers.last * premiers.last), bic + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
+    require(bic < (premiers.last * premiers.last), bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
   }
 }
 

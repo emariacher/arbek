@@ -21,7 +21,7 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
       (bi, res.sum, sqrt, sqrt.toDouble / bi.toDouble, primes, sqrt - bi, div, res)
     }
 
-    sigma2(10) should be === 130
+    sigma2(10) shouldEqual 130
     val z = (2 to 200000).map(sigma2v(_)).toList
     val max = z.maxBy(_._2)
     val sqrtmax = BigDecimal(math.sqrt(max._2.toDouble)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
@@ -34,18 +34,19 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
     val sumlx = x.last._2
     val sqslx = BigDecimal(math.sqrt(sumlx.toDouble)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
     println(sumlx, sqslx)
-    sqslx * sqslx should be === sumlx
+    sqslx * sqslx shouldEqual sumlx
 
 
     var result = 0
     println("Euler211[" + result + "]")
-    result should be === 0
+    result shouldEqual 0
 
   }
 
   "Euler243" should "be OK" in {
     println("Euler243")
     val premiers = EulerPrime.premiers1000
+
     def resilience(d: Int) = {
       val primes = new EulerDiv(d).primes
       val divisors = new EulerDivisors(primes).divisors
@@ -57,11 +58,11 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
         }
       })
       val pgcd_primes = new EulerDiv(resil.length).primes intersect primes
-      println(d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)) + "\t" + primes + "\t" + new EulerDiv(resil.length).primes + "\t" + pgcd_primes)
+      println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)) + "\t" + primes + "\t" + new EulerDiv(resil.length).primes + "\t" + pgcd_primes)
       (resil.length, d - 1)
     }
 
-    resilience(12) should be ===(4, 11)
+    resilience(12) shouldEqual (4, 11)
     resilience(premiers.take(4).product.toInt)
     resilience(premiers.take(5).product.toInt)
     resilience(2 * premiers.take(5).product.toInt)
@@ -79,15 +80,16 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
 
     val result = 0
     println("Euler243[" + result + "]")
-    result should be === 0
+    result shouldEqual 0
   }
 
   "Euler500" should "be OK" in {
     println("Euler500")
     val premiers = EulerPrime.premiers1000
+
     def numdiv(d: BigInt) = {
       val divisors = new EulerDivisors(new EulerDiv(d)).divisors
-      println(d + "\t" + (divisors.length+2) + "\t" + ispowerof2(divisors.length+2) + "\t" + divisors)
+      println(""+d + "\t" + (divisors.length + 2) + "\t" + ispowerof2(divisors.length + 2) + "\t" + divisors)
     }
 
     def ispowerof2(d: BigInt) = {
@@ -106,22 +108,22 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
     numdiv(64)
     numdiv(96)
     numdiv(120)
-    numdiv(120*2)
-    numdiv(120*3)
-    numdiv(120*5)
-    numdiv(120*2*3)
-    numdiv(120*7)
-    numdiv(120*11)
-    numdiv(120*5*2)
-    numdiv(120*5*3)
-    numdiv(120*5*7)
-    numdiv(120*7*2)
-    numdiv(120*7*3)
-    numdiv(120*7*11)
+    numdiv(120 * 2)
+    numdiv(120 * 3)
+    numdiv(120 * 5)
+    numdiv(120 * 2 * 3)
+    numdiv(120 * 7)
+    numdiv(120 * 11)
+    numdiv(120 * 5 * 2)
+    numdiv(120 * 5 * 3)
+    numdiv(120 * 5 * 7)
+    numdiv(120 * 7 * 2)
+    numdiv(120 * 7 * 3)
+    numdiv(120 * 7 * 11)
 
     val result = 0
     println("Euler500[" + result + "]")
-    result should be === 0
+    result shouldEqual 0
   }
 
   "Euler451" should "be OK" in {
@@ -178,9 +180,9 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
     println(doZeJob(100))
     println(doZeJob(7))
 
-    doZeJob(15)._2 should be === 11
-    doZeJob(100)._2 should be === 51
-    doZeJob(7)._2 should be === 1
+    doZeJob(15)._2 shouldEqual 11
+    doZeJob(100)._2 shouldEqual 51
+    doZeJob(7)._2 shouldEqual 1
     val prems100000 = EulerPrime.premiers100000.tail
     val prems10000 = EulerPrime.premiers10000.tail
     val prems1000 = EulerPrime.premiers1000.tail
@@ -195,11 +197,11 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
     val z2 = (3 to limit).toList.map(doZeJob2(_))
     val t_la2 = timeStamp(t_la, "la2!")
     var z3 = (3 to limit).toList.filter(!primesx2.contains(_)).map(doZeJob2(_)).map(_._2).sum + primesx2.takeWhile(_ <= limit).toList.length
-    z2.map(_._2).sum should be === z3
+    z2.map(_._2).sum shouldEqual z3
     val t_la3 = timeStamp(t_la2, "la3!")
     if (powerlimit < 11) {
       val z = (3 to limit).toList.map(doZeJob(_))
-      z2.map(u => (u._1, u._2)) should be === z.map(u => (u._1, u._2))
+      z2.map(u => (u._1, u._2)) shouldEqual z.map(u => (u._1, u._2))
       println(z.mkString("\n  ", "\n  ", "\n  "))
       println(z.filter(u => pow2.contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
       println(z.filter(u => pow2.map(_ * 3).contains(u._1)).mkString("\n  ", "\n  ", "\n  "))
@@ -239,13 +241,13 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
         c.last._3.toDouble / c.head._3.toDouble,
         c.last._4.toDouble / c.head._4.toDouble)
     }).mkString("\n  ", "\n  ", "\n  "))
-    r.last._3 should be === z3
+    r.last._3 shouldEqual z3
 
 
     println(EulerPrime.premiers1000.take(20))
     var result = 0
     println("Euler451[" + result + "]")
-    result should be === 0
+    result shouldEqual 0
 
   }
 
