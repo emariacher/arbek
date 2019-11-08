@@ -43,7 +43,7 @@ public class CitationLatine {
 
             System.out.print("cipher:  ");
             for (int i = 0; i < cipher.length; i++)
-                System.out.print(new Integer(cipher[i]) + " ");
+                System.out.print(Integer.valueOf(cipher[i]) + " ");
             System.out.println("");
 
             // Encode using basic encoder
