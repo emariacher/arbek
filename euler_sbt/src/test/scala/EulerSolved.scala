@@ -393,7 +393,7 @@ class EulerSolved extends FlatSpec with Matchers {
   "Euler100" should "be OK" in {
     println("Euler100")
 
-    /*val limit: BigInt = powl(10, 13)
+    val limit: BigInt = powl(10, 13)
 
     def is50pourcent(total: Double): (Boolean, String) = {
       val totcar = math.pow(total - 0.5, 2)
@@ -525,7 +525,7 @@ class EulerSolved extends FlatSpec with Matchers {
     bi = 120
     var inc: BigInt = 4
     var prev: List[BigInt] = List(3, 7)
-    while (bi < powl(10, 10)) {
+    /*while (bi < powl(10, 10)) {
       val z = is50pourcent3(bi.toDouble, prev)
       if (z._1) {
         bi = z._3
@@ -534,7 +534,7 @@ class EulerSolved extends FlatSpec with Matchers {
         println(bi, inc)
       }
       bi += inc
-    }
+    }*/
     val t_la3 = timeStamp(t_la2, "la3! ******************************")
 
     bi = 137904
@@ -563,7 +563,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
     val result = blueInt
     println("Euler100[" + blueInt + "]")
-    result.toString() shouldEqual "756872327473"*/
+    result.toString() shouldEqual "756872327473"
   }
 
   "Euler158" should "be OK" in {
