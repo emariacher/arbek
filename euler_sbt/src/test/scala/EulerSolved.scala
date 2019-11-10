@@ -538,9 +538,9 @@ class EulerSolved extends FlatSpec with Matchers {
     }*/
     val t_la3 = timeStamp(t_la2, "la3! ******************************")
 
-    bi = 137904
+    bi = 120
     inc = 4
-    prev = List(3, 3, 11, 239)
+    prev = List(3, 7)
     var blueInt: BigInt = 0
     var found = false
     while (bi < limit && !found) {
