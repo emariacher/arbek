@@ -483,7 +483,8 @@ class EulerSolved extends FlatSpec with Matchers {
           val totprim = new EulerDiv(totalInt).primes
           val totprim1 = new EulerDiv(totalInt - 1).primes
           println("________________", totprim.contains(2))
-          println(statInt, (totalInt, blueInt, stat, totprim, totprim1))
+          println(statInt, (totalInt, blueInt, stat, totprim, totprim1),
+            new EulerDiv(blueInt).primes, new EulerDiv(blueInt - 1).primes, total / prev.product.toDouble)
           (true, whichInc4(totprim1, prev), totalInt - 1, totprim)
         } else {
           (false, 0, 0, List.empty[BigInt])
@@ -551,7 +552,7 @@ class EulerSolved extends FlatSpec with Matchers {
         println(bi, inc)
         if (bi > powl(10, 12)) {
           found = true
-          val totcar = math.pow((bi.toDouble+1) - 0.5, 2)
+          val totcar = math.pow((bi.toDouble + 1) - 0.5, 2)
           val totsqrt = math.sqrt(totcar / 2)
           val blue = math.ceil(totsqrt)
           blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
