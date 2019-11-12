@@ -393,7 +393,7 @@ class EulerSolved extends FlatSpec with Matchers {
   "Euler100" should "be OK" in {
     println("Euler100")
 
-    val limit: BigInt = powl(10, 13)
+    val limit: Double = Math.pow(10, 13)
 
     def is50pourcent(total: Double): (Boolean, String) = {
       val totcar = math.pow(total - 0.5, 2)
@@ -449,7 +449,7 @@ class EulerSolved extends FlatSpec with Matchers {
       nextinc
     }
 
-    def is50pourcent5(total: Double, prev: List[BigInt]): (Boolean, BigInt, BigInt, List[BigInt], Double) = {
+    def is50pourcent5(total: Double, prev: List[BigInt]): (Boolean, BigInt, BigInt, List[BigInt], Double, Double) = {
       val totcar = math.pow(total - 0.5, 2)
       val totsqrt = math.sqrt(totcar / 2)
       val blue = math.ceil(totsqrt)
@@ -464,12 +464,13 @@ class EulerSolved extends FlatSpec with Matchers {
           println("________________", totprim.contains(2))
           println(statInt, (totalInt, blueInt, stat, totprim, totprim1),
             new EulerDiv(blueInt).primes, new EulerDiv(blueInt - 1).primes, total / prev.product.toDouble)
-          (true, whichInc4(totprim1, prev), totalInt - 1, totprim, total / prev.product.toDouble)
+          (true, whichInc4(totprim1, prev), totalInt - 1, totprim,
+            total / prev.product.toDouble, whichInc4(totprim1, prev).toDouble * total.toDouble / prev.product.toDouble)
         } else {
-          (false, 0, 0, List.empty[BigInt], 0)
+          (false, 0, 0, List.empty[BigInt], 0, 0)
         }
       } else {
-        (false, 0, 0, List.empty[BigInt], 0)
+        (false, 0, 0, List.empty[BigInt], 0, 0)
       }
     }
 
@@ -503,21 +504,26 @@ class EulerSolved extends FlatSpec with Matchers {
       bi += inc
     }
     val t_la4 = timeStamp(t_la3, "la4! ******************************")
+    bi = 120
+    inc = 4
+    prev = List(3, 7)
     blueInt = 0
     found = false
-    while (bi < limit && !found) {
+    while (bi.toDouble < limit && !found) {
       val z = is50pourcent5(bi.toDouble, prev)
       if (z._1) {
         bi = z._3
         inc = z._2
         prev = z._4
         println(bi, inc)
-        if (bi > powl(10, 12)) {
+        if (bi.toDouble > Math.pow(10, 12)) {
           found = true
           val totcar = math.pow((bi.toDouble + 1) - 0.5, 2)
           val totsqrt = math.sqrt(totcar / 2)
           val blue = math.ceil(totsqrt)
           blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+        } else {
+          println(bi.toDouble, ">", Math.pow(10, 12), bi.toDouble > Math.pow(10, 12))
         }
       }
       bi += inc
