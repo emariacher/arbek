@@ -449,7 +449,7 @@ class EulerSolved extends FlatSpec with Matchers {
       nextinc
     }
 
-    def is50pourcent5(total: Double, prev: List[BigInt]): (Boolean, BigInt, BigInt, List[BigInt], Double, Double) = {
+    def is50pourcent5(total: Double, prev: List[BigInt]): (Boolean, BigInt, BigInt, List[BigInt], Double, BigInt) = {
       val totcar = math.pow(total - 0.5, 2)
       val totsqrt = math.sqrt(totcar / 2)
       val blue = math.ceil(totsqrt)
@@ -467,7 +467,8 @@ class EulerSolved extends FlatSpec with Matchers {
             new EulerDiv(blueInt).primes, new EulerDiv(blueInt - 1).primes, ratio, total * ratio)
           println("next: ",
             BigDecimal(total * ratio).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt)
-          (true, whichInc4(totprim1, prev), totalInt - 1, totprim, ratio, total * ratio)
+          (true, whichInc4(totprim1, prev), totalInt - 1, totprim, ratio,
+            BigDecimal(total * ratio).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt)
         } else {
           (false, 0, 0, List.empty[BigInt], 0, 0)
         }
@@ -510,6 +511,7 @@ class EulerSolved extends FlatSpec with Matchers {
     inc = 4
     prev = List(3, 7)
     blueInt = 0
+    var next: BigInt = 686
     found = false
     while (bi.toDouble < limit && !found) {
       val z = is50pourcent5(bi.toDouble, prev)
@@ -517,6 +519,7 @@ class EulerSolved extends FlatSpec with Matchers {
         bi = z._3
         inc = z._2
         prev = z._4
+        next = z._6
         println(bi, inc)
         if (bi.toDouble > Math.pow(10, 12)) {
           found = true
@@ -525,8 +528,9 @@ class EulerSolved extends FlatSpec with Matchers {
           val blue = math.ceil(totsqrt)
           blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
         }
+        bi = next
       }
-      bi += inc
+      bi += 1
     }
     val t_la5 = timeStamp(t_la4, "la5! ******************************")
 
