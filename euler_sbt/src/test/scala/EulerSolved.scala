@@ -411,29 +411,6 @@ class EulerSolved extends FlatSpec with Matchers {
       }
     }
 
-    def is50pourcent4(total: Double, prev: List[BigInt]): (Boolean, BigInt, BigInt, List[BigInt]) = {
-      val totcar = math.pow(total - 0.5, 2)
-      val totsqrt = math.sqrt(totcar / 2)
-      val blue = math.ceil(totsqrt)
-      val stat = (blue / total) * ((blue - 1) / (total - 1))
-      if (math.abs(stat - 0.5) < 0.0000000000001) {
-        val totalInt = BigDecimal(total).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-        val blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-        val statInt = (blueInt * (blueInt - 1)) * 2 == (totalInt * (totalInt - 1))
-        if (statInt) {
-          val totprim = new EulerDiv(totalInt).primes
-          val totprim1 = new EulerDiv(totalInt - 1).primes
-          println("________________", totprim.contains(2))
-          println(statInt, (totalInt, blueInt, stat, totprim, totprim1),
-            new EulerDiv(blueInt).primes, new EulerDiv(blueInt - 1).primes, total / prev.product.toDouble)
-          (true, whichInc4(totprim1, prev), totalInt - 1, totprim)
-        } else {
-          (false, 0, 0, List.empty[BigInt])
-        }
-      } else {
-        (false, 0, 0, List.empty[BigInt])
-      }
-    }
 
     def whichInc4(ll1: List[BigInt], ll2: List[BigInt]) = {
       val ll3 = ll1.filter(bi => !ll2.contains(bi))
@@ -479,7 +456,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
 
     val t_ici = timeStamp(t_start, "ici!")
-    val z1 = (1 to 100000).map(b => is50pourcent(b.toDouble)).filter(_._1)
+    val z1 = (1 to 25000).map(b => is50pourcent(b.toDouble)).filter(_._1)
     println(z1.mkString("\n  ", "\n  ", "\n  "))
     val t_la = timeStamp(t_ici, "la!")
 
@@ -489,24 +466,7 @@ class EulerSolved extends FlatSpec with Matchers {
     val t_la3 = timeStamp(t_ici, "la3! ******************************")
     var blueInt: BigInt = 0
     var found = false
-    while (bi.toDouble < Math.pow(10, 7) && !found) {
-      val z = is50pourcent4(bi.toDouble, prev)
-      if (z._1) {
-        bi = z._3
-        inc = z._2
-        prev = z._4
-        println(bi, inc, Math.pow(10, 7), bi.toDouble < Math.pow(10, 7))
-        if (bi.toDouble > Math.pow(10, 12)) {
-          found = true
-          val totcar = math.pow((bi.toDouble + 1) - 0.5, 2)
-          val totsqrt = math.sqrt(totcar / 2)
-          val blue = math.ceil(totsqrt)
-          blueInt = BigDecimal(blue).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-        }
-      }
-      bi += inc
-    }
-    val t_la4 = timeStamp(t_la3, "la4! ******************************")
+   val t_la4 = timeStamp(t_la3, "la4! ******************************")
     bi = 120
     inc = 4
     prev = List(3, 7)
@@ -520,7 +480,6 @@ class EulerSolved extends FlatSpec with Matchers {
         inc = z._2
         prev = z._4
         next = z._6
-        println(bi, inc)
         if (bi.toDouble > Math.pow(10, 12)) {
           found = true
           val totcar = math.pow((bi.toDouble + 1) - 0.5, 2)
