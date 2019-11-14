@@ -5,6 +5,7 @@ import scala.collection.immutable.{Range, ListSet}
 import scala.math.BigInt
 
 class EulerSolved extends FlatSpec with Matchers {
+
   "Euler27" should "be OK" in {
     println("Euler27")
 
@@ -602,74 +603,49 @@ class EulerSolved extends FlatSpec with Matchers {
 
     //println(z1.mkString("\n  ", "\n  ", "\n  "), z1.length)
 
-    var zstart = timeStamp(t_ici, "zstart")
-    var cpt = 1
-    var bi: BigInt = 15
+    var zstart = timeStamp(t_ici, "stream")
+    var cpt = 0
+    var bi: BigInt = 1
     var prevnumdiv = 2
 
     /*while (bi < limit) {
       var cptprimes = new EulerDivisors(new EulerDiv(bi).primes).divisors.length
 
       if (cptprimes == prevnumdiv) {
-        //println(bi - 1, bi, cptprimes)
+        //println("---", bi - 1, bi, cptprimes)
         cpt += 1
       }
-      //println( bi, cptprimes)
+      //println(bi, cptprimes)
       prevnumdiv = cptprimes
       bi += 1
     }
     timeStamp(zstart, "zend")
     cpt shouldEqual z1.length*/
 
-    zstart = timeStamp(t_ici, "zstart2")
+    zstart = timeStamp(t_ici, "increment")
     cpt = 1
-    bi = 15
+    bi = 1
     prevnumdiv = 2
 
-    /*while (bi < limit) {
-      if(EulerPrime.isPrime(bi)) {
-        bi +=1
+    while (bi < limit) {
+      if (EulerPrime.isPrime(bi)) {
+        bi += 1
         prevnumdiv = 0
       } else {
         var cptprimes = new EulerDivisors(new EulerDiv(bi).primes).divisors.length
-
         if (cptprimes == prevnumdiv) {
-          //println(bi - 1, bi, cptprimes)
+          //println(cpt, bi - 1, bi, cptprimes)
           cpt += 1
         }
         prevnumdiv = cptprimes
         bi += 1
       }
     }
-    timeStamp(zstart, "zend2")
-    cpt shouldEqual z1.length*/
-
-    zstart = timeStamp(t_ici, "zstart3")
-    cpt = 1
-    bi = 15
-    prevnumdiv = 2
-
-    /*while (bi < limit) {
-      if(EulerPrime.isPrime(bi)) {
-        bi +=1
-        prevnumdiv = 0
-      } else {
-        var cptprimes = new EulerDivisors(new EulerDiv(bi).primes).divisors.length
-
-        if (cptprimes == prevnumdiv) {
-          //println(bi - 1, bi, cptprimes)
-          cpt += 1
-        }
-        prevnumdiv = cptprimes
-        bi += 1
-      }
-    }*/
-    timeStamp(zstart, "zend3")
+    timeStamp(zstart, "jumpoverprime")
     //cpt shouldEqual z1.length
 
 
-    // result = cpt
-    val result = 986262
+    val result = cpt
     println("Euler179[" + cpt + "]")
     result shouldEqual 986262
   }
@@ -904,4 +880,6 @@ class EulerSolved extends FlatSpec with Matchers {
     result._1 shouldEqual 1918080160*/
 
   }
+
+
 }
