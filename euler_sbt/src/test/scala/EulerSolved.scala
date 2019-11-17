@@ -694,6 +694,15 @@ class EulerSolved extends FlatSpec with Matchers {
 
     def genere(ls: List[String]): List[String] = ls.map(s => List(s + "L", s + "A", s + "O").filter(good(_))).flatten
 
+    def getNumbers(L0: List[String]) = {
+      val L0gAA = L0.groupBy(_.indexOf("AA")).toList.map(u => (u._1, u._2.length, u._2))
+      val nL0d = L0gAA.head._2
+      val nL0f = L0gAA.sortBy(_._1).last._2
+      val nL0a = L0.length - (nL0d + nL0f) // le nombre de strings avec 0 Late et pas AA à la fin ou au début
+      (nL0d + nL0f + nL0a) shouldEqual L0.length
+      (L0gAA, (nL0d, nL0f, nL0a))
+    }
+
     def doZeJob2(e: Int) = {
       val ls = (0 until Math.pow(3, e).toInt).map(i => {
         var s = ""
@@ -708,28 +717,20 @@ class EulerSolved extends FlatSpec with Matchers {
       })
       val z = ls.filter(good(_))
       val L0 = z.filter(countL(_) == 0)
-      //val L0gAA = L0.map(s => (s, s.indexOf("AA"))).groupBy(_._2).toList.map(u => (u._1, u._2.length, u._2))
-      val L0gAA = L0.groupBy(_.indexOf("AA")).toList.map(u => (u._1, u._2.length, u._2))
-      val nL0d = L0gAA.head._2
-      val nL0f = L0gAA.sortBy(_._1).last._2
-      val nL0a = L0.length - (nL0d + nL0f) // le nombre de strings avec 0 Late et pas AA à la fin ou au début
       val L1 = z.filter(countL(_) == 1)
-      val L1gAA = L1.groupBy(_.indexOf("AA")).toList.map(u => (u._1, u._2.length, u._2))
-      (nL0d + nL0f + nL0a) shouldEqual L0.length
       (L0.length + L1.length) shouldEqual z.length
 
       println(e, ls.length, z.length, z.take(5))
 
-      (z.length, z, L0gAA, (nL0d, nL0f, nL0a), L1gAA)
+      (z.length, z, getNumbers(L0.toList), getNumbers(L1.toList))
     }
 
     println("\n****doZeJob2****")
     val d2zj3 = doZeJob2(3)
     val d2zj4 = doZeJob2(4)
     println(d2zj4._2)
-    println(d2zj4._4)
-    println(d2zj4._3.mkString("\n  ", "\n  ", "\n  "))
-    println(d2zj4._5.mkString("\n  ", "\n  ", "\n  "))
+    println(d2zj4._3._2, d2zj4._3._1.mkString("\n  ", "\n  ", "\n  "))
+    println(d2zj4._4._2, d2zj4._4._1.mkString("\n  ", "\n  ", "\n  "))
     d2zj4._1 shouldEqual 43
 
 
