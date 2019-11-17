@@ -694,7 +694,8 @@ class EulerSolved extends FlatSpec with Matchers {
 
     def genere(ls: List[String]): List[String] = ls.map(s => List(s + "L", s + "A", s + "O").filter(good(_))).flatten
 
-    def getNumbers(L0: List[String]) = {
+    //: (List[(Int,Int, List[String])],(Int,Int,Int))
+    def getNumbers(L0: List[String]): (List[(Int, Int, List[String])], (Int, Int, Int)) = {
       val L0gAA = L0.groupBy(_.indexOf("AA")).toList.map(u => (u._1, u._2.length, u._2))
       val nL0d = L0gAA.head._2
       val nL0f = L0gAA.sortBy(_._1).last._2
@@ -703,7 +704,9 @@ class EulerSolved extends FlatSpec with Matchers {
       (L0gAA, (nL0d, nL0f, nL0a))
     }
 
-    def doZeJob2(e: Int) = {
+    //: (Int,Int,Int,(List[String],(Int,Int,Int)),(List[String],(Int,Int,Int)))
+
+    def doZeJob2(e: Int, verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])], (Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int))) = {
       val ls = (0 until Math.pow(3, e).toInt).map(i => {
         var s = ""
         var j = i
@@ -720,35 +723,44 @@ class EulerSolved extends FlatSpec with Matchers {
       val L1 = z.filter(countL(_) == 1)
       (L0.length + L1.length) shouldEqual z.length
 
-      println(e, ls.length, z.length, z.take(5))
+      val gn0 = getNumbers(L0.toList)
+      val gn1 = getNumbers(L1.toList)
+      verbose match {
+        case 1 => println(e, ls.length, z.length)
+        case 2 => println(e, ls.length, z.length, gn0._2, gn1._2)
+        case 3 => println(e, ls.length, z.length, gn0._2, gn1._2)
+          println(gn0._2, gn0._1.mkString("\n  ", "\n  ", "\n  "))
+          println(gn1._2, gn1._1.mkString("\n  ", "\n  ", "\n  "))
+      }
 
-      (z.length, z, getNumbers(L0.toList), getNumbers(L1.toList))
+      (e, ls.length, z.length, gn0, gn1)
     }
 
     println("\n****doZeJob2****")
-    val d2zj3 = doZeJob2(3)
-    val d2zj4 = doZeJob2(4)
-    println(d2zj4._2)
-    println(d2zj4._3._2, d2zj4._3._1.mkString("\n  ", "\n  ", "\n  "))
-    println(d2zj4._4._2, d2zj4._4._1.mkString("\n  ", "\n  ", "\n  "))
-    d2zj4._1 shouldEqual 43
+    var verbose = 2
+    val d2zj4 = doZeJob2(4, verbose)
+    d2zj4._3 shouldEqual 43
+    val l2 = (3 until 12).map(doZeJob2(_, verbose))
 
+    println("\n****doZeJob3****")
 
-    var prevL1 = 0
+    var lr = List(doZeJob2(3, verbose), doZeJob2(4, verbose), doZeJob2(5, verbose))
 
-    def doZeJob3(e: Int): (BigInt, BigInt, BigInt, List[(BigInt, Int)]) = {
-      var ls = List("")
-      while (ls.head.length < e) {
-        ls = genere(ls)
-      }
-      val L0 = ls.filter(countL(_) == 0)
-      val L1 = ls.filter(countL(_) == 1)
-      val L1C = (0 to e).map(i => {
-        (BigInt(L1.count(_.indexOf('L') == i)), i)
-      })
-      println("doZeJob3[" + e + "]", ls.length, L0.length, L1.length, L1C)
-      (BigInt(ls.length), BigInt(L0.length), BigInt(L1.length), L1C.toList)
+    def doZeJob3(e: Int,
+                 verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])], (Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int))) = {
+      val d2zj = doZeJob2(e, verbose)
+      val nL0d = 0
+      val nL0f = lr.dropRight(1).last._4._2._2 + lr.last._4._2._2
+      val nL0a = 0
+      val nL1d = lr.dropRight(2).last._3
+      val nL1f = 0
+      val nL1a = 0
+      println("    ", nL0d, nL0f, nL0a, nL1d, nL1f, nL1a,"\n************\n")
+      lr = lr :+ d2zj
+      d2zj
     }
+
+    (6 until 9).map(doZeJob3(_, verbose))
 
     var result = 1918080160
     println("Euler191[" + result + "]")
