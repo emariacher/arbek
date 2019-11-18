@@ -758,19 +758,19 @@ class EulerSolved extends FlatSpec with Matchers {
       (Int, Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int, Int))) = {
       val d2zj = doZeJob2(e, verbose)
       val nL0df = if (e > 4) 1 else 0
-      val nL0d = 0
-      val nL0f = lr.dropRight(1).last._4._2._2 + lr.last._4._2._2
+      val nL0d = lr.dropRight(2).last._4._2._2 + lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + 2
+      val nL0f = nL0d
       val nL0a = 0
       val nL1df = if (e > 4) 1 else 0
-      val nL1d = lr.dropRight(2).last._3
-      val nL1f = 0
+      val nL1d = lr.dropRight(2).last._3 - 1
+      val nL1f = nL1d
       val nL1a = 0
       println("    ", nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a, "\n************\n")
       lr = lr :+ d2zj
       d2zj
     }
 
-    (6 until 9).map(doZeJob3(_, verbose))
+    (6 until 13).map(doZeJob3(_, verbose))
 
     var result = 1918080160
     println("Euler191[" + result + "]")
