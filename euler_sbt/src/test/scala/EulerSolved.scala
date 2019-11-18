@@ -695,18 +695,26 @@ class EulerSolved extends FlatSpec with Matchers {
     def genere(ls: List[String]): List[String] = ls.map(s => List(s + "L", s + "A", s + "O").filter(good(_))).flatten
 
     //: (List[(Int,Int, List[String])],(Int,Int,Int))
-    def getNumbers(L0: List[String]): (List[(Int, Int, List[String])], (Int, Int, Int)) = {
+    def getNumbers(L0: List[String]): (List[(Int, Int, List[String])], (Int, Int, Int, Int)) = {
       val L0gAA = L0.groupBy(_.indexOf("AA")).toList.map(u => (u._1, u._2.length, u._2))
-      val nL0d = L0gAA.head._2
-      val nL0f = L0gAA.sortBy(_._1).last._2
-      val nL0a = L0.length - (nL0d + nL0f) // le nombre de strings avec 0 Late et pas AA à la fin ou au début
-      (nL0d + nL0f + nL0a) shouldEqual L0.length
-      (L0gAA, (nL0d, nL0f, nL0a))
+      var nL0d = L0gAA.head._2
+      var nL0df = 0
+      var nL0f = L0.groupBy(_.reverse.indexOf("AA")).toList.map(u => (u._1, u._2.length, u._2)).head._2
+      if (L0.head.length > 4) {
+        nL0d -= 1
+        nL0f -= 1
+        nL0df = 1
+      }
+      val nL0a = L0.length - (nL0d + nL0f + nL0df) // le nombre de strings avec 0 Late et pas AA à la fin ou au début
+      (nL0df + nL0d + nL0f + nL0a) shouldEqual L0.length
+      nL0d shouldEqual nL0f
+      (L0gAA, (nL0df, nL0d, nL0f, nL0a))
     }
 
     //: (Int,Int,Int,(List[String],(Int,Int,Int)),(List[String],(Int,Int,Int)))
 
-    def doZeJob2(e: Int, verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])], (Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int))) = {
+    def doZeJob2(e: Int, verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])],
+      (Int, Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int, Int))) = {
       val ls = (0 until Math.pow(3, e).toInt).map(i => {
         var s = ""
         var j = i
@@ -746,16 +754,18 @@ class EulerSolved extends FlatSpec with Matchers {
 
     var lr = List(doZeJob2(3, verbose), doZeJob2(4, verbose), doZeJob2(5, verbose))
 
-    def doZeJob3(e: Int,
-                 verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])], (Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int))) = {
+    def doZeJob3(e: Int, verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])],
+      (Int, Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int, Int))) = {
       val d2zj = doZeJob2(e, verbose)
+      val nL0df = if (e > 4) 1 else 0
       val nL0d = 0
       val nL0f = lr.dropRight(1).last._4._2._2 + lr.last._4._2._2
       val nL0a = 0
+      val nL1df = if (e > 4) 1 else 0
       val nL1d = lr.dropRight(2).last._3
       val nL1f = 0
       val nL1a = 0
-      println("    ", nL0d, nL0f, nL0a, nL1d, nL1f, nL1a,"\n************\n")
+      println("    ", nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a, "\n************\n")
       lr = lr :+ d2zj
       d2zj
     }
