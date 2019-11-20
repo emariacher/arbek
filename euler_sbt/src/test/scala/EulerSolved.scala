@@ -764,13 +764,13 @@ class EulerSolved extends FlatSpec with Matchers {
       val nL1df = if (e > 4) 1 else 0
       val nL1d = lr.dropRight(2).last._3 - 1
       val nL1f = nL1d
-      val nL1a = 0
-      println("    ", nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a, "\n************\n")
+      val nL1a = if (e > 9) (lr.dropRight(4).last._3 + lr.dropRight(3).last._3 + lr.last._3) else 0
+      println("    ", nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a, "_ " + (d2zj._5._2._4 - nL1a), "\n")
       lr = lr :+ d2zj
       d2zj
     }
 
-    (6 until 13).map(doZeJob3(_, verbose))
+    (6 until 14).map(doZeJob3(_, verbose))
 
     var result = 1918080160
     println("Euler191[" + result + "]")
