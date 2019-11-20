@@ -760,7 +760,7 @@ class EulerSolved extends FlatSpec with Matchers {
       val nL0df = if (e > 4) 1 else 0
       val nL0d = lr.dropRight(2).last._4._2._2 + lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + 2
       val nL0f = nL0d
-      val nL0a = 0
+      val nL0a = lr.dropRight(2).last._4._2._4 + lr.dropRight(1).last._4._2._4 + lr.last._4._2._4 - 2
       val nL1df = if (e > 4) 1 else 0
       val nL1d = lr.dropRight(2).last._3 - 1
       val nL1f = nL1d
