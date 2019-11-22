@@ -754,21 +754,21 @@ class EulerSolved extends FlatSpec with Matchers {
 
     var lr = List(doZeJob2(3, verbose), doZeJob2(4, verbose), doZeJob2(5, verbose))
 
-    def doZeJob3(e: Int, verbose: Int = 0): BigInt = {
+    def doZeJob3(e: Int, verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])],
+      (Int, Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int, Int))) = {
       val d2zj = doZeJob2(e, verbose)
-      val nL0df: BigInt = if (e > 4) 1 else 0
-      val nL0d: BigInt = lr.dropRight(2).last._4._2._2 + lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + 2
-      val nL0f: BigInt = nL0d
-      val nL0a: BigInt = lr.dropRight(2).last._4._2._4 + lr.dropRight(1).last._4._2._4 + lr.last._4._2._4 - 2
-      val nL1df: BigInt = if (e > 4) 1 else 0
-      val nL1d: BigInt = lr.dropRight(2).last._3 - 1
-      val nL1f: BigInt = nL1d
-      val nL1a: BigInt = if (e > 9) (lr.dropRight(4).last._3 + lr.dropRight(3).last._3 + lr.last._3 +
-        (lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + nL0d + 4)) else 0
-      val result = List(nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a)
-      println("    ", e, result.sum, result, "\n")
+      val nL0df = if (e > 4) 1 else 0
+      val nL0d = lr.dropRight(2).last._4._2._2 + lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + 2
+      val nL0f = nL0d
+      val nL0a = lr.dropRight(2).last._4._2._4 + lr.dropRight(1).last._4._2._4 + lr.last._4._2._4 - 2
+      val nL1df = if (e > 4) 1 else 0
+      val nL1d = lr.dropRight(2).last._3 - 1
+      val nL1f = nL1d
+      val nL1a = if (e > 9) (lr.dropRight(4).last._3 + lr.dropRight(3).last._3 + lr.last._3 +
+        (lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + d2zj._4._2._2 + 4)) else 0
+      println("    ", nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a, "\n")
       lr = lr :+ d2zj
-      result.sum
+      d2zj
     }
 
     (6 until 14).map(doZeJob3(_, verbose))
