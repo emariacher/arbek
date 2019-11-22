@@ -732,19 +732,19 @@ class EulerSolved extends FlatSpec with Matchers {
 
       val gn0 = getNumbers(L0.toList)._2
       val gn1 = getNumbers(L1.toList)._2
-      val result = List(gn0._1, gn0._2, gn0._3, gn0._4, gn1._1, gn1._2, gn1._3, gn1._4)
       verbose match {
-        case 1 => println(e, result, result.sum)
-        case 2 => println(e, result, result.sum, gn0, gn1)
-        case 3 => println(e, result, result.sum, gn0, gn1)
+        case 1 => println(e, ls.length, z.length)
+        case 2 => println(e, ls.length, z.length, gn0._2, gn1._2)
+        case 3 => println(e, ls.length, z.length, gn0._2, gn1._2)
           println(gn0)
           println(gn1)
       }
-      result.map(BigInt(_))
+
+      List(gn0._1, gn0._2, gn0._3, gn0._4, gn1._1, gn1._2, gn1._3, gn1._4)
     }
 
     println("\n****doZeJob2****")
-    var verbose = 1
+    var verbose = 2
     val d2zj4 = doZeJob2(4, verbose)
     d2zj4.sum shouldEqual 43
     val l2 = (3 until 12).map(doZeJob2(_, verbose))
@@ -754,25 +754,23 @@ class EulerSolved extends FlatSpec with Matchers {
     var lr = List(doZeJob2(3, verbose), doZeJob2(4, verbose), doZeJob2(5, verbose))
 
     def doZeJob3(e: Int, verbose: Int = 0): List[BigInt] = {
-      if (e < 13) {
-        doZeJob2(e, verbose)
-      }
+      val d2zj = doZeJob2(e, verbose)
       val nL0df: BigInt = if (e > 4) 1 else 0
-      val nL0d: BigInt = lr.dropRight(2).last.apply(2) + lr.dropRight(1).last.apply(2) + lr.last.apply(2)
+      val nL0d: BigInt = lr.dropRight(2).last.apply(2) + lr.dropRight(1).last.apply(2) + lr.last.apply(2) + 2
       val nL0f: BigInt = nL0d
-      val nL0a: BigInt = lr.dropRight(2).last.apply(4) + lr.dropRight(1).last.apply(4) + lr.last.apply(4)
+      val nL0a: BigInt = lr.dropRight(2).last.apply(4) + lr.dropRight(1).last.apply(4) + lr.last.apply(4) - 2
       val nL1df: BigInt = if (e > 4) 1 else 0
       val nL1d: BigInt = lr.dropRight(2).last.sum - 1
       val nL1f: BigInt = nL1d
       val nL1a: BigInt = if (e > 9) (lr.dropRight(4).last.sum + lr.dropRight(3).last.sum + lr.last.sum +
-        (lr.dropRight(1).last.apply(2) + lr.last.apply(2) + nL0d + 4)) else 0
+        (lr.dropRight(1).last.apply(2) + lr.last.apply(2) + d2zj.apply(2) + 4)) else 0
       val result = List(nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a)
-      println("    ", e, result.sum, result, "\n")
-      lr = lr :+ result
-      result
+      println("    ", result.sum, result, "\n")
+      lr = lr :+ d2zj
+      d2zj
     }
 
-    (6 until 16).map(doZeJob3(_, verbose))
+    (6 until 14).map(doZeJob3(_, verbose))
 
     var result = 1918080160
     println("Euler191[" + result + "]")
