@@ -713,7 +713,7 @@ class EulerSolved extends FlatSpec with Matchers {
 
     //: (Int,Int,Int,(List[String],(Int,Int,Int)),(List[String],(Int,Int,Int)))
 
-    def doZeJob2(e: Int, verbose: Int = 0): (Int, Int, (List[(Int, Int, List[String])],
+    def doZeJob2(e: Int, verbose: Int = 0): (Int, Int, Int, (List[(Int, Int, List[String])],
       (Int, Int, Int, Int)), (List[(Int, Int, List[String])], (Int, Int, Int, Int))) = {
       val ls = (0 until Math.pow(3, e).toInt).map(i => {
         var s = ""
@@ -741,13 +741,13 @@ class EulerSolved extends FlatSpec with Matchers {
           println(gn1._2, gn1._1.mkString("\n  ", "\n  ", "\n  "))
       }
 
-      (e, z.length, gn0, gn1)
+      (e, ls.length, z.length, gn0, gn1)
     }
 
     println("\n****doZeJob2****")
     var verbose = 2
     val d2zj4 = doZeJob2(4, verbose)
-    d2zj4._2 shouldEqual 43
+    d2zj4._3 shouldEqual 43
     val l2 = (3 until 12).map(doZeJob2(_, verbose))
 
     println("\n****doZeJob3****")
@@ -757,14 +757,14 @@ class EulerSolved extends FlatSpec with Matchers {
     def doZeJob3(e: Int, verbose: Int = 0): BigInt = {
       val d2zj = doZeJob2(e, verbose)
       val nL0df: BigInt = if (e > 4) 1 else 0
-      val nL0d: BigInt = lr.dropRight(2).last._3._2._2 + lr.dropRight(1).last._3._2._2 + lr.last._3._2._2 + 2
+      val nL0d: BigInt = lr.dropRight(2).last._4._2._2 + lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + 2
       val nL0f: BigInt = nL0d
-      val nL0a: BigInt = lr.dropRight(2).last._3._2._4 + lr.dropRight(1).last._3._2._4 + lr.last._3._2._4 - 2
+      val nL0a: BigInt = lr.dropRight(2).last._4._2._4 + lr.dropRight(1).last._4._2._4 + lr.last._4._2._4 - 2
       val nL1df: BigInt = if (e > 4) 1 else 0
-      val nL1d: BigInt = lr.dropRight(2).last._2 - 1
+      val nL1d: BigInt = lr.dropRight(2).last._3 - 1
       val nL1f: BigInt = nL1d
-      val nL1a: BigInt = if (e > 9) (lr.dropRight(4).last._2 + lr.dropRight(3).last._2 + lr.last._2 +
-        (lr.dropRight(1).last._3._2._2 + lr.last._3._2._2 + nL0d + 4)) else 0
+      val nL1a: BigInt = if (e > 9) (lr.dropRight(4).last._3 + lr.dropRight(3).last._3 + lr.last._3 +
+        (lr.dropRight(1).last._4._2._2 + lr.last._4._2._2 + nL0d + 4)) else 0
       val result = List(nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a)
       println("    ", e, result.sum, result, "\n")
       lr = lr :+ d2zj
