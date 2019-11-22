@@ -752,7 +752,7 @@ class EulerSolved extends FlatSpec with Matchers {
     var lr = List(doZeJob2(3, verbose), doZeJob2(4, verbose), doZeJob2(5, verbose), doZeJob2(6, verbose), doZeJob2(7, verbose), doZeJob2(8, verbose), doZeJob2(9, verbose), doZeJob2(10, verbose))
 
     def doZeJob3(e: Int, verbose: Int = 0): BigInt = {
-      val z = doZeJob2(e, verbose)
+      if (e < 13) doZeJob2(e, verbose)
       val nL0df: BigInt = if (e > 4) 1 else 0
       val nL0d: BigInt = lr.dropRight(2).last._3._2 + lr.dropRight(1).last._3._2 + lr.last._3._2 + 2
       val nL0f: BigInt = nL0d
@@ -766,13 +766,12 @@ class EulerSolved extends FlatSpec with Matchers {
       val gn1 = (nL1df, nL1d, nL1f, nL1a)
       val result = List(nL0df, nL0d, nL0f, nL0a, nL1df, nL1d, nL1f, nL1a)
       println("    ", e, result.sum, gn0, gn1, "\n")
-      lr = lr :+ z
+      lr = lr :+ (e, result.sum, gn0, gn1)
       result.sum
     }
 
-    (11 until 14).map(doZeJob3(_, verbose))
 
-    var result = 1918080160
+    var result = (11 until 31).map(doZeJob3(_, verbose)).last
     println("Euler191[" + result + "]")
     result shouldEqual 1918080160
   }
