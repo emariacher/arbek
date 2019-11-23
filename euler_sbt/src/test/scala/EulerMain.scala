@@ -40,7 +40,7 @@ class EulerMain extends FlatSpec with Matchers {
       (z.flatten.sum, y)
     }
 
-    def T(a: BigInt, prems: List[BigInt]): List[BigInt] = {
+    def T(a: BigInt, n: Double, prems: List[BigInt]): List[BigInt] = {
       val t_iciS = timeStamp(t_start, "")
       val a1 = a.toDouble + 1.0
       val z = prems.filter(_ > a).filter(b => {
@@ -48,9 +48,19 @@ class EulerMain extends FlatSpec with Matchers {
         val ratio = b1 / a1
         val c: Double = (b1 * ratio) - 1.0
         //println(a, b, c, (c % 1 <= 0.00001))
-        (c % 1 <= 0.1)
+        if ((c % 1 <= 0.1) && (c < n)) {
+          (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt))
+        } else false
       })
       timeStamp(t_iciS, "la! T(" + a + ")")
+      z
+    }
+
+    def U(n: BigInt, prems: List[BigInt]): List[List[BigInt]] = {
+      val premsn: List[BigInt] = prems.takeWhile(_ < n)
+      val z: List[List[BigInt]] = premsn.map(a => {
+        T(a, n.toDouble, premsn)
+      })
       z
     }
 
@@ -75,11 +85,11 @@ class EulerMain extends FlatSpec with Matchers {
     S(1024)*/
     println("********************************")
     val prems: List[BigInt] = EulerPrime.premiers10000.toList
-    println(T(2, prems))
-    println(T(3, prems))
-    println(T(5, prems))
-    println(T(7, prems))
-    println(T(11, prems))
+    println(T(2, 1000, prems))
+    println(T(5, 1000, prems))
+    println(T(7, 1000, prems))
+    println(T(11, 1000, prems))
+    println(U(100, prems).mkString("\n", "\n", "\n"))
 
     var result = 0
     println("Euler518[" + result + "]")
