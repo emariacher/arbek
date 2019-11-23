@@ -30,10 +30,14 @@ class EulerMain extends FlatSpec with Matchers {
       //val t_iciS = timeStamp(t_start, "")
       val prems = EulerPrime.premiers10000.filter(_ < n).toList
       val z = prems.combinations(3).filter(Yes2(_)).toList
+      val lp = z.flatten.distinct.sorted
       val y = z.map(l => (l, div(l)))
-      println("S(" + n + ")", prems.length, z.length, z.flatten.sum, y.mkString("\n  ", " - ", "\n  "), z.map(_.sum).sorted)
+      println("S(" + n + ")", prems.length, z.length, z.flatten.sum,
+        /*lp, "\n  ",
+        prems.filter(p => !lp.contains(p)),*/
+        y.mkString("\n  ", " - ", "\n  "), z.map(_.sum).sorted)
       //val t_laS = timeStamp(t_iciS, "la! S(" + n + ")")
-      z.flatten.sum
+      (z.flatten.sum, y)
     }
 
     YesV(37, 151, 607) shouldEqual true
@@ -46,7 +50,7 @@ class EulerMain extends FlatSpec with Matchers {
     Yes(5, 2, 11) shouldEqual false
     Yes2(List(5, 2, 11)) shouldEqual true
     println("********************************")
-    S(100) shouldEqual 1035
+    S(100)._1 shouldEqual 1035
     println("********************************")
     S(16)
     S(32)
@@ -54,6 +58,7 @@ class EulerMain extends FlatSpec with Matchers {
     S(128)
     S(256)
     S(512)
+    S(1024)
 
     var result = 0
     println("Euler518[" + result + "]")
