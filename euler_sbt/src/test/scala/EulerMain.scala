@@ -30,17 +30,13 @@ class EulerMain extends FlatSpec with Matchers {
       //val t_iciS = timeStamp(t_start, "")
       val prems: List[BigInt] = EulerPrime.premiers10000.filter(_ < n).toList
       val z = prems.combinations(3).filter(Yes2(_)).toList
-      val lp = z.flatten.distinct.sorted
-      val y = z.map(l => (l, div(l))).groupBy(_._1.head).toList.sortBy(_._1)
+      val y = z.map(l => (l, div(l))).groupBy(_._1.head).toList.sortBy(_._1).map(q => (q._1, q._2.length, q._2))
       println("S(" + n + ")", prems.length, z.length, z.flatten.sum,
-        /*lp, "\n  ",
-        prems.filter(p => !lp.contains(p)),*/
         y.mkString("\n   ", "\n   ", "\n   "), z.map(_.sum).sorted)
-      //val t_laS = timeStamp(t_iciS, "la! S(" + n + ")")
       (z.flatten.sum, y)
     }
 
-    def T(a: BigInt, n: Double, prems: List[BigInt]): (BigInt, List[BigInt]) = {
+    def T(a: BigInt, n: Double, prems: List[BigInt]): (BigInt, BigInt, List[BigInt]) = {
       //val t_iciS = timeStamp(t_start, "")
       val a1 = a.toDouble + 1.0
       val z = prems.filter(_ > a).filter(b => {
@@ -54,20 +50,20 @@ class EulerMain extends FlatSpec with Matchers {
       })
       //timeStamp(t_iciS, "la! T(" + a + ")")
       //println(a, n, z)
-      (a, z)
+      (a, z.length, z)
     }
 
-    def U(n: BigInt, prems: List[BigInt]): List[(BigInt, List[BigInt])] = {
+    def U(n: BigInt, prems: List[BigInt]): List[(BigInt, BigInt, List[BigInt])] = {
       val premsn: List[BigInt] = prems.takeWhile(_ < n)
-      val z: List[(BigInt, List[BigInt])] = premsn.map(a => {
+      val z: List[(BigInt, BigInt, List[BigInt])] = premsn.map(a => {
         T(a, n.toDouble, premsn)
       })
-      z.filter(!_._2.isEmpty)
+      z.filter(!_._3.isEmpty)
     }
 
     def V(n: BigInt, prems: List[BigInt]): BigInt = {
       U(n, prems).map(z => {
-        z._2.map(y => {
+        z._3.map(y => {
           //println(z, y, ((y + 1) * (y + 1) / (z._1 + 1)) - 1, z._1 + y + ((y + 1) * (y + 1) / (z._1 + 1)) - 1)
           z._1 + y + ((y + 1) * (y + 1) / (z._1 + 1)) - 1
         }).sum
@@ -91,7 +87,7 @@ class EulerMain extends FlatSpec with Matchers {
     V(100, prems) shouldEqual 1035
     val i = 450
     println("\ni=" + i)
-    println(U(i, prems))
+    println(U(i, prems).mkString("\n   ", "\n   ", "\n   "))
     S(i)._1 shouldEqual V(i, prems)
 
     /*(1 until 1000).foreach(i => {
