@@ -40,29 +40,38 @@ class EulerMain extends FlatSpec with Matchers {
       (z.flatten.sum, y)
     }
 
-    def T(a: BigInt, n: Double, prems: List[BigInt]): List[BigInt] = {
+    def T(a: BigInt, n: Double, prems: List[BigInt]): (BigInt, List[BigInt]) = {
       //val t_iciS = timeStamp(t_start, "")
       val a1 = a.toDouble + 1.0
       val z = prems.filter(_ > a).filter(b => {
         val b1 = b.toDouble + 1.0
         val ratio = b1 / a1
         val c: Double = (b1 * ratio) - 1.0
-        if ((c % 1 <= 0.1) && (c < n)) {
-          println("    ", a, b, c)
-          (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt))
+        if ((c % 1 <= 0.00001) && (c < n)) {
+          //println("    ", a, b, c)
+          (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_DOWN).toBigInt))
         } else false
       })
       //timeStamp(t_iciS, "la! T(" + a + ")")
-      println(a, n, z)
-      z
+      //println(a, n, z)
+      (a, z)
     }
 
-    def U(n: BigInt, prems: List[BigInt]): List[List[BigInt]] = {
+    def U(n: BigInt, prems: List[BigInt]): List[(BigInt, List[BigInt])] = {
       val premsn: List[BigInt] = prems.takeWhile(_ < n)
-      val z: List[List[BigInt]] = premsn.map(a => {
+      val z: List[(BigInt, List[BigInt])] = premsn.map(a => {
         T(a, n.toDouble, premsn)
       })
-      z
+      z.filter(!_._2.isEmpty)
+    }
+
+    def V(n: BigInt, prems: List[BigInt]): BigInt = {
+      U(n, prems).map(z => {
+        z._2.map(y => {
+          //println(z, y, ((y + 1) * (y + 1) / (z._1 + 1)) - 1, z._1 + y + ((y + 1) * (y + 1) / (z._1 + 1)) - 1)
+          z._1 + y + ((y + 1) * (y + 1) / (z._1 + 1)) - 1
+        }).sum
+      }).sum
     }
 
     YesV(37, 151, 607) shouldEqual true
@@ -86,11 +95,8 @@ class EulerMain extends FlatSpec with Matchers {
     S(1024)*/
     println("********************************")
     val prems: List[BigInt] = EulerPrime.premiers10000.toList
-    println(T(2, 1000, prems))
-    println(T(5, 1000, prems))
-    println(T(7, 1000, prems))
-    println(T(11, 1000, prems))
-    println(U(100, prems).mkString("\n", "\n", "\n"))
+    println(U(100, prems))
+    V(100, prems) shouldEqual 1035
 
     var result = 0
     println("Euler518[" + result + "]")
