@@ -85,18 +85,20 @@ class EulerMain extends FlatSpec with Matchers {
     Yes2(List(5, 2, 11)) shouldEqual true
     println("********************************")
     S(100)._1 shouldEqual 1035
-    /*println("********************************")
-    S(16)
-    S(32)
-    S(64)
-    S(128)
-    S(256)
-    S(512)
-    S(1024)*/
     println("********************************")
     val prems: List[BigInt] = EulerPrime.premiers10000.toList
     println(U(100, prems))
     V(100, prems) shouldEqual 1035
+    val i = 450
+    println("\ni=" + i)
+    println(U(i, prems))
+    S(i)._1 shouldEqual V(i, prems)
+
+    /*(1 until 1000).foreach(i => {
+      println("i=" + i)
+      S(i)._1 shouldEqual V(i, prems)
+    })*/
+
 
     var result = 0
     println("Euler518[" + result + "]")
