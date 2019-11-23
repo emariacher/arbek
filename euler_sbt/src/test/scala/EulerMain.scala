@@ -41,18 +41,19 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     def T(a: BigInt, n: Double, prems: List[BigInt]): List[BigInt] = {
-      val t_iciS = timeStamp(t_start, "")
+      //val t_iciS = timeStamp(t_start, "")
       val a1 = a.toDouble + 1.0
       val z = prems.filter(_ > a).filter(b => {
         val b1 = b.toDouble + 1.0
         val ratio = b1 / a1
         val c: Double = (b1 * ratio) - 1.0
-        //println(a, b, c, (c % 1 <= 0.00001))
         if ((c % 1 <= 0.1) && (c < n)) {
+          println("    ", a, b, c)
           (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt))
         } else false
       })
-      timeStamp(t_iciS, "la! T(" + a + ")")
+      //timeStamp(t_iciS, "la! T(" + a + ")")
+      println(a, n, z)
       z
     }
 
