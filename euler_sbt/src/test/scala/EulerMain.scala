@@ -43,9 +43,14 @@ class EulerMain extends FlatSpec with Matchers {
         val b1 = b.toDouble + 1.0
         val ratio = b1 / a1
         val c: Double = (b1 * ratio) - 1.0
-        if ((c % 1 <= 0.00001) && (c < n)) {
-          //println("    ", a, b, c)
-          (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_DOWN).toBigInt))
+        if (c < n) {
+          if (c % 1 <= 0.00001) {
+            //println("    ", a, b, c)
+            (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_DOWN).toBigInt))
+          } else if (c % 1 >= 0.9999) {
+            //println("    ", a, b, c)
+            (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt))
+          } else false
         } else false
       })
       //timeStamp(t_iciS, "la! T(" + a + ")")
@@ -85,15 +90,10 @@ class EulerMain extends FlatSpec with Matchers {
     val prems: List[BigInt] = EulerPrime.premiers10000.toList
     println(U(100, prems))
     V(100, prems) shouldEqual 1035
-    val i = 450
-    println("\ni=" + i)
-    println(U(i, prems).mkString("\n   ", "\n   ", "\n   "))
-    S(i)._1 shouldEqual V(i, prems)
-
-    /*(1 until 1000).foreach(i => {
+    (1 until 1000).foreach(i => {
       println("i=" + i)
       S(i)._1 shouldEqual V(i, prems)
-    })*/
+    })
 
 
     var result = 0
