@@ -130,7 +130,7 @@ class EulerMain extends FlatSpec with Matchers {
     S(1000)._1 shouldEqual Y(1000, prems)
 
     val t_iciV = timeStamp(t_start, "")
-    val j = 2000
+    var j = 2000
     (1 until j).foreach(i => {
       V(i, prems)
     })
@@ -138,7 +138,12 @@ class EulerMain extends FlatSpec with Matchers {
     (1 until j).foreach(i => {
       Y(i, prems)
     })
-    val t_laY = timeStamp(t_iciV, "la! Y(" + j + ")")
+    val t_laY = timeStamp(t_iciY, "la! Y(" + j + ")")
+    j = 10000
+    V(j, prems)
+    val t_la10KV = timeStamp(t_laY, "la! V(" + j + ")")
+    Y(j, prems)
+    val t_la10KY = timeStamp(t_la10KV, "la! Y(" + j + ")")
 
     var result = 0
     println("Euler518[" + result + "]")
