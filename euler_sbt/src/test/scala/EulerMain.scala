@@ -77,12 +77,8 @@ class EulerMain extends FlatSpec with Matchers {
 
     def W(a: BigInt, n: Double, prems: List[BigInt]): (BigInt, BigInt, List[BigInt]) = {
       val a1 = a.toDouble + 1.0
-      val z = prems.dropWhile(_ <= a).takeWhile(b => {
-        val b1 = b.toDouble + 1.0
-        val ratio = b1 / a1
-        val c: Double = (b1 * ratio) - 1.0
-        (c < n)
-      }).filter(b => {
+      val limit = BigDecimal(math.sqrt(a1 * n)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      val z = prems.dropWhile(_ <= a).takeWhile(_ <= limit).filter(b => {
         val b1 = b.toDouble + 1.0
         val ratio = b1 / a1
         val c: Double = (b1 * ratio) - 1.0
@@ -129,6 +125,7 @@ class EulerMain extends FlatSpec with Matchers {
     println(U(100, prems))
     V(100, prems) shouldEqual 1035
     S(1000)._1 shouldEqual V(1000, prems)
+    S(1000)._1 shouldEqual Y(1000, prems)
 
     val t_iciV = timeStamp(t_start, "")
     val j = 2000
