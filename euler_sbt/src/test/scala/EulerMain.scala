@@ -156,15 +156,22 @@ class EulerMain extends FlatSpec with Matchers {
     j = 100000
     Y(j, prems)
     t_la = timeStamp(t_la, "la! Y(" + j + ")")
-    val w2 = W(2, j.toDouble, prems)._3
-    println(2, j, w2)
-    YesV(2, w2.last, ((w2.last + 1) * (w2.last + 1) / (2 + 1)) - 1) shouldEqual true
+    var i = 2
+    var w = W(i, j.toDouble, prems)._3
+    println(i, j, w)
+    YesV(i, w.last, ((w.last + 1) * (w.last + 1) / (i + 1)) - 1) shouldEqual true
+    println(i, j, BigDecimal(math.sqrt((i + 1) * j)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt)
 
     println(3, j, W(3, j.toDouble, prems)._3)
     println(5, j, W(5, j.toDouble, prems)._3)
     println(17, j, W(17, j.toDouble, prems)._3)
     println(19, j, W(19, j.toDouble, prems)._3)
-    println(47, j, W(47, j.toDouble, prems)._3)
+
+    i = 47
+    w = W(i, j.toDouble, prems)._3
+    println(i, j, w)
+    YesV(i, w.last, ((w.last + 1) * (w.last + 1) / (i + 1)) - 1) shouldEqual true
+    println(i, j, BigDecimal(math.sqrt((i + 1) * j)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt)
 
     var result = 0
     println("Euler518[" + result + "]")
