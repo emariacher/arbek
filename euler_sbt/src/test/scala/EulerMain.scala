@@ -75,6 +75,44 @@ class EulerMain extends FlatSpec with Matchers {
       }).sum
     }
 
+    def W(a: BigInt, n: Double, prems: List[BigInt]): (BigInt, BigInt, List[BigInt]) = {
+      val a1 = a.toDouble + 1.0
+      val z = prems.filter(_ > a).takeWhile(b => {
+        val b1 = b.toDouble + 1.0
+        val ratio = b1 / a1
+        val c: Double = (b1 * ratio) - 1.0
+        (c < n)
+      }).filter(b => {
+        val b1 = b.toDouble + 1.0
+        val ratio = b1 / a1
+        val c: Double = (b1 * ratio) - 1.0
+        if (c % 1 <= 0.00001) {
+          (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_DOWN).toBigInt))
+        } else if (c % 1 >= 0.9999) {
+          (prems.contains(BigDecimal(c).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt))
+        } else false
+      })
+      (a, z.length, z)
+    }
+
+    def X(n: BigInt, prems: List[BigInt]): List[(BigInt, BigInt, List[BigInt])] = {
+      val premsn: List[BigInt] = prems.takeWhile(_ < n)
+      val z: List[(BigInt, BigInt, List[BigInt])] = premsn.map(a => {
+        W(a, n.toDouble, premsn)
+      })
+      z.filter(!_._3.isEmpty)
+    }
+
+    def Y(n: BigInt, prems: List[BigInt]): BigInt = {
+      X(n, prems).map(z => {
+        z._3.map(y => {
+          //println(z, y, ((y + 1) * (y + 1) / (z._1 + 1)) - 1, z._1 + y + ((y + 1) * (y + 1) / (z._1 + 1)) - 1)
+          z._1 + y + ((y + 1) * (y + 1) / (z._1 + 1)) - 1
+        }).sum
+      }).sum
+    }
+
+
     YesV(37, 151, 607) shouldEqual true
     YesV(71, 83, 97) shouldEqual true
     Yes(2, 5, 11) shouldEqual true
@@ -90,11 +128,18 @@ class EulerMain extends FlatSpec with Matchers {
     val prems: List[BigInt] = EulerPrime.premiers10000.toList
     println(U(100, prems))
     V(100, prems) shouldEqual 1035
-    (1 until 1000).foreach(i => {
-      println("i=" + i)
-      S(i)._1 shouldEqual V(i, prems)
-    })
+    S(1000)._1 shouldEqual V(1000, prems)
 
+    val t_iciV = timeStamp(t_start, "")
+    val j = 2000
+    (1 until j).foreach(i => {
+      V(i, prems)
+    })
+    val t_iciY = timeStamp(t_iciV, "la! V(" + j + ")")
+    (1 until j).foreach(i => {
+      Y(i, prems)
+    })
+    val t_laY = timeStamp(t_iciV, "la! Y(" + j + ")")
 
     var result = 0
     println("Euler518[" + result + "]")
