@@ -123,7 +123,7 @@ class EulerMain extends FlatSpec with Matchers {
     println("********************************")
     S(100)._1 shouldEqual 1035
     println("********************************")
-    val prems: List[BigInt] = EulerPrime.premiers10000.toList
+    var prems: List[BigInt] = EulerPrime.premiers10000.toList
     println(U(100, prems))
     V(100, prems) shouldEqual 1035
     S(1000)._1 shouldEqual V(1000, prems)
@@ -141,9 +141,13 @@ class EulerMain extends FlatSpec with Matchers {
     val t_laY = timeStamp(t_iciY, "la! Y(" + j + ")")
     j = 10000
     V(j, prems)
-    val t_la10KV = timeStamp(t_laY, "la! V(" + j + ")")
+    var t_la = timeStamp(t_laY, "la! V(" + j + ")")
     Y(j, prems)
-    val t_la10KY = timeStamp(t_la10KV, "la! Y(" + j + ")")
+    t_la = timeStamp(t_la, "la! Y(" + j + ")")
+    j = 100000
+    prems = EulerPrime.premiers100000.toList
+    Y(j, prems)
+    t_la = timeStamp(t_la, "la! Y(" + j + ")")
 
     var result = 0
     println("Euler518[" + result + "]")
