@@ -77,7 +77,7 @@ class EulerMain extends FlatSpec with Matchers {
 
     def W(a: BigInt, n: Double, prems: List[BigInt]): (BigInt, BigInt, List[BigInt]) = {
       val a1 = a.toDouble + 1.0
-      val z = prems.filter(_ > a).takeWhile(b => {
+      val z = prems.dropWhile(_ <= a).takeWhile(b => {
         val b1 = b.toDouble + 1.0
         val ratio = b1 / a1
         val c: Double = (b1 * ratio) - 1.0
