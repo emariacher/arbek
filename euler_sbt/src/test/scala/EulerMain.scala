@@ -20,7 +20,8 @@ class EulerMain extends FlatSpec with Matchers {
 
     def YesV(a: BigInt, b: BigInt, c: BigInt) = {
       var r = EulerPrime.isPrime(a) && EulerPrime.isPrime(b) && EulerPrime.isPrime(c) && (b + 1).toDouble / (a + 1).toDouble == (c + 1).toDouble / (b + 1).toDouble
-      println("           ", (a, b, c), (a + 1, b + 1, c + 1), (b + 1).toDouble / (a + 1).toDouble, r)
+      println("   ", (a, b, c), (a + 1, b + 1, c + 1), (b + 1).toDouble / (a + 1).toDouble, r)
+      println("           ", ((new EulerDiv(a + 1)).primes, (new EulerDiv(b + 1)).primes, (new EulerDiv(c + 1)).primes))
       r
     }
 
@@ -45,6 +46,7 @@ class EulerMain extends FlatSpec with Matchers {
           println("   ", a, b.map(c => (c, c + 1, (new EulerDiv(c + 1)).primes)))
         })
       })
+      s
     }
 
 
@@ -125,6 +127,8 @@ class EulerMain extends FlatSpec with Matchers {
 
     YesV(37, 151, 607) shouldEqual true
     YesV(71, 83, 97) shouldEqual true
+    YesV(337, 389, 449) shouldEqual true
+    YesV(449, 509, 577) shouldEqual true
     Yes(2, 5, 11) shouldEqual true
     Yes(2, 5, 13) shouldEqual false
     Yes(31, 47, 71) shouldEqual true
@@ -135,12 +139,11 @@ class EulerMain extends FlatSpec with Matchers {
     println("********************************")
     S(100)._1 shouldEqual 1035
     println("********************************")
-    S2(1000)
+    var S1000 = S2(1000)
     println("********************************")
     var prems: List[BigInt] = EulerPrime.premiers10000.toList
     println(U(100, prems))
     V(100, prems) shouldEqual 1035
-    var S1000 = S(1000)
     S1000._1 shouldEqual V(1000, prems)
     S1000._1 shouldEqual Y(1000, prems)
 
