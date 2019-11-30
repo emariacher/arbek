@@ -39,13 +39,17 @@ class EulerMain extends FlatSpec with Matchers {
 
     def S2(n: Int) = {
       var s = S(n)
+      var lp: Set[BigInt] = Set()
       s._2.foreach(z => {
         println(z._1)
         z._3.foreach(a => {
           val b = a._1
-          println("   ", a, b.map(c => (c, c + 1, (new EulerDiv(c + 1)).primes)))
+          val d: List[(BigInt, BigInt, List[BigInt])] = b.map(c => (c, c + 1, (new EulerDiv(c + 1)).primes))
+          lp = lp ++ d.map(_._3).flatten
+          println("   ", a, d)
         })
       })
+      println(lp.toList.sorted)
       s
     }
 
@@ -129,6 +133,8 @@ class EulerMain extends FlatSpec with Matchers {
     YesV(71, 83, 97) shouldEqual true
     YesV(337, 389, 449) shouldEqual true
     YesV(449, 509, 577) shouldEqual true
+    YesV(2887, 2963, 3041) shouldEqual true
+    YesV(397, 1193, 3581) shouldEqual true
     Yes(2, 5, 11) shouldEqual true
     Yes(2, 5, 13) shouldEqual false
     Yes(31, 47, 71) shouldEqual true
@@ -191,6 +197,9 @@ class EulerMain extends FlatSpec with Matchers {
     YesV(i, w.last, ((w.last + 1) * (w.last + 1) / (i + 1)) - 1) shouldEqual true
     println(i, j, BigDecimal(math.sqrt((i + 1) * j)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt)
 
+    j = 4000
+    S2(j)
+    t_la = timeStamp(t_la, "la! Y(" + j + ")")
     var result = 0
     println("Euler518[" + result + "]")
     result shouldEqual 0
