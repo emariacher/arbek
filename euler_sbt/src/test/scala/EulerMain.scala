@@ -36,6 +36,18 @@ class EulerMain extends FlatSpec with Matchers {
       (z.flatten.sum, y)
     }
 
+    def S2(n: Int) = {
+      var s = S(n)
+      s._2.foreach(z => {
+        println(z._1)
+        z._3.foreach(a => {
+          val b = a._1
+          println("   ", a, b.map(c => (c, c + 1, (new EulerDiv(c + 1)).primes)))
+        })
+      })
+    }
+
+
     def T(a: BigInt, n: Double, prems: List[BigInt]): (BigInt, BigInt, List[BigInt]) = {
       //val t_iciS = timeStamp(t_start, "")
       val a1 = a.toDouble + 1.0
@@ -123,11 +135,14 @@ class EulerMain extends FlatSpec with Matchers {
     println("********************************")
     S(100)._1 shouldEqual 1035
     println("********************************")
+    S2(1000)
+    println("********************************")
     var prems: List[BigInt] = EulerPrime.premiers10000.toList
     println(U(100, prems))
     V(100, prems) shouldEqual 1035
-    S(1000)._1 shouldEqual V(1000, prems)
-    S(1000)._1 shouldEqual Y(1000, prems)
+    var S1000 = S(1000)
+    S1000._1 shouldEqual V(1000, prems)
+    S1000._1 shouldEqual Y(1000, prems)
 
     val t_iciV = timeStamp(t_start, "")
     var j = 2000
