@@ -77,9 +77,9 @@ object Euler {
     }
   }
 
-  def triangular(a: Int): List[BigInt] = {
-    var l = List[BigInt](1)
-    (2 to a).foreach(b => {
+  def triangular(a: BigInt): Seq[BigInt] = {
+    var l = List[BigInt](0)
+    (1 to a.toInt).foreach(b => {
       l = l :+ (b + l.last)
     })
     l
