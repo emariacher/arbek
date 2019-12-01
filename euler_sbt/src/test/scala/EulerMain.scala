@@ -13,13 +13,14 @@ class EulerMain extends FlatSpec with Matchers {
 
     def G1(a: BigInt): BigInt = {
       val t = t10.takeWhile(_ <= a)
-      val l1 = t.map(z => (z, 3 * z)).filter(_._2 == a)
-      val l2 = t.combinations(2).map(y => List(y :+ y.head, y :+ y.last)).flatten.map(z => (z, z.sum)).filter(_._2 == a)
-      val l3 = t.combinations(3).map(z => (z, z.sum)).filter(_._2 == a)
-      println(l1.toList)
-      println(l2.toList)
-      println(l3.toList)
-      BigInt(0)
+      val l1 = t.map(z => (z, 3 * z)).filter(_._2 == a).toList
+      val l2 = t.combinations(2).map(y => List(y :+ y.head, y :+ y.last)).flatten.map(z => (z, z.sum)).filter(_._2 == a).toList
+      val l3 = t.combinations(3).map(z => (z, z.sum)).filter(_._2 == a).toList
+      println(l1)
+      println(l2)
+      println(l3)
+      println(l1.size, l2.size, l3.size)
+      BigInt(l1.size + (l2.size * 3) + (l3.size * 6))
     }
 
     println(t10)
