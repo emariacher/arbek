@@ -77,6 +77,14 @@ object Euler {
     }
   }
 
+  def triangular(a: Int): List[BigInt] = {
+    var l = List[BigInt](1)
+    (2 to a).foreach(b => {
+      l = l :+ (b + l.last)
+    })
+    l
+  }
+
   def rangeStream(a: BigInt, b: BigInt): LazyList[BigInt] = a #:: rangeStream(b, 1 + b)
 
   def stream_zero_a_linfini: LazyList[BigInt] = rangeStream(0, 1)

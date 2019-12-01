@@ -9,7 +9,9 @@ import scala.math.BigInt
 class EulerMain extends FlatSpec with Matchers {
   "Euler621" should "be OK" in {
     println("Euler621")
-    
+
+    println(Euler.triangular(10))
+
     var result = 0
     println("Euler621[" + result + "]")
     result shouldEqual 0
