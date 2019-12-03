@@ -13,9 +13,9 @@ class EulerMain extends FlatSpec with Matchers {
 
     def G1(a: BigInt, verbose: Boolean = false): (BigInt, BigInt, (BigInt, BigInt, BigInt)) = {
       val t = tr.takeWhile(_ <= a)
-      val l1 = t.map(z => (z, 3 * z)).filter(_._2 == a).toList
-      val l2 = t.combinations(2).map(y => List(y :+ y.head, y :+ y.last)).flatten.map(z => (z, z.sum)).filter(_._2 == a).toList
-      val l3 = t.combinations(3).map(z => (z, z.sum)).filter(_._2 == a).toList
+      val l1 = t.filter(_ * 3 == a).toList
+      val l2 = t.combinations(2).map(y => List(y :+ y.head, y :+ y.last)).flatten.filter(_.sum == a).toList
+      val l3 = t.combinations(3).filter(_.sum == a).toList
       val result = BigInt(l1.size + (l2.size * 3) + (l3.size * 6))
       if (verbose) {
         println(a, result, " ", (l1.size, l2.size, l3.size), l1, l2, l3)
