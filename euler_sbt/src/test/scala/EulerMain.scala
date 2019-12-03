@@ -9,7 +9,7 @@ import scala.math.BigInt
 class EulerMain extends FlatSpec with Matchers {
   "Euler621" should "be OK" in {
     println("Euler621")
-    val tr = Euler.triangular(50)
+    val tr = Euler.triangular(200)
 
     def G1(a: BigInt, verbose: Boolean = false): (BigInt, BigInt, (BigInt, BigInt, BigInt)) = {
       val t = tr.takeWhile(_ <= a)
@@ -24,13 +24,17 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     println(tr)
+    println(tr.filter(_ % 10 == 0))
 
-    G1(7)
-    G1(9)._2 shouldEqual 7
-    G1(1000)._2 shouldEqual 78
+    G1(7, true)
+    G1(9, true)._2 shouldEqual 7
+    G1(10, true)._2
+    G1(100, true)._2
+    G1(1000, true)._2 shouldEqual 78
+    G1(10000, true)._2
     //G1(1000000)._4 shouldEqual 2106
 
-    val j = 1000
+    val j = 100
     val a = (1 to j).map(G1(_)).groupBy(_._3).toList.
       sortBy(b => (b._1._1 * j * j) + (b._1._2 * j) + b._1._3).map(b => (b._1, b._2.map(_._1)))
     println(a.mkString("\n"))
