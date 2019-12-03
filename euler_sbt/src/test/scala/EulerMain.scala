@@ -20,7 +20,7 @@ class EulerMain extends FlatSpec with Matchers {
       val result = BigInt(l1.size + (l2.size * 3) + (l3.size * 6))
       if (verbose) {
         println(a, result, " ", (l1.size, l2.size, l3.size), l1, l2, l3)
-        t_la = timeStamp(t_la, "fin "+ a)
+        t_la = timeStamp(t_la, "G1 fin "+ a)
       }
       (a, result, (l1.size, l2.size, l3.size))
     }
