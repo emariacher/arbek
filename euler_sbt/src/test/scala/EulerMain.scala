@@ -9,9 +9,10 @@ import scala.math.BigInt
 class EulerMain extends FlatSpec with Matchers {
   "Euler621" should "be OK" in {
     println("Euler621")
-    val tr = Euler.triangular(200)
+    val tr = Euler.triangular(500)
 
     def G1(a: BigInt, verbose: Boolean = false): (BigInt, BigInt, (BigInt, BigInt, BigInt)) = {
+      var t_la = Calendar.getInstance()
       val t = tr.takeWhile(_ <= a)
       val l1 = t.filter(_ * 3 == a).toList
       val l2 = t.combinations(2).map(y => List(y :+ y.head, y :+ y.last)).flatten.filter(_.sum == a).toList
@@ -19,6 +20,7 @@ class EulerMain extends FlatSpec with Matchers {
       val result = BigInt(l1.size + (l2.size * 3) + (l3.size * 6))
       if (verbose) {
         println(a, result, " ", (l1.size, l2.size, l3.size), l1, l2, l3)
+        t_la = timeStamp(t_la, "fin "+ a)
       }
       (a, result, (l1.size, l2.size, l3.size))
     }
@@ -31,7 +33,9 @@ class EulerMain extends FlatSpec with Matchers {
     G1(10, true)._2
     G1(100, true)._2
     G1(1000, true)._2 shouldEqual 78
-    G1(10000, true)._2
+    G1(10000, true)._2 shouldEqual 252
+    G1(100000, true)._2
+    2106 shouldEqual 3 * 3 * 3 * 78
     //G1(1000000)._4 shouldEqual 2106
 
     val j = 100
