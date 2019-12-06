@@ -21,6 +21,24 @@ class EulerMain extends FlatSpec with Matchers {
     binomial(5, 4) shouldEqual 5
     binomial(5, 5) shouldEqual 1
 
+    def B(n: BigInt): BigInt = {
+      (0 to n.toInt).map(binomial(n, _)).product
+    }
+
+    B(5) shouldEqual 2500
+
+    def D(n: BigInt): BigInt = {
+      ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sum
+    }
+
+    D(5) shouldEqual 5467
+
+    def S(n: BigInt): BigInt = {
+      (1 to n.toInt).map(D(_)).sum
+    }
+
+    S(5) shouldEqual 5736
+
     var result = 0
     println("Euler650[" + result + "]")
     result shouldEqual 0
