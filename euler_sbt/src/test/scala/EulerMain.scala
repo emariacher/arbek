@@ -40,6 +40,11 @@ class EulerMain extends FlatSpec with Matchers {
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
 
+    (1 to 5).foreach(i => {
+      val j = BigDecimal(math.pow(2, i)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      println(i, j, S(j))
+    })
+
     var result = 0
     println("Euler650[" + result + "]")
     result shouldEqual 0
