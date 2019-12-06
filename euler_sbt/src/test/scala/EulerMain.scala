@@ -38,6 +38,7 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     S(5) shouldEqual 5736
+    S(10) shouldEqual BigInt("141740594713218418")
 
     var result = 0
     println("Euler650[" + result + "]")
