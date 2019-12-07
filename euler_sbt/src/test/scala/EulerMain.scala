@@ -21,31 +21,63 @@ class EulerMain extends FlatSpec with Matchers {
     binomial(5, 4) shouldEqual 5
     binomial(5, 5) shouldEqual 1
 
-    def B(n: BigInt): BigInt = {
-      (0 to n.toInt).map(binomial(n, _)).product
+    def B(n: BigInt, verbose: Boolean = false): List[BigInt] = {
+      val r = (0 to n.toInt).map(binomial(n, _)).toList
+      if (verbose) {
+        println("B(" + n + "): " + r.product, r)
+      }
+      r
     }
 
-    B(5) shouldEqual 2500
+    def B2(n: BigInt, prevl: List[BigInt], verbose: Boolean = false): List[BigInt] = {
+      var r: List[BigInt] = List(BigInt(1))
+      r = r ++ prevl.sliding(2).map(_.sum) :+ BigInt(1)
+      if (verbose) {
+        println("B2(" + n + "): " + r)
+      }
+      r
+    }
 
-    def D(n: BigInt): List[BigInt] = {
-      println(n, new EulerDiv(n).primes)
-      println("    primbn[" + B(n) + "]", new EulerDiv(B(n)).primes.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
-      println("    divbn", ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sorted)
-      ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sorted
+    B(5, true).product shouldEqual 2500
+
+    var j = 5
+    var prevl = List(BigInt(1), BigInt(1))
+    (2 to j).foreach(n => {
+      prevl = B2(n, prevl, true)
+    })
+    B(j, true).product shouldEqual prevl.product
+
+    0 shouldEqual 1
+
+    def D(n: BigInt, verbose: Boolean = false): List[BigInt] = {
+      val r = ((new EulerDivisors(new EulerDiv(B(n).product).primes).divisors) :+ BigInt(1)).sorted
+      if (verbose) {
+        println("D(" + n + "): " + r.sum, new EulerDiv(n).primes)
+        println("    primbn[" + B(n) + "]", new EulerDiv(B(n).product).primes.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
+        println("    divbn", r)
+      }
+      r
     }
 
     D(5).sum shouldEqual 5467
 
     def S(n: BigInt): BigInt = {
       val r = (1 to n.toInt).map(D(_))
-      println("S(" + n + "): " + r.flatten.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
+      println("S(" + n + "): " + r.flatten.sum, r.flatten.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
       r.flatten.sum
     }
 
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
 
-    //S(13)
+    j = 15
+    val tr = Euler.triangular(j)
+
+    println(tr)
+
+    (1 to j).foreach(n => {
+      B(n, true)
+    })
 
     var result = 0
     println("Euler650[" + result + "]")
