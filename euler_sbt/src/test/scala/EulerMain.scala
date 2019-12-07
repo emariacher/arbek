@@ -28,22 +28,24 @@ class EulerMain extends FlatSpec with Matchers {
     B(5) shouldEqual 2500
 
     def D(n: BigInt): BigInt = {
+      println(n, new EulerDiv(n).primes)
+      println("    primbn", new EulerDiv(B(n)).primes.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
+      println("    divbn", ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sorted)
       ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sum
     }
 
     D(5) shouldEqual 5467
 
     def S(n: BigInt): BigInt = {
-      (1 to n.toInt).map(D(_)).sum
+      val r = (1 to n.toInt).map(D(_)).sum
+      println(r)
+      r
     }
 
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
 
-    (1 to 5).foreach(i => {
-      val j = BigDecimal(math.pow(2, i)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-      println(i, j, S(j))
-    })
+    //S(13)
 
     var result = 0
     println("Euler650[" + result + "]")
