@@ -50,22 +50,12 @@ class EulerMain extends FlatSpec with Matchers {
     def D(n: BigInt, bn: List[BigInt], verbose: Boolean = false): List[BigInt] = {
       val r = ((new EulerDivisors(new EulerDiv(bn.product).primes).divisors) :+ BigInt(1)).sorted
       if (verbose) {
-        println("D(" + n + "): " + r.sum, new EulerDiv(n).primes)
-        println("    primbn[" + B(n) + "]", new EulerDiv(bn.product).primes.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
-        println("    divbn", r)
+        println("D(" + n + "): " + r.sum, r)
       }
       r
     }
 
-    var r: BigInt = 1
-    prevl = List(BigInt(1), BigInt(1))
-    (2 to j).foreach(n => {
-      prevl = B2(n, prevl, true)
-      r += D(n, prevl, true).sum
-    })
-
     D(5, B(5)).sum shouldEqual 5467
-    r shouldEqual 5736
 
     def S(n: BigInt): BigInt = {
       val r = (1 to n.toInt).map(o => D(o, B(o)))
@@ -75,6 +65,18 @@ class EulerMain extends FlatSpec with Matchers {
 
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
+
+    var r: BigInt = 1
+    prevl = List(BigInt(1), BigInt(1))
+    (2 to j).foreach(n => {
+      prevl = B2(n, prevl, true)
+      r += D(n, prevl, true).sum
+      n match {
+        case 5 => r shouldEqual 5736
+        case 10 => r shouldEqual BigInt("141740594713218418")
+        case _ =>
+      }
+    })
 
     var result = 0
     println("Euler650[" + result + "]")
