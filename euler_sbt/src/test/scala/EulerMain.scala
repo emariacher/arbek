@@ -27,19 +27,19 @@ class EulerMain extends FlatSpec with Matchers {
 
     B(5) shouldEqual 2500
 
-    def D(n: BigInt): BigInt = {
+    def D(n: BigInt): List[BigInt] = {
       println(n, new EulerDiv(n).primes)
-      println("    primbn", new EulerDiv(B(n)).primes.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
+      println("    primbn[" + B(n) + "]", new EulerDiv(B(n)).primes.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
       println("    divbn", ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sorted)
-      ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sum
+      ((new EulerDivisors(new EulerDiv(B(n)).primes).divisors) :+ BigInt(1)).sorted
     }
 
-    D(5) shouldEqual 5467
+    D(5).sum shouldEqual 5467
 
     def S(n: BigInt): BigInt = {
-      val r = (1 to n.toInt).map(D(_)).sum
-      println(r)
-      r
+      val r = (1 to n.toInt).map(D(_))
+      println("S(" + n + "): " + r.flatten.groupBy(u => u).toList.map(y => (y._1, y._2.length)).sortBy(_._1))
+      r.flatten.sum
     }
 
     S(5) shouldEqual 5736
