@@ -57,12 +57,15 @@ class EulerMain extends FlatSpec with Matchers {
       r
     }
 
+    var r: BigInt = 1
     prevl = List(BigInt(1), BigInt(1))
     (2 to j).foreach(n => {
       prevl = B2(n, prevl, true)
+      r += D(n, prevl, true).sum
     })
 
     D(5, B(5)).sum shouldEqual 5467
+    r shouldEqual 5736
 
     def S(n: BigInt): BigInt = {
       val r = (1 to n.toInt).map(o => D(o, B(o)))
