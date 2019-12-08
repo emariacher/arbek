@@ -11,7 +11,7 @@ class EulerMain extends FlatSpec with Matchers {
     println("Euler650")
 
     // explore how modulo addition & multiplication work
-    def m(bi: BigInt, mod: BigInt = BigInt(1000000007)): BigInt = bi % mod
+    def m(bi: BigInt, mod: BigInt = BigInt(23)): BigInt = bi % mod
 
     val mod = 23
     (m(27, mod) + m(37, mod)) shouldEqual m(27 + 37, mod)
@@ -46,11 +46,23 @@ class EulerMain extends FlatSpec with Matchers {
       r
     }
 
+    def B3(n: BigInt, prevl: List[BigInt], verbose: Boolean = false): List[BigInt] = {
+      var r: List[BigInt] = List(BigInt(1))
+      r = r ++ prevl.take((prevl.length + 2) / 2).sliding(2).map(_.sum)
+      r = r ++ r.take((prevl.length + 1) / 2).reverse
+      if (verbose) {
+        println("B3(" + n + "): " + r)
+      }
+      r
+    }
+
     B(5, true).product shouldEqual 2500
 
     var j = 5
     var prevl = List(BigInt(1), BigInt(1))
     (2 to j).foreach(n => {
+      B3(n, prevl, true)
+      B2(n, prevl) shouldEqual (B3(n, prevl))
       prevl = B2(n, prevl, true)
     })
     B(j, true).product shouldEqual prevl.product
@@ -83,14 +95,15 @@ class EulerMain extends FlatSpec with Matchers {
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
 
+    val vb = 7
     j = 15
     var t_la = Calendar.getInstance()
     var r: BigInt = 1
     prevl = List(BigInt(1), BigInt(1))
     (2 to j).foreach(n => {
-      prevl = B2(n, prevl, n < 11)
-      r += D(n, prevl, n < 11).sum
-      timeStamp(t_la, "D & B2 " + j + " : " + n)
+      prevl = B2(n, prevl, n < vb)
+      r += D(n, prevl, n < vb).sum
+      timeStamp(t_la, "D & B2 " + j + " : " + n + " -> " + r)
       n match {
         case 5 => r shouldEqual 5736
         case 10 => r shouldEqual BigInt("141740594713218418")
@@ -101,16 +114,29 @@ class EulerMain extends FlatSpec with Matchers {
     r = 1
     prevl = List(BigInt(1), BigInt(1))
     (2 to j).foreach(n => {
-      prevl = B2(n, prevl, n < 11)
-      r += m(D3(n, prevl, n < 11).sum)
-      timeStamp(t_la, "D3 & B2 " + j + " : " + n)
+      prevl = B2(n, prevl, n < vb)
+      r += m(D3(n, prevl, n < vb).sum)
+      timeStamp(t_la, "D3 & B2 " + j + " : " + n + " -> " + m(r))
       n match {
-        case 5 => r shouldEqual 5736
+        case 5 => m(r) shouldEqual m(5736)
         case 10 => m(r) shouldEqual m(BigInt("141740594713218418"))
         case _ =>
       }
     })
     t_la = timeStamp(t_la, "D3 & B2 " + j)
+    r = 1
+    prevl = List(BigInt(1), BigInt(1))
+    (2 to j).foreach(n => {
+      prevl = B3(n, prevl, n < vb)
+      r += m(D3(n, prevl, n < vb).sum)
+      timeStamp(t_la, "D3 & B3 " + j + " : " + n + " -> " + m(r))
+      n match {
+        case 5 => m(r) shouldEqual m(5736)
+        case 10 => m(r) shouldEqual m(BigInt("141740594713218418"))
+        case _ =>
+      }
+    })
+    t_la = timeStamp(t_la, "D3 & B3 " + j)
 
     var result = 0
     println("Euler650[" + result + "]")
