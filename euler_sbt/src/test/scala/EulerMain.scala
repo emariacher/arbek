@@ -95,6 +95,25 @@ class EulerMain extends FlatSpec with Matchers {
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
 
+    def B4(n: BigInt, prevl: List[BigInt], verbose: Boolean = false): List[BigInt] = {
+      var r: List[BigInt] = List(BigInt(1))
+      r = r ++ prevl.take((prevl.length + 2) / 2).sliding(2).map(_.sum)
+      r = r ++ r.take((prevl.length + 1) / 2).reverse
+      if (verbose) {
+        println("B4(" + n + "): " + r)
+      }
+      r
+    }
+
+    def D4(n: BigInt, bn: List[BigInt], verbose: Boolean = false): List[BigInt] = {
+      val r = ((new EulerDivisors(bn.map(o => new EulerDiv(o).primes).flatten.map(m(_))).divisors.map(m(_))) :+ BigInt(1)).sorted
+      if (verbose) {
+        println("D4(" + n + "): " + r.sum, r)
+      }
+      r
+    }
+
+
     val vb = 7
     j = 15
     var t_la = Calendar.getInstance()
@@ -137,6 +156,19 @@ class EulerMain extends FlatSpec with Matchers {
       }
     })
     t_la = timeStamp(t_la, "D3 & B3 " + j)
+    r = 1
+    prevl = List(BigInt(1), BigInt(1))
+    (2 to j).foreach(n => {
+      prevl = B4(n, prevl, n < vb)
+      r += m(D4(n, prevl, n < vb).sum)
+      timeStamp(t_la, "D4 & B4 " + j + " : " + n + " -> " + m(r))
+      n match {
+        case 5 => m(r) shouldEqual m(5736)
+        case 10 => m(r) shouldEqual m(BigInt("141740594713218418"))
+        case _ =>
+      }
+    })
+    t_la = timeStamp(t_la, "D4 & B4 " + j)
 
     var result = 0
     println("Euler650[" + result + "]")
