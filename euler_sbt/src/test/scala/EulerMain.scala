@@ -95,18 +95,18 @@ class EulerMain extends FlatSpec with Matchers {
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
 
-    def B4(n: BigInt, prevl: List[BigInt], verbose: Boolean = false): List[BigInt] = {
+    def B4(n: BigInt, prevl: (List[BigInt], List[BigInt]), verbose: Boolean = false): (List[BigInt], List[BigInt]) = {
       var r: List[BigInt] = List(BigInt(1))
-      r = r ++ prevl.take((prevl.length + 2) / 2).sliding(2).map(_.sum)
-      r = r ++ r.take((prevl.length + 1) / 2).reverse
+      r = r ++ prevl._1.take((prevl._1.length + 2) / 2).sliding(2).map(_.sum)
+      r = r ++ r.take((prevl._1.length + 1) / 2).reverse
       if (verbose) {
         println("B4(" + n + "): " + r)
       }
-      r
+      (r, r)
     }
 
-    def D4(n: BigInt, bn: List[BigInt], verbose: Boolean = false): List[BigInt] = {
-      val r = ((new EulerDivisors(bn.map(o => new EulerDiv(o).primes).flatten.map(m(_))).divisors.map(m(_))) :+ BigInt(1)).sorted
+    def D4(n: BigInt, bn: (List[BigInt], List[BigInt]), verbose: Boolean = false): List[BigInt] = {
+      val r = ((new EulerDivisors(bn._1.map(o => new EulerDiv(o).primes).flatten.map(m(_))).divisors.map(m(_))) :+ BigInt(1)).sorted
       if (verbose) {
         println("D4(" + n + "): " + r.sum, r)
       }
@@ -157,10 +157,10 @@ class EulerMain extends FlatSpec with Matchers {
     })
     t_la = timeStamp(t_la, "D3 & B3 " + j)
     r = 1
-    prevl = List(BigInt(1), BigInt(1))
+    var prevl2 = (List(BigInt(1), BigInt(1)), List(BigInt(1), BigInt(1)))
     (2 to j).foreach(n => {
-      prevl = B4(n, prevl, n < vb)
-      r += m(D4(n, prevl, n < vb).sum)
+      prevl2 = B4(n, prevl2, n < vb)
+      r += m(D4(n, prevl2, n < vb).sum)
       timeStamp(t_la, "D4 & B4 " + j + " : " + n + " -> " + m(r))
       n match {
         case 5 => m(r) shouldEqual m(5736)
