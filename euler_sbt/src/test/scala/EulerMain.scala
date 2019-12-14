@@ -102,14 +102,19 @@ class EulerMain extends FlatSpec with Matchers {
       r = r ++ r.take((prevl._1.length + 1) / 2).reverse
       r2 = r.take((r.length + 2) / 2)
       if (verbose) {
-        println("B4(" + n + "): " + r)
+        println("B4(" + n + "): " + r, r.length)
         println("B4(" + n + "): " + r2, (n + 3) / 2, r2.length)
-        (n + 3) / 2 shouldEqual  r2.length
+        (n + 3) / 2 shouldEqual r2.length
       }
       (r, r2)
     }
 
     def D4(n: BigInt, bn: (List[BigInt], List[BigInt]), verbose: Boolean = false): List[BigInt] = {
+      val bn1 = bn._2.map(o => new EulerDiv(o).primes)
+      val bn2 = bn1 ++ bn1.take(n.toInt + 1 - ((n.toInt + 3) / 2)).reverse
+      println(bn._1.map(o => new EulerDiv(o).primes))
+      println(bn2)
+      bn2 shouldEqual bn._1.map(o => new EulerDiv(o).primes)
       val r = ((new EulerDivisors(bn._1.map(o => new EulerDiv(o).primes).flatten.map(m(_))).divisors.map(m(_))) :+ BigInt(1)).sorted
       if (verbose) {
         println("D4(" + n + "): " + r.sum, r)
