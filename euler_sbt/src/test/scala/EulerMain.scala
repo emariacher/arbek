@@ -98,11 +98,12 @@ class EulerMain extends FlatSpec with Matchers {
     def B4(n: BigInt, prevl: (List[BigInt], List[BigInt]), verbose: Boolean = false): (List[BigInt], List[BigInt]) = {
       var r: List[BigInt] = List(BigInt(1))
       var r2: List[BigInt] = List(BigInt(1))
-      r = r ++ prevl._1.take((prevl._1.length + 2) / 2).sliding(2).map(_.sum)
-      r = r ++ r.take((prevl._1.length + 1) / 2).reverse
+      //r = r ++ prevl._1.take((prevl._1.length + 2) / 2).sliding(2).map(_.sum)
+      r = r ++ prevl._2.sliding(2).map(_.sum)
+      r = r ++ r.take((n.toInt + 1) / 2).reverse
       r2 = r.take((r.length + 2) / 2)
       if (verbose) {
-        println("B4(" + n + "): " + r, r.length)
+        println("B4(" + n + "): " + r, r.length, prevl._1.length)
         println("B4(" + n + "): " + r2, (n + 3) / 2, r2.length)
         (n + 3) / 2 shouldEqual r2.length
       }
