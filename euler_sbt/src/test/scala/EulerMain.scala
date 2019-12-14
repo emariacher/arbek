@@ -103,7 +103,8 @@ class EulerMain extends FlatSpec with Matchers {
       r2 = r.take((r.length + 2) / 2)
       if (verbose) {
         println("B4(" + n + "): " + r)
-        println("B4(" + n + "): " + r2)
+        println("B4(" + n + "): " + r2, (n + 3) / 2, r2.length)
+        (n + 3) / 2 shouldEqual  r2.length
       }
       (r, r2)
     }
@@ -162,7 +163,7 @@ class EulerMain extends FlatSpec with Matchers {
     r = 1
     var prevl2 = (List(BigInt(1), BigInt(1)), List(BigInt(1), BigInt(1)))
     (2 to j).foreach(n => {
-      prevl2 = B4(n, prevl2, n < vb)
+      prevl2 = B4(n, prevl2, true)
       r += m(D4(n, prevl2, n < vb).sum)
       timeStamp(t_la, "D4 & B4 " + j + " : " + n + " -> " + m(r))
       n match {
