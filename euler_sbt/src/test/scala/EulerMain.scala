@@ -95,19 +95,18 @@ class EulerMain extends FlatSpec with Matchers {
     S(5) shouldEqual 5736
     S(10) shouldEqual BigInt("141740594713218418")
 
-    def B4(n: BigInt, prevl: (List[BigInt], List[BigInt]), verbose: Boolean = false): (List[BigInt], List[BigInt]) = {
+    def B4(n: BigInt, prevl: List[BigInt], verbose: Boolean = false): List[BigInt] = {
       var r: List[BigInt] = List(BigInt(1))
       var r2: List[BigInt] = List(BigInt(1))
       //r = r ++ prevl._1.take((prevl._1.length + 2) / 2).sliding(2).map(_.sum)
-      r = r ++ prevl._2.sliding(2).map(_.sum)
+      r = r ++ prevl.sliding(2).map(_.sum)
       r = r ++ r.take((n.toInt + 1) / 2).reverse
       r2 = r.take((n.toInt + 3) / 2)
       if (verbose) {
-        println("B4(" + n + "): " + r, r.length, prevl._1.length)
         println("B4(" + n + "): " + r2, (n + 3) / 2, r2.length)
         (n + 3) / 2 shouldEqual r2.length
       }
-      (r, r2)
+      r2
     }
 
     def D4(n: BigInt, bn: List[BigInt], verbose: Boolean = false): List[BigInt] = {
@@ -165,10 +164,10 @@ class EulerMain extends FlatSpec with Matchers {
     })
     t_la = timeStamp(t_la, "D3 & B3 " + j)
     r = 1
-    var prevl2 = (List(BigInt(1), BigInt(1)), List(BigInt(1), BigInt(1)))
+    prevl = List(BigInt(1), BigInt(1))
     (2 to j).foreach(n => {
-      prevl2 = B4(n, prevl2, true)
-      r += m(D4(n, prevl2._2, n < vb).sum)
+      prevl = B4(n, prevl, true)
+      r += m(D4(n, prevl, n < vb).sum)
       timeStamp(t_la, "D4 & B4 " + j + " : " + n + " -> " + m(r))
       n match {
         case 5 => m(r) shouldEqual m(5736)
