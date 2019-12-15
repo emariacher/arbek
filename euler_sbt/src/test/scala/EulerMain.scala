@@ -120,17 +120,25 @@ class EulerMain extends FlatSpec with Matchers {
     j = 15
     var t_la = Calendar.getInstance()
     var r: BigInt = 1
+    var lr = List[(BigInt, BigInt, List[BigInt])]().empty
     prevl = List(BigInt(1), BigInt(1))
     (2 to j).foreach(n => {
       prevl = B2(n, prevl, n < vb)
       r += D(n, prevl, n < vb).sum
-      timeStamp(t_la, "D & B2 " + j + " : " + n + " -> " + r)
+      timeStamp(t_la, "D & B2 " + j + " : " + n + " -> " + r + " [" + prevl.product + "]")
       n match {
         case 5 => r shouldEqual 5736
         case 10 => r shouldEqual BigInt("141740594713218418")
         case _ =>
       }
+      lr = lr :+ (n, prevl.product, new EulerDiv(prevl.product).primes)
     })
+    println(lr.mkString("\n", "\n", "\n"))
+    lr.tail.foreach(c => {
+      println("  ", c._1, c._2, c._1.pow((c._1 - 2).toInt), c._2 % c._1.pow((c._1 - 2).toInt))
+    })
+
+    0 shouldEqual 1
     t_la = timeStamp(t_la, "D & B2 " + j)
     r = 1
     prevl = List(BigInt(1), BigInt(1))
