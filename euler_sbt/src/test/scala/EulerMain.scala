@@ -27,7 +27,11 @@ class EulerMain extends FlatSpec with Matchers {
     streak(13, true) shouldEqual 4
     P(3, 14) shouldEqual 1
     P(6, 1000000) shouldEqual 14286
-    println((2 until 100).map(streak(_, true)).max)
+    println((2 until 100).map(streak(_)).max)
+    streak(61, true)
+    println((1 until 10).map(i => ("P(" + i + ",100)", P(i, 100))).mkString(", "))
+    println((1 until 15).map(i => ("P(2," + math.pow(2, i) + ")", P(2, math.pow(2, i).toInt))).mkString(", "))
+    println((1 until 15).map(i => ("P(3," + math.pow(3, i) + ")", P(3, math.pow(3, i).toInt))).mkString(", "))
 
     var result = 0
     println("Euler601[" + result + "]")
