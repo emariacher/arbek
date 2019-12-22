@@ -32,9 +32,11 @@ class EulerMain extends FlatSpec with Matchers {
     println((1 until 10).map(i => ("P(" + i + ",100)", P(i, 100))).mkString(", "))
 
     def Q2(sn: Int, elimit: Int, verbose: Boolean = false) = {
+      println("Q2", sn, elimit)
       var prev = BigInt(0)
       if (verbose) {
-        println((1 until elimit).map(e => ("P(sn," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+        println("  " + (2 until elimit).map(e => ("P(sn," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+        print("  ")
       }
       (1 until elimit).foreach(e => {
         prev = P2(sn, e, prev)
@@ -48,24 +50,17 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     def P2(sn: Int, e: Int, prev: BigInt): BigInt = {
-      sn match {
-        case 2 => (prev * sn) + (e % sn)
-        case 3 => (prev * sn) + (e match {
-          case 0 => 1
-          case 1 => 1
-          case 2 => -1
-          case 3 => 1
-          case 4 => -1
-          case 5 => 1
-          case 6 => -1
-          case _ => 0
-        })
+      (prev * sn) + ((sn % 2) match {
+        case 0 => (e % 2)
+        case 1 => ((e % 2) * 2) - 1
         case _ => BigInt(999)
-      }
+      })
     }
 
-    Q2(2, 15, true)
-    Q2(3, 13, true)
+    Q2(2, 15)
+    Q2(3, 13)
+    Q2(4, 8)
+    Q2(5, 6, true)
 
     var result = 0
     println("Euler601[" + result + "]")
