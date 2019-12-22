@@ -24,14 +24,32 @@ class EulerMain extends FlatSpec with Matchers {
       (2 until N.toInt).filter(streak(_) == s).length
     }
 
+    def P2(sn: Int, e: Int, prev: BigInt): BigInt = {
+      sn match {
+        case 2 => (prev * sn) + (e % sn)
+        case _ => BigInt(0)
+      }
+    }
+
     streak(13, true) shouldEqual 4
     P(3, 14) shouldEqual 1
     P(6, 1000000) shouldEqual 14286
     println((2 until 100).map(streak(_)).max)
     streak(61, true)
     println((1 until 10).map(i => ("P(" + i + ",100)", P(i, 100))).mkString(", "))
-    println((1 until 15).map(i => ("P(2," + math.pow(2, i) + ")", P(2, math.pow(2, i).toInt))).mkString(", "))
-    println((1 until 15).map(i => ("P(3," + math.pow(3, i) + ")", P(3, math.pow(3, i).toInt))).mkString(", "))
+
+    println((1 until 15).map(i => ("P(2," + math.pow(2, i).toInt + ")[" + i + "]", P(2, math.pow(2, i).toInt))).mkString(", "))
+    var prev = BigInt(0)
+    var e = 0
+    var sn = 2
+    (1 until 15).foreach(e => {
+      prev = P2(sn, e, prev)
+      val p = P(sn, math.pow(sn, e + 1).toInt)
+      println(sn, e, p, prev)
+      p shouldEqual prev
+    })
+
+    //println((1 until 15).map(i => ("P(3," + math.pow(3, i).toInt + ")[" + i + "]", P(3, math.pow(3, i).toInt))).mkString(", "))
 
     var result = 0
     println("Euler601[" + result + "]")
