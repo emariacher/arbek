@@ -34,14 +34,14 @@ class EulerMain extends FlatSpec with Matchers {
     def Q3(sn: Int, elimit: Int) = {
       println("Q3", sn, elimit)
       var prev = BigInt(0)
-      println("  " + (2 until elimit).map(e => ("P(" + sn + ")," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+      println("  " + (2 until elimit).map(e => ("P(" + sn + "," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
     }
 
     def Q6(sn: Int, elimit: Int, verbose: Boolean = false, check: Boolean = false) = {
       println("Q6", sn, elimit)
       var prev = BigInt(0)
       if (verbose) {
-        println("  " + (2 until elimit).map(e => ("P(" + sn + ")," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+        println("  " + (2 until elimit).map(e => ("P(" + sn + "," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
         print("  ")
       }
       (2 until elimit).foreach(e => {
@@ -69,7 +69,7 @@ class EulerMain extends FlatSpec with Matchers {
       println("Q2", sn, elimit)
       var prev = BigInt(0)
       if (verbose) {
-        println("  " + (2 until elimit).map(e => ("P(" + sn + ")," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+        println("  " + (2 until elimit).map(e => ("P(" + sn + "," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
         print("  ")
       }
       (1 until elimit).foreach(e => {
@@ -108,6 +108,7 @@ class EulerMain extends FlatSpec with Matchers {
     Q3(14, 7)
     Q3(15, 7)
     Q3(16, 7)
+    Q3(17, 7)
 
     var result = 0
     println("Euler601[" + result + "]")
