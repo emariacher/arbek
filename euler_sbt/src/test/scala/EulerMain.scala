@@ -31,7 +31,13 @@ class EulerMain extends FlatSpec with Matchers {
     streak(61, true)
     println((1 until 10).map(i => ("P(" + i + ",100)", P(i, 100))).mkString(", "))
 
-    def Q6(sn: Int, elimit: Int, verbose: Boolean = false) = {
+    def Q3(sn: Int, elimit: Int) = {
+      println("Q3", sn, elimit)
+      var prev = BigInt(0)
+      println("  " + (2 until elimit).map(e => ("P(" + sn + ")," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+    }
+
+    def Q6(sn: Int, elimit: Int, verbose: Boolean = false, check: Boolean = false) = {
       println("Q6", sn, elimit)
       var prev = BigInt(0)
       if (verbose) {
@@ -44,7 +50,9 @@ class EulerMain extends FlatSpec with Matchers {
         if (verbose) {
           print(" - ", sn, e, (e % sn), p, prev)
         }
-        prev shouldEqual p
+        if (check) {
+          prev shouldEqual p
+        }
       })
       println("")
     }
@@ -57,7 +65,7 @@ class EulerMain extends FlatSpec with Matchers {
       })
     }
 
-    def Q2(sn: Int, elimit: Int, verbose: Boolean = false) = {
+    def Q2(sn: Int, elimit: Int, verbose: Boolean = false, check: Boolean = false) = {
       println("Q2", sn, elimit)
       var prev = BigInt(0)
       if (verbose) {
@@ -70,7 +78,9 @@ class EulerMain extends FlatSpec with Matchers {
         if (verbose) {
           print(" - ", sn, e, (e % sn), p, prev)
         }
-        prev shouldEqual p
+        if (check) {
+          prev shouldEqual p
+        }
       })
       println("")
     }
@@ -83,11 +93,21 @@ class EulerMain extends FlatSpec with Matchers {
       })
     }
 
-    Q2(2, 15,true)
-    Q2(3, 13,true)
-    Q2(4, 8,true)
-    //Q2(5, 7, true)
-    Q6(6, 9, true)
+    Q2(2, 15, false, true)
+    Q2(3, 13, false, true)
+    Q2(4, 8, false, true)
+    Q3(5, 9)
+    Q6(6, 9, true, true)
+    Q3(7, 9)
+    Q3(8, 8)
+    Q3(9, 7)
+    Q3(10, 7)
+    Q3(11, 7)
+    Q3(12, 7)
+    Q3(13, 7)
+    Q3(14, 7)
+    Q3(15, 7)
+    Q3(16, 7)
 
     var result = 0
     println("Euler601[" + result + "]")
