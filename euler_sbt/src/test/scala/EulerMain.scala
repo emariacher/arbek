@@ -93,7 +93,7 @@ class EulerMain extends FlatSpec with Matchers {
       })
     }
 
-    Q2(2, 15, false, true)
+    /*Q2(2, 15, false, true)
     Q2(3, 13, false, true)
     Q2(4, 8, false, true)
     Q3(5, 9)
@@ -108,7 +108,21 @@ class EulerMain extends FlatSpec with Matchers {
     Q3(14, 7)
     Q3(15, 7)
     Q3(16, 7)
-    Q3(17, 7)
+    Q3(17, 7)*/
+
+    def T(N: BigInt): List[(Int, Int)] = {
+      (3 until N.toInt by 2).toList.map(streak(_)).groupBy(i => i).toList.map(i => (i._1, i._2.length)).sortBy(_._1)
+    }
+
+    println((3 until 16 by 2).toList)
+    println((3 until 16 by 2).toList.map(streak(_)))
+    println((3 until 16 by 2).toList.map(streak(_)).groupBy(i => i).toList.map(i => (i._1, i._2.length)))
+
+    val T1million = T(1000000)
+    println(T1million)
+    T1million.apply(3)._2 shouldEqual 14286
+    println(T(2000000))
+    println(T(4000000))
 
     var result = 0
     println("Euler601[" + result + "]")
