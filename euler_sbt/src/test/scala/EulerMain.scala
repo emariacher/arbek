@@ -110,8 +110,14 @@ class EulerMain extends FlatSpec with Matchers {
     Q3(16, 7)
     Q3(17, 7)*/
 
-    def T(N: BigInt): List[(Int, Int)] = {
-      (3 until N.toInt by 2).toList.map(streak(_)).groupBy(i => i).toList.map(i => (i._1, i._2.length)).sortBy(_._1)
+    def T(N: BigInt): List[(Int, Int, Int)] = {
+      val l = (3 until N.toInt by 2).toList.map(streak(_)).groupBy(i => i)
+      l.toList.map(i => (i._1, i._2.length, i._2.last)).sortBy(_._1)
+    }
+
+    def U(N: BigInt): List[(Int, Int, Int, List[(Int, Int)])] = {
+      val l = (3 until N.toInt by 2).toList.map(z => (z, streak(z))).groupBy(i => i._2)
+      l.toList.map(i => (i._1, i._2.length, i._2.last._1, i._2)).sortBy(_._1)
     }
 
     println((3 until 16 by 2).toList)
@@ -121,8 +127,13 @@ class EulerMain extends FlatSpec with Matchers {
     val T1million = T(1000000)
     println(T1million)
     T1million.apply(3)._2 shouldEqual 14286
-    println(T(2000000))
-    println(T(4000000))
+    (2 until 5).toList.foreach(e => {
+      val limit = BigDecimal(Math.pow(2, e)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      val tl = T(limit)
+      println(e, limit, tl.map(t => (t._1, t._2)), (tl.last._1, tl.last._3))
+    })
+
+    println(U(15))
 
     var result = 0
     println("Euler601[" + result + "]")
