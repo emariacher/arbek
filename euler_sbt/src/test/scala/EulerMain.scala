@@ -110,12 +110,8 @@ class EulerMain extends FlatSpec with Matchers {
     Q3(16, 7)
     Q3(17, 7)*/
 
-    def T(N: BigInt): List[(Int, Int, Int)] = {
-      val l = (3 until N.toInt by 2).toList.map(streak(_)).groupBy(i => i)
-      l.toList.map(i => (i._1, i._2.length, i._2.last)).sortBy(_._1)
-    }
 
-    def U(N: BigInt): List[(Int, Int, Int)] = {
+    def T(N: BigInt): List[(Int, Int, Int)] = {
       val l = (3 until N.toInt by 2).toList.map(z => (z, streak(z))).groupBy(i => i._2)
       l.toList.map(i => (i._1, i._2.length, i._2.last._1)).sortBy(_._1)
     }
@@ -127,10 +123,20 @@ class EulerMain extends FlatSpec with Matchers {
     val T1million = T(1000000)
     println(T1million)
     T1million.apply(3)._2 shouldEqual 14286
-    (2 until 25).toList.foreach(e => {
+    val tl = (2 until 25).toList.map(e => {
       val limit = BigDecimal(Math.pow(2, e)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
-      val tl = U(limit)
-      println(e, limit, tl.map(t => (t._1, t._2)), (tl.last._1, tl.last._3))
+      val tz = T(limit)
+      (e, tz)
+    })
+
+    tl.foreach(z => {
+      val limit = BigDecimal(Math.pow(2, z._1)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      println(z._1, limit, z._2.map(t => (t._1, t._2)), (z._1, z._2.last._3))
+    })
+
+    tl.foreach(z => {
+      val limit = BigDecimal(Math.pow(2, z._1)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      println(z._1, limit, z._2.map(t => (t._1, t._2, t._3)))
     })
 
 
