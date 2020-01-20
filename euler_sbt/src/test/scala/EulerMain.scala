@@ -16,7 +16,8 @@ class EulerMain extends FlatSpec with Matchers {
 
     val l = data.split(",").map(_.replaceAll("\"", "")).sorted
     (l.indexOf("COLIN") + 1) shouldEqual 938
-    
+    "COLIN".toList.map(_.toInt - 'A'.toInt + 1).sum shouldEqual 53
+
     var result = 0
     println("Euler22[" + result + "]")
     result shouldEqual 0
