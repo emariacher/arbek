@@ -65,7 +65,7 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
       (resil.length, d - 1)
     }
 
-    resilience(12) shouldEqual (4, 11)
+    resilience(12) shouldEqual(4, 11)
     resilience(premiers.take(4).product.toInt)
     resilience(premiers.take(5).product.toInt)
     resilience(2 * premiers.take(5).product.toInt)
@@ -92,7 +92,7 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
 
     def numdiv(d: BigInt) = {
       val divisors = new EulerDivisors(new EulerDiv(d)).divisors
-      println(""+d + "\t" + (divisors.length + 2) + "\t" + ispowerof2(divisors.length + 2) + "\t" + divisors)
+      println("" + d + "\t" + (divisors.length + 2) + "\t" + ispowerof2(divisors.length + 2) + "\t" + divisors)
     }
 
     def ispowerof2(d: BigInt) = {
@@ -453,6 +453,144 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
 
   }
 
+  "Euler601" should "be OK" in {
+    println("Euler601")
+
+    def streak(n: BigInt, verbose: Boolean = false): Int = {
+      val z = stream_zero_a_linfini.takeWhile(i => (n + i) % (i + 1) == 0).toList
+      if (verbose) {
+        z.foreach(i => print(", " + (n + i) + ": " + (i + 1)))
+        println(" - streak(" + n + "): " + z.length)
+      }
+      z.length
+    }
+
+    def P(s: BigInt, N: BigInt): Int = {
+      (2 until N.toInt).filter(streak(_) == s).length
+    }
+
+    streak(13, true) shouldEqual 4
+    P(3, 14) shouldEqual 1
+    P(6, 1000000) shouldEqual 14286
+    println((2 until 100).map(streak(_)).max)
+    streak(61, true)
+    println((1 until 10).map(i => ("P(" + i + ",100)", P(i, 100))).mkString(", "))
+
+    def Q3(sn: Int, elimit: Int) = {
+      println("Q3", sn, elimit)
+      var prev = BigInt(0)
+      println("  " + (2 until elimit).map(e => ("P(" + sn + "," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+    }
+
+    def Q6(sn: Int, elimit: Int, verbose: Boolean = false, check: Boolean = false) = {
+      println("Q6", sn, elimit)
+      var prev = BigInt(0)
+      if (verbose) {
+        println("  " + (2 until elimit).map(e => ("P(" + sn + "," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+        print("  ")
+      }
+      (2 until elimit).foreach(e => {
+        prev = P6(sn, e, prev)
+        val p = P(sn, math.pow(sn, e + 1).toInt)
+        if (verbose) {
+          print(" - ", sn, e, (e % sn), p, prev)
+        }
+        if (check) {
+          prev shouldEqual p
+        }
+      })
+      println("")
+    }
+
+    def P6(sn: Int, e: Int, prev: BigInt): BigInt = {
+      (prev * sn) + ((e % 2) match {
+        case 0 => 3
+        case 1 => 0
+        case _ => BigInt(999)
+      })
+    }
+
+    def Q2(sn: Int, elimit: Int, verbose: Boolean = false, check: Boolean = false) = {
+      println("Q2", sn, elimit)
+      var prev = BigInt(0)
+      if (verbose) {
+        println("  " + (2 until elimit).map(e => ("P(" + sn + "," + math.pow(sn, e).toInt + ")[" + e + "]", P(sn, math.pow(sn, e).toInt))).mkString(", "))
+        print("  ")
+      }
+      (1 until elimit).foreach(e => {
+        prev = P2(sn, e, prev)
+        val p = P(sn, math.pow(sn, e + 1).toInt)
+        if (verbose) {
+          print(" - ", sn, e, (e % sn), p, prev)
+        }
+        if (check) {
+          prev shouldEqual p
+        }
+      })
+      println("")
+    }
+
+    def P2(sn: Int, e: Int, prev: BigInt): BigInt = {
+      (prev * sn) + ((sn % 2) match {
+        case 0 => (e % 2)
+        case 1 => ((e % 2) * 2) - 1
+        case _ => BigInt(999)
+      })
+    }
+
+    /*Q2(2, 15, false, true)
+    Q2(3, 13, false, true)
+    Q2(4, 8, false, true)
+    Q3(5, 9)
+    Q6(6, 9, true, true)
+    Q3(7, 9)
+    Q3(8, 8)
+    Q3(9, 7)
+    Q3(10, 7)
+    Q3(11, 7)
+    Q3(12, 7)
+    Q3(13, 7)
+    Q3(14, 7)
+    Q3(15, 7)
+    Q3(16, 7)
+    Q3(17, 7)*/
+
+
+    def T(N: BigInt): List[(Int, Int, Int)] = {
+      val l = (3 until N.toInt by 2).toList.map(z => (z, streak(z))).groupBy(i => i._2)
+      l.toList.map(i => (i._1, i._2.length, i._2.last._1)).sortBy(_._1)
+    }
+
+    println((3 until 16 by 2).toList)
+    println((3 until 16 by 2).toList.map(streak(_)))
+    println((3 until 16 by 2).toList.map(streak(_)).groupBy(i => i).toList.map(i => (i._1, i._2.length)))
+
+    val T1million = T(1000000)
+    println(T1million)
+    T1million.apply(3)._2 shouldEqual 14286
+    val tl = (2 until 25).toList.map(e => {
+      val limit = BigDecimal(Math.pow(2, e)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      val tz = T(limit)
+      (e, tz)
+    })
+
+    tl.foreach(z => {
+      val limit = BigDecimal(Math.pow(2, z._1)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      println(z._1, limit, z._2.map(t => (t._1, t._2)), (z._1, z._2.last._3))
+    })
+
+    tl.foreach(z => {
+      val limit = BigDecimal(Math.pow(2, z._1)).setScale(0, BigDecimal.RoundingMode.HALF_UP).toBigInt
+      println(z._1, limit, z._2.map(t => (t._1, t._2, t._3)))
+    })
+
+
+    var result = 0
+    println("Euler601[" + result + "]")
+    result shouldEqual 0
+  }
+
+
   "Euler621" should "be OK" in {
     println("Euler621")
     val tr = Euler.triangular(500)
@@ -466,7 +604,7 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
       val result = BigInt(l1.size + (l2.size * 3) + (l3.size * 6))
       if (verbose) {
         println(a, result, " ", (l1.size, l2.size, l3.size), l1, l2, l3)
-        t_la = timeStamp(t_la, "G1 fin "+ a)
+        t_la = timeStamp(t_la, "G1 fin " + a)
       }
       (a, result, (l1.size, l2.size, l3.size))
     }
