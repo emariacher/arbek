@@ -14,7 +14,8 @@ class EulerMain extends FlatSpec with Matchers {
     val url = "https://projecteuler.net/project/resources/p022_names.txt"
     val data = io.Source.fromURL(url).mkString
 
-    println(data)
+    val l = data.split(",").map(_.replaceAll("\"", "")).sorted
+    (l.indexOf("COLIN") + 1) shouldEqual 938
     
     var result = 0
     println("Euler22[" + result + "]")
