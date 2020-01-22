@@ -34,9 +34,13 @@ class EulerMain extends FlatSpec with Matchers {
     Ck(1, 10) shouldEqual 3
     Ck(3, 100000) shouldEqual 297
 
-    (1 to 9).foreach(e => {
+    val l = (1 to 6).map(e => {
       val y = BigInt(math.pow(10, e).toInt)
-      println("" + y + Ck2(y).mkString)
+      (y, Ck2(y))
+    })
+
+    l.foreach(e => {
+      println(e._1 + e._2.mkString)
     })
 
     var result = 0
