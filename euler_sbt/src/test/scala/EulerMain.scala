@@ -26,9 +26,18 @@ class EulerMain extends FlatSpec with Matchers {
       (1 to bi.toInt).map(z => squareprimes(z)).filter(_ == k).length
     }
 
+    def Ck2(bi: BigInt) = {
+      (1 to bi.toInt).map(z => squareprimes(z)).groupBy(u => u).toList.map(y => (y._1, y._2.length))
+    }
+
     Ck(0, 10) shouldEqual 7
     Ck(1, 10) shouldEqual 3
     Ck(3, 100000) shouldEqual 297
+
+    (1 to 9).foreach(e => {
+      val y = BigInt(math.pow(10, e).toInt)
+      println("" + y + Ck2(y).mkString)
+    })
 
     var result = 0
     println("Euler632[" + result + "]")
