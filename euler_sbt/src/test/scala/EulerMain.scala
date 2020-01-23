@@ -43,6 +43,10 @@ class EulerMain extends FlatSpec with Matchers {
       println(e._1 + e._2.mkString)
     })
 
+    l.foreach(e => {
+      println(e._1 + e._2.map(z => (z._1, new EulerDiv(z._2).primes.mkString(";"))).mkString("-"))
+    })
+
     l.sliding(2).foreach(ee => {
       println("\n" + ee.last._1)
       ee.head._2.zip(ee.last._2).foreach(ff => {
