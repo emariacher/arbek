@@ -16,10 +16,12 @@ object Euler {
 
   def printZisday(date: Date, fmt: String): String = new String(new SimpleDateFormat(fmt).format(date))
 
-  def timeStamp(c_t_start: Calendar, s_title: String): Calendar = {
+  def timeStamp(c_t_start: Calendar, s_title: String, verbose: Boolean = true): Calendar = {
     val t_end = Calendar.getInstance()
-    println("t_now: " + printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
-      "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()))
+    if (verbose) {
+      println("t_now: " + printZisday(t_end, "ddMMMyy_HH_mm_ss_SSS [") + s_title +
+        "] t_diff: " + (t_end.getTimeInMillis() - c_t_start.getTimeInMillis()))
+    }
     t_end
   }
 
