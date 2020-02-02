@@ -59,6 +59,9 @@ class EulerMain extends FlatSpec with Matchers {
 
     l1 shouldEqual l2
 
+    println("check that all even numbers are quickly always sum of 2 abundants numbers: " +
+      l2.sliding(2).map(z => z.last - z.head).toList.lastIndexWhere(_ > 2), l2.length)
+
     var result = 0
     println("Euler23[" + result + "]")
     result shouldEqual 0
