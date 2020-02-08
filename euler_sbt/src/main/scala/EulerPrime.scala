@@ -14,7 +14,7 @@ object EulerPrime {
   val premiers1000 = premiers10000.takeWhile(_ < 1000)
   println("")
 
-  def isPrime(bi: BigInt): Boolean = {
+  def isPrime(bi: BigInt, verbose: Boolean = false): Boolean = {
     if (bi < 100000) {
       premiers100000.contains(bi)
     } else {
@@ -22,6 +22,9 @@ object EulerPrime {
       premiers100000.takeWhile((premier: BigInt) => {
         if (bi % premier == 0) {
           divisor = premier
+          if (verbose) {
+            println(premier + " est un diviseur de " + bi)
+          }
           false
         } else if ((premier * premier) > bi) {
           false
