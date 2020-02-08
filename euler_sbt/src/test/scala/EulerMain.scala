@@ -66,7 +66,7 @@ class EulerMain extends FlatSpec with Matchers {
     val zlpairnosum = l2.sliding(2).toList.filter(z => z.last - z.head > 2)
     println(zlpairnosum)
     val lpairnosum = ((1 to 23).toList ++ List(26, 28, 34, 46)).filter(_ % 2 == 0)
-    println(lpairnosum)
+    println("lpairnosum", lpairnosum)
 
     limit = zeLimit
     abundantNumbers = (1 to limit).filter(i => sumdiv(i) > i).toList
@@ -90,11 +90,12 @@ class EulerMain extends FlatSpec with Matchers {
 
     val l3 = doZeJob3(abundantNumbers, oddabundants, limit)
 
-    (1 to limit).filter(i => i % 2 != 0).filter(i => !l3.contains(i)).toList
+    val oddnumberswearelookingfor = (1 to limit).filter(i => i % 2 != 0).filter(i => !l3.contains(i)).toList
+    println("oddnumberswearelookingfor", oddnumberswearelookingfor)
 
-    var result = 0
+    var result = oddnumberswearelookingfor.sum + lpairnosum.sum
     println("Euler23[" + result + "]")
-    result shouldEqual 0
+    result shouldEqual 4179871
   }
 
 }
