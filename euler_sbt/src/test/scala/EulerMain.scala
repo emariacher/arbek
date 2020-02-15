@@ -18,15 +18,16 @@ class EulerMain extends FlatSpec with Matchers {
     ((root + ((root * 3) % mod)) % mod) shouldEqual BigInt("1513083232796311")
 
     var eulercoinList = List((1, root, root.toString.length))
-    val biggestPrime = 220000
+    val biggestPrime = 7000000
     val premiers = (new CheckEulerPrime(biggestPrime, 10000)).premiers
     //println(eulercoinList.map(_._2).sum, new EulerDiv2(root, premiers, true).primes, eulercoinList)
     (1 to 1000000).foreach(n => {
       val bi = ((root * n) % mod)
       if (bi < eulercoinList.head._2) {
         eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
-        val somme = eulercoinList.map(_._2).sum
+        val somme = eulercoinList.map(_._2).sum % mod
         println(somme, bi, new EulerDiv2(bi, premiers).primes, eulercoinList)
+        println(somme, new EulerDiv2(somme, premiers, true).primes, bi, new EulerDiv2(bi, premiers).primes, eulercoinList)
       }
     })
     //println(EulerPrime.isPrime(mod, true))
