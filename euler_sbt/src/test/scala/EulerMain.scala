@@ -18,20 +18,17 @@ class EulerMain extends FlatSpec with Matchers {
     ((root + ((root * 3) % mod)) % mod) shouldEqual BigInt("1513083232796311")
 
     var eulercoinList = List((1, root, root.toString.length))
-    println(eulercoinList.map(_._2).sum, new EulerDiv(root, true).primes, eulercoinList)
+    val biggestPrime = 220000
+    val premiers = (new CheckEulerPrime(biggestPrime, 10000)).premiers
+    //println(eulercoinList.map(_._2).sum, new EulerDiv2(root, premiers, true).primes, eulercoinList)
     (1 to 1000000).foreach(n => {
       val bi = ((root * n) % mod)
       if (bi < eulercoinList.head._2) {
         eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
         val somme = eulercoinList.map(_._2).sum
-        println(somme, eulercoinList)
-        println(somme, new EulerDiv(bi, true).primes, eulercoinList)
+        println(somme, bi, new EulerDiv2(bi, premiers).primes, eulercoinList)
       }
     })
-    println(root, EulerPrime.isPrime(root, true), root / 17, root % 17, BigInt("88480630296571") * 17)
-    println(BigInt("88480630296571"), EulerPrime.isPrime(BigInt("88480630296571"), true), BigInt("88480630296571") / 1249)
-    println(BigInt("70841177179"), EulerPrime.isPrime(BigInt("70841177179"), true), BigInt("70841177179") / 12043)
-    println(BigInt("5882353"), EulerPrime.isPrime(BigInt("5882353"), true))
     //println(EulerPrime.isPrime(mod, true))
 
 
