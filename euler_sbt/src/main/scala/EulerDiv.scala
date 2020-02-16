@@ -6,35 +6,7 @@ import scala.collection.immutable.TreeSet
 import scala.collection.immutable.NumericRange
 
 class EulerDiv(bi: BigInt) {
-  var primes = List[BigInt]()
-  val premiers = EulerPrime.premiers100000
-  var bic = bi
-  var index = 0
-
-  premiers.takeWhile((premier: BigInt) => {
-    while (bic % premier == 0 & bic >= premier) {
-      primes = primes :+ premier
-      bic = bic / premier
-    }
-    if (bic == 1) {
-      false
-    } else if ((premier * premier) > bic) {
-      if (bic != bi) {
-        primes = primes :+ bic
-        require(primes.product == bi)
-      } else if (primes.isEmpty) {
-        primes = primes :+ bic
-      }
-      false
-    } else {
-      true
-    }
-  })
-  if (primes.isEmpty) {
-    require(bi < (premiers.last * premiers.last), bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
-  } else {
-    require(bic < (premiers.last * premiers.last), bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
-  }
+  val primes = new EulerDiv2(bi, EulerPrime.premiers100000, false).primes
 }
 
 class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt], verbose: Boolean = false) {
@@ -62,12 +34,12 @@ class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt], verbose: Boolean = false)
     }
   })
   if (primes.isEmpty) {
-    require(bi < (premiers.last * premiers.last), bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
+    require(bi < (premiers.last * premiers.last), bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
   } else {
     if (verbose) {
       println("          EulerDiv " + bi, primes, bic, math.sqrt(bic.toDouble))
     }
-    require(bic < (premiers.last * premiers.last), bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + (premiers.last * premiers.last) + ")")
+    require(bic < (premiers.last * premiers.last), bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
   }
 }
 
