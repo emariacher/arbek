@@ -23,6 +23,7 @@ class EulerMain extends FlatSpec with Matchers {
     val nearmod = rootdivisors.map(i => (i, mod / i, mod % i))
     val nearmod2 = nearmod.sortBy(_._3).tail
     println(root, rootprimes, rootdivisors)
+    println("mod/root = ", mod.toDouble / root.toDouble)
     println(nearmod)
     println(nearmod2, "\n")
 
@@ -56,7 +57,7 @@ class EulerMain extends FlatSpec with Matchers {
         println(z.take(2), "\n")
         prevdelta = z.head
         prevdiff = n - eulercoinList.tail.head._1
-        n += prevdiff - 1
+        n += prevdiff
       } else {
         n += 1
       }
