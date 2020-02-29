@@ -23,7 +23,7 @@ object EulerPrime {
         if (bi % premier == 0) {
           divisor = premier
           if (verbose) {
-            println(premier + " est un diviseur de " + bi)
+            println("" + premier + " est un diviseur de " + bi)
           }
           false
         } else if ((premier * premier) > bi) {

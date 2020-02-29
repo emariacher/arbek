@@ -3,7 +3,6 @@ import java.util.Calendar
 import org.scalatest._
 import Euler._
 import scala.collection.immutable.{ListSet, TreeSet}
-
 import scala.math.BigInt
 
 class EulerMain extends FlatSpec with Matchers {
@@ -21,7 +20,7 @@ class EulerMain extends FlatSpec with Matchers {
     val premiers = (new CheckEulerPrime(biggestPrime, 10000)).premiers
     val rootprimes = new EulerDiv2(root, premiers).primes
     val rootdivisors = new EulerDivisors(rootprimes).getFullDivisors
-    val nearmod = rootdivisors.map(i => (i, mod / i))
+    val nearmod = rootdivisors.map(i => (i, mod / i, mod % i)).sortBy(_._3)
     println(root, rootprimes, rootdivisors)
     println(nearmod, "\n")
 
@@ -47,8 +46,8 @@ class EulerMain extends FlatSpec with Matchers {
       if (bi < eulercoinList.head._2) {
         eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
         val somme = eulercoinList.map(_._2).sum % mod
-        println(somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble, eulercoinList)
-        println(nearmod.map(z => (z._1, math.abs(((z._2 - bi)).toDouble))).sortBy(_._2).take(2))
+        println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble, eulercoinList)
+        println(nearmod.map(z => (z._1, math.abs(((z._2 - bi)).toDouble))).sortBy(_._2)(Ordering.Double.TotalOrdering).take(2), "\n")
         prevdiff = n - eulercoinList.tail.head._1
         n += prevdiff - 1
       } else {
