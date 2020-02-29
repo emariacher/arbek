@@ -20,9 +20,11 @@ class EulerMain extends FlatSpec with Matchers {
     val premiers = (new CheckEulerPrime(biggestPrime, 10000)).premiers
     val rootprimes = new EulerDiv2(root, premiers).primes
     val rootdivisors = new EulerDivisors(rootprimes).getFullDivisors
-    val nearmod = rootdivisors.map(i => (i, mod / i, mod % i)).sortBy(_._3)
+    val nearmod = rootdivisors.map(i => (i, mod / i, mod % i))
+    val nearmod2 = nearmod.sortBy(_._3).tail
     println(root, rootprimes, rootdivisors)
-    println(nearmod, "\n")
+    println(nearmod)
+    println(nearmod2, "\n")
 
     var eulercoinList = List((1, root, root.toString.length))
     var max = 60000000
@@ -46,7 +48,8 @@ class EulerMain extends FlatSpec with Matchers {
       if (bi < eulercoinList.head._2) {
         eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
         val somme = eulercoinList.map(_._2).sum % mod
-        println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble, eulercoinList)
+        //println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble, eulercoinList)
+        println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
         println(nearmod.map(z => (z._1, math.abs(((z._2 - bi)).toDouble))).sortBy(_._2)(Ordering.Double.TotalOrdering).take(2), "\n")
         prevdiff = n - eulercoinList.tail.head._1
         n += prevdiff - 1
