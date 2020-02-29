@@ -41,6 +41,7 @@ class EulerMain extends FlatSpec with Matchers {
     })
     var vieilleSomme = eulercoinList.map(_._2).sum % mod
     t_la = timeStamp(t_la, "après1 ")
+    var state = 0
     var n = 1
     var prevdiff = 1
     var prevdelta: (BigInt, Double, Double) = null
@@ -51,14 +52,19 @@ class EulerMain extends FlatSpec with Matchers {
         eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
         val somme = eulercoinList.map(_._2).sum % mod
         //println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble, eulercoinList)
-        println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
+        println(n, somme, bi, eulercoinList.tail.head._2 - bi, " prevdiff[" + (n - eulercoinList.tail.head._1) + "]", (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
         val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
         println(n, mod / n, mod % n)
         println(z.take(2), "\n")
         prevdelta = z.head
         prevdiff = n - eulercoinList.tail.head._1
         n += prevdiff
+        state = 1
+      } else if (state == 1) {
+        state = 2
+        n += prevdiff * 2
       } else {
+        state = 2
         n += 1
       }
     }
