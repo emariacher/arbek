@@ -33,7 +33,7 @@ class EulerMain extends FlatSpec with Matchers {
     println(mod, mod + 2, new EulerDiv2(mod + 2, premiers).primes, "\n")
 
     var eulercoinList = List((1, root, root.toString.length))
-    var max = 100000
+    var max = 43000000
     var t_la = Calendar.getInstance()
     (1 to max).foreach(n => {
       val bi = ((root * n) % mod)
@@ -44,14 +44,16 @@ class EulerMain extends FlatSpec with Matchers {
         //println(somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, eulercoinList)
       }
     })
+    var oldlast = eulercoinList.map(_._2).last
     var vieilleSomme = eulercoinList.map(_._2).sum % mod
-    t_la = timeStamp(t_la, "après1 ")
+    t_la = timeStamp(t_la, "après1 max: " + max)
     var state = 0
     var n = 1
     var prevdiff = 1
     var prevdelta: (BigInt, Double, Double) = null
     eulercoinList = List((1, root, root.toString.length))
-    while (n < max) {
+    var max1 = 200000000
+    while (n < max1) {
       val bi = ((root * n) % mod)
       if (bi < eulercoinList.head._2) {
         eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
@@ -64,6 +66,11 @@ class EulerMain extends FlatSpec with Matchers {
         prevdelta = z.head
         prevdiff = n - eulercoinList.tail.head._1
         n += prevdiff
+        if ((n > max) & (eulercoinList.map(_._2).last == oldlast)) {
+          println("************Checking! @" + max + "**************")
+          eulercoinList.map(_._2).sum % mod shouldEqual vieilleSomme
+          timeStamp(t_la, "après2 max: " + max)
+        }
         state = 1
       } else if (state == 1) {
         state = 2
@@ -73,8 +80,7 @@ class EulerMain extends FlatSpec with Matchers {
         n += 1
       }
     }
-    eulercoinList.map(_._2).sum % mod shouldEqual vieilleSomme
-    t_la = timeStamp(t_la, "après2 ")
+    t_la = timeStamp(t_la, "après2 max1: " + max1)
 
     n = 1
     prevdiff = 1
