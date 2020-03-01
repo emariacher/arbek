@@ -12,15 +12,16 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import java.util.Base64;
+import java.util.Random;
 
 public class CitationLatine {
     static String IV = "AAAAAAAAAAAAAAAA";
-    static String plaintext = "test text 123\0\0\0"; /*Note null padding*/
+    static String plaintext = "test text 124";
     static String encryptionKey = "0123456789abcdef";
 
     public static void main(String[] args) {
         System.out.println("Citation Latine");
-        if(args.length==0) {
+        if (args.length == 0) {
             String enc = doZeJob(plaintext, encryptionKey);
             doZeJob(enc, encryptionKey);
         } else {
@@ -33,18 +34,13 @@ public class CitationLatine {
         String base64encodedString = new String();
         try {
 
-            System.out.println("plain:   " + text);
+            System.out.println("plain:    " + text);
 
             String seizetext = padRightMod16(text);
             System.out.println("seizetext[" + seizetext + "] " + seizetext.length());
-            String seizeclef = clef.substring(0,16);
+            String seizeclef = clef.substring(0, 16);
 
             byte[] cipher = encrypt(seizetext, seizeclef);
-
-            System.out.print("cipher:  ");
-            for (int i = 0; i < cipher.length; i++)
-                System.out.print(Integer.valueOf(cipher[i]) + " ");
-            System.out.println("");
 
             // Encode using basic encoder
             base64encodedString = Base64.getEncoder().encodeToString(cipher);
@@ -55,8 +51,8 @@ public class CitationLatine {
 
             String decrypted = decrypt(decipher, seizeclef);
 
-            System.out.println("decrypt: " + decrypted);
-            if(text.indexOf(" ")<0) {
+            System.out.println("decrypt:  " + decrypted);
+            if (text.indexOf(" ") < 0) {
                 System.out.println("decrypt2: " + decrypt(Base64.getDecoder().decode(text), seizeclef));
             }
         } catch (Exception e) {
@@ -67,7 +63,13 @@ public class CitationLatine {
     }
 
     public static String padRight(String s, int n) {
-        return String.format("%1$-" + n + "s", s);
+        Random rand = new Random();
+        String spadded = "";
+        for (int i = 1; i < 20; i++) {
+            spadded = spadded + rand.nextInt(4568797 * i);
+        }
+        spadded = "" + rand.nextInt(1223457) + " " + s + " " + spadded;
+        return spadded.substring(0, s.length() - (s.length() % 16) + 32);
     }
 
     public static String padRightMod16(String s) {
