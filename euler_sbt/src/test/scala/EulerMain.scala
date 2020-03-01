@@ -26,9 +26,14 @@ class EulerMain extends FlatSpec with Matchers {
     println("mod/root = ", mod.toDouble / root.toDouble)
     println(nearmod)
     println(nearmod2, "\n")
+    /*Range(2,3).toList.foreach(bi => {
+      println("  ", bi, mod + bi)
+      println("     ", bi, mod + bi, new EulerDiv2(mod + bi, premiers,true).primes)
+    })*/
+    println(mod, mod + 2, new EulerDiv2(mod + 2, premiers).primes, "\n")
 
     var eulercoinList = List((1, root, root.toString.length))
-    var max = 43000000
+    var max = 100000
     var t_la = Calendar.getInstance()
     (1 to max).foreach(n => {
       val bi = ((root * n) % mod)
