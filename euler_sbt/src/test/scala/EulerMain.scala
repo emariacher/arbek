@@ -51,6 +51,7 @@ class EulerMain extends FlatSpec with Matchers {
     var n = 1
     var prevdiff = 1
     var prevdelta: (BigInt, Double, Double) = null
+    var prevy = 1.0
     eulercoinList = List((1, root, root.toString.length))
     var max1 = 200000000
     while (n < max1) {
@@ -60,12 +61,14 @@ class EulerMain extends FlatSpec with Matchers {
         val somme = eulercoinList.map(_._2).sum % mod
         //println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble, eulercoinList)
         println(n, somme, bi, eulercoinList.tail.head._2 - bi, " prevdiff[" + (n - eulercoinList.tail.head._1) + "]", (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
-        println("   " + math.abs(((n - eulercoinList.tail.head._1).toDouble * root.toDouble) / mod.toDouble))
+        val y = math.abs(((n - eulercoinList.tail.head._1).toDouble * root.toDouble) / mod.toDouble)
+        println("   " + y, y / prevy)
         val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
         println(n, mod / n, mod % n)
         println(z.take(2), "\n")
         prevdelta = z.head
         prevdiff = n - eulercoinList.tail.head._1
+        prevy = y
         n += prevdiff
         if ((n > max) & (eulercoinList.map(_._2).last == oldlast)) {
           println("************Checking! @" + max + "**************")
