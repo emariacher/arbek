@@ -66,7 +66,9 @@ class EulerMain extends FlatSpec with Matchers {
         println("[" + n, somme, "" + bi + "]", n * bi, somme / n, x / prevx, eulercoinList.tail.head._2 - bi,
           " prevdiff[" + diff + "]", (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
         val y = math.abs((diff.toDouble * root.toDouble) / mod.toDouble)
-        println(y, "   ", (-4 to 4).map(u => math.abs(((diff.toDouble + u) * root.toDouble) / mod.toDouble) % 1))
+
+        val a = (-20 to 20).map(u => (u, math.abs(((diff.toDouble + u) * root.toDouble) / mod.toDouble) % 1)).map(u => (u._1, u._2 > 0.99))
+        println(y, "   ", a)
         val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
         println(n, mod / n, mod % n)
         println(z.take(2), "\n")
