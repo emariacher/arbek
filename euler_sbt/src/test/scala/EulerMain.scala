@@ -54,7 +54,7 @@ class EulerMain extends FlatSpec with Matchers {
     var prevy = 1.0
     var prevx = 1.0
     eulercoinList = List((1, root, root.toString.length))
-    var max1 = 200000000
+    var max1 = 60000000
     while (n < max1) {
       val bi = ((root * n) % mod)
       if (bi < eulercoinList.head._2) {
@@ -67,7 +67,7 @@ class EulerMain extends FlatSpec with Matchers {
           " prevdiff[" + diff + "]", (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
         val y = math.abs((diff.toDouble * root.toDouble) / mod.toDouble)
 
-        val a = (-20 to 20).map(u => (u, math.abs(((diff.toDouble + u) * root.toDouble) / mod.toDouble) % 1)).map(u => (u._1, u._2 > 0.99))
+        val a = (-20 to 10000).map(u => (u, math.abs(((diff.toDouble + u) * root.toDouble) / mod.toDouble) % 1.0)).filter(u => u._2 > 0.99)
         println(y, "   ", a)
         val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
         println(n, mod / n, mod % n)
