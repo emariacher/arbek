@@ -68,7 +68,9 @@ class EulerMain extends FlatSpec with Matchers {
         val y = math.abs((diff.toDouble * root.toDouble) / mod.toDouble)
 
         val a = (-20 to 10000).map(u => (u, math.abs(((diff.toDouble + u) * root.toDouble) / mod.toDouble) % 1.0)).filter(u => u._2 > 0.999)
+        val b = (0 to 200).map(v => (0 to 200).map(u => (u + (v * 500), math.abs(((diff.toDouble + u + (v * 500)) * root.toDouble) / mod.toDouble) % 1.0)).filter(u => u._2 > 0.999))
         println(y, "   ", a)
+        println(y, "   ", b)
         val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
         println(n, mod / n, mod % n)
         println(z.take(2), "\n")
