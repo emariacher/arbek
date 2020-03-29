@@ -66,7 +66,7 @@ class EulerMain extends FlatSpec with Matchers {
         val x = somme.toDouble / n.toDouble
         val diff = n - eulercoinList.tail.head._1
         val remdiff = math.abs((diff.toDouble * root.toDouble) / mod.toDouble) % 1.0
-        println("\n[" + n, somme, "" + bi + " < " + lastEulerCoin + "] diff:", diff, remdiff + " vs " + prevremdiff,
+        println("\n[" + n, somme, "" + bi + " < " + lastEulerCoin + "] diff:", diff, "" + remdiff + " vs " + prevremdiff,
           (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
         val y = math.abs((diff.toDouble * root.toDouble) / mod.toDouble)
         val a = (-20 to 6600).map(u => (u, math.abs(((diff.toDouble + u) * root.toDouble) / mod.toDouble) % 1.0)).filter(u => u._2 > 0.999)
@@ -97,12 +97,17 @@ class EulerMain extends FlatSpec with Matchers {
     }
     t_la = timeStamp(t_la, "après2 max1: " + max1)
 
+    state = 0
     n = 1
     prevdiff = 1
-    prevdelta = (BigInt(0), 0.0, 0.0)
+    prevremdiff = 1.0
+    prevdelta = null
+    prevy = 1.0
+    prevx = 1.0
     eulercoinList = List((1, root, root.toString.length))
+    var max2 = 60000000
+    lastEulerCoin = BigInt(0)
     t_la = timeStamp(t_la, "après3 ")
-
 
     var result = 0
     println("Euler700[" + result + "]")
