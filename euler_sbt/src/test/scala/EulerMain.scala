@@ -62,8 +62,9 @@ class EulerMain extends FlatSpec with Matchers {
         val somme = eulercoinList.map(_._2).sum % mod
         val x = somme.toDouble / n.toDouble
         val diff = n - eulercoinList.tail.head._1
-        //println(n, somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble, eulercoinList)
-        println("\n[" + n, somme, "" + bi + "] diff:", diff, (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
+        val remdiff = math.abs((diff.toDouble * root.toDouble) / mod.toDouble) % 1.0
+        println("\n[" + n, somme, "" + bi + "] diff:", diff, remdiff,
+          (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
         val y = math.abs((diff.toDouble * root.toDouble) / mod.toDouble)
 
         val a = (-20 to 6600).map(u => (u, math.abs(((diff.toDouble + u) * root.toDouble) / mod.toDouble) % 1.0)).filter(u => u._2 > 0.999)
@@ -72,8 +73,6 @@ class EulerMain extends FlatSpec with Matchers {
         println(y, "   ", a)
         println(y, "   ", b)
         val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
-        /*println(n, mod / n, mod % n)
-        println(z.take(2), "\n")*/
         prevdelta = z.head
         prevdiff = diff
         prevy = y
