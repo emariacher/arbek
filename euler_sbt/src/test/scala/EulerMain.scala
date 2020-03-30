@@ -55,7 +55,7 @@ class EulerMain extends FlatSpec with Matchers {
     var prevy = 1.0
     var prevx = 1.0
     eulercoinList = List((1, root, root.toString.length))
-    var max1 = max+4
+    var max1 = max + 4
     var lastEulerCoin = BigInt(0)
     while (n < max1) {
       val bi = ((root * n) % mod)
@@ -105,7 +105,7 @@ class EulerMain extends FlatSpec with Matchers {
     prevy = 1.0
     prevx = 1.0
     eulercoinList = List((1, root, root.toString.length))
-    var max2 = max+4
+    var max2 = max + 4
     lastEulerCoin = BigInt(0)
     while (n < max2) {
       val bi = ((root * n) % mod)
@@ -119,8 +119,8 @@ class EulerMain extends FlatSpec with Matchers {
         println("\n[" + n, somme, "" + bi + " < " + lastEulerCoin + "] diff:", diff, "" + remdiff + " vs " + prevremdiff,
           (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
         val y = math.abs((diff.toDouble * root.toDouble) / mod.toDouble)
-        val b = (0 to 500).toList.map(v => (0 to 500).toList.
-          map(u => (u + (v * 500), math.abs(((diff.toDouble + u + (v * 500)) * root.toDouble) / mod.toDouble) % 1.0))).flatten.filter(u => u._2 >= prevremdiff)
+        val b = (0 to 500).toList.map(v => (1 to 500).toList.
+          map(u => (u + (v * 500), math.abs(((diff.toDouble + u + (v * 500)) * root.toDouble) / mod.toDouble) % 1.0))).flatten.filter(u => u._2 >= prevremdiff).take(4)
         println(y, "   ", b)
         val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
         prevdelta = z.head
