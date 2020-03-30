@@ -55,7 +55,7 @@ class EulerMain extends FlatSpec with Matchers {
     var prevy = 1.0
     var prevx = 1.0
     eulercoinList = List((1, root, root.toString.length))
-    var max1 = 60000000
+    var max1 = max+4
     var lastEulerCoin = BigInt(0)
     while (n < max1) {
       val bi = ((root * n) % mod)
@@ -105,9 +105,46 @@ class EulerMain extends FlatSpec with Matchers {
     prevy = 1.0
     prevx = 1.0
     eulercoinList = List((1, root, root.toString.length))
-    var max2 = 60000000
+    var max2 = max+4
     lastEulerCoin = BigInt(0)
-    t_la = timeStamp(t_la, "après3 ")
+    while (n < max2) {
+      val bi = ((root * n) % mod)
+      lastEulerCoin = eulercoinList.head._2
+      if (bi < lastEulerCoin) {
+        eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
+        val somme = eulercoinList.map(_._2).sum % mod
+        val x = somme.toDouble / n.toDouble
+        val diff = n - eulercoinList.tail.head._1
+        val remdiff = math.abs((diff.toDouble * root.toDouble) / mod.toDouble) % 1.0
+        println("\n[" + n, somme, "" + bi + " < " + lastEulerCoin + "] diff:", diff, "" + remdiff + " vs " + prevremdiff,
+          (n - eulercoinList.tail.head._1).toDouble / prevdiff.toDouble)
+        val y = math.abs((diff.toDouble * root.toDouble) / mod.toDouble)
+        val b = (0 to 500).toList.map(v => (0 to 500).toList.
+          map(u => (u + (v * 500), math.abs(((diff.toDouble + u + (v * 500)) * root.toDouble) / mod.toDouble) % 1.0))).flatten.filter(u => u._2 >= prevremdiff)
+        println(y, "   ", b)
+        val z = nearmod.map(z => (z._1, 0.0, math.abs(((z._2 - bi)).toDouble))).sortBy(_._3)(Ordering.Double.TotalOrdering)
+        prevdelta = z.head
+        prevdiff = diff
+        prevremdiff = remdiff
+        prevy = y
+        prevx = x
+        n += prevdiff
+        if ((n > max) & (eulercoinList.map(_._2).last == oldlast)) {
+          println("************Checking! @" + max + "**************")
+          eulercoinList.map(_._2).sum % mod shouldEqual vieilleSomme
+          timeStamp(t_la, "après2 max: " + max)
+        }
+        state = 1
+      } else if (state == 1) {
+        state = 2
+        n += prevdiff * 2
+      } else {
+        state = 2
+        n += 1
+      }
+    }
+    t_la = timeStamp(t_la, "après2 max1: " + max1)
+
 
     var result = 0
     println("Euler700[" + result + "]")
