@@ -9,10 +9,11 @@ class EulerDiv(bi: BigInt) {
   val primes = new EulerDiv2(bi, EulerPrime.premiers100000, false).primes
 }
 
-class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt], verbose: Boolean = false) {
+class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt], verbose: Boolean = false, nofail: Boolean = false) {
   var primes = List[BigInt]()
   var bic = bi
   var index = 0
+  var solved = true
 
   premiers.takeWhile((premier: BigInt) => {
     while (bic % premier == 0 & bic >= premier) {
@@ -34,12 +35,23 @@ class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt], verbose: Boolean = false)
     }
   })
   if (primes.isEmpty) {
-    require(bi < (premiers.last * premiers.last), bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+    if (!nofail) {
+      require(bi < (premiers.last * premiers.last), bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+    } else if (bi >= (premiers.last * premiers.last)) {
+      solved = false
+      System.err.println("Can't decide1[" + bi + "]: " + bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+    }
+
   } else {
     if (verbose) {
       println("          EulerDiv " + bi, primes, bic, math.sqrt(bic.toDouble))
     }
-    require(bic < (premiers.last * premiers.last), bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+    if (!nofail) {
+      require(bic < (premiers.last * premiers.last), bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+    } else if (bic >= (premiers.last * premiers.last)) {
+      System.err.println("Can't decide2[" + bi + "]: " + bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+      solved = false
+    }
   }
 }
 
