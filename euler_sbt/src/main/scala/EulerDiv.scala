@@ -38,8 +38,10 @@ class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt], verbose: Boolean = false,
     if (!nofail) {
       require(bi < (premiers.last * premiers.last), bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
     } else if (bi >= (premiers.last * premiers.last)) {
+      if (verbose) {
+        System.err.println("Can't decide1[" + bi + "]: " + bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+      }
       solved = false
-      System.err.println("Can't decide1[" + bi + "]: " + bi.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
     }
 
   } else {
@@ -49,7 +51,9 @@ class EulerDiv2(bi: BigInt, premiers: TreeSet[BigInt], verbose: Boolean = false,
     if (!nofail) {
       require(bic < (premiers.last * premiers.last), bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
     } else if (bic >= (premiers.last * premiers.last)) {
-      System.err.println("Can't decide2[" + bi + "]: " + bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+      if (verbose) {
+        System.err.println("Can't decide2[" + bi + "]: " + bic.toString + "<" + premiers.last + "*" + premiers.last + "(" + ((premiers.last * premiers.last), math.sqrt(bic.toDouble)) + ")")
+      }
       solved = false
     }
   }

@@ -20,19 +20,20 @@ class EulerMain extends FlatSpec with Matchers {
     val premiers = (new CheckEulerPrime(biggestPrime, 10000)).premiers
     val rootprimes = new EulerDiv2(root, premiers).primes
     val rootdivisors = new EulerDivisors(rootprimes).getFullDivisors
-    val nearmod = rootdivisors.map(i => (i, mod / i, mod % i))
-    val nearmod2 = nearmod.sortBy(_._3).tail
     println(root, rootprimes, rootdivisors)
     println("mod/root = ", mod.toDouble / root.toDouble)
-    println(nearmod)
-    println(nearmod2, "\n")
-    Range(0, 100).toList.foreach(bi => {
+    println("mod: " + mod, mod + 2, new EulerDiv2(mod + 2, premiers).primes, "\n")
+    Range(0, 7300).toList.foreach(bi => {
       val ed2 = new EulerDiv2(mod + bi, premiers, false, true)
       if (ed2.solved) {
-        println("     ", bi, mod + bi, ed2.primes, ed2.solved)
+        print(".")
+        val intersect = ed2.primes.toList.intersect(rootprimes.tail)
+        if (!intersect.isEmpty) {
+          println("\n" + bi, mod + bi, ed2.primes, ed2.solved)
+          println("     ", intersect)
+        }
       }
     })
-    println("mod: " + mod, mod + 2, new EulerDiv2(mod + 2, premiers).primes, "\n")
 
     var eulercoinList = List((1, root, root.toString.length))
     var max = 43000000
@@ -46,10 +47,9 @@ class EulerMain extends FlatSpec with Matchers {
         println(somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, eulercoinList)
       }
     })
-    var oldlast = eulercoinList.map(_._2).last
+    var oldhead = eulercoinList.map(_._2).head
     var vieilleSomme = eulercoinList.map(_._2).sum % mod
-    t_la = timeStamp(t_la, "après1 max: " + max + " " + vieilleSomme)
-
+    t_la = timeStamp(t_la, "après1 max: " + max + " " + vieilleSomme + " " + oldhead)
 
     var result = 0
     println("Euler700[" + result + "]")
