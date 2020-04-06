@@ -15,6 +15,8 @@ class EulerMain extends FlatSpec with Matchers {
     ((root * 3) % mod) shouldEqual BigInt("8912517754604")
     ((root * 3) % mod) < root shouldEqual true
     ((root + ((root * 3) % mod)) % mod) shouldEqual BigInt("1513083232796311")
+    /*val root = BigInt("417")
+    val mod = BigInt("1249")*/
 
     val biggestPrime = 220000
     val premiers = (new CheckEulerPrime(biggestPrime, 10000)).premiers
@@ -22,8 +24,9 @@ class EulerMain extends FlatSpec with Matchers {
     val rootdivisors = new EulerDivisors(rootprimes).getFullDivisors
     println(root, rootprimes, rootdivisors)
     println("mod/root = ", mod.toDouble / root.toDouble)
+    println("1/root = ", 1.0 / root.toDouble)
     println("mod: " + mod, mod + 2, new EulerDiv2(mod + 2, premiers).primes, "\n")
-    Range(0, 7300).toList.foreach(bi => {
+    /*Range(0, 7300).toList.foreach(bi => {
       val ed2 = new EulerDiv2(mod + bi, premiers, false, true)
       if (ed2.solved) {
         print(".")
@@ -33,18 +36,22 @@ class EulerMain extends FlatSpec with Matchers {
           println("     ", intersect)
         }
       }
-    })
+    })*/
 
     var eulercoinList = List((1, root, root.toString.length))
     var max = 43000000
     var t_la = Calendar.getInstance()
     (1 to max).foreach(n => {
-      val bi = ((root * n) % mod)
-      if (bi < eulercoinList.head._2) {
-        eulercoinList = (eulercoinList :+ (n, bi, bi.toString.length)).sortBy(_._2)
+      val reste = ((root * n) % mod)
+      val div = ((root.toDouble * n) / mod.toDouble) % 1
+      if (reste < eulercoinList.head._2) {
+        eulercoinList = (eulercoinList :+ (n, reste, reste.toString.length)).sortBy(_._2)
         val somme = eulercoinList.map(_._2).sum % mod
         //println(somme, bi, new EulerDiv2(bi, premiers).primes, eulercoinList)
-        println(somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, eulercoinList)
+        println(somme, reste, div, reste.toDouble / mod.toDouble,
+          eulercoinList.tail.head._2 - reste,
+          n - eulercoinList.tail.head._1,
+          eulercoinList)
       }
     })
     var oldhead = eulercoinList.map(_._2).head
