@@ -55,7 +55,7 @@ class EulerMain extends FlatSpec with Matchers {
     var prevx = 1.0
     eulercoinList = List((1, root))
     var max1 = 200000000
-    while (n < max1) {
+    while (n < max) {
       val bi = ((root * n) % mod)
       if (bi < eulercoinList.head._2) {
         eulercoinList = (eulercoinList :+ (n, bi)).sortBy(_._2)
@@ -77,7 +77,7 @@ class EulerMain extends FlatSpec with Matchers {
         prevy = y
         prevx = x
         n += prevdiff
-        if ((n > max) & (eulercoinList.map(_._2).last == oldlast)) {
+        if ((n > (max-3)) & (eulercoinList.map(_._2).last == oldlast)) {
           println("************Checking! @" + max + "**************")
           eulercoinList.map(_._2).sum % mod shouldEqual vieilleSomme
           timeStamp(t_la, "après2 max: " + max)
@@ -91,12 +91,15 @@ class EulerMain extends FlatSpec with Matchers {
         n += 1
       }
     }
-    t_la = timeStamp(t_la, "après2 max1: " + max1)
+    t_la = timeStamp(t_la, "après2 max: " + max)
 
-    n = 1
-    prevdiff = 1
-    prevdelta = (BigInt(0), 0.0, 0.0)
-    eulercoinList = List((1, root))
+    eulercoinList = eulercoinList.reverse.take(3)
+    n = eulercoinList.last._1
+    val prevn = eulercoinList.take(2).last._1
+    val diff = n - prevn
+    val listedesProchainsCandidats = (1 to 10).map(u => (diff + (u * n))).toList
+    println(n, eulercoinList.map(_._2).sum, eulercoinList)
+    println(n, diff, listedesProchainsCandidats)
     t_la = timeStamp(t_la, "après3 ")
 
 
