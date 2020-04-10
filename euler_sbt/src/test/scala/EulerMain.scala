@@ -32,13 +32,13 @@ class EulerMain extends FlatSpec with Matchers {
     })*/
     println(mod, mod + 2, new EulerDiv2(mod + 2, premiers).primes, "\n")
 
-    var eulercoinList = List((1, root))
+    var eulercoinList = List((BigInt(1), root))
     var max = 43000000
     var t_la = Calendar.getInstance()
     (1 to max).foreach(n => {
-      val bi = ((root * n) % mod)
+      val bi: BigInt = ((root * BigInt(n)) % mod)
       if (bi < eulercoinList.head._2) {
-        eulercoinList = (eulercoinList :+ (n, bi)).sortBy(_._2)
+        eulercoinList = (eulercoinList :+ (BigInt(n), bi)).sortBy(_._2)
         val somme = eulercoinList.map(_._2).sum % mod
         //println(somme, bi, new EulerDiv2(bi, premiers).primes, eulercoinList)
         //println(somme, bi, eulercoinList.tail.head._2 - bi, n - eulercoinList.tail.head._1, eulercoinList)
@@ -48,8 +48,8 @@ class EulerMain extends FlatSpec with Matchers {
     var vieilleSomme = eulercoinList.map(_._2).sum % mod
     t_la = timeStamp(t_la, "après1 max: " + max)
     var state = 0
-    var n = 1
-    var prevdiff = 1
+    var n = BigInt(1)
+    var prevdiff = BigInt(1)
     var prevdelta: (BigInt, Double, Double) = null
     var prevy = 1.0
     var prevx = 1.0
@@ -96,7 +96,7 @@ class EulerMain extends FlatSpec with Matchers {
     eulercoinList = eulercoinList.reverse.take(3)
     n = eulercoinList.last._1
     var prevn = eulercoinList.take(2).last._1
-    while ((n < max1) & (n != prevn)) {
+    while (n < max1) {
       if (n == 42298633) {
         println("************Checking! @" + n + "/" + max + "**************")
         eulercoinList.map(_._2).sum % mod shouldEqual vieilleSomme
@@ -104,22 +104,26 @@ class EulerMain extends FlatSpec with Matchers {
       }
       val diff = n - prevn
       val listedesProchainsCandidats = (1 to 10).map(u => (diff + (u * n))).toList
-      println(n, eulercoinList.map(_._2).sum, eulercoinList.reverse)
+      println(n, eulercoinList.map(_._2).sum % mod, eulercoinList.reverse)
       //println(" " + n, diff, listedesProchainsCandidats)
+      var found = false
       listedesProchainsCandidats.takeWhile(ncand => {
         val ecand = ((root * ncand) % mod)
         if (ecand < eulercoinList.last._2) {
           eulercoinList = (eulercoinList :+ (ncand, ecand)).sortBy(_._1)
+          found = true
           false
         } else {
           true
         }
       })
+      found shouldEqual true
       prevn = n
       n = eulercoinList.last._1
     }
     val Somme = eulercoinList.map(_._2).sum % mod
     t_la = timeStamp(t_la, "après3 max1: " + max1 + " , Somme = " + Somme)
+    println(n, eulercoinList.map(_._2).sum % mod, eulercoinList.reverse)
 
     var result = 0
     println("Euler700[" + result + "]")
