@@ -22,13 +22,15 @@ class EulerMain extends FlatSpec with Matchers {
     def F(d: Int): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
-      println(d, (start until end))
-      (start until end).toList.filter(bi => f(bi) % 3 == 0).length
+      val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
+      println(d, (start until end), z)
+      z
     }
 
     f(2573) shouldEqual 3
-    F(2) shouldEqual 30
-    F(6) shouldEqual 290898
+    val z = (2 to 6).map(i => (i, F(i)))
+    z.apply(0) shouldEqual(2, 30)
+    z.apply(4) shouldEqual(6, 290898)
 
     var result = 0
     println("Euler706[" + result + "]")
