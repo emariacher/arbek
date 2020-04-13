@@ -13,10 +13,9 @@ class EulerMain extends FlatSpec with Matchers {
     def f(n: BigInt): BigInt = {
       val s = n.toString
       val l = s.length
-      //val z = (1 to l).map(i => s.toSeq.combinations(i)).toList.flatten.filter(z => s.contains(z.mkString))
       val z = (1 to l).map(i => s.toSeq.sliding(i)).toList.flatten
-      //println(n, z.filter(u => (u.sum % 3 == 0) & (u != 0)).length, z)
-      z.filter(u => (u.sum % 3 == 0) & (u != 0)).length
+      //println(n, z.filter(u => (u.sum % 3 == 0)).length, z)
+      z.filter(u => (u.sum % 3 == 0)).length
     }
 
     def F(d: Int): BigInt = {
@@ -31,6 +30,25 @@ class EulerMain extends FlatSpec with Matchers {
     val z = (2 to 6).map(i => (i, F(i)))
     z.apply(0) shouldEqual(2, 30)
     z.apply(4) shouldEqual(6, 290898)
+
+    def f2(n: BigInt): BigInt = {
+      val s = n.toString
+      val l = s.length
+      val z = (1 to l).map(i => s.toSeq.sliding(i)).toList.flatten
+      println(n, z.filter(u => (u.sum % 3 == 0)).length, z)
+      z.filter(u => (u.sum % 3 == 0)).length
+    }
+
+    def F2(d: Int): BigInt = {
+      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
+      val end = start * 10
+      val y = (start until end).toList.filter(bi => f2(bi) % 3 == 0)
+      val z = y.length
+      println(d, (start until end), z)
+      z
+    }
+
+    F2(2)
 
     var result = 0
     println("Euler706[" + result + "]")
