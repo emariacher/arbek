@@ -54,7 +54,7 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     F2(2) shouldEqual 30
-    F2(3)
+    F2(3) shouldEqual F(3)
     F2(4)
 
     var result = 0
