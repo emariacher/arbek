@@ -14,7 +14,7 @@ class EulerMain extends FlatSpec with Matchers {
       val s = n.toString
       val l = s.length
       val z = (1 to l).map(i => s.toSeq.sliding(i)).toList.flatten
-      if(verbose) {
+      if (verbose) {
         println(n, z.filter(u => (u.sum % 3 == 0)).length, z)
       }
       z.filter(u => (u.sum % 3 == 0)).length
@@ -28,10 +28,10 @@ class EulerMain extends FlatSpec with Matchers {
       z
     }
 
-    f(2573,true) shouldEqual 3
-    f(100,true) shouldEqual 3
-    f(150,true) shouldEqual 3
-    f(1000,true) shouldEqual 6
+    f(2573, true) shouldEqual 3
+    f(100, true) shouldEqual 3
+    f(150, true) shouldEqual 3
+    f(1000, true) shouldEqual 6
     /*val z = (2 to 6).map(i => (i, F(i)))
     z.apply(0) shouldEqual(2, 30)
     z.apply(4) shouldEqual(6, 290898)*/
@@ -47,9 +47,9 @@ class EulerMain extends FlatSpec with Matchers {
     def F2(d: Int): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
-      val y = (start until end).toList.filter(bi => f2(bi).length % 3 == 0)
+      val y = (start until end).toList.map(bi => (bi, f2(bi))).filter(_._2.length % 3 == 0)
       val z = y.length
-      println(d, (start until end), z, y)
+      println(d, (start until end), z, y.groupBy(_._2.length).mkString("\n  ", "\n  ", "\n"))
       z
     }
 
