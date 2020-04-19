@@ -55,7 +55,16 @@ class EulerMain extends FlatSpec with Matchers {
 
     F2(2) shouldEqual 30
     F2(3) shouldEqual F(3)
-    F2(4)
+
+    def F3(start: BigInt, end: BigInt): BigInt = {
+      val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
+      println((start until end), z)
+      z
+    }
+
+    F3(10, 100) shouldEqual 30
+    F3(10, 20) shouldEqual F3(40, 50)
+    F3(200, 300) shouldEqual F3(800, 900)
 
     var result = 0
     println("Euler706[" + result + "]")
