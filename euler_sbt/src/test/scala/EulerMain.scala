@@ -65,6 +65,7 @@ class EulerMain extends FlatSpec with Matchers {
     F3(10, 100) shouldEqual 30
     F3(10, 20) shouldEqual F3(40, 50)
     F3(200, 300) shouldEqual F3(800, 900)
+    F3(200010010, 200010020) shouldEqual F3(200010070, 200010080)
 
     var result = 0
     println("Euler706[" + result + "]")
