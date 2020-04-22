@@ -64,7 +64,12 @@ class EulerMain extends FlatSpec with Matchers {
 
     F3(10, 100) shouldEqual 30
     F3(10, 20) shouldEqual F3(40, 50)
+    F3(20, 30) shouldEqual F3(50, 60)
+    F3(30, 40) shouldEqual F3(90, 100)
+    F3(100, 200) shouldEqual F3(400, 500)
     F3(200, 300) shouldEqual F3(800, 900)
+    F3(300, 400) shouldEqual F3(600, 700)
+    F3(100, 1000) shouldEqual ((F3(300, 400) * 3) + (F3(100, 200) * 6))
     F3(200010010, 200010020) shouldEqual F3(200010070, 200010080)
 
     var result = 0
