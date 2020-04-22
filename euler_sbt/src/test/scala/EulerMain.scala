@@ -67,8 +67,8 @@ class EulerMain extends FlatSpec with Matchers {
     F3(100, 1000) shouldEqual ((F3(300, 400) * 3) + (F3(100, 200) * 6))
     F3(200010010, 200010020) shouldEqual F3(200010070, 200010080)
     //F3(100, 200) shouldEqual (0 until 10).map(i => F3(100 + (i * 10), 100 + ((i + 1) * 10))).toList.sum
-    F3(100, 200) shouldEqual (F3(100, 110) * 7)
-    F3(1000, 2000) shouldEqual (0 until 10).map(i => F3(1000 + (i * 100), 1000 + ((i + 1) * 100))).toList.sum
+    F3(100, 200) shouldEqual ((F3(100, 110) * 7) + (F3(110, 120) * 3))
+    F3(1000, 2000) shouldEqual ((F3(1000, 1100) * 7) + (F3(1100, 1200) * 3))
     F3(300, 400) shouldEqual ((F3(300, 310) * 4) + (F3(310, 320) * 6))
     F3(3000, 4000) shouldEqual ((F3(3000, 3100) * 4) + (F3(3100, 3200) * 6))
 
