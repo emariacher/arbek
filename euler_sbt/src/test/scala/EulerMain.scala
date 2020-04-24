@@ -79,6 +79,10 @@ class EulerMain extends FlatSpec with Matchers {
     F3(1000, 1100) shouldEqual (0 until 10).map(i => F3(1000 + (i * 10), 1000 + ((i + 1) * 10))).toList.sum
     F3(1100, 1200) shouldEqual (0 until 10).map(i => F3(1100 + (i * 10), 1100 + ((i + 1) * 10))).toList.sum
 
+    def dozemap(start: BigInt, inc: BigInt): BigInt = {
+      (0 until 10).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList.sum
+    }
+
     def F4(d: Int): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
@@ -87,6 +91,10 @@ class EulerMain extends FlatSpec with Matchers {
       val result = F3(start, end)
       result shouldEqual ((((F3(start * 3, (start * 3) + delta) * 4) + (F3((start * 3) + delta, (start * 3) + (delta * 2)) * 6)) * 3) +
         (((F3(start, start + delta) * 7) + (F3(start + delta, start + (delta * 2)) * 3)) * 6))
+      F3(start * 3, (start * 3) + delta) shouldEqual dozemap(start * 3, inc)
+      F3((start * 3) + delta, (start * 3) + (delta * 2)) shouldEqual dozemap((start * 3) + delta, inc)
+      F3(start, start + delta) shouldEqual dozemap(start, inc)
+      F3(start + delta, start + (delta * 2)) shouldEqual dozemap(start + delta, inc)
       result
     }
 
@@ -97,7 +105,7 @@ class EulerMain extends FlatSpec with Matchers {
     t_la = timeStamp(t_la, "F4")
     F4(5)
     t_la = timeStamp(t_la, "F4")
-    F4(6) shouldEqual 290898
+    //F4(6) shouldEqual 290898
     t_la = timeStamp(t_la, "F4")
 
     var result = 0
