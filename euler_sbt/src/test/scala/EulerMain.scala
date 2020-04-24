@@ -62,6 +62,7 @@ class EulerMain extends FlatSpec with Matchers {
       z
     }
 
+    var t_la = Calendar.getInstance()
     F3(10, 100) shouldEqual 30
     F3(10, 100) shouldEqual ((F3(30, 40) * 3) + (F3(10, 20) * 6))
     F3(100, 1000) shouldEqual ((F3(300, 400) * 3) + (F3(100, 200) * 6))
@@ -73,7 +74,31 @@ class EulerMain extends FlatSpec with Matchers {
     F3(3000, 4000) shouldEqual ((F3(3000, 3100) * 4) + (F3(3100, 3200) * 6))
     F3(100, 1000) shouldEqual ((((F3(300, 310) * 4) + (F3(310, 320) * 6)) * 3) + (((F3(100, 110) * 7) + (F3(110, 120) * 3)) * 6))
     F3(1000, 10000) shouldEqual ((((F3(3000, 3100) * 4) + (F3(3100, 3200) * 6)) * 3) + (((F3(1000, 1100) * 7) + (F3(1100, 1200) * 3)) * 6))
+    F3(3000, 3100) shouldEqual (0 until 10).map(i => F3(3000 + (i * 10), 3000 + ((i + 1) * 10))).toList.sum
+    F3(3100, 3200) shouldEqual (0 until 10).map(i => F3(3100 + (i * 10), 3100 + ((i + 1) * 10))).toList.sum
+    F3(1000, 1100) shouldEqual (0 until 10).map(i => F3(1000 + (i * 10), 1000 + ((i + 1) * 10))).toList.sum
+    F3(1100, 1200) shouldEqual (0 until 10).map(i => F3(1100 + (i * 10), 1100 + ((i + 1) * 10))).toList.sum
 
+    def F4(d: Int): BigInt = {
+      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
+      val end = start * 10
+      val delta = start / 10
+      val inc = delta / 10
+      val result = F3(start, end)
+      result shouldEqual ((((F3(start * 3, (start * 3) + delta) * 4) + (F3((start * 3) + delta, (start * 3) + (delta * 2)) * 6)) * 3) +
+        (((F3(start, start + delta) * 7) + (F3(start + delta, start + (delta * 2)) * 3)) * 6))
+      result
+    }
+
+    t_la = timeStamp(t_la, "F3")
+    F4(3) shouldEqual 342
+    t_la = timeStamp(t_la, "F4")
+    F4(4)
+    t_la = timeStamp(t_la, "F4")
+    F4(5)
+    t_la = timeStamp(t_la, "F4")
+    F4(6) shouldEqual 290898
+    t_la = timeStamp(t_la, "F4")
 
     var result = 0
     println("Euler706[" + result + "]")
