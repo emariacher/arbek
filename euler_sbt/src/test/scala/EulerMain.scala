@@ -95,11 +95,12 @@ class EulerMain extends FlatSpec with Matchers {
       if (check) {
         F3(start, end) shouldEqual result
       }
+      println("")
       F3(start * 3, (start * 3) + delta) shouldEqual dozemap(start * 3, inc)
       F3((start * 3) + delta, (start * 3) + (delta * 2)) shouldEqual dozemap((start * 3) + delta, inc)
       F3(start, start + delta) shouldEqual dozemap(start, inc)
       F3(start + delta, start + (delta * 2)) shouldEqual dozemap(start + delta, inc)
-      println("**[" + start + "-" + end + "]: " + result)
+      println("**[" + start + "-" + end + "]: " + result + "               delta: " + delta + ", inc: " + inc)
       result
     }
 
