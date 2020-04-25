@@ -95,17 +95,16 @@ class EulerMain extends FlatSpec with Matchers {
       val end = start * 10
       val delta = start / 10
       val inc = delta / 10
-      val lmilieu = dozemap((start * 3) + delta, inc)
-      val result = ((((F3(start * 3, (start * 3) + inc) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
-        (((getMapResult(lmilieu._1.reverse) * 7) + (F3(start + delta, start + delta + inc) * 30)) * 6)
+      val result = ((((F3(start * 3, (start * 3) + inc) * 40) + (F3((start * 3) + delta, (start * 3) + (delta * 2)) * 6)) * 3) +
+        (((F3(start, start + delta) * 7) + (F3(start + delta, start + delta + inc) * 30)) * 6)
         )
       if (check) {
         F3(start, end) shouldEqual result
       }
       println("")
       F3(start * 3, (start * 3) + inc) shouldEqual dozemap(start * 3, inc / 10)._2
-      //F3((start * 3) + delta, (start * 3) + (delta * 2)) shouldEqual dozemap((start * 3) + delta, inc)._2
-      //F3(start, start + delta) shouldEqual dozemap(start, inc)._2
+      F3((start * 3) + delta, (start * 3) + (delta * 2)) shouldEqual dozemap((start * 3) + delta, inc)._2
+      F3(start, start + delta) shouldEqual dozemap(start, inc)._2
       F3(start + delta, start + delta + inc) shouldEqual dozemap(start + delta, inc / 10)._2
       println("**[" + start + "-" + end + "]: " + result + "               delta: " + delta + ", inc: " + inc)
       result
@@ -120,6 +119,29 @@ class EulerMain extends FlatSpec with Matchers {
     t_la = timeStamp(t_la, "F4" + 5)
     F4(6, false) shouldEqual 290898
     t_la = timeStamp(t_la, "F4" + 6)
+
+    def F5(d: Int, check: Boolean = true): BigInt = {
+      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
+      val end = start * 10
+      val delta = start / 10
+      val inc = delta / 10
+      F3(start * 3, (start * 3) + inc) shouldEqual dozemap(start * 3, inc / 10)._2
+      val lmilieu = dozemap((start * 3) + delta, inc)
+      F3(start + delta, start + delta + inc) shouldEqual dozemap(start + delta, inc / 10)._2
+      val result = ((((F3(start * 3, (start * 3) + inc) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
+        (((getMapResult(lmilieu._1.reverse) * 7) + (F3(start + delta, start + delta + inc) * 30)) * 6)
+        )
+      if (check) {
+        F3(start, end) shouldEqual result
+      }
+      println("")
+      println("**[" + start + "-" + end + "]: " + result + "               delta: " + delta + ", inc: " + inc)
+      result
+    }
+
+    F5(6, false) shouldEqual 290898
+    t_la = timeStamp(t_la, "F5" + 6)
+
 
     var result = 0
     println("Euler706[" + result + "]")
