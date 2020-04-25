@@ -80,17 +80,20 @@ class EulerMain extends FlatSpec with Matchers {
     F3(1100, 1200) shouldEqual (0 until 10).map(i => F3(1100 + (i * 10), 1100 + ((i + 1) * 10))).toList.sum
 
     def dozemap(start: BigInt, inc: BigInt): BigInt = {
-      (0 until 10).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList.sum
+      val troisPremiersIcrements = (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+      (troisPremiersIcrements.apply(0) * 4) + (troisPremiersIcrements.apply(1) * 3) + (troisPremiersIcrements.apply(2) * 3)
     }
 
-    def F4(d: Int): BigInt = {
+    def F4(d: Int, check: Boolean = true): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
       val delta = start / 10
       val inc = delta / 10
-      val result = F3(start, end)
-      result shouldEqual ((((F3(start * 3, (start * 3) + delta) * 4) + (F3((start * 3) + delta, (start * 3) + (delta * 2)) * 6)) * 3) +
+      val result = ((((F3(start * 3, (start * 3) + delta) * 4) + (F3((start * 3) + delta, (start * 3) + (delta * 2)) * 6)) * 3) +
         (((F3(start, start + delta) * 7) + (F3(start + delta, start + (delta * 2)) * 3)) * 6))
+      if (check) {
+        F3(start, end) shouldEqual result
+      }
       F3(start * 3, (start * 3) + delta) shouldEqual dozemap(start * 3, inc)
       F3((start * 3) + delta, (start * 3) + (delta * 2)) shouldEqual dozemap((start * 3) + delta, inc)
       F3(start, start + delta) shouldEqual dozemap(start, inc)
@@ -105,7 +108,7 @@ class EulerMain extends FlatSpec with Matchers {
     t_la = timeStamp(t_la, "F4")
     F4(5)
     t_la = timeStamp(t_la, "F4")
-    //F4(6) shouldEqual 290898
+    F4(6, false) shouldEqual 290898
     t_la = timeStamp(t_la, "F4")
 
     var result = 0
