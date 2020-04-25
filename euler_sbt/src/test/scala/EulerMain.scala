@@ -36,7 +36,7 @@ class EulerMain extends FlatSpec with Matchers {
     z.apply(0) shouldEqual(2, 30)
     z.apply(4) shouldEqual(6, 290898)*/
 
-    def f2(n: BigInt): List[BigInt] = {
+    /*def f2(n: BigInt): List[BigInt] = {
       val s = n.toString
       val l = s.length
       val z = (1 to l).map(i => s.toSeq.sliding(i)).toList.flatten
@@ -54,16 +54,16 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     F2(2) shouldEqual 30
-    F2(3) shouldEqual F(3)
+    F2(3) shouldEqual F(3)*/
 
     def F3(start: BigInt, end: BigInt): BigInt = {
       val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
-      println((start until end), z)
+      print(" [" + start + "-" + end + "]: " + z + ",")
       z
     }
 
     var t_la = Calendar.getInstance()
-    F3(10, 100) shouldEqual 30
+    /*F3(10, 100) shouldEqual 30
     F3(10, 100) shouldEqual ((F3(30, 40) * 3) + (F3(10, 20) * 6))
     F3(100, 1000) shouldEqual ((F3(300, 400) * 3) + (F3(100, 200) * 6))
     F3(200010010, 200010020) shouldEqual F3(200010070, 200010080)
@@ -77,10 +77,11 @@ class EulerMain extends FlatSpec with Matchers {
     F3(3000, 3100) shouldEqual (0 until 10).map(i => F3(3000 + (i * 10), 3000 + ((i + 1) * 10))).toList.sum
     F3(3100, 3200) shouldEqual (0 until 10).map(i => F3(3100 + (i * 10), 3100 + ((i + 1) * 10))).toList.sum
     F3(1000, 1100) shouldEqual (0 until 10).map(i => F3(1000 + (i * 10), 1000 + ((i + 1) * 10))).toList.sum
-    F3(1100, 1200) shouldEqual (0 until 10).map(i => F3(1100 + (i * 10), 1100 + ((i + 1) * 10))).toList.sum
+    F3(1100, 1200) shouldEqual (0 until 10).map(i => F3(1100 + (i * 10), 1100 + ((i + 1) * 10))).toList.sum*/
 
     def dozemap(start: BigInt, inc: BigInt): BigInt = {
       val troisPremiersIcrements = (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+      println("")
       (troisPremiersIcrements.apply(0) * 4) + (troisPremiersIcrements.apply(1) * 3) + (troisPremiersIcrements.apply(2) * 3)
     }
 
@@ -98,18 +99,19 @@ class EulerMain extends FlatSpec with Matchers {
       F3((start * 3) + delta, (start * 3) + (delta * 2)) shouldEqual dozemap((start * 3) + delta, inc)
       F3(start, start + delta) shouldEqual dozemap(start, inc)
       F3(start + delta, start + (delta * 2)) shouldEqual dozemap(start + delta, inc)
+      println("**[" + start + "-" + end + "]: " + result)
       result
     }
 
     t_la = timeStamp(t_la, "F3")
     F4(3) shouldEqual 342
-    t_la = timeStamp(t_la, "F4")
+    t_la = timeStamp(t_la, "F4 " + 3)
     F4(4)
-    t_la = timeStamp(t_la, "F4")
+    t_la = timeStamp(t_la, "F4" + 4)
     F4(5)
-    t_la = timeStamp(t_la, "F4")
+    t_la = timeStamp(t_la, "F4" + 5)
     F4(6, false) shouldEqual 290898
-    t_la = timeStamp(t_la, "F4")
+    t_la = timeStamp(t_la, "F4" + 6)
 
     var result = 0
     println("Euler706[" + result + "]")
