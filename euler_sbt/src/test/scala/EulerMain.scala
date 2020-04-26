@@ -110,21 +110,22 @@ class EulerMain extends FlatSpec with Matchers {
       result
     }
 
-    t_la = timeStamp(t_la, "F3")
-    //F4(3) shouldEqual 342
-    t_la = timeStamp(t_la, "F4 " + 3)
-    F4(4)
-    t_la = timeStamp(t_la, "F4" + 4)
-    F4(5)
-    t_la = timeStamp(t_la, "F4" + 5)
-    F4(6, false) shouldEqual 290898
-    t_la = timeStamp(t_la, "F4" + 6)
+    /*    t_la = timeStamp(t_la, "F3")
+        //F4(3) shouldEqual 342
+        t_la = timeStamp(t_la, "F4 " + 3)
+        F4(4)
+        t_la = timeStamp(t_la, "F4" + 4)
+        F4(5)
+        t_la = timeStamp(t_la, "F4" + 5)
+        F4(6, false) shouldEqual 290898
+        t_la = timeStamp(t_la, "F4" + 6)*/
 
     def F5(d: Int, check: Boolean = true): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
       val delta = start / 10
       val inc = delta / 10
+      println("")
       F3(start * 3, (start * 3) + inc) shouldEqual dozemap(start * 3, inc / 10)._2
       val lmilieu = dozemap((start * 3) + delta, inc)
       F3(start + delta, start + delta + inc) shouldEqual dozemap(start + delta, inc / 10)._2
@@ -134,12 +135,15 @@ class EulerMain extends FlatSpec with Matchers {
       if (check) {
         F3(start, end) shouldEqual result
       }
-      println("")
-      println("**[" + start + "-" + end + "]: " + result + "               delta: " + delta + ", inc: " + inc)
+      println("\n**[" + d + "][" + start + "-" + end + "]: " + result + "         delta: " + delta + ", inc: " + inc)
       result
     }
 
+    F5(4, false)
+    F5(5, false)
     F5(6, false) shouldEqual 290898
+    F5(7, false)
+    F5(8, false)
     t_la = timeStamp(t_la, "F5" + 6)
 
 
