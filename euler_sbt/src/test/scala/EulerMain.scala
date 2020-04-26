@@ -95,7 +95,9 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     def dozemaps(start: BigInt, inc: BigInt): List[BigInt] = {
+      print("   dzms:")
       val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+      println(" -> " + getMapResults(deuxPremiersIcrements))
       deuxPremiersIcrements
     }
 
@@ -144,14 +146,12 @@ class EulerMain extends FlatSpec with Matchers {
       val delta = start / 10
       val inc = delta / 10
       println("")
-      F3(start * 3, (start * 3) + inc) shouldEqual dozemap(start * 3, inc / 10)._2
       val lmilieu = ((d - 2) % 3) match {
         case 0 => dozemap((start * 3) + delta, inc)
         case _ => getMilieu((start * 3) + delta, inc)
       }
-      F3(start + delta, start + delta + inc) shouldEqual dozemap(start + delta, inc / 10)._2
-      val result = ((((F3(start * 3, (start * 3) + inc) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
-        (((getMapResult(lmilieu._1.reverse) * 7) + (F3(start + delta, start + delta + inc) * 30)) * 6)
+      val result = ((((getMapResults(dozemaps(start * 3, inc / 10)) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
+        (((getMapResult(lmilieu._1.reverse) * 7) + (getMapResults(dozemaps(start + delta, inc / 10)) * 30)) * 6)
         )
       if (check) {
         F3(start, end) shouldEqual result
