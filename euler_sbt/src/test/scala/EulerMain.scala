@@ -83,11 +83,20 @@ class EulerMain extends FlatSpec with Matchers {
       (l.head * 4) + (l.tail.sum * 3)
     }
 
+    def getMapResults(l: List[BigInt]): BigInt = {
+      (l.head * 4) + (l.last * 6)
+    }
+
     def dozemap(start: BigInt, inc: BigInt): (List[BigInt], BigInt) = {
       print("   dzm:")
       val troisPremiersIcrements = (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
       println(" -> " + getMapResult(troisPremiersIcrements))
       (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
+    }
+
+    def dozemaps(start: BigInt, inc: BigInt): List[BigInt] = {
+      val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+      deuxPremiersIcrements
     }
 
     def F4(d: Int, check: Boolean = true): BigInt = {
@@ -120,6 +129,15 @@ class EulerMain extends FlatSpec with Matchers {
         F4(6, false) shouldEqual 290898
         t_la = timeStamp(t_la, "F4" + 6)*/
 
+    def getMilieu(start: BigInt, inc: BigInt): (List[BigInt], BigInt) = {
+      val lm = List(dozemaps(start, inc / 10),
+        dozemaps(start + inc, inc / 10))
+      val result = List((lm.head.head * 7) + (lm.head.last * 3), (lm.last.head * 7) + (lm.last.last * 3),
+        (((inc / 10 - lm.map(_.head).sum) * 7) + ((inc / 10 - lm.map(_.last).sum) * 3)))
+      println(" ------------- : " + result)
+      (result, getMapResult(result))
+    }
+
     def F5(d: Int, check: Boolean = true): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
@@ -127,11 +145,8 @@ class EulerMain extends FlatSpec with Matchers {
       val inc = delta / 10
       println("")
       F3(start * 3, (start * 3) + inc) shouldEqual dozemap(start * 3, inc / 10)._2
-      val lmilieu = dozemap((start * 3) + delta, inc)
-      val lm = List(dozemap((start * 3) + delta, inc / 10),
-        dozemap((start * 3) + delta + inc, inc / 10),
-        dozemap((start * 3) + delta + inc + inc, inc / 10))
-      println("               " + lm.map(_._1.head).sum + "   " + lm.map(_._1.tail.head).sum)
+      //val lmilieu = dozemap((start * 3) + delta, inc)
+      val lmilieu = getMilieu((start * 3) + delta, inc)
       F3(start + delta, start + delta + inc) shouldEqual dozemap(start + delta, inc / 10)._2
       val result = ((((F3(start * 3, (start * 3) + inc) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
         (((getMapResult(lmilieu._1.reverse) * 7) + (F3(start + delta, start + delta + inc) * 30)) * 6)
