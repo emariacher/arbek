@@ -164,8 +164,7 @@ class EulerMain extends FlatSpec with Matchers {
         t_la = timeStamp(t_la, "F4" + 6)*/
 
     def getMilieu(start: BigInt, inc: BigInt): (List[BigInt], BigInt) = {
-      val lm = List(dozemaps(start, inc / 10),
-        dozemaps(start + inc, inc / 10))
+      val lm = List(dozemaps3(start, inc / 10), dozemaps3(start + inc, inc / 10))
       val result = List((lm.head.head * 7) + (lm.head.last * 3), (lm.last.head * 7) + (lm.last.last * 3),
         (((inc / 10 - lm.map(_.head).sum) * 7) + ((inc / 10 - lm.map(_.last).sum) * 3)))
       println(" ------------- : " + result)
@@ -195,6 +194,7 @@ class EulerMain extends FlatSpec with Matchers {
     F5(6) shouldEqual 290898
     F5(7) shouldEqual 3023178
     F5(8) shouldEqual 30000000
+    F5(9)
     t_la = timeStamp(t_la, "F5" + 6)
 
 
