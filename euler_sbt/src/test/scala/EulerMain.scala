@@ -104,7 +104,7 @@ class EulerMain extends FlatSpec with Matchers {
     def dozemaps2(start: BigInt, inc: BigInt): List[BigInt] = {
       print("   dzms2:")
       val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-      val plusrapide = List(getMapResult(dozemap(start, inc / 10)._1), getMapResult(dozemap(start + inc, inc / 10)._1))
+      val plusrapide = List(getMapResults(dozemaps(start, inc / 10)), getMapResult(dozemap(start + inc, inc / 10)._1))
       println(" -> " + getMapResults(deuxPremiersIcrements))
       deuxPremiersIcrements shouldEqual plusrapide
       deuxPremiersIcrements
