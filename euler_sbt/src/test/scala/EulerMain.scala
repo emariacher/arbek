@@ -101,6 +101,15 @@ class EulerMain extends FlatSpec with Matchers {
       deuxPremiersIcrements
     }
 
+    def dozemaps2(start: BigInt, inc: BigInt): List[BigInt] = {
+      print("   dzms2:")
+      val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+      val plusrapide = List(getMapResult(dozemap(start, inc / 10)._1), getMapResult(dozemap(start + inc, inc / 10)._1))
+      println(" -> " + getMapResults(deuxPremiersIcrements))
+      deuxPremiersIcrements shouldEqual plusrapide
+      deuxPremiersIcrements
+    }
+
     def F4(d: Int, check: Boolean = true): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
@@ -140,7 +149,7 @@ class EulerMain extends FlatSpec with Matchers {
       (result, getMapResult(result))
     }
 
-    def F5(d: Int, check: Boolean = false): BigInt = {
+    def F5(d: Int): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString)
       val end = start * 10
       val delta = start / 10
@@ -150,19 +159,16 @@ class EulerMain extends FlatSpec with Matchers {
         case 0 => dozemap((start * 3) + delta, inc)
         case _ => getMilieu((start * 3) + delta, inc)
       }
-      val result = ((((getMapResults(dozemaps(start * 3, inc / 10)) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
+      val result = ((((getMapResults(dozemaps2(start * 3, inc / 10)) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
         (((getMapResult(lmilieu._1.reverse) * 7) + (getMapResults(dozemaps(start + delta, inc / 10)) * 30)) * 6)
         )
-      if (check) {
-        F3(start, end) shouldEqual result
-      }
-      println("\n**[" + d + "][" + start + "-" + end + "]: " + result + "         delta: " + delta + ", inc: " + inc)
+      println("**[" + d + "][" + start + "-" + end + "]: " + result + "         delta: " + delta + ", inc: " + inc)
       result
     }
 
     F3(10, 100) shouldEqual 30
     F4(4)
-    F5(5, true) shouldEqual 30000
+    F5(5) shouldEqual 30000
     F5(6) shouldEqual 290898
     F5(7) shouldEqual 3023178
     F5(8) shouldEqual 30000000
