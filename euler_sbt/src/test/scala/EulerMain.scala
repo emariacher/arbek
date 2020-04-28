@@ -94,6 +94,18 @@ class EulerMain extends FlatSpec with Matchers {
       (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
     }
 
+    def dozemap2(start: BigInt, inc: BigInt): (List[BigInt], BigInt) = {
+      print("   dzm2:")
+      val troisPremiersIcrements = inc.toInt match {
+        case 10 => (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+        case _ => List(getMapResult(dozemap2(start, inc / 10)._1),
+          getMapResult(dozemap2(start + inc, inc / 10)._1),
+          getMapResult(dozemap2(start + inc + inc, inc / 10)._1))
+      }
+      println(" -> " + getMapResult(troisPremiersIcrements))
+      (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
+    }
+
     def dozemaps(start: BigInt, inc: BigInt): List[BigInt] = {
       print("   dzms:")
       val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
@@ -103,10 +115,11 @@ class EulerMain extends FlatSpec with Matchers {
 
     def dozemaps2(start: BigInt, inc: BigInt): List[BigInt] = {
       print("   dzms2:")
-      val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-      val plusrapide = List(getMapResults(dozemaps(start, inc / 10)), getMapResult(dozemap(start + inc, inc / 10)._1))
+      val deuxPremiersIcrements = inc.toInt match {
+        case 10 => (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+        case _ => List(getMapResults(dozemaps2(start, inc / 10)), getMapResult(dozemap2(start + inc, inc / 10)._1))
+      }
       println(" -> " + getMapResults(deuxPremiersIcrements))
-      deuxPremiersIcrements shouldEqual plusrapide
       deuxPremiersIcrements
     }
 
