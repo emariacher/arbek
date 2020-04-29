@@ -167,7 +167,7 @@ class EulerMain extends FlatSpec with Matchers {
       val lm = List(dozemaps3(start, inc / 10), dozemaps3(start + inc, inc / 10))
       val result = List((lm.head.head * 7) + (lm.head.last * 3), (lm.last.head * 7) + (lm.last.last * 3),
         (((inc / 10 - lm.map(_.head).sum) * 7) + ((inc / 10 - lm.map(_.last).sum) * 3)))
-      println(" ------------- : " + result)
+      println("getMilieu : " + result)
       (result, getMapResult(result))
     }
 
@@ -181,8 +181,12 @@ class EulerMain extends FlatSpec with Matchers {
         case 0 => dozemap((start * 3) + delta, inc)
         case _ => getMilieu((start * 3) + delta, inc)
       }
-      val result = ((((getMapResults(dozemaps2(start * 3, inc / 10)) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
-        (((getMapResult(lmilieu._1.reverse) * 7) + (getMapResults(dozemaps3(start + delta, inc / 10)) * 30)) * 6)
+      val r0 = dozemaps2(start * 3, inc / 10)
+      println(d + " r0: " + r0)
+      val r1 = dozemaps3(start + delta, inc / 10)
+      println(d + " r1: " + r1)
+      val result = ((((getMapResults(r0) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
+        (((getMapResult(lmilieu._1.reverse) * 7) + (getMapResults(r1) * 30)) * 6)
         )
       println("**[" + d + "][" + start + "-" + end + "]: " + result + "         delta: " + delta + ", inc: " + inc)
       result
