@@ -178,13 +178,13 @@ class EulerMain extends FlatSpec with Matchers {
       val inc = delta / 10
       println("")
       val lmilieu = ((d - 2) % 3) match {
-        case 0 => dozemap((start * 3) + delta, inc)
+        case 0 => dozemap2((start * 3) + delta, inc)
         case _ => getMilieu((start * 3) + delta, inc)
       }
       val r0 = dozemaps2(start * 3, inc / 10)
-      println(d + " r0: " + r0)
+      println("" + d + " r0: " + r0)
       val r1 = dozemaps3(start + delta, inc / 10)
-      println(d + " r1: " + r1)
+      println("" + d + " r1: " + r1)
       val result = ((((getMapResults(r0) * 40) + (getMapResult(lmilieu._1) * 6)) * 3) +
         (((getMapResult(lmilieu._1.reverse) * 7) + (getMapResults(r1) * 30)) * 6)
         )
@@ -199,6 +199,9 @@ class EulerMain extends FlatSpec with Matchers {
     F5(7) shouldEqual 3023178
     F5(8) shouldEqual 30000000
     F5(9)
+    F5(10)
+    F5(11)
+    F5(12)
     t_la = timeStamp(t_la, "F5" + 6)
 
 
