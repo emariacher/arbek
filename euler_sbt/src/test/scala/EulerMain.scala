@@ -32,52 +32,15 @@ class EulerMain extends FlatSpec with Matchers {
     f(100, true) shouldEqual 3
     f(150, true) shouldEqual 3
     f(1000, true) shouldEqual 6
-    /*val z = (2 to 6).map(i => (i, F(i)))
-    z.apply(0) shouldEqual(2, 30)
-    z.apply(4) shouldEqual(6, 290898)*/
-
-    /*def f2(n: BigInt): List[BigInt] = {
-      val s = n.toString
-      val l = s.length
-      val z = (1 to l).map(i => s.toSeq.sliding(i)).toList.flatten
-      //println(n, z.filter(u => (u.sum % 3 == 0)).length, z)
-      z.filter(u => (u.sum % 3 == 0)).map(u => BigInt(u.toString))
-    }
-
-    def F2(d: Int): BigInt = {
-      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
-      val end = start * 10
-      val y = (start until end).toList.map(bi => (bi, f2(bi))).filter(_._2.length % 3 == 0)
-      val z = y.length
-      println(d, (start until end), z, y.groupBy(_._2.length).mkString("\n  ", "\n  ", "\n"))
-      z
-    }
-
-    F2(2) shouldEqual 30
-    F2(3) shouldEqual F(3)*/
 
     def F3(start: BigInt, end: BigInt): BigInt = {
       val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
       //print(" [" + start + "-" + end + "]: " + z + ",")
+      print("," + z)
       z
     }
 
     var t_la = Calendar.getInstance()
-    /*F3(10, 100) shouldEqual 30
-    F3(10, 100) shouldEqual ((F3(30, 40) * 3) + (F3(10, 20) * 6))
-    F3(100, 1000) shouldEqual ((F3(300, 400) * 3) + (F3(100, 200) * 6))
-    F3(200010010, 200010020) shouldEqual F3(200010070, 200010080)
-    //F3(100, 200) shouldEqual (0 until 10).map(i => F3(100 + (i * 10), 100 + ((i + 1) * 10))).toList.sum
-    F3(100, 200) shouldEqual ((F3(100, 110) * 7) + (F3(110, 120) * 3))
-    F3(1000, 2000) shouldEqual ((F3(1000, 1100) * 7) + (F3(1100, 1200) * 3))
-    F3(300, 400) shouldEqual ((F3(300, 310) * 4) + (F3(310, 320) * 6))
-    F3(3000, 4000) shouldEqual ((F3(3000, 3100) * 4) + (F3(3100, 3200) * 6))
-    F3(100, 1000) shouldEqual ((((F3(300, 310) * 4) + (F3(310, 320) * 6)) * 3) + (((F3(100, 110) * 7) + (F3(110, 120) * 3)) * 6))
-    F3(1000, 10000) shouldEqual ((((F3(3000, 3100) * 4) + (F3(3100, 3200) * 6)) * 3) + (((F3(1000, 1100) * 7) + (F3(1100, 1200) * 3)) * 6))
-    F3(3000, 3100) shouldEqual (0 until 10).map(i => F3(3000 + (i * 10), 3000 + ((i + 1) * 10))).toList.sum
-    F3(3100, 3200) shouldEqual (0 until 10).map(i => F3(3100 + (i * 10), 3100 + ((i + 1) * 10))).toList.sum
-    F3(1000, 1100) shouldEqual (0 until 10).map(i => F3(1000 + (i * 10), 1000 + ((i + 1) * 10))).toList.sum
-    F3(1100, 1200) shouldEqual (0 until 10).map(i => F3(1100 + (i * 10), 1100 + ((i + 1) * 10))).toList.sum*/
 
     def getMapResult(l: List[BigInt]): BigInt = {
       (l.head * 4) + (l.tail.sum * 3)
@@ -85,56 +48,6 @@ class EulerMain extends FlatSpec with Matchers {
 
     def getMapResults(l: List[BigInt]): BigInt = {
       (l.head * 4) + (l.last * 6)
-    }
-
-    def dozemap(start: BigInt, inc: BigInt): (List[BigInt], BigInt) = {
-      print("   dzm:")
-      val troisPremiersIcrements = (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-      println(" -> " + getMapResult(troisPremiersIcrements))
-      (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
-    }
-
-    def dozemap2(start: BigInt, inc: BigInt, cpt: Int=0): (List[BigInt], BigInt) = {
-      //print("   dzm2:")
-      val cpt1= cpt+1
-      val troisPremiersIcrements = inc.toInt match {
-        case 10 => (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-        case _ => List(getMapResult(dozemap2(start, inc / 10, cpt1)._1),
-          getMapResult(dozemap2(start + inc, inc / 10, cpt1)._1),
-          getMapResult(dozemap2(start + inc + inc, inc / 10, cpt1)._1))
-      }
-      if(cpt==0) {
-        //print(" - " + getMapResult(troisPremiersIcrements))
-//        println("")
-      }
-      (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
-    }
-
-    def dozemaps(start: BigInt, inc: BigInt): List[BigInt] = {
-      print("   dzms:")
-      val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-      println(" -> " + getMapResults(deuxPremiersIcrements))
-      deuxPremiersIcrements
-    }
-
-    def dozemaps2(start: BigInt, inc: BigInt): List[BigInt] = {
-      //print("   dzms2:")
-      val deuxPremiersIcrements = inc.toInt match {
-        case 10 => (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-        case _ => List(getMapResults(dozemaps2(start, inc / 10)), getMapResult(dozemap2(start + inc, inc / 10)._1))
-      }
-      print(" -> " + getMapResults(deuxPremiersIcrements))
-      deuxPremiersIcrements
-    }
-
-    def dozemaps3(start: BigInt, inc: BigInt): List[BigInt] = {
-      print("   dzms3:")
-      val deuxPremiersIcrements = inc.toInt match {
-        case 10 => (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-        case _ => List(getMapResult(dozemap2(start, inc / 10)._1), getMapResult(dozemap2(start + inc, inc / 10)._1))
-      }
-      println(" -> " + getMapResults(deuxPremiersIcrements))
-      deuxPremiersIcrements
     }
 
     def F4(d: Int, check: Boolean = true): BigInt = {
@@ -157,15 +70,58 @@ class EulerMain extends FlatSpec with Matchers {
       result
     }
 
-    /*    t_la = timeStamp(t_la, "F3")
-        //F4(3) shouldEqual 342
-        t_la = timeStamp(t_la, "F4 " + 3)
-        F4(4)
-        t_la = timeStamp(t_la, "F4" + 4)
-        F4(5)
-        t_la = timeStamp(t_la, "F4" + 5)
-        F4(6, false) shouldEqual 290898
-        t_la = timeStamp(t_la, "F4" + 6)*/
+    def dozemap(start: BigInt, inc: BigInt): (List[BigInt], BigInt) = {
+      print("   dzm:")
+      val troisPremiersIcrements = (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+      println(" -> " + getMapResult(troisPremiersIcrements))
+      (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
+    }
+
+    def dozemap2(start: BigInt, inc: BigInt, cpt: Int = 0): (List[BigInt], BigInt) = {
+      //print("   dzm2:")
+      val cpt1 = cpt + 1
+      val troisPremiersIcrements = inc.toInt match {
+        case 10 =>
+          val r = (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+          print(" ")
+          r
+        case _ => List(getMapResult(dozemap2(start, inc / 10, cpt1)._1),
+          getMapResult(dozemap2(start + inc, inc / 10, cpt1)._1),
+          getMapResult(dozemap2(start + inc + inc, inc / 10, cpt1)._1))
+      }
+      if (cpt == 0) {
+        //print(" - " + getMapResult(troisPremiersIcrements))
+        //print(" ")
+      }
+      (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
+    }
+
+    def dozemaps(start: BigInt, inc: BigInt): List[BigInt] = {
+      print("   dzms:")
+      val deuxPremiersIcrements = (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+      println(" -> " + getMapResults(deuxPremiersIcrements))
+      deuxPremiersIcrements
+    }
+
+    def dozemaps2(start: BigInt, inc: BigInt): List[BigInt] = {
+      //print("   dzms2:")
+      val deuxPremiersIcrements = inc.toInt match {
+        case 10 => (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+        case _ => List(getMapResults(dozemaps2(start, inc / 10)), getMapResult(dozemap2(start + inc, inc / 10)._1))
+      }
+      println(" -> " + (deuxPremiersIcrements, getMapResults(deuxPremiersIcrements)))
+      deuxPremiersIcrements
+    }
+
+    def dozemaps3(start: BigInt, inc: BigInt): List[BigInt] = {
+      print("   dzms3:")
+      val deuxPremiersIcrements = inc.toInt match {
+        case 10 => (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
+        case _ => List(getMapResult(dozemap2(start, inc / 10)._1), getMapResult(dozemap2(start + inc, inc / 10)._1))
+      }
+      println(" -> " + getMapResults(deuxPremiersIcrements))
+      deuxPremiersIcrements
+    }
 
     def getMilieu(start: BigInt, inc: BigInt): (List[BigInt], BigInt) = {
       val lm = List(dozemaps3(start, inc / 10), dozemaps3(start + inc, inc / 10))
