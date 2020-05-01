@@ -33,6 +33,15 @@ class EulerMain extends FlatSpec with Matchers {
     f(150, true) shouldEqual 3
     f(1000, true) shouldEqual 6
 
+    def F2(d: Int, delta: BigInt): BigInt = {
+      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
+      val end = start + delta
+      val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
+      println(d, (start until end), z)
+      z
+    }
+
+
     def F3(start: BigInt, end: BigInt): BigInt = {
       val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
       //print(" [" + start + "-" + end + "]: " + z + ",")
@@ -90,7 +99,8 @@ class EulerMain extends FlatSpec with Matchers {
           getMapResult(dozemap2(start + inc + inc, inc / 10, cpt1)._1))
       }
       if (cpt == 0) {
-        //print(" - " + getMapResult(troisPremiersIcrements))
+        println("" + start + " - " + (start + (inc * 10)) + ": " +
+          (troisPremiersIcrements, getMapResult(troisPremiersIcrements)))
         //print(" ")
       }
       (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
@@ -153,7 +163,12 @@ class EulerMain extends FlatSpec with Matchers {
     }
 
     F3(10, 100) shouldEqual 30
-    F4(4)
+    dozemap2(1000, 10)
+
+    (2 to 10).map(d => F2(d, 10))
+    (4 to 10).map(d => F2(d, 100))
+
+    /*F4(4)
     F5(5) shouldEqual 30000
     F5(6) shouldEqual 290898
     F5(7) shouldEqual 3023178
@@ -161,7 +176,7 @@ class EulerMain extends FlatSpec with Matchers {
     F5(9)
     F5(10)
     F5(11)
-    F5(12)
+    F5(12)*/
     t_la = timeStamp(t_la, "F5" + 6)
 
 
