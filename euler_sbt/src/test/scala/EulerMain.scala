@@ -33,8 +33,8 @@ class EulerMain extends FlatSpec with Matchers {
     f(150, true) shouldEqual 3
     f(1000, true) shouldEqual 6
 
-    def F2(d: Int, delta: BigInt): BigInt = {
-      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
+    def F2(d: Int, DeltaStart: BigInt, delta: BigInt): BigInt = {
+      val start = BigInt("1" + (2 to d).map(z => "0").mkString) + DeltaStart
       val end = start + delta
       val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
       println(d, (start until end), z)
@@ -45,7 +45,7 @@ class EulerMain extends FlatSpec with Matchers {
     def F3(start: BigInt, end: BigInt): BigInt = {
       val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
       //print(" [" + start + "-" + end + "]: " + z + ",")
-      print("," + z)
+      //print("," + z)
       z
     }
 
@@ -98,10 +98,14 @@ class EulerMain extends FlatSpec with Matchers {
           getMapResult(dozemap2(start + inc, inc / 10, cpt1)._1),
           getMapResult(dozemap2(start + inc + inc, inc / 10, cpt1)._1))
       }
+      val s = (0 to cpt1).map(i => " ").mkString("")
       if (cpt == 0) {
-        println("" + start + " - " + (start + (inc * 10)) + ": " +
+        println(s + start + " - " + (start + (inc * 10)) + ": " +
           (troisPremiersIcrements, getMapResult(troisPremiersIcrements)))
         //print(" ")
+      } else {
+        println(s + start + " - " + (start + (inc * 10)) + ": " +
+          (troisPremiersIcrements, getMapResult(troisPremiersIcrements)))
       }
       (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
     }
@@ -164,9 +168,17 @@ class EulerMain extends FlatSpec with Matchers {
 
     F3(10, 100) shouldEqual 30
     dozemap2(1000, 10)
+    dozemap2(10000, 100)
+    dozemap2(100000, 100)
 
-    (2 to 10).map(d => F2(d, 10))
-    (4 to 10).map(d => F2(d, 100))
+    (2 to 8).map(d => F2(d, 0, 10))
+    (4 to 10).foreach(d => {
+      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
+      println(start, start + 1000, getMapResult(List(
+        F2(d, 0, 100),
+        F2(d, 100, 100),
+        F2(d, 200, 100))))
+    })
 
     /*F4(4)
     F5(5) shouldEqual 30000
