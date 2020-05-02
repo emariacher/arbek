@@ -92,20 +92,17 @@ class EulerMain extends FlatSpec with Matchers {
       val troisPremiersIcrements = inc.toInt match {
         case 10 =>
           val r = (0 until 3).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
-          print(" ")
+          //print(" ")
           r
         case _ => List(getMapResult(dozemap2(start, inc / 10, cpt1)._1),
           getMapResult(dozemap2(start + inc, inc / 10, cpt1)._1),
           getMapResult(dozemap2(start + inc + inc, inc / 10, cpt1)._1))
       }
       val s = (0 to cpt1).map(i => " ").mkString("")
-      if (cpt == 0) {
+      if (cpt < 0) {
         println(s + start + " - " + (start + (inc * 10)) + ": " +
           (troisPremiersIcrements, getMapResult(troisPremiersIcrements)))
         //print(" ")
-      } else {
-        println(s + start + " - " + (start + (inc * 10)) + ": " +
-          (troisPremiersIcrements, getMapResult(troisPremiersIcrements)))
       }
       (troisPremiersIcrements, getMapResult(troisPremiersIcrements))
     }
@@ -123,7 +120,7 @@ class EulerMain extends FlatSpec with Matchers {
         case 10 => (0 until 2).map(i => F3(start + (i * inc), start + ((i + 1) * inc))).toList
         case _ => List(getMapResults(dozemaps2(start, inc / 10)), getMapResult(dozemap2(start + inc, inc / 10)._1))
       }
-      println(" -> " + (deuxPremiersIcrements, getMapResults(deuxPremiersIcrements)))
+      print(" -> " + getMapResults(deuxPremiersIcrements))
       deuxPremiersIcrements
     }
 
@@ -166,6 +163,16 @@ class EulerMain extends FlatSpec with Matchers {
       result
     }
 
+    def F6(d: Int): List[BigInt] = {
+      val start = BigInt("1" + (2 to d).map(z => "0").mkString)
+      val end = start * 10
+      val delta = start / 10
+      val inc = delta / 10
+      val r0 = dozemaps2(start * 3, inc / 10)
+      println("\n**[" + d + "][" + (start * 3) + "-" + ((start * 3) + inc) + "]: " + getMapResults(r0) + "         delta: " + delta + ", inc: " + inc)
+      r0
+    }
+
     F3(10, 100) shouldEqual 30
     dozemap2(1000, 10)
     dozemap2(10000, 100)
@@ -179,6 +186,8 @@ class EulerMain extends FlatSpec with Matchers {
         F2(d, 100, 100),
         F2(d, 200, 100))))
     })
+
+    (5 to 14).foreach(d => F6(d))
 
     /*F4(4)
     F5(5) shouldEqual 30000
