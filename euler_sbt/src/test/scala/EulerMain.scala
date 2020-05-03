@@ -187,7 +187,7 @@ class EulerMain extends FlatSpec with Matchers {
         F2(d, 200, 100))))
     })
 
-    (5 to 14).foreach(d => F6(d))
+    //(5 to 14).foreach(d => F6(d))
 
     /*F4(4)
     F5(5) shouldEqual 30000
