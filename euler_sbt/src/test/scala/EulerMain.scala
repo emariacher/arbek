@@ -33,11 +33,17 @@ class EulerMain extends FlatSpec with Matchers {
     f(150, true) shouldEqual 3
     f(1000, true) shouldEqual 6
 
-    def F2(d: Int, DeltaStart: BigInt, delta: BigInt): BigInt = {
+    def F2(d: Int, DeltaStart: BigInt, delta: BigInt, verbose: Int = 0): BigInt = {
       val start = BigInt("1" + (2 to d).map(z => "0").mkString) + DeltaStart
       val end = start + delta
       val z = (start until end).toList.filter(bi => f(bi) % 3 == 0).length
-      println(d, (start until end), z)
+      verbose match {
+        case 0 => println(d, (start until end), z)
+        case 1 =>
+        case 50 => print("\n," + z)
+        case _ => print("," + z)
+      }
+
       z
     }
 
@@ -187,6 +193,22 @@ class EulerMain extends FlatSpec with Matchers {
         F2(d, 200, 100))))
     })
 
+
+    def FF2(d: Int, delta: BigInt): Unit = {
+      println(F2(d, 0, delta))
+      println(F2(d, 500*100, delta))
+      (0 to 500).foreach(i => {
+        F2(4, i * 100, delta, 2)
+        if (i % 100 == 0) {
+          println("")
+        }
+      })
+      println("")
+    }
+
+    FF2(4,100)
+    FF2(7,100)
+    FF2(10,100)
     //(5 to 14).foreach(d => F6(d))
 
     /*F4(4)
