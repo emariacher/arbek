@@ -17,7 +17,7 @@ class EulerMain extends FlatSpec with Matchers {
     var t_la = Calendar.getInstance()
     val premiers1000 = EulerPrime.premiers1000
     premiers1000.foreach(p => {
-      println(p, p * p, (0 to 100).map(n => (n, f(n), OK(p, n))).filter(_._3).mkString("#"))
+      println(p, p * p, (0 to 1000).map(n => (n, f(n), OK(p, n))).filter(_._3).mkString("#"))
     })
     t_la = timeStamp(t_la, "ici")
 
