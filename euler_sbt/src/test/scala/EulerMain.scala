@@ -20,6 +20,10 @@ class EulerMain extends FlatSpec with Matchers {
       println(p, p * p, (0 to 1000).map(n => (n, f(n), OK(p, n))).filter(_._3).mkString("#"))
     })
     t_la = timeStamp(t_la, "ici")
+    println((0 to 1000).map(n => (n, f(n))).map(nn => {
+      (nn._1, nn._2, premiers1000.filter(p => nn._2 % (p * p) == 0).mkString("-"))
+    }).filter(!_._3.isEmpty).mkString("\n"))
+    t_la = timeStamp(t_la, "là")
 
     var result = 0
     println("Euler457[" + result + "]")
