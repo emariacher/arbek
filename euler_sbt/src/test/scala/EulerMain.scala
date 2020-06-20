@@ -42,10 +42,14 @@ class EulerMain extends FlatSpec with Matchers {
       println("  27", (8 to i).toList.map(j => ("27" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * (j - 2)))))
       println("  278", (3 to 6).toList.map(j => ("278" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * 6) + (factorial(i - 3) * (j - 1)))))
     })
+    println("La solution commence par 2783.")
+    val y5 = z(5)
+    println(y5.apply(0), 999999 - 999360, y5.apply(999999 - 999360))
+    println("La solution restante de 0 à 5 est " + y5.apply(639) + " a traduire en 915460")
 
-    var result = 0
+    var result = BigInt("2783915460")
     println("Euler24[" + result + "]")
-    result shouldEqual 0
+    result shouldEqual BigInt("2783915460")
   }
 
   /*"Euler457" should "be OK" in {
