@@ -10,34 +10,28 @@ class EulerMain extends FlatSpec with Matchers {
   "Euler24" should "be OK" in {
     println("Euler24")
 
-    def z(i: Int) = (0 to i).permutations.map(_.mkString("")).toList
+    def z(i: Int): List[String] = (0 to i).permutations.map(_.mkString("")).toList
 
     def factorial(n: Int): Int = n match {
       case 0 => 1
       case _ => n * factorial(n - 1)
     }
 
-    (4 to 8).foreach(i => {
+    def u(l: List[String], s: String, i: Int): (String, Int, Int) = {
+      (s, l.indexWhere(_.startsWith(s)), i)
+    }
+
+    println(z(2))
+    (6 to 8).foreach(i => {
       val y = z(i)
-      println(i, factorial(i + 1), y.length, Math.pow(i, i - 4).toInt, y.apply(Math.pow(i, i - 4).toInt))
-      println("  ", y.indexWhere(_.startsWith("013")), y.indexWhere(_.startsWith("014")),
-        y.indexWhere(_.startsWith("015")), y.indexWhere(_.startsWith("016")), y.indexWhere(_.startsWith("017")), y.indexWhere(_.startsWith("018")))
-      println("  ", factorial(i - 2), factorial(i - 2) * 2, factorial(i - 2) * 3)
-      println("    ", y.indexWhere(_.startsWith("021")), y.indexWhere(_.startsWith("023")),
-        y.indexWhere(_.startsWith("024")), y.indexWhere(_.startsWith("025")), y.indexWhere(_.startsWith("026")))
-      println("    ", factorial(i - 1), factorial(i - 1) + factorial(i - 2), factorial(i - 1) + (2 * factorial(i - 2)))
-      println("      ", y.indexWhere(_.startsWith("031")), y.indexWhere(_.startsWith("032")), y.indexWhere(_.startsWith("034")), y.indexWhere(_.startsWith("035")))
-      println("      ", factorial(i - 1) * 2, (factorial(i - 1) * 2) + factorial(i - 2), (factorial(i - 1) * 2) + (2 * factorial(i - 2)), (factorial(i - 1) * 2) + (3 * factorial(i - 2)))
-      println("        ", y.indexWhere(_.startsWith("041")))
-      println("041     ", factorial(i - 1) * 3)
+      println(i, factorial(i), (0 to i).toList.map(j => u(y, j.toString, factorial(i) * j)))
+      println("  2", (0 to 1).toList.map(j => u(y, "2" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * j))))
+      println("  2", (3 to i).toList.map(j => u(y, "2" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * (j - 1)))))
     })
 
-    (4 to 10).foreach(i => {
-      println(i, factorial(i + 1), Math.pow(i, i - 4).toInt)
-      println("    ", factorial(i - 1), factorial(i - 1) + factorial(i - 2), factorial(i - 1) + (2 * factorial(i - 2)))
-      println("      ", factorial(i - 1) * 2, (factorial(i - 1) * 2) + factorial(i - 2), (factorial(i - 1) * 2) + (2 * factorial(i - 2)),
-        (factorial(i - 1) * 2) + (3 * factorial(i - 2)), (factorial(i - 1) * 2) + (4 * factorial(i - 2)), (factorial(i - 1) * 2) + (5 * factorial(i - 2)))
-      println("041     ", factorial(i - 1) * 3)
+    (6 to 9).foreach(i => {
+      println(i, factorial(i), (0 to i).toList.map(j => (j.toString, factorial(i) * j)))
+      println("  2", (3 to i).toList.map(j => ("2" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * (j - 1)))))
     })
 
     var result = 0
