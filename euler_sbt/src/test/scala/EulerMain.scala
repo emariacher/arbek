@@ -17,8 +17,8 @@ class EulerMain extends FlatSpec with Matchers {
       case _ => n * factorial(n - 1)
     }
 
-    def u(l: List[String], s: String, i: Int): (String, Int, Int) = {
-      if ((i != 0) & (l.indexWhere(_.startsWith(s)) >= 0)) {
+    def u(l: List[String], s: String, i: Int, check: Boolean = true): (String, Int, Int) = {
+      if ((i != 0) & (l.indexWhere(_.startsWith(s)) >= 0) & check) {
         i shouldEqual l.indexWhere(_.startsWith(s))
       }
       (s, l.indexWhere(_.startsWith(s)), i)
@@ -33,11 +33,14 @@ class EulerMain extends FlatSpec with Matchers {
       println("  27", (0 to 1).toList.map(j => u(y, "27" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * j))))
       println("  27", (3 to 6).toList.map(j => u(y, "27" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * (j - 1)))))
       println("  27", (8 to i).toList.map(j => u(y, "27" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * (j - 2)))))
+      println("  278", (3 to 6).toList.map(j => u(y, "278" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * 6) + (factorial(i - 3) * (j - 1)), true)))
     })
 
     (6 to 9).foreach(i => {
       println(i, factorial(i), (0 to i).toList.map(j => (j.toString, factorial(i) * j)))
       println("  2", (3 to i).toList.map(j => ("2" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * (j - 1)))))
+      println("  27", (8 to i).toList.map(j => ("27" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * (j - 2)))))
+      println("  278", (3 to 6).toList.map(j => ("278" + j.toString, (factorial(i) * 2) + (factorial(i - 1) * 6) + (factorial(i - 2) * 6) + (factorial(i - 3) * (j - 1)))))
     })
 
     var result = 0
