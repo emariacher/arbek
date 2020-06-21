@@ -34,12 +34,11 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(premiers.take(4).product.toInt)
     resilience(premiers.take(5).product.toInt)
     resilience(2 * premiers.take(5).product.toInt)
-    resilience(2 * 2 * premiers.take(5).product.toInt)
-    resilience(2 * 3 * premiers.take(5).product.toInt)
-    resilience(2 * 2 * 3 * premiers.take(5).product.toInt)
-    resilience(2 * 3 * 5 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
+    resilience(premiers.take(6).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(6).product.toInt)
+    resilience(premiers.take(7).product.toInt)
+    resilience(premiers.take(8).product.toInt)
 
     val result = 0
     println("Euler243[" + result + "]")
