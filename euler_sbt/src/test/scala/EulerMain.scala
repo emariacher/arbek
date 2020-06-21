@@ -8,7 +8,6 @@ import scala.math.BigInt
 class EulerMain extends FlatSpec with Matchers {
 
 
-
   "Euler243" should "be OK" in {
     println("Euler243")
     val premiers = EulerPrime.premiers1000
@@ -30,6 +29,7 @@ class EulerMain extends FlatSpec with Matchers {
 
     resilience(12) shouldEqual(4, 11)
     println(1.0 * 15499 / 94744)
+    println(94745, new EulerDiv(94745).primes)
 
     resilience(premiers.take(4).product.toInt)
     resilience(premiers.take(5).product.toInt)
@@ -39,6 +39,7 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(2 * 2 * 3 * premiers.take(5).product.toInt)
     resilience(2 * 3 * 5 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
+    resilience(2 * 2 * 3 * 3 * premiers.take(6).product.toInt)
 
     val result = 0
     println("Euler243[" + result + "]")
