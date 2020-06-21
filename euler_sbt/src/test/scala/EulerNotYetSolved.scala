@@ -46,45 +46,32 @@ class EulerNotYetSolved extends FlatSpec with Matchers {
 
   }
 
-  "Euler243" should "be OK" in {
-    println("Euler243")
-    val premiers = EulerPrime.premiers1000
 
-    def resilience(d: Int) = {
-      val primes = new EulerDiv(d).primes
-      val divisors = new EulerDivisors(primes).divisors
-      val resil = Range(1, d, 2).filter(i => {
-        //divisors.filter(div => i % div == 0).isEmpty
-        divisors.find(div => i % div == 0) match {
-          case Some(i) => false
-          case _ => true
-        }
-      })
-      val pgcd_primes = new EulerDiv(resil.length).primes intersect primes
-      println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)) + "\t" + primes + "\t" + new EulerDiv(resil.length).primes + "\t" + pgcd_primes)
-      (resil.length, d - 1)
-    }
 
-    resilience(12) shouldEqual(4, 11)
-    resilience(premiers.take(4).product.toInt)
-    resilience(premiers.take(5).product.toInt)
-    resilience(2 * premiers.take(5).product.toInt)
-    resilience(2 * 2 * premiers.take(5).product.toInt)
-    resilience(2 * 3 * premiers.take(5).product.toInt)
-    resilience(2 * 2 * 3 * premiers.take(5).product.toInt)
-    resilience(2 * 3 * 5 * premiers.take(5).product.toInt)
-    resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    resilience(premiers.take(5).product.toInt)
-    resilience(premiers.take(6).product.toInt)
-    resilience(premiers.take(7).product.toInt)
-    resilience(premiers.take(8).product.toInt)
+  "Euler457" should "be OK" in {
+    println("Euler457")
 
-    println(1.0 * 15499 / 94744)
+    def f(n: BigInt): BigInt = (n * n) - (3 * n) - 1
 
-    val result = 0
-    println("Euler243[" + result + "]")
+    def OK(p: BigInt, n: BigInt): Boolean = f(n) % (p * p) == 0
+
+    var t_la = Calendar.getInstance()
+    val premiers1000 = EulerPrime.premiers1000
+    println(premiers1000.toList.map(p => {
+      (p, p * p, (0 to 1000).map(n => (n, f(n), OK(p, n))).filter(_._3))
+    }).filter(!_._3.isEmpty).mkString("\n"))
+    t_la = timeStamp(t_la, "ici")
+    println((0 to 1000).map(n => (n, f(n))).map(nn => {
+      (nn._1, nn._2, premiers1000.filter(p => nn._2 % (p * p) == 0).mkString("-"))
+    }).filter(!_._3.isEmpty).mkString("\n"))
+    t_la = timeStamp(t_la, "là")
+
+    var result = 0
+    println("Euler457[" + result + "]")
     result shouldEqual 0
   }
+
+
 
   "Euler500" should "be OK" in {
     println("Euler500")
