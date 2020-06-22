@@ -27,7 +27,8 @@ class EulerMain extends FlatSpec with Matchers {
       (resil.length, d - 1)
     }
 
-    resilience(12) shouldEqual(4, 11)
+    var t_la = Calendar.getInstance()
+    //resilience(12) shouldEqual(4, 11)
     println(1.0 * 15499 / 94744)
     println(94745, new EulerDiv(94745).primes)
 
@@ -39,6 +40,7 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(2 * 2 * 3 * 3 * premiers.take(6).product.toInt)
     resilience(premiers.take(7).product.toInt)
     resilience(premiers.take(8).product.toInt)
+    t_la = timeStamp(t_la, "là")
 
     val result = 0
     println("Euler243[" + result + "]")
