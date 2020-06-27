@@ -39,8 +39,14 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(premiers.take(5).product.toInt)
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    (4 to 8).map(i => resilience(premiers.take(i).product.toInt)).sliding(2).
-      toList.map(l => println("____ " + (l.head._3 / l.last._3) + " ____"))
+    (3 to 8).map(i => resilience(premiers.take(i).product.toInt)).sliding(2).
+      toList.map(l => {
+      println("____ " + (l.head._3 / l.last._3) + " ____")
+      (l.head._3 / l.last._3)
+    }).sliding(2).
+      toList.map(l => {
+      println("_+_ " + (l.head / l.last) + " _+_")
+    })
     t_la = timeStamp(t_la, "là")
 
     val result = 0
