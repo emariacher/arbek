@@ -13,6 +13,7 @@ class EulerMain extends FlatSpec with Matchers {
     val premiers = EulerPrime.premiers1000
 
     def resilience(d: Int) = {
+      var t_ici = Calendar.getInstance()
       val primes = new EulerDiv(d).primes
       val divisors = new EulerDivisors(primes).divisors
       val resil = Range(1, d, 2).filter(i => {
@@ -23,8 +24,10 @@ class EulerMain extends FlatSpec with Matchers {
         }
       })
       val pgcd_primes = new EulerDiv(resil.length).primes intersect primes
-      println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)) + "\t" + primes + "\t" + new EulerDiv(resil.length).primes + "\t" + pgcd_primes)
-      (resil.length, d - 1)
+      println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)) +
+        "\t" + primes + "\t" + new EulerDiv(resil.length).primes + "\t" + pgcd_primes,
+        timeStampD(t_ici, "ici", false))
+      (d, "" + resil.length + "/" + (d - 1), (1.0 * resil.length / (d - 1)))
     }
 
     var t_la = Calendar.getInstance()
@@ -36,10 +39,8 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(premiers.take(5).product.toInt)
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    resilience(premiers.take(6).product.toInt)
-    resilience(2 * 2 * 3 * 3 * premiers.take(6).product.toInt)
-    resilience(premiers.take(7).product.toInt)
-    resilience(premiers.take(8).product.toInt)
+    (4 to 8).map(i => resilience(premiers.take(i).product.toInt)).sliding(2).
+      toList.map(l => println("____ " + (l.head._3 / l.last._3) + " ____"))
     t_la = timeStamp(t_la, "là")
 
     val result = 0
