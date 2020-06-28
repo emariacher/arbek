@@ -34,11 +34,20 @@ class EulerMain extends FlatSpec with Matchers {
       var t_ici = Calendar.getInstance()
       val d = l.product
       val ld = l.distinct
-      val lp = List(BigInt(1)) ++ premiers.takeWhile(_ < d).filter(bi => !ld.contains(bi))
-      println("" + d + "\t" + lp.size + "/" + (d - 1) + "\t" + 1.0 * lp.size / (d.toDouble - 1),
+      val lp1 = List(BigInt(1)) ++ premiers.takeWhile(_ < d).filter(bi => !ld.contains(bi))
+      val dsq = math.sqrt(d.toDouble).floor.toLong
+      val le = premiers.takeWhile(_ < dsq).filter(bi => !ld.contains(bi)).toList
+      val lp2 = le.map(p => {
+        val max = d / p
+        val lf = le.dropWhile(_ < p)
+        val lg = premiers.dropWhile(_ < p).takeWhile(_ <= max)
+        lg.map(_ * p)
+      }).flatten.distinct
+      val ls = lp1 ++ lp2
+      println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
-      println(lp)
-      (d, "" + lp.size + "/" + (d - 1), 1.0 * lp.size / (d.toDouble - 1))
+      println(ls)
+      (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1))
     }
 
     var t_la = Calendar.getInstance()
@@ -48,6 +57,7 @@ class EulerMain extends FlatSpec with Matchers {
 
     resilience(12)._3 shouldEqual resilience2(List(2, 2, 3))._3
     resilience(premiers.take(4).product.toInt)._3 shouldEqual resilience2(premiers.take(4).toList)._3
+    resilience(premiers.take(4).product.toInt * 3)._3 shouldEqual resilience2(premiers.take(4).toList :+ 3)._3
     resilience(premiers.take(4).product.toInt)
     resilience(premiers.take(5).product.toInt)
     resilience(2 * premiers.take(5).product.toInt)
