@@ -24,10 +24,21 @@ class EulerMain extends FlatSpec with Matchers {
         }
       })
       val pgcd_primes = new EulerDiv(resil.length).primes intersect primes
-      println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)) +
-        "\t" + primes + "\t" + new EulerDiv(resil.length).primes + "\t" + pgcd_primes,
+      println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)),
         timeStampD(t_ici, "ici", false))
+      println(resil)
       (d, "" + resil.length + "/" + (d - 1), (1.0 * resil.length / (d - 1)))
+    }
+
+    def resilience2(l: List[BigInt]) = {
+      var t_ici = Calendar.getInstance()
+      val d = l.product
+      val ld = l.distinct
+      val lp = List(BigInt(1)) ++ premiers.takeWhile(_ < d).filter(bi => !ld.contains(bi))
+      println("" + d + "\t" + lp.size + "/" + (d - 1) + "\t" + 1.0 * lp.size / (d.toDouble - 1),
+        timeStampD(t_ici, "ici", false))
+      println(lp)
+      (d, "" + lp.size + "/" + (d - 1), 1.0 * lp.size / (d.toDouble - 1))
     }
 
     var t_la = Calendar.getInstance()
@@ -35,11 +46,13 @@ class EulerMain extends FlatSpec with Matchers {
     println(1.0 * 15499 / 94744)
     println(94745, new EulerDiv(94745).primes)
 
+    resilience(12)._3 shouldEqual resilience2(List(2, 2, 3))._3
+    resilience(premiers.take(4).product.toInt)._3 shouldEqual resilience2(premiers.take(4).toList)._3
     resilience(premiers.take(4).product.toInt)
     resilience(premiers.take(5).product.toInt)
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    (3 to 8).map(i => resilience(premiers.take(i).product.toInt)).sliding(2).
+    (3 to 7).map(i => resilience(premiers.take(i).product.toInt)).sliding(2).
       toList.map(l => {
       println("____ " + (l.head._3 / l.last._3) + " ____")
       (l.head._3 / l.last._3)
