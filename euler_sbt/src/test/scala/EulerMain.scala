@@ -10,7 +10,7 @@ class EulerMain extends FlatSpec with Matchers {
 
   "Euler243" should "be OK" in {
     println("Euler243")
-    val premiers = EulerPrime.premiers1000
+    val premiers = EulerPrime.premiers100000
 
     def resilience(d: Int) = {
       var t_ici = Calendar.getInstance()
@@ -46,7 +46,7 @@ class EulerMain extends FlatSpec with Matchers {
       val ls = lp1 ++ lp2
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
-      println(ls)
+      println(ls.sorted)
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1))
     }
 
@@ -58,11 +58,16 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(12)._3 shouldEqual resilience2(List(2, 2, 3))._3
     resilience(premiers.take(4).product.toInt)._3 shouldEqual resilience2(premiers.take(4).toList)._3
     resilience(premiers.take(4).product.toInt * 3)._3 shouldEqual resilience2(premiers.take(4).toList :+ 3)._3
-    resilience(premiers.take(4).product.toInt)
-    resilience(premiers.take(5).product.toInt)
+    println(new EulerDiv(2197).primes)
+    resilience(premiers.take(5).product.toInt)._3 shouldEqual resilience2(premiers.take(5).toList)._3
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    (3 to 7).map(i => resilience(premiers.take(i).product.toInt)).sliding(2).
+    (3 to 7).map(i => {
+      val z = resilience(premiers.take(i).product.toInt)
+      val y = resilience2(premiers.take(i).toList)
+      y shouldEqual z
+      z
+    }).sliding(2).
       toList.map(l => {
       println("____ " + (l.head._3 / l.last._3) + " ____")
       (l.head._3 / l.last._3)
