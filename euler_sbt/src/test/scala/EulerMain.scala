@@ -36,14 +36,24 @@ class EulerMain extends FlatSpec with Matchers {
       val ld = l.distinct
       val lp1 = List(BigInt(1)) ++ premiers.takeWhile(_ < d).filter(bi => !ld.contains(bi))
       val dsq = math.sqrt(d.toDouble).floor.toLong
-      val le = premiers.takeWhile(_ < dsq).filter(bi => !ld.contains(bi)).toList
+      var le = premiers.takeWhile(_ < dsq).filter(bi => !ld.contains(bi)).toList
+      println("le", le)
       val lp2 = le.map(p => {
         val max = d / p
-        val lf = le.dropWhile(_ < p)
         val lg = premiers.dropWhile(_ < p).takeWhile(_ <= max)
         lg.map(_ * p)
       }).flatten.distinct
-      val ls = lp1 ++ lp2
+      val dsq3 = math.pow(d.toDouble, 1.0 / 3.0).floor.toLong
+      println("dsq3", dsq3)
+      le = premiers.takeWhile(_ <= dsq3).filter(bi => !ld.contains(bi)).toList
+      println("le", le)
+      val lp3 = le.map(p => {
+        val max = d / p
+        val lg = premiers.dropWhile(_ < (p * p)).takeWhile(_ <= max)
+        lg.map(_ * p)
+      }).flatten.distinct
+      println("lp3", lp3)
+      val ls = lp1 ++ lp2 ++ lp3
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
       println(ls.sorted)
@@ -58,7 +68,7 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(12)._3 shouldEqual resilience2(List(2, 2, 3))._3
     resilience(premiers.take(4).product.toInt)._3 shouldEqual resilience2(premiers.take(4).toList)._3
     resilience(premiers.take(4).product.toInt * 3)._3 shouldEqual resilience2(premiers.take(4).toList :+ 3)._3
-    println(new EulerDiv(2197).primes)
+    println("******", new EulerDiv(2197).primes)
     resilience(premiers.take(5).product.toInt)._3 shouldEqual resilience2(premiers.take(5).toList)._3
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
