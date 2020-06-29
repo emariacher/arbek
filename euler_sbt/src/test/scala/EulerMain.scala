@@ -72,6 +72,7 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(premiers.take(5).product.toInt)._3 shouldEqual resilience2(premiers.take(5).toList)._3
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
+    println("*+****", new EulerDiv(4913).primes)
     (3 to 7).map(i => {
       val z = resilience(premiers.take(i).product.toInt)
       val y = resilience2(premiers.take(i).toList)
