@@ -26,7 +26,7 @@ class EulerMain extends FlatSpec with Matchers {
       val pgcd_primes = new EulerDiv(resil.length).primes intersect primes
       println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)),
         timeStampD(t_ici, "ici", false))
-      println(resil)
+      println(resil.toList)
       (d, "" + resil.length + "/" + (d - 1), (1.0 * resil.length / (d - 1)))
     }
 
@@ -35,29 +35,28 @@ class EulerMain extends FlatSpec with Matchers {
       val d = l.product
       val ld = l.distinct
       val lp1 = List(BigInt(1)) ++ premiers.takeWhile(_ < d).filter(bi => !ld.contains(bi))
-      val dsq = math.sqrt(d.toDouble).floor.toLong
-      var le = premiers.takeWhile(_ < dsq).filter(bi => !ld.contains(bi)).toList
-      println("l", l.product, l, "dsq", dsq, "le", le)
-      val lp2 = le.map(p => {
+      val dsq2 = math.sqrt(d.toDouble).floor.toLong
+      val le2 = premiers.takeWhile(_ < dsq2).filter(bi => !ld.contains(bi)).toList
+      println("l", l.product, l)
+      val lp2 = le2.map(p => {
         val max = d / p
         val lg = premiers.dropWhile(_ < p).takeWhile(_ <= max)
         lg.map(_ * p)
-      }).flatten.distinct
-      //println("lp2", lp2)
+      })
       val dsq3 = math.pow(d.toDouble, 1.0 / 3.0).floor.toLong
-      le = premiers.takeWhile(_ <= dsq3).filter(bi => !ld.contains(bi)).toList
-      println("  dsq3", dsq3, "le", le)
-      val lp3 = le.map(p => {
+      val le3 = premiers.takeWhile(_ <= dsq3).filter(bi => !ld.contains(bi)).toList
+      val lp3 = le3.map(p => {
         val max = d / p
         val lg = premiers.dropWhile(_ < (p * p)).takeWhile(_ <= max)
         lg.map(_ * p) ++ List(p * p * p)
-      }).flatten.distinct
-      //println("lp3", lp3)
+      })
       println(math.pow(d.toDouble, 1.0 / 4.0).floor.toLong, l.sorted.last, math.pow(d.toDouble, 1.0 / 4.0).floor.toLong < l.sorted.last)
-      val ls = (lp1 ++ lp2 ++ lp3).distinct
+      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct).distinct
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
       println(ls.sorted)
+      println("  dsq2", dsq2, "  le2", le2, "  lp2", lp2.mkString("\n  ", "\n  ", ""))
+      println("  dsq3", dsq3, "  le3", le3, "  lp3", lp3.mkString("\n  ", "\n  ", ""))
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1))
     }
 
