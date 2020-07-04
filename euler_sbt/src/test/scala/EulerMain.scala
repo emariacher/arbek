@@ -27,7 +27,7 @@ class EulerMain extends FlatSpec with Matchers {
       println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)),
         timeStampD(t_ici, "ici", false))
       println(resil.toList)
-      (d, "" + resil.length + "/" + (d - 1), (1.0 * resil.length / (d - 1)))
+      (d, "" + resil.length + "/" + (d - 1), (1.0 * resil.length / (d - 1)), resil.toList)
     }
 
     def resilience2(l: List[BigInt]) = {
@@ -48,16 +48,22 @@ class EulerMain extends FlatSpec with Matchers {
       val lp3 = le3.map(p => {
         val max = d / p
         val lg = premiers.dropWhile(_ < (p * p)).takeWhile(_ <= max)
-        lg.map(_ * p) ++ List(p * p * p)
+        lg.map(_ * p)
+      })
+      val lp4 = le3.map(p => {
+        val max = d / (p * p)
+        val lg = premiers.dropWhile(_ < p).takeWhile(_ <= max)
+        lg.map(_ * p * p)
       })
       println(math.pow(d.toDouble, 1.0 / 4.0).floor.toLong, l.sorted.last, math.pow(d.toDouble, 1.0 / 4.0).floor.toLong < l.sorted.last)
-      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct).distinct
+      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct ++ lp4.flatten.distinct).distinct
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
       println(ls.sorted)
       println("  dsq2", dsq2, "  le2", le2, "  lp2", lp2.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp3", lp3.mkString("\n  ", "\n  ", ""))
-      (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1))
+      println("  dsq3", dsq3, "  le3", le3, "  lp4", lp4.mkString("\n  ", "\n  ", ""))
+      (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
 
     var t_la = Calendar.getInstance()
@@ -68,24 +74,17 @@ class EulerMain extends FlatSpec with Matchers {
     resilience(12)._3 shouldEqual resilience2(List(2, 2, 3))._3
     resilience(premiers.take(4).product.toInt)._3 shouldEqual resilience2(premiers.take(4).toList)._3
     resilience(premiers.take(4).product.toInt * 3)._3 shouldEqual resilience2(premiers.take(4).toList :+ 3)._3
-    println("******", new EulerDiv(2197).primes)
-    println("******", new EulerDiv(2249).primes)
+    println("******", 2197, new EulerDiv(2197).primes)
+    println("******", 2249, new EulerDiv(2249).primes)
     resilience(premiers.take(5).product.toInt)._3 shouldEqual resilience2(premiers.take(5).toList)._3
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    println("*+****", new EulerDiv(5491).primes)
+    println("*+****", 6137, new EulerDiv(6137).primes)
     (3 to 7).map(i => {
       val z = resilience(premiers.take(i).product.toInt)
       val y = resilience2(premiers.take(i).toList)
-      y shouldEqual z
-      z
-    }).sliding(2).
-      toList.map(l => {
-      println("____ " + (l.head._3 / l.last._3) + " ____")
-      (l.head._3 / l.last._3)
-    }).sliding(2).
-      toList.map(l => {
-      println("_+_ " + (l.head / l.last) + " _+_")
+      println(z._4.diff(y._4).map(bi => (bi, new EulerDiv(bi).primes)))
+      z._4.diff(y._4).size shouldEqual 0
     })
     t_la = timeStamp(t_la, "là")
 
