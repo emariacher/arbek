@@ -72,20 +72,19 @@ class EulerMain extends FlatSpec with Matchers {
     println(94745, new EulerDiv(94745).primes)
 
     resilience(12)._3 shouldEqual resilience2(List(2, 2, 3))._3
-    resilience(premiers.take(4).product.toInt)._3 shouldEqual resilience2(premiers.take(4).toList)._3
-    resilience(premiers.take(4).product.toInt * 3)._3 shouldEqual resilience2(premiers.take(4).toList :+ 3)._3
-    println("******", 2197, new EulerDiv(2197).primes)
-    println("******", 2249, new EulerDiv(2249).primes)
-    resilience(premiers.take(5).product.toInt)._3 shouldEqual resilience2(premiers.take(5).toList)._3
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    println("*+****", 6137, new EulerDiv(6137).primes)
     (3 to 7).map(i => {
       val z = resilience(premiers.take(i).product.toInt)
       val y = resilience2(premiers.take(i).toList)
       val ldiff = z._4.diff(y._4)
-      println(ldiff.size, ldiff.map(bi => (bi, new EulerDiv(bi).primes)))
+      println(premiers.take(i).product.toInt, "ldiff", ldiff.size, ldiff.map(bi => (bi, new EulerDiv(bi).primes)))
       z._4.diff(y._4).size shouldEqual 0
+      val z3 = resilience(premiers.take(i).product.toInt * 3)
+      val y3 = resilience2(premiers.take(i).toList :+ 3)
+      val ldiff3 = z3._4.diff(y3._4)
+      println(premiers.take(i).product.toInt * 3, "ldiff3", ldiff3.size, ldiff3.map(bi => (bi, new EulerDiv(bi).primes)))
+      z3._4.diff(y3._4).size shouldEqual 0
     })
     t_la = timeStamp(t_la, "là")
 
