@@ -50,13 +50,19 @@ class EulerMain extends FlatSpec with Matchers {
         val lg = premiers.dropWhile(_ < (p * p)).takeWhile(_ <= max)
         lg.map(_ * p)
       })
+      val lp31 = le3.sliding(2).map(l => {
+        val p = l.product
+        val max = d / p
+        val lg = le2.takeWhile(_ <= max)
+        lg.map(_ * p)
+      })
       val lp4 = le3.map(p => {
         val max = d / (p * p)
         val lg = premiers.dropWhile(_ < p).takeWhile(_ <= max)
         lg.map(_ * p * p)
       })
       println(math.pow(d.toDouble, 1.0 / 4.0).floor.toLong, l.sorted.last, math.pow(d.toDouble, 1.0 / 4.0).floor.toLong < l.sorted.last)
-      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct ++ lp4.flatten.distinct).distinct
+      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct ++ lp31.flatten.distinct ++ lp4.flatten.distinct).distinct
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
       println(ls.sorted)
