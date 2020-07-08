@@ -54,22 +54,27 @@ class EulerMain extends FlatSpec with Matchers {
         val p = l.product
         val max = d / p
         val lg = le2.takeWhile(_ <= max)
-        println(l, p, lg, lg.map(_ * p))
         lg.map(_ * p)
       }).toList
+      val lp32 = le3.map(p => {
+        val max = math.pow(d.toDouble / p.toDouble, 1.0 / 2.0).floor.toLong
+        val lg = le2.takeWhile(_ <= max)
+        lg.map(bi => bi * bi * p)
+      })
       val lp4 = le3.map(p => {
         val max = d / (p * p)
         val lg = le2.takeWhile(_ <= max)
         lg.map(_ * p * p)
       })
       println(math.pow(d.toDouble, 1.0 / 4.0).floor.toLong, l.sorted.last, math.pow(d.toDouble, 1.0 / 4.0).floor.toLong < l.sorted.last)
-      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct ++ lp31.flatten.distinct ++ lp4.flatten.distinct).distinct
+      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct ++ lp31.flatten.distinct ++ lp32.flatten.distinct ++ lp4.flatten.distinct).distinct
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
       println(ls.sorted)
       println("  dsq2", dsq2, "  le2", le2, "  lp2", lp2.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp3", lp3.mkString("\n  ", "\n  ", ""))
-      println("  dsq3", dsq3, "  le3", le3, "  lp31", lp31.toList.mkString("\n  ", "\n  ", ""))
+      println("  dsq3", dsq3, "  le3", le3, "  lp31", lp31.mkString("\n  ", "\n  ", ""))
+      println("  dsq3", dsq3, "  le3", le3, "  lp32", lp32.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp4", lp4.mkString("\n  ", "\n  ", ""))
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
