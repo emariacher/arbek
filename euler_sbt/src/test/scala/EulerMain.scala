@@ -50,15 +50,16 @@ class EulerMain extends FlatSpec with Matchers {
         val lg = premiers.dropWhile(_ < (p * p)).takeWhile(_ <= max)
         lg.map(_ * p)
       })
-      val lp31 = le3.sliding(2).map(l => {
+      val lp31: List[List[BigInt]] = le3.combinations(2).map(l => {
         val p = l.product
         val max = d / p
         val lg = le2.takeWhile(_ <= max)
+        println(l, p, lg, lg.map(_ * p))
         lg.map(_ * p)
-      })
+      }).toList
       val lp4 = le3.map(p => {
         val max = d / (p * p)
-        val lg = premiers.dropWhile(_ < p).takeWhile(_ <= max)
+        val lg = le2.takeWhile(_ <= max)
         lg.map(_ * p * p)
       })
       println(math.pow(d.toDouble, 1.0 / 4.0).floor.toLong, l.sorted.last, math.pow(d.toDouble, 1.0 / 4.0).floor.toLong < l.sorted.last)
@@ -68,6 +69,7 @@ class EulerMain extends FlatSpec with Matchers {
       println(ls.sorted)
       println("  dsq2", dsq2, "  le2", le2, "  lp2", lp2.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp3", lp3.mkString("\n  ", "\n  ", ""))
+      println("  dsq3", dsq3, "  le3", le3, "  lp31", lp31.toList.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp4", lp4.mkString("\n  ", "\n  ", ""))
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
