@@ -67,19 +67,21 @@ class EulerMain extends FlatSpec with Matchers {
         lg.map(_ * p * p)
       })
       println(math.pow(d.toDouble, 1.0 / 4.0).floor.toLong, l.sorted.last, math.pow(d.toDouble, 1.0 / 4.0).floor.toLong < l.sorted.last)
-      val ls = (lp1 ++ lp2.flatten.distinct ++ lp3.flatten.distinct ++ lp31.flatten.distinct ++ lp32.flatten.distinct ++ lp4.flatten.distinct).distinct
-      println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
-        timeStampD(t_ici, "ici", false))
-      println(ls.sorted)
       println("  dsq2", dsq2, "  le2", le2)
       println("  dsq3", dsq3, "  le3", le3, "  lp3", lp3.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp31", lp31.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp32", lp32.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp4", lp4.mkString("\n  ", "\n  ", ""))
+      var lp5 = List[BigInt]()
       if (le2.size > 2) {
-        val lp5 = le2.takeWhile(bi => (bi * bi) < d).combinations(3).toList.filter(_.product < d)
-        println("  lp5", lp5.mkString(","))
+        val lp5z = le2.takeWhile(bi => (bi * bi) < d).combinations(3).toList.filter(_.product < d)
+        println("  lp5z", lp5z.mkString(","))
+        lp5 = lp5z.map(_.product)
       }
+      val ls = (lp1 ++ lp2.flatten ++ lp3.flatten ++ lp31.flatten ++ lp32.flatten ++ lp4.flatten ++ lp5).distinct
+      println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
+        timeStampD(t_ici, "ici", false))
+      //println(ls.sorted)
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
 
