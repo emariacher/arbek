@@ -71,11 +71,15 @@ class EulerMain extends FlatSpec with Matchers {
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         timeStampD(t_ici, "ici", false))
       println(ls.sorted)
-      println("  dsq2", dsq2, "  le2", le2, "  lp2", lp2.mkString("\n  ", "\n  ", ""))
+      println("  dsq2", dsq2, "  le2", le2)
       println("  dsq3", dsq3, "  le3", le3, "  lp3", lp3.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp31", lp31.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp32", lp32.mkString("\n  ", "\n  ", ""))
       println("  dsq3", dsq3, "  le3", le3, "  lp4", lp4.mkString("\n  ", "\n  ", ""))
+      if (le2.size > 2) {
+        val lp5 = le2.takeWhile(bi => (bi * bi) < d).combinations(3).toList.filter(_.product < d)
+        println("  lp5", lp5.mkString(","))
+      }
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
 
