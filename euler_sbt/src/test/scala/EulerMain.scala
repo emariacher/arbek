@@ -25,7 +25,7 @@ class EulerMain extends FlatSpec with Matchers {
       })
       val pgcd_primes = new EulerDiv(resil.length).primes intersect primes
       println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)),
-        timeStampD(t_ici, "ici", false))
+        "ici " + timeStampD(t_ici, "ici", false))
       println(resil.toList)
       (d, "" + resil.length + "/" + (d - 1), (1.0 * resil.length / (d - 1)), resil.toList)
     }
@@ -80,7 +80,28 @@ class EulerMain extends FlatSpec with Matchers {
       }
       val ls = (lp1 ++ lp2.flatten ++ lp3.flatten ++ lp31.flatten ++ lp32.flatten ++ lp4.flatten ++ lp5).distinct
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
-        timeStampD(t_ici, "ici", false))
+        "ici2 " + timeStampD(t_ici, "ici", false))
+      //println(ls.sorted)
+      (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
+    }
+
+    def resilience3(l: List[BigInt]) = {
+      var t_ici = Calendar.getInstance()
+      val d = l.product
+      val ld = l.distinct
+      val lp1 = List(BigInt(1)) ++ premiers.takeWhile(_ < d).filter(bi => !ld.contains(bi))
+      val lp2 = lp1.map(p => {
+        lp1.takeWhile(_ < d / p).map(_ * p)
+      }).flatten
+      val lp3 = lp2.map(p => {
+        lp2.takeWhile(_ < d / p).map(_ * p)
+      }).flatten
+      val lp4 = lp3.map(p => {
+        lp3.takeWhile(_ < d / p).map(_ * p)
+      }).flatten
+      val ls = (lp1 ++ lp2 ++ lp3 ++ lp4).distinct
+      println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
+        "ici3 " + timeStampD(t_ici, "ici", false))
       //println(ls.sorted)
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
