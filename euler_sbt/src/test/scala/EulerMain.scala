@@ -109,7 +109,12 @@ class EulerMain extends FlatSpec with Matchers {
       val ls = lp4
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         "ici3 " + timeStampD(t_ici, "ici", false))
-      //println(ls.sorted)
+      if (!lp4.diff(lp3).isEmpty) {
+        val pp = lp2.tail.head
+        println(pp, math.pow(pp.toDouble, 4), d, "lp4.diff(lp3)", lp4.diff(lp3).map(bi => (bi, new EulerDiv(bi).primes)).take(2))
+        (math.pow(pp.toDouble, 4) < d.toDouble) shouldEqual true
+        (math.pow(pp.toDouble, 5) < d.toDouble) shouldEqual false
+      }
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
 
