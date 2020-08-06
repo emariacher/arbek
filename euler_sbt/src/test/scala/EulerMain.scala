@@ -90,17 +90,23 @@ class EulerMain extends FlatSpec with Matchers {
       val d = l.product
       val ld = l.distinct
       val lp1 = List(BigInt(1)) ++ premiers.takeWhile(_ < d).filter(bi => !ld.contains(bi))
-      val lp2 = lp1.map(p => {
-        lp1.takeWhile(_.toDouble < d.toDouble / p.toDouble).map(_ * p)
-      }).flatten
-      val lp3 = lp2.map(p => {
+      val lp2 = lp1.takeWhile(p => (p * p) <= d).map(p => {
+        //println("in lp2", p, lp1.takeWhile(bi => bi.toDouble < d.toDouble / p.toDouble).map(_ * p))
+        lp1.takeWhile(bi => bi.toDouble < d.toDouble / p.toDouble).map(_ * p)
+      }).flatten.sorted.distinct
+      val lp3 = lp2.takeWhile(p => (p * p * p) <= d).map(p => {
+        //println("in lp3", p, lp2.takeWhile(bi => bi.toDouble < d.toDouble / p.toDouble).map(_ * p))
         lp2.takeWhile(_.toDouble < d.toDouble / p.toDouble).map(_ * p)
-      }).flatten
-      val lp4 = lp3.map(p => {
+      }).flatten.sorted.distinct
+      val lp4 = lp3.takeWhile(p => (p * p * p * p) <= d).map(p => {
+        //println("in lp4", p, lp3.takeWhile(bi => bi.toDouble < d.toDouble / p.toDouble).map(_ * p))
         lp3.takeWhile(_.toDouble < d.toDouble / p.toDouble).map(_ * p)
-      }).flatten
-      //println("  lp4", lp4)
-      val ls = lp4.distinct
+      }).flatten.sorted.distinct
+      /*println("  lp1", lp1)
+      println("  lp2", lp2)
+      println("  lp3", lp3)
+      println("  lp4", lp4)*/
+      val ls = lp4
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         "ici3 " + timeStampD(t_ici, "ici", false))
       //println(ls.sorted)
