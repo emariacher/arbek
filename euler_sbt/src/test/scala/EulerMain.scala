@@ -99,7 +99,8 @@ class EulerMain extends FlatSpec with Matchers {
       val lp4 = lp3.map(p => {
         lp3.takeWhile(_.toDouble < d.toDouble / p.toDouble).map(_ * p)
       }).flatten
-      val ls = (lp1 ++ lp2 ++ lp3 ++ lp4).distinct
+      //println("  lp4", lp4)
+      val ls = lp4.distinct
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1),
         "ici3 " + timeStampD(t_ici, "ici", false))
       //println(ls.sorted)
