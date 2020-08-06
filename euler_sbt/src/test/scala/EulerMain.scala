@@ -10,7 +10,7 @@ class EulerMain extends FlatSpec with Matchers {
 
   "Euler243" should "be OK" in {
     println("Euler243")
-    val premiers = (new CheckEulerPrime(520000, 10000)).premiers
+    val premiers = (new CheckEulerPrime(1540000, 10000)).premiers
 
     def resilience(d: Int) = {
       var t_ici = Calendar.getInstance()
@@ -26,7 +26,7 @@ class EulerMain extends FlatSpec with Matchers {
       val pgcd_primes = new EulerDiv(resil.length).primes intersect primes
       println("" + d + "\t" + resil.length + "/" + (d - 1) + "\t" + (1.0 * resil.length / (d - 1)),
         "ici " + timeStampD(t_ici, "ici", false))
-      println(resil.toList)
+      //println(resil.toList)
       (d, "" + resil.length + "/" + (d - 1), (1.0 * resil.length / (d - 1)), resil.toList)
     }
 
@@ -118,12 +118,14 @@ class EulerMain extends FlatSpec with Matchers {
       val z = resilience(premiers.take(i).product.toInt)
       val y = resilience3(premiers.take(i).toList)
       val ldiff = z._4.diff(y._4)
-      println(premiers.take(i).product.toInt, "ldiff", ldiff.size, ldiff.map(bi => (bi, new EulerDiv(bi).primes)))
+      println(premiers.take(i).product.toInt, "ldiff", ldiff.size, ldiff.map(bi => (bi, new EulerDiv(bi).primes)).take(40))
+      println(y._1, y._2, y._3)
       z._4.diff(y._4).size shouldEqual 0
       val z3 = resilience(premiers.take(i).product.toInt * 3)
       val y3 = resilience3(premiers.take(i).toList :+ 3)
       val ldiff3 = z3._4.diff(y3._4)
-      println(premiers.take(i).product.toInt * 3, "ldiff3", ldiff3.size, ldiff3.map(bi => (bi, new EulerDiv(bi).primes)))
+      println(premiers.take(i).product.toInt * 3, "ldiff3", ldiff3.size, ldiff3.map(bi => (bi, new EulerDiv(bi).primes)).take(40))
+      println(y3._1, y3._2, y3._3)
       z3._4.diff(y3._4).size shouldEqual 0
     })
     t_la = timeStamp(t_la, "là")
