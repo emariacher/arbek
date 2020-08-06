@@ -10,11 +10,11 @@ class EulerMain extends FlatSpec with Matchers {
 
   "Euler243" should "be OK" in {
     println("Euler243")
-    val premiers = EulerPrime.premiers100000
+    val premiers = (new CheckEulerPrime(520000, 10000)).premiers
 
     def resilience(d: Int) = {
       var t_ici = Calendar.getInstance()
-      val primes = new EulerDiv(d).primes
+      val primes = new EulerDiv2(d, premiers, false).primes
       val divisors = new EulerDivisors(primes).divisors
       val resil = Range(1, d, 2).filter(i => {
         //divisors.filter(div => i % div == 0).isEmpty
