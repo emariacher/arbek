@@ -73,19 +73,16 @@ class EulerMain extends FlatSpec with Matchers {
       var exponent = 2
       while (lp.diff(oldlp).nonEmpty) {
         oldlp = lp
-        val lp1 = lp.takeWhile(p => math.pow(p.toDouble, exponent) <= d.toDouble).flatMap(p => {
+        lp = lp.takeWhile(p => math.pow(p.toDouble, exponent) <= d.toDouble).flatMap(p => {
           val lp2 = lp.takeWhile(bi => bi.toDouble < d.toDouble / p.toDouble).map(_ * p)
-          println("  in while", exponent, p, lp.takeWhile(bi => bi.toDouble < d.toDouble / p.toDouble).map(_ * p))
+          //println("  in while", exponent, p, lp.takeWhile(bi => bi.toDouble < d.toDouble / p.toDouble).map(_ * p))
           lp2
         }).sorted.distinct
         exponent += 1
-        lp = lp1
-        println("after while", exponent, lp1)
-        println("after while", exponent, lp)
       }
       val ls = lp
       println("" + d + "\t" + ls.size + "/" + (d - 1) + "\t" + 1.0 * ls.size / (d.toDouble - 1), exponent,
-        "ici3 " + timeStampD(t_ici, "ici", false))
+        "ici4 " + timeStampD(t_ici, "ici", false))
       (d, "" + ls.size + "/" + (d - 1), 1.0 * ls.size / (d.toDouble - 1), ls.sorted)
     }
 
