@@ -93,7 +93,8 @@ class EulerMain extends FlatSpec with Matchers {
 
     resilience(2 * premiers.take(5).product.toInt)
     resilience(2 * 2 * 3 * 3 * premiers.take(5).product.toInt)
-    (3 to 7).map(i => {
+    var lresilience = List[Double]()
+    (3 to 7).foreach(i => {
       val z = resilience(premiers.take(i).product.toInt)
       val y = resilience4(premiers.take(i).toList)
       val ldiff = z._4.diff(y._4)
@@ -104,8 +105,13 @@ class EulerMain extends FlatSpec with Matchers {
       val ldiff3 = z3._4.diff(y3._4)
       //println(premiers.take(i).product.toInt * 3, "ldiff3", ldiff3.size, ldiff3.map(bi => (bi, new EulerDiv(bi).primes)).take(40))
       z3._4.diff(y3._4).size shouldEqual 0
+      lresilience = lresilience :+ y._3
     })
     t_la = timeStamp(t_la, "là 1")
+    println(premiers.take(9).product.toInt)
+    println(lresilience)
+    println(lresilience.sliding(2).map(c => c.head / c.last).toList)
+    println(lresilience.sliding(2).map(c => c.head / c.last).toList.sliding(2).map(c => c.head / c.last).toList)
 
     val result = 0
     println("Euler243[" + result + "]")
