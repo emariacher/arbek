@@ -11,7 +11,7 @@ class EulerMain extends FlatSpec with Matchers {
   "Euler493" should "be OK" in {
     println("Euler493")
 
-    def dozejob1(s: String, sampleSize: Int) = {
+    def dozejob1(s: String, sampleSize: Int, prev: List[(Int, Int)]) = {
       val z = s.toSeq.combinations(sampleSize).toList
       val y = z.map(e => e.toSeq.distinct.size).groupBy(u => u)
       val x = y.toList.map(a => (a._1, a._2.size)).sortBy(_._1)
@@ -20,6 +20,7 @@ class EulerMain extends FlatSpec with Matchers {
       println(sampleSize, w.toDouble / z.size.toDouble, z.size, z.take(5))
       println("  " + x)
       x.map(_._2).sum shouldEqual z.size
+      x
     }
 
     def builds(couleur: Int, parCouleur: Int): String = {
@@ -31,13 +32,14 @@ class EulerMain extends FlatSpec with Matchers {
     var s = builds(5, 6)
     println(s)
     (1 to 12).foreach(i => {
-      dozejob1(s, i)
+      dozejob1(s, i, List[(Int, Int)]())
     })
 
     s = builds(5, 7)
     println(s)
+    var prev = List[(Int, Int)]()
     (1 to 14).foreach(i => {
-      dozejob1(s, i)
+      prev = dozejob1(s, i, prev)
     })
 
     val result = 0
