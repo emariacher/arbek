@@ -17,7 +17,7 @@ class EulerMain extends FlatSpec with Matchers {
       val x = y.toList.map(a => (a._1, a._2.size)).sortBy(_._1)
       val w = x.map(a => a._1 * a._2).sum
       w shouldEqual z.map(e => e.toSeq.distinct.size).sum
-      println(sampleSize, w.toDouble / z.size.toDouble, z.size, z.take(5))
+      println(sampleSize, w.toDouble / z.size.toDouble, z.size, z.take(5), z.last)
       println("  " + x)
       if (prev.nonEmpty) {
         val v = prev.dropWhile(c => c._1 < x.head._1)
@@ -39,10 +39,10 @@ class EulerMain extends FlatSpec with Matchers {
       dozejob1(s, i, List[(Int, Int)]())
     })
 
-    s = builds(5, 7)
+    s = builds(7, 10)
     println(s)
     var prev = List[(Int, Int)]()
-    (1 to 14).foreach(i => {
+    (1 to 20).foreach(i => {
       prev = dozejob1(s, i, prev)
     })
 
