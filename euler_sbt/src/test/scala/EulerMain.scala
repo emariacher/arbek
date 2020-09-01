@@ -33,18 +33,30 @@ class EulerMain extends FlatSpec with Matchers {
       }).mkString("")
     }
 
-    var s = builds(5, 6)
+    def dozejob2(s: String, sampleSize: Int, prev: List[(Int, Int)]) = {
+      val z = s.toSeq.combinations(sampleSize).toList
+      val y = z.map(e => e.toSeq.distinct.size).groupBy(u => u)
+      val x = z.map(e => e.groupBy(f => f).toList.map(g => g._2.size).sorted)
+      println(sampleSize, z.map(e => e.toSeq.distinct.size).sum.toDouble / z.size.toDouble, z.size, z)
+      println("  " + z.zip(x))
+      if (prev.nonEmpty) {
+      }
+      x
+    }
+
+
+    var s = builds(4, 5)
     println(s)
-    (1 to 12).foreach(i => {
-      dozejob1(s, i, List[(Int, Int)]())
+    (1 to 10).foreach(i => {
+      dozejob2(s, i, List[(Int, Int)]())
     })
 
-    s = builds(7, 10)
+    /*s = builds(7, 10)
     println(s)
     var prev = List[(Int, Int)]()
     (1 to 20).foreach(i => {
       prev = dozejob1(s, i, prev)
-    })
+    })*/
 
     val result = 0
     println("Euler493[" + result + "]")
