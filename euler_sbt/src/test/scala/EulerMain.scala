@@ -33,12 +33,17 @@ class EulerMain extends FlatSpec with Matchers {
       }).mkString("")
     }
 
+    def list2string(l: List[Int]) = {
+      l.zipWithIndex.map(i => (1 to i._1).toList.map(u => i._2).mkString("")).mkString("")
+    }
+
     def dozejob2(s: String, sampleSize: Int, prev: List[(Int, Int)]) = {
       val z = s.toSeq.combinations(sampleSize).toList
       val y = z.map(e => e.toSeq.distinct.size).groupBy(u => u)
       val x = z.map(e => e.groupBy(f => f).toList.map(g => g._2.size).sorted)
-      println(sampleSize, z.map(e => e.toSeq.distinct.size).sum.toDouble / z.size.toDouble, z.size, z)
-      println("  " + z.zip(x).sortBy(_._2.toString))
+      println(sampleSize, z.map(e => e.toSeq.distinct.size).sum.toDouble / z.size.toDouble, z.size)
+      //println("  " + z.zip(x).groupBy(_._2.toString))
+      println("  " + z.zip(x).groupBy(_._2.toString).toList.map(i => (i._1, list2string(i._2.head._2), list2string(i._2.head._2).toSeq.permutations.length, i._2.length)).sortBy(_._1.toString))
       if (prev.nonEmpty) {
       }
       x
