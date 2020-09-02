@@ -38,7 +38,7 @@ class EulerMain extends FlatSpec with Matchers {
       val y = z.map(e => e.toSeq.distinct.size).groupBy(u => u)
       val x = z.map(e => e.groupBy(f => f).toList.map(g => g._2.size).sorted)
       println(sampleSize, z.map(e => e.toSeq.distinct.size).sum.toDouble / z.size.toDouble, z.size, z)
-      println("  " + z.zip(x))
+      println("  " + z.zip(x).sortBy(_._2.toString))
       if (prev.nonEmpty) {
       }
       x
