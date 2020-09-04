@@ -18,7 +18,17 @@ class EulerMain extends FlatSpec with Matchers {
 
     val z = paspremiers100.map(i => {
       paspremiers100.dropWhile(_ <= i).filter(j => i.toString.toList.intersect(j.toString.toList).nonEmpty).map(j => {
-        (i, j, i.toString.toList.intersect(j.toString.toList).head, i.toDouble / j.toDouble)
+        val k = i.toString.toList.intersect(j.toString.toList).head
+        if (i.toString.toList.exists(_ != k) && j.toString.toList.exists(_ != k)) {
+          val is = i.toString.toList.filter(_ != k).head.toString
+          val js = j.toString.toList.filter(_ != k).head.toString
+          if ((i.toDouble / j.toDouble == is.toDouble / js.toDouble) || (i.toDouble / j.toDouble == js.toDouble / is.toDouble)) {
+            println("************", i, j, k, i.toDouble / j.toDouble, is, js, is.toDouble / js.toDouble, js.toDouble / is.toDouble)
+          }
+          (i, j, k, i.toDouble / j.toDouble, is, js, is.toDouble / js.toDouble, js.toDouble / is.toDouble)
+        } else {
+          (i, j, k, i.toDouble / j.toDouble, 0, 0, 0, 0)
+        }
       })
     })
     println(z.flatten.groupBy(_._4).filter(g => g._2.length > 1).toList.sortBy(_._1)(Ordering.Double.TotalOrdering).mkString("\n"))
