@@ -27,9 +27,9 @@ class EulerMain extends FlatSpec with Matchers {
     }).filter(u => u._4 == u._7)
     println(z.mkString("\n"))
 
-    val result = z.map(_._2.toInt).product
+    val result = z.map(_._6.toInt).product / z.map(_._5.toInt).product
     println("Euler33[" + result + "]")
-    result shouldEqual 800
+    result shouldEqual 100
   }
 
 }
