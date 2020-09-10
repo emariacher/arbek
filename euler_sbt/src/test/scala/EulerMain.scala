@@ -21,7 +21,11 @@ class EulerMain extends FlatSpec with Matchers {
       List((p * 10) + 3, (p * 10) + 7, (p * 10) + 9)
     })
 
-    println(z, z.intersect(premiers.toList))
+    val y = z.intersect(premiers.toList)
+    val x = y.filter(p => {
+      EulerPrime.isPrime(p % 1000) & EulerPrime.isPrime(p % 100)
+    })
+    println(z, y, x)
 
     val result = 0
     println("Euler37[" + result + "]")
