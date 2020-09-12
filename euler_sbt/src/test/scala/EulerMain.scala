@@ -12,7 +12,12 @@ class EulerMain extends FlatSpec with Matchers {
     println("Euler37")
     val premiers = EulerPrime.premiers10000
 
+    def isPrimeNZ(bi: BigInt): Boolean = {
+      bi == 0 || EulerPrime.isPrime(bi)
+    }
+
     println(premiers)
+
 
     val root = List(23, 37, 53, 73, 313, 317, 373, 379)
     println(root)
@@ -23,9 +28,12 @@ class EulerMain extends FlatSpec with Matchers {
 
     val y = z.intersect(premiers.toList)
     val x = y.filter(p => {
-      EulerPrime.isPrime(p % 1000) & EulerPrime.isPrime(p % 100)
+      EulerPrime.isPrime(p % 10000) & EulerPrime.isPrime(p % 1000) & EulerPrime.isPrime(p % 100) & EulerPrime.isPrime(p % 10) &
+        isPrimeNZ(p / 10000) & isPrimeNZ(p / 1000) & isPrimeNZ(p / 100) & isPrimeNZ(p / 10)
     })
-    println(z, y, x)
+
+    println(z, y)
+    println((root ++ x).distinct.sorted)
 
     val result = 0
     println("Euler37[" + result + "]")
