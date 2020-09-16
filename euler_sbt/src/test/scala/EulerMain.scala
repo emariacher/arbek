@@ -22,8 +22,10 @@ class EulerMain extends FlatSpec with Matchers {
         isPrimeNZ(p / 100000) & isPrimeNZ(p / 10000) & isPrimeNZ(p / 1000) & isPrimeNZ(p / 100) & isPrimeNZ(p / 10)
     }
 
-    println(premiers)
-    val root = List(23, 37, 53, 73, 313, 317, 373, 797, 3137, 3797)
+    val prems = premiers.filter(p => p.toString.indexOf("2") < 0 & p.toString.indexOf("4") < 0 & p.toString.indexOf("6") < 0 &
+      p.toString.indexOf("8") < 0 & p.toString.indexOf("0") < 0)
+    println(prems)
+    val root = List(23, 37, 53, 73, 313, 317, 373, 537, 797, 3137, 3797, 3173, 31373, 31797, 37973, 73137, 73797)
     println(root.map(p => (p, OK(p))))
     println(premiers.filter(p => OK(p.toInt)))
 
