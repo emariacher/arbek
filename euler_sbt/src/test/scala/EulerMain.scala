@@ -19,6 +19,8 @@ class EulerMain extends FlatSpec with Matchers {
     println(s"results: ${(x take 100).toList}")
     var y = (x take 150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).groupBy(_._2).toList.map(a => (a._1, a._2.length)).sortBy(_._1)
     println(y.mkString("\n"))
+    var z = (x take 200).toList.zipWithIndex.map(a => (a, a._1.toString.length)).groupBy(_._2).toList.map(a => (a._1, a._2.length)).sortBy(_._1).map(_._2)
+    println(z)
 
     def fib3(n: Int): Int = {
       def fib_tail(n: Int, a: Int, b: Int): Int = n match {
