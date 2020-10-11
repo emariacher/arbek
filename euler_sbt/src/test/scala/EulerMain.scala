@@ -15,6 +15,10 @@ class EulerMain extends FlatSpec with Matchers {
       h #:: fib(n, h + n)
     }
 
+    def getIndex(n: BigInt): Int = {
+      fib(0, 1).take(150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == n).head._1._2
+    }
+
     var x = fib(0, 1)
     println(s"results: ${(x take 100).toList}")
     var y = (x take 150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).groupBy(_._2).toList.map(a => (a._1, a._2.length)).sortBy(_._1)
@@ -29,8 +33,10 @@ class EulerMain extends FlatSpec with Matchers {
 
     def answer(n: Int): Int = {
       var indexInPattern = 0
-      if (n < 4) {
+      if (n <= 4) {
         indexInPattern = pattern0.take(n).sum
+      } else {
+        indexInPattern = pattern.take(n-4).sum + 17
       }
       indexInPattern
     }
@@ -39,7 +45,9 @@ class EulerMain extends FlatSpec with Matchers {
     answer(2) shouldEqual 7
     answer(3) shouldEqual 12
     answer(4) shouldEqual 17
-    answer(7) shouldEqual (x take 150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == 7).head
+    answer(7) shouldEqual (x take 150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == 7).head._1._2
+    answer(7) shouldEqual getIndex(7)
+    answer(9) shouldEqual getIndex(9)
     answer(31) shouldEqual (x take 150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == 31).head
 
     def fib3(n: Int): Int = {
