@@ -15,8 +15,19 @@ class EulerMain extends FlatSpec with Matchers {
       h #:: fib(n, h + n)
     }
 
+    def fib3(n: Int): Int = {
+      def fib_tail(n: Int, a: Int, b: Int): Int = n match {
+        case 0 => a
+        case _ => fib_tail(n - 1, b, a + b)
+      }
+
+      return fib_tail(n, 0, 1)
+    }
+
+    println(fib3(12))
+
     def getIndex(n: BigInt): Int = {
-      fib(0, 1).take(150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == n).head._1._2
+      fib(0, 1).take(300).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == n).head._1._2
     }
 
     var x = fib(0, 1)
@@ -35,8 +46,6 @@ class EulerMain extends FlatSpec with Matchers {
       var indexInPattern = 0
       if (n <= 4) {
         indexInPattern = pattern0.take(n).sum
-      } else if (n <= 18) {
-        indexInPattern = pattern.take((n % 18) - 4).sum + 17 + (((n - 4) / 14) * 67)
       } else {
         indexInPattern = pattern.take((n - 4) % 14).sum + 17 + (((n - 4) / 14) * 67)
       }
@@ -57,19 +66,11 @@ class EulerMain extends FlatSpec with Matchers {
     answer(18) shouldEqual getIndex(18)
     answer(19) shouldEqual getIndex(19)
     answer(31) shouldEqual getIndex(31)
+    println(31, answer(31))
+    answer(52) shouldEqual getIndex(52)
+    println(52, answer(52))
 
-    def fib3(n: Int): Int = {
-      def fib_tail(n: Int, a: Int, b: Int): Int = n match {
-        case 0 => a
-        case _ => fib_tail(n - 1, b, a + b)
-      }
-
-      return fib_tail(n, 0, 1)
-    }
-
-    println(fib3(12))
-
-    val result = 0
+    val result = answer(1000)
     println("Euler25[" + result + "]")
     result shouldEqual 0
   }
