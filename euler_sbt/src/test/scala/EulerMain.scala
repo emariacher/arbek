@@ -35,8 +35,10 @@ class EulerMain extends FlatSpec with Matchers {
       var indexInPattern = 0
       if (n <= 4) {
         indexInPattern = pattern0.take(n).sum
+      } else if (n <= 18) {
+        indexInPattern = pattern.take((n % 18) - 4).sum + 17 + (((n - 4) / 14) * 67)
       } else {
-        indexInPattern = pattern.take(n-4).sum + 17
+        indexInPattern = pattern.take((n - 4) % 14).sum + 17 + (((n - 4) / 14) * 67)
       }
       indexInPattern
     }
@@ -45,10 +47,16 @@ class EulerMain extends FlatSpec with Matchers {
     answer(2) shouldEqual 7
     answer(3) shouldEqual 12
     answer(4) shouldEqual 17
+    answer(5) shouldEqual getIndex(5)
     answer(7) shouldEqual (x take 150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == 7).head._1._2
     answer(7) shouldEqual getIndex(7)
     answer(9) shouldEqual getIndex(9)
-    answer(31) shouldEqual (x take 150).toList.zipWithIndex.map(a => (a, a._1.toString.length)).filter(_._2 == 31).head
+    answer(13) shouldEqual getIndex(13)
+    answer(14) shouldEqual getIndex(14)
+    answer(17) shouldEqual getIndex(17)
+    answer(18) shouldEqual getIndex(18)
+    answer(19) shouldEqual getIndex(19)
+    answer(31) shouldEqual getIndex(31)
 
     def fib3(n: Int): Int = {
       def fib_tail(n: Int, a: Int, b: Int): Int = n match {
