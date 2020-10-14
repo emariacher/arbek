@@ -70,9 +70,9 @@ class EulerMain extends FlatSpec with Matchers {
     answer(52) shouldEqual getIndex(52)
     println(52, answer(52))
 
-    val result = answer(1000)
+    val result = answer(1000) - 1
     println("Euler25[" + result + "]")
-    result shouldEqual 0
+    result shouldEqual 4782
   }
 
 }
