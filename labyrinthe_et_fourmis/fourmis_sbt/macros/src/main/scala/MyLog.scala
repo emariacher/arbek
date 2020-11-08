@@ -521,17 +521,10 @@ class MyLog(s_title: String, fil: File, errExt: String) {
   val errfileName = working_directory + File.separatorChar + "out_" + name_no_ext.replaceAll("\\W", "_") + "_" +
     MyLog.printToday("ddMMMyy_HH_mm") + "." + errExt
   var MLA: ActorRef = _
-  var Gui: MyUI = _
   var b_GuiActive = false
 
   def launchActorAndGui: Unit = {
     MLA = MyLog.system.actorOf(Props[MyLogActor], name = "MLA")
-    Gui = new MyUI("", new ZeParameters())
-  }
-
-  def createGui(parameters: ZeParameters): Unit = {
-    Gui = new MyUI(s_title, parameters)
-    b_GuiActive = true
   }
 
   def myPrint(a: Any) = MLA ! logMsg("L", a)
