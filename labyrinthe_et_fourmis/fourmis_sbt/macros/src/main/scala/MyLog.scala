@@ -155,21 +155,21 @@ object MyLog {
 
   def myPrint(a: Any): Unit = if (vierge) print(a) else L.myPrint(a)
 
-  def myPrintln(a: Any) = myPrint(a + "\n")
+  def myPrintln(a: Any) = myPrint(a.toString + "\n")
 
   def myPrintD(a: Any) = myPrint(MyLog.tag(3) + " " + a)
 
   //def myPrintDln(a: Any) = myPrintD(a+"\n")
   def myErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myErrPrint(a)
 
-  def myErrPrintln(a: Any) = myErrPrint(a + "\n")
+  def myErrPrintln(a: Any) = myErrPrint(a.toString + "\n")
 
   def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3) + " " + a)
 
   //def myErrPrintDln(a: Any) = myErrPrintD(a+"\n")
   def myHErrPrint(a: Any) = if (vierge) System.err.print(a) else L.myHErrPrint(a)
 
-  def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
+  def myHErrPrintln(a: Any) = myHErrPrint(a.toString + "\n")
 
 
   def printx(c: whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
@@ -415,7 +415,8 @@ object MyLog {
 
   def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
-  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t => (t._1 + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
+  def printTimeStampsList = if (!timeStampsList.isEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t =>
+    (t._1.toString + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
   def toFileAndDisplay(fileName: String, htmlString: String): Unit = {
     val filo = new File(fileName)
@@ -529,23 +530,23 @@ class MyLog(s_title: String, fil: File, errExt: String) {
 
   def myPrint(a: Any) = MLA ! logMsg("L", a)
 
-  def myPrintln(a: Any) = myPrint(a + "\n")
+  def myPrintln(a: Any) = myPrint(a.toString + "\n")
 
   def myPrintD(a: Any) = myPrint(MyLog.tag(3) + " " + a)
 
-  def myPrintDln(a: Any) = myPrintD(a + "\n")
+  def myPrintDln(a: Any) = myPrintD(a.toString + "\n")
 
   def myErrPrint(a: Any) = MLA ! logMsg("E", a)
 
-  def myErrPrintln(a: Any) = myErrPrint(a + "\n")
+  def myErrPrintln(a: Any) = myErrPrint(a.toString + "\n")
 
   def myErrPrintD(a: Any) = myErrPrint(MyLog.tag(3) + " " + a)
 
-  def myErrPrintDln(a: Any) = myErrPrintD(a + "\n")
+  def myErrPrintDln(a: Any) = myErrPrintD(a.toString + "\n")
 
   def myHErrPrint(a: Any) = MLA ! logMsg("H", a)
 
-  def myHErrPrintln(a: Any) = myHErrPrint(a + "\n")
+  def myHErrPrintln(a: Any) = myHErrPrint(a.toString + "\n")
 
   def closeFiles(): Unit = {
     val t_end = Calendar.getInstance()

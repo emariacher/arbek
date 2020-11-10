@@ -127,7 +127,6 @@ class GrabFilter(val s_extension: String) extends FileFilter {
 }
 
 
-
 class getUrlFromClipboard {
 
   var clipboard: String = _
@@ -140,7 +139,7 @@ class getUrlFromClipboard {
     url = new URL(clipboard)
     source = scala.io.Source.fromURL(url)
   } catch {
-    case e: Exception => throw new Exception(e + " [" + clipboard + "]")
+    case e: Exception => throw new Exception(e.toString + " [" + clipboard + "]")
   }
 }
 
