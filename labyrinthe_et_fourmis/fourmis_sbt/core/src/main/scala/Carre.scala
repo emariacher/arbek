@@ -29,7 +29,7 @@ class Carre(val rc: RowCol) {
     }
   }
 
-  def nettoie {
+  def nettoie: Unit = {
     def nettoie2(maFrontiere: Frontiere) = {
       if (hasFrontiere(maFrontiere)) {
         val (autreCarre, autreFrontiere) = autre(maFrontiere)
@@ -39,6 +39,7 @@ class Carre(val rc: RowCol) {
         }
       }
     }
+
     nettoie2(nord)
     nettoie2(sud)
     nettoie2(ouest)
@@ -65,7 +66,7 @@ class Carre(val rc: RowCol) {
           if (!c.hasFrontiere(autreFrontiere)) {
             if (rnd > prolongeThreshold) {
               frontieres = frontieres :+ maFrontiere
-              if(frontieresColor.size==0) {
+              if (frontieresColor.size == 0) {
                 frontieresColor(maFrontiere) = new Color(tbx.rnd.nextInt(0xC0ffff))
               } else {
                 frontieresColor(maFrontiere) = frontieresColor.toList.map(_._2).head
@@ -76,6 +77,7 @@ class Carre(val rc: RowCol) {
         case _ =>
       }
     }
+
     decide(nord)
     decide(sud)
     decide(ouest)
@@ -87,6 +89,7 @@ class Carre(val rc: RowCol) {
   def rnd = tbx.rnd.nextInt(1000)
 
   def hasFrontiere(f: Frontiere) = !frontieres.filter(_ == f).isEmpty
+
   def getFrontiere(f: Frontiere) = frontieres.filter(_ == f).head
 
   def notFull = {
@@ -114,7 +117,7 @@ class Carre(val rc: RowCol) {
 
   def isLast() = (rc == tbx.maxRC.moinsUn)
 
-  def paint(g: Graphics2D) {
+  def paint(g: Graphics2D): Unit = {
     val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
     val vert = tbx.size.getHeight.toInt / (tbx.maxRow * 2)
     val x = tbx.origin.getWidth.toInt + (horiz * ((2 * col) + 1))
@@ -122,20 +125,20 @@ class Carre(val rc: RowCol) {
 
     g.setColor(Color.black)
     if (bloque) {
-      g.fillOval(x-3, y-3, 6, 6)
+      g.fillOval(x - 3, y - 3, 6, 6)
     }
 
     tbx.zp.ptype match {
-      case PanelType.LABY => frontieres.foreach(f => f.paint(g, horiz, vert, x, y,frontieresColor(f)))
+      case PanelType.LABY => frontieres.foreach(f => f.paint(g, horiz, vert, x, y, frontieresColor(f)))
       case _ => frontieres.foreach(f => f.paint(g, horiz, vert, x, y))
     }
 
     g.setColor(Color.black)
     if (depotPheromones.length > 0) {
       //g.drawString("" + calculePheromone, x - horiz, y - vert)
-      tbx.fourmilieres.zipWithIndex.map(fi =>{
+      tbx.fourmilieres.zipWithIndex.map(fi => {
         g.setColor(fi._1.couleur.color)
-        g.fillOval(x - horiz+(fi._2*2), y - vert+(fi._2*2), math.log(calculePheromone(fi._1)).toInt+2, math.log(calculePheromone(fi._1)).toInt+2)
+        g.fillOval(x - horiz + (fi._2 * 2), y - vert + (fi._2 * 2), math.log(calculePheromone(fi._1)).toInt + 2, math.log(calculePheromone(fi._1)).toInt + 2)
       })
       //g.setColor(Color.gray)
       //g.fillOval(x - horiz, y - vert, math.log(calculePheromone).toInt+2, math.log(calculePheromone).toInt+2)
@@ -144,7 +147,7 @@ class Carre(val rc: RowCol) {
   }
 
   override def toString: String = {
-    "{" + rc + " " + tbx.fourmilieres.map(f => f.toString+"("+calculePheromone(f)+")" ) + "}"
+    "{" + rc + " " + tbx.fourmilieres.map(f => f.toString + "(" + calculePheromone(f) + ")") + "}"
     //"Carre{("+row+","+col+"), "+frontieres+"}"
   }
 
