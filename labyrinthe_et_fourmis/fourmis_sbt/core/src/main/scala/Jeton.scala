@@ -48,11 +48,11 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     ventre = ventrePlein
   }
 
-  def setRowCol(r: Int, c: Int) {
+  def setRowCol(r: Int, c: Int): Unit = {
     setRowCol(new RowCol(r, c))
   }
 
-  def setRowCol(rci: RowCol) {
+  def setRowCol(rci: RowCol): Unit = {
     rc = rci
     col = rc.c
     row = rc.r
@@ -156,7 +156,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     }
   }
 
-  def paint(g: Graphics2D) {
+  def paint(g: Graphics2D): Unit = {
     if (visible) {
       g.setColor(couleur.color)
       val horiz = tbx.size.getWidth.toInt / (tbx.maxCol * 2)
@@ -208,7 +208,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     }
   }
 
-  def resetLocal {
+  def resetLocal: Unit = {
     visible = false
     next = new RowCol(888, 888)
     traces = List.empty[RowCol]
@@ -354,7 +354,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     })
   }
 
-  def sortDuLabyrinthe {
+  def sortDuLabyrinthe: Unit = {
     // essaye de trouver une case vierge en suivant l'ordre de priorite defini
     if (next.r == 888) {
       next = firstStep
@@ -396,7 +396,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     }
   }
 
-  def retourne() {
+  def retourne(): Unit = {
 
     if (traces.isEmpty || next.equals(fourmiliere.nid)) {
       // tu es revenue au nid
@@ -420,7 +420,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     }
   }
 
-  def raccourci() {
+  def raccourci(): Unit = {
     /*next = traces.last
     traces = traces.dropRight(1)*/
     // liste les possibles et prends celui qui raccourci plus le chemin de retour
