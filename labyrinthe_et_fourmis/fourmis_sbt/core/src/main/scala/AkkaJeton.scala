@@ -35,7 +35,7 @@ object AkkaJeton {
       j.cnt
     }
 
-    def receive = {
+    def receive: PartialFunction[Any, Unit] = {
       case GoJeton(j) =>
         //myPrintDln("  ("+j+")")
         sender ! Resultat(j.couleur, echappeJeton(j))
@@ -47,10 +47,10 @@ object AkkaJeton {
     var nrOfResults: Int = _
     var lrjc = List.empty[(Couleur, Int, Int)]
 
-    val workerRouter = context.actorOf(
+    val workerRouter: ActorRef = context.actorOf(
       Props[Worker].withRouter(RoundRobinPool(nrOfWorkers)), name = "workerRouter")
 
-    def receive = {
+    def receive: PartialFunction[Any, Unit] = {
       case Demarre =>
         lj.foreach((j: Jeton) =>
           workerRouter ! GoJeton(j))
@@ -69,7 +69,7 @@ object AkkaJeton {
   }
 
   class Listener extends Actor {
-    def receive = {
+    def receive: PartialFunction[Any, Unit] = {
       case ResultatsJetons(lrjc) =>
         tbx.updateStats(lrjc)
         context.system.terminate()

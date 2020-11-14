@@ -11,8 +11,8 @@ import kebra._
 class Carre(val rc: RowCol) {
   def this(r: Int, c: Int) = this(new RowCol(r, c))
 
-  val row = rc.r
-  val col = rc.c
+  val row: Int = rc.r
+  val col: Int = rc.c
   val engendreThreshold = 998
   val prolongeThreshold = 550
   var frontieres = List[Frontiere]()
@@ -20,7 +20,7 @@ class Carre(val rc: RowCol) {
   var depotPheromones = List[Depot]()
   var bloque = false
 
-  def autre(maFrontiere: Frontiere) = {
+  def autre(maFrontiere: Frontiere): (Option[Carre], Frontiere) = {
     maFrontiere.f match {
       case NORD => (getUpCarre, sud)
       case SUD => (getDownCarre, nord)
@@ -29,8 +29,8 @@ class Carre(val rc: RowCol) {
     }
   }
 
-  def nettoie: Unit = {
-    def nettoie2(maFrontiere: Frontiere) = {
+  def nettoie(): Unit = {
+    def nettoie2(maFrontiere: Frontiere): Unit = {
       if (hasFrontiere(maFrontiere)) {
         val (autreCarre, autreFrontiere) = autre(maFrontiere)
         autreCarre match {
@@ -46,8 +46,8 @@ class Carre(val rc: RowCol) {
     nettoie2(est)
   }
 
-  def genere = {
-    def decide(maFrontiere: Frontiere) = {
+  def genere: Carre = {
+    def decide(maFrontiere: Frontiere): Unit = {
       val (autreCarre, autreFrontiere) = autre(maFrontiere)
       autreCarre match {
         case Some(c) => if (frontieres.isEmpty) {
@@ -66,7 +66,7 @@ class Carre(val rc: RowCol) {
           if (!c.hasFrontiere(autreFrontiere)) {
             if (rnd > prolongeThreshold) {
               frontieres = frontieres :+ maFrontiere
-              if (frontieresColor.size == 0) {
+              if (frontieresColor.isEmpty) {
                 frontieresColor(maFrontiere) = new Color(tbx.rnd.nextInt(0xC0ffff))
               } else {
                 frontieresColor(maFrontiere) = frontieresColor.toList.map(_._2).head
@@ -86,13 +86,13 @@ class Carre(val rc: RowCol) {
     this
   }
 
-  def rnd = tbx.rnd.nextInt(1000)
+  def rnd: Int = tbx.rnd.nextInt(1000)
 
-  def hasFrontiere(f: Frontiere) = !frontieres.filter(_ == f).isEmpty
+  def hasFrontiere(f: Frontiere): Boolean = !frontieres.filter(_ == f).isEmpty
 
-  def getFrontiere(f: Frontiere) = frontieres.filter(_ == f).head
+  def getFrontiere(f: Frontiere): Frontiere = frontieres.filter(_ == f).head
 
-  def notFull = {
+  def notFull: Boolean = {
     var sum = 0
     getUpCarre match {
       case Some(c) => if ((c hasFrontiere sud) || (hasFrontiere(nord))) sum += 1

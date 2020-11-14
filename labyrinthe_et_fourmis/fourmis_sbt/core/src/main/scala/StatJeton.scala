@@ -7,12 +7,12 @@ class StatJeton(val couleur: Couleur) {
 
   var cnt = 0
   var cntDepasse = 0
-  var min = Int.MaxValue
-  var max = Int.MinValue
-  var mean = Double.MinValue
+  var min: Int = Int.MaxValue
+  var max: Int = Int.MinValue
+  var mean: Double = Double.MinValue
   var history = List.empty[Int]
 
-  def update(score: Int) {
+  def update(score: Int): Unit = {
     if (score == 0) {
     } else if (score < zp.limit) {
       history = history :+ score
@@ -25,6 +25,6 @@ class StatJeton(val couleur: Couleur) {
     }
   }
 
-  override def toString = "  [" + cnt + "+" + cntDepasse + " - " + min + "/ %4.3f /".format(mean) + max + "]  "
+  override def toString: String = "  [" + cnt + "+" + cntDepasse + " - " + min + "/ %4.3f /".format(mean) + max + "]  "
 }
 

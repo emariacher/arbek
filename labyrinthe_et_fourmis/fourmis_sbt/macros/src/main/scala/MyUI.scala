@@ -8,17 +8,22 @@ import java.util.Date
 import java.io.FileOutputStream
 import java.util.Scanner
 import java.io.FileNotFoundException
+
 import javax.swing.filechooser.FileFilter
 import javax.swing.JFileChooser
 import javax.swing.UIManager
 import javax.swing.JComponent
 import javax.swing.JButton
+
 import scala.swing._
 import scala.swing.event._
 import java.awt.Color
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
-import akka.actor.{ActorRef, ActorSystem, Props, Actor, Inbox}
+
+import akka.actor.{Actor, ActorRef, ActorSystem, Inbox, Props}
+
+import scala.util.matching.Regex
 
 class MyFile(fname: String) extends File(fname) {
   try {
@@ -34,7 +39,7 @@ class MyFile(fname: String) extends File(fname) {
   }
 
   def close(): Unit = {
-    fos.close
+    fos.close()
   }
 }
 
@@ -75,8 +80,8 @@ class MyFileChooser(s_title: String) extends Panel {
     val ab = new javax.swing.JButton()
     getComponents(fChooser.peer).filter(_.isInstanceOf[javax.swing.AbstractButton]).
       find((y: java.awt.Component) =>
-        y.asInstanceOf[javax.swing.AbstractButton].getIcon() == UIManager.getIcon("FileChooser.detailsViewIcon")) match {
-      case Some(button) => button.asInstanceOf[javax.swing.AbstractButton].doClick
+        y.asInstanceOf[javax.swing.AbstractButton].getIcon == UIManager.getIcon("FileChooser.detailsViewIcon")) match {
+      case Some(button) => button.asInstanceOf[javax.swing.AbstractButton].doClick()
       case _ =>
     }
     fChooser.title = s_title;
@@ -93,7 +98,7 @@ class MyFileChooser(s_title: String) extends Panel {
 
   def getComponents(container: java.awt.Container): List[java.awt.Component] = {
     var l_components = List[java.awt.Component]()
-    val z = container.getComponents().toList
+    val z = container.getComponents.toList
     l_components = l_components ++ z
     z.foreach((y: java.awt.Component) => l_components =
       l_components ++ getComponents(y.asInstanceOf[java.awt.Container]))
@@ -102,9 +107,9 @@ class MyFileChooser(s_title: String) extends Panel {
 
   def readSavedParameters(): List[String] = {
     var l_parameters = List[String]()
-    if (f_defvardiff.canRead()) {
+    if (f_defvardiff.canRead) {
       val sc = new Scanner(f_defvardiff)
-      while (sc.hasNextLine()) {
+      while (sc.hasNextLine) {
         l_parameters = l_parameters :+ sc.nextLine()
       }
     } else {
@@ -121,9 +126,9 @@ class MyFileChooser(s_title: String) extends Panel {
 }
 
 class GrabFilter(val s_extension: String) extends FileFilter {
-  def accept(f: File) = f.getName.contains(s_extension) || f.isDirectory
+  def accept(f: File): Boolean = f.getName.contains(s_extension) || f.isDirectory
 
-  def getDescription(): String = "Just " + s_extension + " files"
+  def getDescription: String = "Just " + s_extension + " files"
 }
 
 
@@ -134,7 +139,7 @@ class getUrlFromClipboard {
   //var file: File = _
   var source: scala.io.BufferedSource = _
   try {
-    clipboard = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString
+    clipboard = Toolkit.getDefaultToolkit.getSystemClipboard.getData(DataFlavor.stringFlavor).toString
     println("Trying to make a URL of:[" + clipboard + "]")
     url = new URL(clipboard)
     source = scala.io.Source.fromURL(url)
@@ -145,7 +150,7 @@ class getUrlFromClipboard {
 
 
 object MyParameter {
-  val pair = """\((.+),(.*)\)""".r
+  val pair: Regex = """\((.+),(.*)\)""".r
 }
 
 class MyParameter(val v: String, val defaultValue: String, val classtype: Component) {
