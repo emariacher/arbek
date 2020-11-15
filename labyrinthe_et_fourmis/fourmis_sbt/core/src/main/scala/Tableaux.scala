@@ -11,7 +11,7 @@ import scala.util.Random
 object Tableaux {
   var tbx: Tableaux = _
 
-  def newTbx(zp: ZePanel, maxRC: RowCol, size: Dimension, origin: Dimension) {
+  def newTbx(zp: ZePanel, maxRC: RowCol, size: Dimension, origin: Dimension): Unit = {
     tbx = new Tableaux(zp, maxRC, size, origin)
   }
 }
@@ -25,13 +25,13 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   val maxWorkers = 5
   val mperfs = scala.collection.mutable.Map.empty[Int, List[Double]]
   var state = StateMachine.reset
-  var oldstate = StateMachine.reset
+  var oldstate: StateMachine = StateMachine.reset
   var seedIndex = 0
   var seed: Int = _
   var rnd: Random = _
   var countGenere = 0
   var countAvance = 0
-  var fourmilieres = zp.ptype match {
+  var fourmilieres: List[Fourmiliere] = zp.ptype match {
     case PanelType.FOURMILIERES => List(new Fourmiliere(new RowCol(maxRow * 2 / 5, maxCol * 2 / 5), "violet", RaceFourmi.ROND),
       new Fourmiliere(new RowCol(maxRow * 3 / 5, maxCol * 3 / 5), "pourpre", RaceFourmi.RECTROND))
     case _ => List(new Fourmiliere(new RowCol(maxRow / 2, maxCol / 2), "violet", RaceFourmi.ROND))
@@ -49,11 +49,11 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   //lj = List(new Orange("orange", 75))
   val mj = lj.map((j: Jeton) => (j.couleur, j)).toMap
   val mjs = lj.map((j: Jeton) => (j.couleur, new StatJeton(j.couleur))).toMap
-  var ltimestamps = List[Long](0)
+  var ltimestamps: List[Long] = List[Long](0)
   var t_startAkka: Calendar = _
   var nrOfWorkers = 4
 
-  def doZeJob(command: String, graphic: Boolean) {
+  def doZeJob(command: String, graphic: Boolean): Unit = {
     //l.myPrintDln(state + " cg: " + countGenere + " ca: " + countAvance + " " + command)
     if (graphic) {
       zp.lbl.text = "Seed: " + seed + ", CountSteps: " + countGenere
@@ -120,14 +120,14 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
   }
 
   def nettoie: StateMachine = {
-    lc.foreach(_.nettoie)
+    lc.foreach(_.nettoie())
     lj.foreach(_.init)
 
     StateMachine.avance
   }
 
   def avance: StateMachine = {
-    if (lj.map(_.avance).filter((sm: StateMachine) => sm == StateMachine.avance).isEmpty) {
+    if (!lj.map(_.avance).exists((sm: StateMachine) => sm == StateMachine.avance)) {
       StateMachine.termine
     } else {
       StateMachine.avance
@@ -147,7 +147,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     countGenere = 0
     countAvance = 0
     LL.l.myPrintln(seed)
-    lc = (0 to maxRow).map((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).flatten.toList
+    lc = (0 to maxRow).flatMap((row: Int) => (0 to maxCol).map((col: Int) => new Carre(row, col))).toList
     fourmilieres.foreach(_.cntmp = 0)
     mj.foreach((cj: (Couleur, Jeton)) => {
       // val cnt = cj._2.cnt
@@ -174,7 +174,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     }
   }
 
-  def updateStats(lrjc: List[(Couleur, Int, Int)]) {
+  def updateStats(lrjc: List[(Couleur, Int, Int)]): Unit = {
     lrjc.foreach((ci: (Couleur, Int, Int)) => {
       mjs.getOrElse(ci._1, new StatJeton()).update(ci._2)
     })
@@ -188,7 +188,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     state = StateMachine.termine
   }
 
-  def findCarre(rc2f: RowCol) = {
+  def findCarre(rc2f: RowCol): Carre = {
     var z = lc.find(_.rc.equals(rc2f))
     if (z.isEmpty) {
       null
@@ -199,7 +199,7 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
 }
 
 case class StateMachine private(state: String) {
-  override def toString = "State_" + state
+  override def toString: String = "State_" + state
 }
 
 object StateMachine {
