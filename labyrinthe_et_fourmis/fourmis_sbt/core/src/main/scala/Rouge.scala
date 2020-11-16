@@ -9,7 +9,8 @@ class Rouge(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Jeton
   val ordreChoix = new Circular(List(nord, ouest, sud, est), nextf, prevf)
   l.myPrintln(MyLog.func(1) + couleur + " " + lastDirection)
 
-  // n'essaye pas de continuer dans la meme direction que la derniere fois mais continue a parcourir les priorites
+  println(couleur + " n'essaye pas de continuer dans la même direction que la dernière fois mais continue à parcourir les priorités")
+
   def firstStep: RowCol = new RowCol(888, 888)
 
   def nextf(c: Circular): Frontiere = {
