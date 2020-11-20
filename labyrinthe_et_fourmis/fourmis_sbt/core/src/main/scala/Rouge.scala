@@ -9,7 +9,9 @@ class Rouge(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Jeton
   val ordreChoix = new Circular(List(nord, ouest, sud, est), nextf, prevf)
   l.myPrintln(MyLog.func(1) + couleur + " " + lastDirection)
 
-  println(couleur + " n'essaye pas de continuer dans la même direction que la dernière fois mais continue à parcourir les priorités")
+  def explique: Unit = {
+    println(couleur + " n'essaye pas de continuer dans la même direction que la dernière fois mais continue à parcourir les priorités[" + ordreChoix + "]")
+  }
 
   def firstStep: RowCol = new RowCol(888, 888)
 
@@ -31,7 +33,10 @@ class Rouge(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Jeton
 }
 
 class Orange(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Rouge(couleur, rayon, fourmiliere) {
-  // essaye de continuer dans la meme direction que la derniere fois
+  override def explique: Unit = {
+    println(couleur + " essaye de continuer dans la même direction que la dernière fois[" + ordreChoix + "]")
+  }
+
   override def firstStep: RowCol = getNext(lastDirection, true, true)
 
   override def retourne() = raccourci()
@@ -39,11 +44,18 @@ class Orange(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Roug
 
 class VertFonce(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends Rouge(couleur, rayon, fourmiliere) {
   override val ordreChoix = new Circular(List(nord, est, sud, ouest), nextf, prevf)
-  // n'essaye pas de continuer dans la meme direction que la derniere fois mais continue a parcourir les priorites
+
+  override def explique: Unit = {
+    println(couleur + " n'essaye pas de continuer dans la même direction que la dernière fois mais continue à parcourir les priorités[" + ordreChoix + "]")
+  }
+
 }
 
 class VertClair(couleur: String, rayon: Int, fourmiliere: Fourmiliere) extends VertFonce(couleur, rayon, fourmiliere) {
-  // essaye de continuer dans la meme direction que la derniere fois
+  override def explique: Unit = {
+    println(couleur + " essaye de continuer dans la même direction que la dernière fois[" + ordreChoix + "]")
+  }
+
   override def firstStep: RowCol = getNext(lastDirection, true, true)
 
   override def retourne() = raccourci()

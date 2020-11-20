@@ -46,7 +46,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     visible = true
     statut = Pheromone.CHERCHE
     ventre = ventrePlein
+    explique
   }
+
+  def explique: Unit
 
   def setRowCol(r: Int, c: Int): Unit = {
     setRowCol(new RowCol(r, c))
