@@ -38,6 +38,7 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
   var miracule = 0
   val role = Role.OUVRIERE
   var killed = 0
+  var explication_recue = false
 
   def this(s: String, rayon: Int, fourmiliere: Fourmiliere) = this(new Couleur(s), rayon, fourmiliere)
 
@@ -46,7 +47,10 @@ abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Four
     visible = true
     statut = Pheromone.CHERCHE
     ventre = ventrePlein
-    explique
+    if (!explication_recue) {
+      explique
+      explication_recue = true
+    }
   }
 
   def explique: Unit
