@@ -156,10 +156,10 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
         case _ => cj._2.aRameneDeLaJaffe
       }
       val js = mjs.getOrElse(cj._1, new StatJeton())
+      js.update(cnt)
       if (cnt != 0) {
         cj._2.label.text = js.toString
       }
-      js.update(cnt)
       cj._2.resetLocal
     })
     StateMachine.genere

@@ -11,7 +11,7 @@ import scala.swing.event.{ButtonClicked, ValueChanged}
  * Created by ericm_000 on 16.03.2016.
  */
 class UI extends SimpleSwingApplication {
-    val titre = "Sors du Labyrinthe. Vert va toujours a tribord, Rouge toujours a babord et bleu est fou."
+    val titre = "Sors du Labyrinthe. Vert va toujours à tribord, Rouge toujours à babord et bleu est fou."
     val buttonStepLbl = "step"
     val labelLbl = "Idle Label"
     val zpanelType = PanelType.LABY
