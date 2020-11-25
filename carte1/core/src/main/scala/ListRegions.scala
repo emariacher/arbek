@@ -1,9 +1,10 @@
 package carte
 
 class ListRegions {
-	var lr = List[Region]()
-			def add(r: Region) {
-		lr = lr :+ r
-	}
+  var lr: List[Region] = List[Region]()
+
+  def add(r: Region): Unit = {
+    lr = lr :+ r
+  }
 
 }
