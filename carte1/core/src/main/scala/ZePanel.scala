@@ -14,9 +14,9 @@ import scala.swing.{Label, Panel}
 
 class ZeActor extends Actor {
   context.setReceiveTimeout(1 second)
-  var slider_timeout : Int = 20
+  var slider_timeout: Int = 20
 
-  def receive = {
+  def receive: PartialFunction[Any, Unit] = {
     case ReceiveTimeout =>
       if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout", slider_timeout)
     case slider: (String, Int) =>
@@ -30,7 +30,7 @@ class ZeActor extends Actor {
     case "step" =>
       l.myErrPrintDln("step")
       ZePanel.zp.repaint
-      tbx.doZeJob("step",0)
+      tbx.doZeJob("step", 0)
       context.setReceiveTimeout(10 minutes)
       ZePanel.zp.step = true
   }
@@ -39,11 +39,12 @@ class ZeActor extends Actor {
 object ZePanel {
   var zp: ZePanel = _
   var za: ActorRef = _
-  implicit val system = MyLog.system
+  implicit val system: ActorSystem = MyLog.system
 
-  def newZePanel(lbl: Label, maxRow: Int, maxCol: Int) {
+  def newZePanel(lbl: Label, maxRow: Int, maxCol: Int): Unit = {
     zp = new ZePanel(lbl, maxRow, maxCol)
-    za = ActorDSL.actor(new ZeActor)
+    //za = ActorDSL.actor(new ZeActor)
+    za = system.actorOf(Props[ZeActor], "zePanelActor")
   }
 }
 
@@ -59,7 +60,7 @@ class ZePanel(val lbl: Label, val maxRow: Int, val maxCol: Int) extends Panel {
   val origin = new Dimension(0, 0)
   newTbx(this, maxRow, maxCol, preferredSize, origin)
 
-  override def paint(g: Graphics2D) {
+  override def paint(g: Graphics2D): Unit = {
     g.setColor(Color.black)
     tbx.cb.lcarres.lc.foreach(_.paint(g))
   }
