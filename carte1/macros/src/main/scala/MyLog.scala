@@ -102,7 +102,7 @@ object MyLog {
 
   var system: ActorSystem = _
   var timeStampsList = List.empty[(Long, String)]
-  val MatchFileLine = """.+\((.+)\..+:(\d+)\)""".r
+  val MatchFileLine: Regex = """.+\((.+)\..+:(\d+)\)""".r
   val MatchFunc: Regex = """(.+)\(.+""".r
   val r_name: Regex = """Expr\[String\]\(\"(.+)\"\)""".r
   var L: MyLog = _
@@ -417,7 +417,7 @@ object MyLog {
 
   def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
-  def printTimeStampsList = if (timeStampsList.nonEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t =>
+  def printTimeStampsList() = if (timeStampsList.nonEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t =>
     (t._1.toString + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
 
   def toFileAndDisplay(fileName: String, htmlString: String): Unit = {

@@ -1,6 +1,6 @@
 package carte
 
-import kebra.MyLog
+import kebra.{LL, MyLog}
 
 import scala.math._
 
@@ -18,7 +18,7 @@ class CarteBlanche {
       timeout_cpt -= 1
       //MyLog.myPrintIt(timeout, timeout_cpt)
     } while ((!c.isLast) & (timeout_cpt > 0))
-    MyLog.myPrintIt(timeout, lcarres.lc.length)
+    //MyLog.myPrintIt(timeout, lcarres.lc.length)
     if (c.isLast) {
       StateMachine.repandRegions
     } else {
@@ -41,7 +41,7 @@ class CarteBlanche {
 
   def getRegions: StateMachine = {
     lcarres.lc.foreach(_.getRegions)
-    //				System.out.println(MyLog.tag(1)+" lregions.l: "+lregions.lr)
+    MyLog.myPrintIt(lregions.lr.length)
     StateMachine.colorie
   }
 

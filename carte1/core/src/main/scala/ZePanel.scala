@@ -18,7 +18,7 @@ class ZeActor extends Actor {
 
   def receive: PartialFunction[Any, Unit] = {
     case ReceiveTimeout =>
-      if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout", slider_timeout)
+      if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint(); tbx.doZeJob("timeout", slider_timeout)
     case slider: (String, Int) =>
       slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100), 5000)
       MyLog.myPrintIt(slider._2, slider_timeout)
@@ -26,10 +26,9 @@ class ZeActor extends Actor {
       ZePanel.zp.pause = (slider._2 == 0)
       ZePanel.zp.run = !ZePanel.zp.pause
       ZePanel.zp.step = false
-      ZePanel.zp.step = false
     case "step" =>
       l.myErrPrintDln("step")
-      ZePanel.zp.repaint
+      ZePanel.zp.repaint()
       tbx.doZeJob("step", 0)
       context.setReceiveTimeout(10 minutes)
       ZePanel.zp.step = true
