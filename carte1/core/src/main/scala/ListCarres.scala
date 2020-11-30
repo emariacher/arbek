@@ -3,7 +3,7 @@ package carte
 import carte.Tableaux._
 
 class ListCarres {
-  var lc = List[Carre]()
+  var lc: List[Carre] = List[Carre]()
 
   def getNextRowCol: (Int, Int) = {
     if (lc.isEmpty) {
