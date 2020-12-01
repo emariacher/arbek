@@ -35,8 +35,10 @@ class Tableaux(val zp: ZePanel, val maxRow: Int, val maxCol: Int, val size: Dime
       case StateMachine.getRegions => state = cb.getRegions
         carte = new Coloriage3
       case StateMachine.colorie => state = carte.colorie
+        zp.slow_timeout = 1
         count += 1
       case StateMachine.reverse => state = carte.reverse
+        zp.slow_timeout = 200
         count += 1
       case StateMachine.termine =>
         System.err.println(zp.lbl.text)
