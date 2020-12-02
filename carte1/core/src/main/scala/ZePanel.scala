@@ -20,7 +20,7 @@ class ZeActor extends Actor {
     case ReceiveTimeout =>
       if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint();
       tbx.doZeJob("timeout", slider_timeout)
-      context.setReceiveTimeout((slider_timeout * ZePanel.zp.slow_timeout) millisecond)
+    case newtimeout: Int => context.setReceiveTimeout(newtimeout millisecond)
     case slider: (String, Int) =>
       slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100), 5000)
       MyLog.myPrintIt(slider._2, slider_timeout)
@@ -28,8 +28,7 @@ class ZeActor extends Actor {
       ZePanel.zp.pause = (slider._2 == 0)
       ZePanel.zp.run = !ZePanel.zp.pause
       ZePanel.zp.step = false
-    case "step"
-    =>
+    case "step" =>
       l.myErrPrintDln("step")
       ZePanel.zp.repaint()
       tbx.doZeJob("step", 0)
@@ -58,7 +57,6 @@ class ZePanel(val lbl: Label, val maxRow: Int, val maxCol: Int) extends Panel {
   var largeur = 1000
   val hauteur = 700
   var limit: Int = _
-  var slow_timeout: Int = 1
   preferredSize = new Dimension(largeur, hauteur)
   val origin = new Dimension(0, 0)
   newTbx(this, maxRow, maxCol, preferredSize, origin)
