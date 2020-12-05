@@ -37,6 +37,7 @@ class Coloriage2 extends Coloriage {
         } else {
           r.couleursDejaEssayees = r.couleursDejaEssayees + couleursEncoreLibres.head
           state = StateMachine.colorie
+          ZePanel.za ! "normal"
           couleursEncoreLibres.head
         }
       } else {

@@ -29,10 +29,10 @@ class Region(val tbx: Tableaux, val canton: Canton) {
     val couleursEncoreLibres = Couleurs.l -- couleursDejaEssayees
     couleur = (if (couleursEncoreLibres.isEmpty) {
       state = StateMachine.reverse
+      ZePanel.za ! "slow"
       Color.black
     } else {
       couleursDejaEssayees = couleursDejaEssayees + couleursEncoreLibres.head
-      state = StateMachine.colorie
       couleursEncoreLibres.head
     })
     state

@@ -34,11 +34,11 @@ class Tableaux(val zp: ZePanel, val maxRow: Int, val maxCol: Int, val size: Dime
       case StateMachine.cleanRegions => state = cb.cleanRegions
       case StateMachine.getRegions => state = cb.getRegions
         carte = new Coloriage3
-      case StateMachine.colorie => state = carte.colorie
-        ZePanel.za ! 1
+      case StateMachine.colorie =>
+        state = carte.colorie
         count += 1
-      case StateMachine.reverse => state = carte.reverse
-        ZePanel.za ! 200
+      case StateMachine.reverse =>
+        state = carte.reverse
         count += 1
       case StateMachine.termine =>
         System.err.println(zp.lbl.text)
