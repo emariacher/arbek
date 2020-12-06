@@ -527,7 +527,7 @@ class MyLog(s_title: String, fil: File, errExt: String) {
   var b_GuiActive = false
 
   def launchActorAndGui(): Unit = {
-    MLA = MyLog.system.actorOf(Props[MyLogActor], name = "MLA")
+    MLA = MyLog.system.actorOf(Props[MyLogActor](), name = "MLA")
   }
 
   def myPrint(a: Any): Unit = MLA ! logMsg("L", a)

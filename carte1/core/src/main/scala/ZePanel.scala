@@ -50,7 +50,7 @@ object ZePanel {
   def newZePanel(lbl: Label, maxRow: Int, maxCol: Int): Unit = {
     zp = new ZePanel(lbl, maxRow, maxCol)
     //za = ActorDSL.actor(new ZeActor)
-    za = system.actorOf(Props[ZeActor], "zePanelActor")
+    za = system.actorOf(Props[ZeActor](), "zePanelActor")
   }
 }
 
