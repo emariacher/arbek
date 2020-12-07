@@ -353,7 +353,7 @@ object MyLog {
         } catch {
           case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList
             .filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  "));
-            sys.exit
+            sys.exit()
         }
       }
     })
@@ -387,7 +387,7 @@ object MyLog {
         } catch {
           case unknown: Throwable => System.err.println("" + unknown + unknown.getStackTrace.toList
             .filter(_.toString.indexOf("scala.") != 0).mkString("\n  ", "\n  ", "\n  "));
-            sys.exit
+            sys.exit()
         }
       }
     })
@@ -583,7 +583,7 @@ class MyLog(s_title: String, fil: File, errExt: String) {
   var b_GuiActive = false
 
   def launchActorAndGui: Unit = {
-    MLA = MyLog.system.actorOf(Props[MyLogActor], name = "MLA")
+    MLA = MyLog.system.actorOf(Props[MyLogActor](), name = "MLA")
     Gui = new MyUI("", new ZeParameters())
   }
 
@@ -657,7 +657,7 @@ class MyLogActor extends Actor {
     case hcloseMsg(javascriptHeader, postProcessFunc) =>
       b_filesActive = false
       errfile.writeFile(postProcessFunc(hlines, javascriptHeader))
-      files.foreach(_.close)
+      files.foreach(_.close())
       context.system.terminate()
     //exit
     case logMsg(errorType, msg) => errorType match {
@@ -682,7 +682,7 @@ class MyLogActor extends Actor {
     }
     case closeMsg =>
       b_filesActive = false
-      files.foreach(_.close)
+      files.foreach(_.close())
       context.system.terminate()
     //exit
   }

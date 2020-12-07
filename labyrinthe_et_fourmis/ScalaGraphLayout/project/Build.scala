@@ -5,8 +5,8 @@ object BuildSettings {
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamacros",
     version := "1.0.0",
-    scalaVersion := "2.13.1",
-    crossScalaVersions := Seq("2.12.6", "2.13.1"),
+    scalaVersion := "2.13.3",
+    crossScalaVersions := Seq("2.13.3", "2.13.1"),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
     logLevel := Level.Debug,
@@ -59,11 +59,6 @@ object MyBuild extends Build {
               "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
               "org.apache.commons" % "commons-math3" % "3.5",
               "org.scala-lang.modules" %% "scala-swing" % "2.1.0")
-          // in Scala 2.10, quasiquotes are provided by macro paradise
-          case Some((2, 10)) =>
-            libraryDependencies.value ++ Seq(
-              compilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full),
-              "org.scalamacros" %% "quasiquotes" % "2.1.0-M5" cross CrossVersion.binary)
         }
       }
     )

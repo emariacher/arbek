@@ -30,6 +30,6 @@ class Resultat {
 
   def printFinalLog1 = {
     myPrintD(Console.BLUE + "la!\n" + Console.RESET)
-    filestats.close
+    filestats.close()
   }
 }

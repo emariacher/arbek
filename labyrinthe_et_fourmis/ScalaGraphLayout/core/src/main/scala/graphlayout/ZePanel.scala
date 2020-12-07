@@ -16,9 +16,9 @@ import scala.language.postfixOps
 class ZeActor extends Actor {
   context.setReceiveTimeout(10 milliseconds)
 
-  def receive = {
+  def receive: PartialFunction[Any, Unit] = {
     case ReceiveTimeout =>
-      if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint; tbx.doZeJob("timeout", true)
+      if ((!ZePanel.zp.pause) && (!ZePanel.zp.step)) ZePanel.zp.repaint(); tbx.doZeJob("timeout", true)
     case slider: (String, Int)@unchecked =>
       tbx.graph.doZeSliderJob(slider)
       context.setReceiveTimeout(tbx.graph.slider_timeout millisecond)
@@ -28,7 +28,7 @@ class ZeActor extends Actor {
       MyLog.myAssert2(true, false)
     case "step" =>
       LL.l.myErrPrintDln("step")
-      ZePanel.zp.repaint
+      ZePanel.zp.repaint()
       tbx.doZeJob("step", true)
       ZePanel.zp.step = true
     case "bloque" =>
@@ -42,11 +42,11 @@ class ZeActor extends Actor {
 object ZePanel {
   var zp: ZePanel = _
   var za: ActorRef = _
-  implicit val system = MyLog.system
+  implicit val system: ActorSystem = MyLog.system
 
-  def newZePanel(lbl: Label, maxRC: RowCol, graph: GraphAbstract) = {
+  def newZePanel(lbl: Label, maxRC: RowCol, graph: GraphAbstract): Unit = {
     zp = new ZePanel(lbl, maxRC, graph)
-    za = system.actorOf(Props[ZeActor], "zePanelActor")
+    za = system.actorOf(Props[ZeActor](), "zePanelActor")
   }
 }
 
@@ -61,7 +61,7 @@ class ZePanel(val lbl: Label, val maxRC: RowCol, val graph: GraphAbstract) exten
   val origin = new Dimension(0, 0)
   newTbx(this, maxRC, preferredSize, origin, graph)
 
-  override def paint(g: Graphics2D) = {
+  override def paint(g: Graphics2D): Unit = {
     g.setColor(Color.white)
     g.fillRect(0, 0, largeur, hauteur)
 

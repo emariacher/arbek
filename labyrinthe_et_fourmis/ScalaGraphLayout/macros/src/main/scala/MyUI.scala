@@ -115,9 +115,9 @@ class MyFileChooser(s_title: String) extends Panel {
 }
 
 class GrabFilter(val s_extension: String) extends FileFilter {
-  def accept(f: File) = f.getName.contains(s_extension) || f.isDirectory
+  def accept(f: File): Boolean = f.getName.contains(s_extension) || f.isDirectory
 
-  def getDescription(): String = "Just " + s_extension + " files"
+  def getDescription: String = "Just " + s_extension + " files"
 }
 
 class MyUI(val s_title: String, val parameters: ZeParameters) extends Frame {
@@ -125,7 +125,7 @@ class MyUI(val s_title: String, val parameters: ZeParameters) extends Frame {
   if (!parameters.isEmpty) {
     title = s_title
     contents = gpanel
-    pack
+    pack()
     visible = true
   }
 
@@ -137,8 +137,8 @@ class MyUI(val s_title: String, val parameters: ZeParameters) extends Frame {
   }
 
   def getAndClose(): ZeParameters = {
-    val l_output = get
-    close
+    val l_output = get()
+    close()
     l_output
   }
 }
@@ -162,27 +162,30 @@ class gridpanel(val rows0: Int, val cols0: Int, val parameters: ZeParameters, va
 
   def add2Panel(p: (String, MyParameter)): Unit = {
     contents += new Label(p._1)
-    if (p._2.classtype.isInstanceOf[PasswordField]) {
-      contents += p._2.classtype.asInstanceOf[PasswordField]
-    } else if (p._2.classtype.isInstanceOf[TextField]) {
-      p._2.classtype.asInstanceOf[TextField].text = p._2.value
-      contents += p._2.classtype.asInstanceOf[TextField]
+    p._2.classtype match {
+      case field: PasswordField =>
+        contents += field
+      case field: TextField =>
+        field.text = p._2.value
+        contents += field
+      case _ =>
     }
   }
 
-  def getFromPanel(): ZeParameters = {
+  def getFromPanel: ZeParameters = {
     var p_output = new ZeParameters
     parameters.foreach(p_output += getFromField(_))
     p_output
   }
 
   def getFromField(p: (String, MyParameter)): (String, MyParameter) = {
-    if (p._2.classtype.isInstanceOf[PasswordField]) {
-      (p._1, new MyParameter(p._2.classtype.asInstanceOf[PasswordField].password.toList.mkString(""), "", new PasswordField))
-    } else if (p._2.classtype.isInstanceOf[TextField]) {
-      (p._1, new MyParameter(p._2.classtype.asInstanceOf[TextField].text))
-    } else {
-      (p._1, new MyParameter(MyLog.tag(1) + "You most probably have an issue with [" + p + "]"))
+    p._2.classtype match {
+      case field: PasswordField =>
+        (p._1, new MyParameter(field.password.toList.mkString(""), "", new PasswordField))
+      case field: TextField =>
+        (p._1, new MyParameter(field.text))
+      case _ =>
+        (p._1, new MyParameter(MyLog.tag(1) + "You most probably have an issue with [" + p + "]"))
     }
   }
 }
@@ -194,7 +197,7 @@ class getUrlFromClipboard {
   //var file: File = _
   var source: scala.io.BufferedSource = _
   try {
-    clipboard = Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString
+    clipboard = Toolkit.getDefaultToolkit.getSystemClipboard.getData(DataFlavor.stringFlavor).toString
     println("Trying to make a URL of:[" + clipboard + "]")
     url = new URL(clipboard)
     source = scala.io.Source.fromURL(url)
@@ -205,13 +208,13 @@ class getUrlFromClipboard {
 
 class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[String, MyParameter] {
   /** ** Minimal Map stuff begin ****/
-  lazy val keyLookup = Map() ++ pairs
+  lazy val keyLookup: Map[String, MyParameter] = Map() ++ pairs
 
   override def get(key: String): Option[MyParameter] = keyLookup.get(key)
 
   override def iterator: Iterator[(String, MyParameter)] = pairs.reverseIterator
 
-  override def +[B1 >: MyParameter](kv: (String, B1)) = {
+  override def +[B1 >: MyParameter](kv: (String, B1)): ZeParameters = {
     val (key: String, value: MyParameter) = kv
     new ZeParameters((key, value) :: pairs)
   }
@@ -222,7 +225,7 @@ class ZeParameters(val pairs: List[(String, MyParameter)] = Nil) extends Map[Str
 
   /** ** Minimal map stuff end ****/
 
-  def +(s: String) = {
+  def +(s: String): ZeParameters = {
     s match {
       case MyParameter.pair(k, v) => new ZeParameters((k, new MyParameter(v)) :: pairs)
       case _ => new ZeParameters(pairs)
