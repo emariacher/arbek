@@ -9,6 +9,22 @@ import org.apache.commons.math3.distribution._
 import scala.collection.immutable.List
 import scala.util.Random
 
+// https://www.futura-sciences.com/planete/dossiers/zoologie-fourmi-secrets-fourmiliere-1404/page/8/
+/*
+Chez la fourmi du pharaon Monomorium pharaonis, on connaît une phéromone de piste à longue durée d'action qui permet de
+dessiner un réseau de pistes parcourues chaque jour. Une deuxième phéromone est plus volatile, mais attire un plus
+grand nombre d'ouvrières sur la piste. Enfin une troisième substance déposée aux croisements fait office de sens interdits
+informant les ouvrières qu'il n'y a aucune nourriture sur la route ainsi signalée.
+
+Les phéromones d'alarme alertent, regroupent ou dispersent les ouvrières mises en difficulté par un événement imprévu comme l'irruption d'un intrus.
+ */
+
+// http://jl.carton.free.fr/fourmis/TPE.pdf
+/*
+Une  ouvrière  en  quête  de  nourriture  suit  les  odeurs  des  phéromones-aller  ("je  pars"),  et  une ouvrière qui
+veut retourner à la fourmilière utilise des phéromones-retour ("je reviens"). (voir Expérience du I : Mise en évidence du « langage » des fourmis )
+ */
+
 class Fourmi(val anode: ANode) {
   var fourmiliere: Fourmiliere = _
   val tribu = anode.tribu
