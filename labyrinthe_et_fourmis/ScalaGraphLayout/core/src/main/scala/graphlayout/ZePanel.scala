@@ -31,9 +31,6 @@ class ZeActor extends Actor {
       ZePanel.zp.repaint()
       tbx.doZeJob("step", true)
       ZePanel.zp.step = true
-    case "bloque" =>
-      //l.myErrPrintDln("bloque")
-      tbx.doZeJob("bloque", true)
     case mouse: (String, Int, Int)@unchecked =>
       tbx.graph.doZeMouseJob(mouse)
   }
