@@ -73,7 +73,7 @@ class Agregats extends GraphAbstract {
       }
       listCarreAvecPheronome.foreach(_.evapore(filterond))
       listCarreAvecPheronome = tbx.lc.filter(!_.depotPheromones.isEmpty)
-      lfourmi.foreach(_.doZeJob(listCarreAvecPheronome))
+      lfourmi.foreach(_.doZeJobC(listCarreAvecPheronome))
     }
     lnoedges.filter(_.getDist._1 < 50).foreach(_.ecarte) // occupe toi seulement d'ecarter potentiellement les fourmis si elles sont près l'une de l'autre
 

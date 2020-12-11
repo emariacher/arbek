@@ -216,7 +216,7 @@ class Fourmi(val anode: ANode) {
     }
   }
 
-  def doZeJob(lc: List[Carre]): Unit = {
+  def doZeJobC(lc: List[Carre]): Unit = {
     previousState = state
     state match {
       case FourmiStateMachine.mort =>
