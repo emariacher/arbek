@@ -53,7 +53,7 @@ class Fourmi(val anode: ANode) {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = influenceDesPheromones
-  var limiteDetectionNourriture = 200
+  var limiteDetectionNourriture = 500
   var increment = 10
   var plusAssezDEnergie = 1500
 
