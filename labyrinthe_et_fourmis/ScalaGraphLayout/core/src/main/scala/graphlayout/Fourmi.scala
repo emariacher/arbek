@@ -53,7 +53,7 @@ class Fourmi(val anode: ANode) {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = influenceDesPheromones
-  var limiteDetectionNourriture = 500
+  var limiteDetectionNourriture = 1000
   var increment = 10
   var plusAssezDEnergie = 1500
 
@@ -108,12 +108,13 @@ class Fourmi(val anode: ANode) {
       avanceAPeuPresCommeAvant
       logcarres = List[Carre]()
     } else {
-      var limiteReniflage = 10
+      var limiteReniflage = 50
       var listeDesCarresReniflables = List[Carre]()
       var listeDesCarresPasDejaParcourus = List[Carre]()
 
       listeDesCarresReniflables = lc.filter(c =>
         anode.pasLoin(c.XY) < limiteReniflage & c.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal)
+
       listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
 
       if (listeDesCarresPasDejaParcourus.isEmpty) {
