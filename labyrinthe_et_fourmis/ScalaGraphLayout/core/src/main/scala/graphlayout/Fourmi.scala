@@ -27,7 +27,7 @@ veut retourner à la fourmilière utilise des phéromones-retour ("je reviens"). (v
 
 class Fourmi(val anode: ANode) {
   var fourmiliere: Fourmiliere = _
-  val tribu = anode.tribu
+  val tribu: Tribu = anode.tribu
   var direction: Double = .0
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
@@ -53,7 +53,7 @@ class Fourmi(val anode: ANode) {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = influenceDesPheromones
-  var limiteDetectionNourriture = 1000
+  var limiteDetectionNourriture = 800
   var increment = 10
   var plusAssezDEnergie = 1500
 
