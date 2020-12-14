@@ -53,15 +53,15 @@ class Fourmi(val anode: ANode) {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = influenceDesPheromones
-  var limiteDetectionNourriture = 800
+  var limiteDetectionNourriture = 700
   var increment = 10
   var plusAssezDEnergie = 1500
 
-  def carre = tbx.findCarre(anode.x, anode.y)
+  def carre: Carre = tbx.findCarre(anode.x, anode.y)
 
   override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu + carre
 
-  def avanceOld(lc: List[Carre]) = {
+  def avanceOld(lc: List[Carre]): Unit = {
     val oldnode = new Node(anode.x, anode.y)
     val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
     if (lc.isEmpty) {
@@ -281,6 +281,7 @@ class Fourmi(val anode: ANode) {
     lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
     if (previousState != state) {
       stateCompteur = 0
+      myPrintDln(state)
     } else {
       stateCompteur += 1
     }
