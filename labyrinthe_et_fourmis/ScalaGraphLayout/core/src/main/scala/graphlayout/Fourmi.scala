@@ -53,7 +53,7 @@ class Fourmi(val anode: ANode) {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci = influenceDesPheromones
-  var limiteDetectionNourriture = 700
+  var limiteDetectionNourriture = 600
   var increment = 10
   var plusAssezDEnergie = 1500
 
@@ -133,7 +133,11 @@ class Fourmi(val anode: ANode) {
         Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
           listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
       }
-      state = FourmiStateMachine.cherche
+      if (carre.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal) {
+        state = FourmiStateMachine.surLaTrace
+      } else {
+        state = FourmiStateMachine.cherche
+      }
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ carre).distinct
     }
