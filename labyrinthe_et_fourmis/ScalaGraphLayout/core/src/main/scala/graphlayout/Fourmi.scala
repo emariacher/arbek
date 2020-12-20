@@ -119,6 +119,11 @@ class Fourmi(val anode: ANode) {
 
       if (listeDesCarresPasDejaParcourus.isEmpty) {
         avanceAPeuPresCommeAvant
+        if (carre.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal) {
+          state = FourmiStateMachine.surLaTrace
+        } else {
+          state = FourmiStateMachine.cherche
+        }
       } else {
         val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
           val e = new Edge(c.fn, anode)
@@ -132,11 +137,12 @@ class Fourmi(val anode: ANode) {
         lfedges2.foreach(_.rassemble)
         Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
           listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
-      }
-      if (carre.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal) {
-        state = FourmiStateMachine.surLaTrace
-      } else {
-        state = FourmiStateMachine.cherche
+        if (carre.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal) {
+          state = FourmiStateMachine.surLaTrace
+        } else {
+          state = FourmiStateMachine.cherche
+        }
+
       }
       direction = oldnode.getNodeDirection(anode)
       logcarres = (logcarres :+ carre).distinct
