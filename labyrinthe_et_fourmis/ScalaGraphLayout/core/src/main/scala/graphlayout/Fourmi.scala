@@ -31,7 +31,7 @@ class Fourmi(val anode: ANode) {
   var direction: Double = .0
   var jnode: JNode = _
   var state: FourmiStateMachine = FourmiStateMachine.cherche
-  var previousState = state
+  var previousState: FourmiStateMachine = FourmiStateMachine.undefined
   var stateCompteur = 0
   var logxys = List[(Carre, FourmiStateMachine)]()
   var indexlog: Int = _
@@ -290,8 +290,8 @@ class Fourmi(val anode: ANode) {
     }
     lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
     if (previousState != state) {
+      myPrintDln(previousState.toString + "[" + stateCompteur + "] --> " + state)
       stateCompteur = 0
-      myPrintDln(state)
     } else {
       stateCompteur += 1
     }
@@ -386,6 +386,7 @@ object FourmiStateMachine {
   val lisse = FourmiStateMachine("lisse")
   val ratioTourneEnRondSurLaTrace = FourmiStateMachine("ratioTourneEnRondSurLaTrace")
   val mort = FourmiStateMachine("mort")
+  val undefined = FourmiStateMachine("undefined")
 }
 
 
