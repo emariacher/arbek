@@ -61,47 +61,7 @@ class Fourmi(val anode: ANode) {
   def carre: Carre = tbx.findCarre(anode.x, anode.y)
 
   override def toString: String = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu + carre
-
-  def avanceOld(lc: List[Carre]): Unit = {
-    val oldnode = new Node(anode.x, anode.y)
-    val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
-    if (lc.isEmpty) {
-      avanceAPeuPresCommeAvant
-      logcarres = List[Carre]()
-    } else {
-      var limiteReniflage = 10
-      var listeDesCarresReniflables = List[Carre]()
-      var listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
-        .filter(c => (Math.abs(direction - anode.getNodeDirection(c.XY)) % (Math.PI * 2)) < ParametresPourFourmi.angleDeReniflage)
-      while (listeDesCarresPasDejaParcourus.isEmpty
-        & limiteReniflage < influenceDesPheromones) {
-        listeDesCarresReniflables = lc.filter(c =>
-          anode.pasLoin(c.XY) < limiteReniflage & c.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal)
-        listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
-        limiteReniflage += 1
-      }
-      if (listeDesCarresPasDejaParcourus.isEmpty) {
-        avanceAPeuPresCommeAvant
-      } else {
-        val lfedges2 = listeDesCarresPasDejaParcourus.map(c => {
-          val e = new Edge(c.fn, anode)
-          e.attraction = Math.max(c.hasPheromone(tribu),
-            suisLeChemin1 +
-              (listeDesCarresReniflables.length - listeDesCarresPasDejaParcourus.length) * suisLeChemin2
-          ) // quand ca tourne en rond, force la sortie
-          e
-        })
-        //myPrintDln("***********************************")
-        lfedges2.foreach(_.rassemble)
-        Edge.checkInside("" + (anode, listeDesCarresReniflables.map(_.fn).mkString("{", ",", "}")),
-          listeDesCarresReniflables.map(_.fn) :+ oldnode, anode)
-      }
-      state = FourmiStateMachine.cherche
-      direction = oldnode.getNodeDirection(anode)
-      logcarres = (logcarres :+ carre).distinct
-    }
-  }
-
+  
   def avance(lc: List[Carre]): Unit = {
     val oldnode = new Node(anode.x, anode.y)
     val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
