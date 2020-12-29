@@ -7,6 +7,7 @@ import kebra.MyLog._
 import org.apache.commons.math3.distribution._
 
 import scala.collection.immutable.List
+import scala.collection.mutable
 import scala.util.Random
 
 // https://www.futura-sciences.com/planete/dossiers/zoologie-fourmi-secrets-fourmiliere-1404/page/8/
@@ -33,16 +34,16 @@ class Fourmi(val anode: ANode) {
   var state: FourmiStateMachine = FourmiStateMachine.cherche
   var previousState: FourmiStateMachine = FourmiStateMachine.undefined
   var stateCompteur = 0
-  var logxys = List[(Carre, FourmiStateMachine)]()
+  var logxys: List[(Carre, FourmiStateMachine)] = List[(Carre, FourmiStateMachine)]()
   var indexlog: Int = _
   var triggerTrace = false
-  var logcarres = List[Carre]()
-  var lcompteurState = scala.collection.mutable.Map[FourmiStateMachine, Int]()
+  var logcarres: List[Carre] = List[Carre]()
+  var lcompteurState: mutable.Map[FourmiStateMachine, Int] = scala.collection.mutable.Map[FourmiStateMachine, Int]()
   var lastlogcarre = new Carre(0, 0)
   var cptShortcut: Int = _
   var CEstLaFourmiliere = 20.0
   var influenceDesPheromones = 40.0
-  var angleDeReniflage = (Math.PI * 4 / 5)
+  var angleDeReniflage: Double = (Math.PI * 4 / 5)
   var suisLeChemin1 = 10
   var suisLeChemin2 = 20
   var avanceAPeuPresCommeAvantDispersion = .1
@@ -52,14 +53,14 @@ class Fourmi(val anode: ANode) {
   var simplifieLissage = 7
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
-  var raccourci = influenceDesPheromones
+  var raccourci: Double = influenceDesPheromones
   var limiteDetectionNourriture = 600
   var increment = 10
   var plusAssezDEnergie = 1500
 
   def carre: Carre = tbx.findCarre(anode.x, anode.y)
 
-  override def toString = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu + carre
+  override def toString: String = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu + carre
 
   def avanceOld(lc: List[Carre]): Unit = {
     val oldnode = new Node(anode.x, anode.y)
@@ -101,7 +102,7 @@ class Fourmi(val anode: ANode) {
     }
   }
 
-  def avance(lc: List[Carre]) = {
+  def avance(lc: List[Carre]): Unit = {
     val oldnode = new Node(anode.x, anode.y)
     val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
     if (lc.isEmpty) {
@@ -150,7 +151,7 @@ class Fourmi(val anode: ANode) {
   }
 
 
-  def estALaFourmiliere = anode.pasLoin(fourmiliere.centre) < CEstLaFourmiliere
+  def estALaFourmiliere: Boolean = anode.pasLoin(fourmiliere.centre) < CEstLaFourmiliere
 
   def avanceAPeuPresCommeAvant = {
     direction = new NormalDistribution(direction, avanceAPeuPresCommeAvantDispersion).sample
