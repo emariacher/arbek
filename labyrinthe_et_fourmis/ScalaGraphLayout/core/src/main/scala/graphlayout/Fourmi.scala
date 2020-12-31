@@ -61,7 +61,7 @@ class Fourmi(val anode: ANode) {
   def carre: Carre = tbx.findCarre(anode.x, anode.y)
 
   override def toString: String = "[%.0f,%.0f](%d)".format(anode.x, anode.y, logxys.length) + tribu + carre
-  
+
   def avance(lc: List[Carre]): Unit = {
     val oldnode = new Node(anode.x, anode.y)
     val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
@@ -157,6 +157,7 @@ class Fourmi(val anode: ANode) {
     logcarres = List(fourmiliere.c)
     fourmiliere.retour(state)
     anode.selected = false
+    myPrintDln("AuxAlentoursDeLaFourmiliere")
     FourmiStateMachine.cherche
   }
 
@@ -234,11 +235,12 @@ class Fourmi(val anode: ANode) {
       case FourmiStateMachine.tourneEnRond => cherche(lc)
       case FourmiStateMachine.detecte =>
         cherche(lc)
-        if (aDetecteLaNourriture(10)) {
+        if (aDetecteLaNourriture(20)) {
           state = FourmiStateMachine.retourne
           lisseLeRetour
           cptShortcut = 0
           indexlog = logxys.length - 1
+          myPrintDln("aDetecteLaNourriture")
         } else {
           redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
         }
