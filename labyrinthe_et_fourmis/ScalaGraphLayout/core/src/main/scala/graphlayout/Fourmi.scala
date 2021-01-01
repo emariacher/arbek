@@ -254,6 +254,9 @@ class Fourmi(val anode: ANode) {
     lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
     if (previousState != state) {
       myPrintDln(previousState.toString + "[" + stateCompteur + "] --> " + state)
+      if (previousState == FourmiStateMachine.detecte) {
+        myAssert3(state, FourmiStateMachine.retourne, "No good!")
+      }
       stateCompteur = 0
     } else {
       stateCompteur += 1
