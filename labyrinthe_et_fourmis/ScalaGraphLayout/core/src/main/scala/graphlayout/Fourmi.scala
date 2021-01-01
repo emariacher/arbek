@@ -224,6 +224,11 @@ class Fourmi(val anode: ANode) {
       // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
       state = AuxAlentoursDeLaFourmiliere
     }
+    if (previousState != state) {
+      if (previousState == FourmiStateMachine.detecte) {
+        myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " + previousState)
+      }
+    }
   }
 
   def doZeJobC(lc: List[Carre]): Unit = {
@@ -255,7 +260,7 @@ class Fourmi(val anode: ANode) {
     if (previousState != state) {
       myPrintDln(previousState.toString + "[" + stateCompteur + "] --> " + state)
       if (previousState == FourmiStateMachine.detecte) {
-        myAssert3(state, FourmiStateMachine.retourne, "No good!")
+        myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " + previousState)
       }
       stateCompteur = 0
     } else {
