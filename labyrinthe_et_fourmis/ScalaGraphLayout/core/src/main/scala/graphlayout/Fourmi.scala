@@ -66,7 +66,7 @@ class Fourmi(val anode: ANode) {
     val oldnode = new Node(anode.x, anode.y)
     val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
     if (lc.isEmpty) {
-      avanceAPeuPresCommeAvant
+      avanceAPeuPresCommeAvant()
       logcarres = List[Carre]()
     } else {
       var limiteReniflage = 50
@@ -79,7 +79,7 @@ class Fourmi(val anode: ANode) {
       listeDesCarresPasDejaParcourus = listeDesCarresReniflables.filter(c => !logcarres.contains(c))
 
       if (listeDesCarresPasDejaParcourus.isEmpty) {
-        avanceAPeuPresCommeAvant
+        avanceAPeuPresCommeAvant()
         if (carre.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal) {
           state = FourmiStateMachine.surLaTrace
         } else {
@@ -113,13 +113,13 @@ class Fourmi(val anode: ANode) {
 
   def estALaFourmiliere: Boolean = anode.pasLoin(fourmiliere.centre) < CEstLaFourmiliere
 
-  def avanceAPeuPresCommeAvant = {
+  def avanceAPeuPresCommeAvant(): Unit = {
     direction = new NormalDistribution(direction, avanceAPeuPresCommeAvantDispersion).sample
     anode.x += Math.sin(direction) * avanceAPeuPresCommeAvantVitesse
     anode.y += Math.cos(direction) * avanceAPeuPresCommeAvantVitesse
   }
 
-  def avanceDroit = {
+  def avanceDroit(): Unit = {
     anode.x += Math.sin(direction) * avanceDroitVitesse
     anode.y += Math.cos(direction) * avanceDroitVitesse
   }
@@ -161,7 +161,7 @@ class Fourmi(val anode: ANode) {
     FourmiStateMachine.cherche
   }
 
-  def lisseLeRetour = {
+  def lisseLeRetour(): Unit = {
     val jaffeC = logxys.last
     val fourmiliereC = (fourmiliere.c, FourmiStateMachine.cherche)
     if (raccourci > 0) {
@@ -214,7 +214,7 @@ class Fourmi(val anode: ANode) {
     }
   }
 
-  def cherche(lc: List[Carre]) = {
+  def cherche(lc: List[Carre]): Unit = {
     avance(lc)
     redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
     if (aDetecteLaNourriture(limiteDetectionNourriture)) {
@@ -226,7 +226,7 @@ class Fourmi(val anode: ANode) {
     }
     if (previousState != state) {
       if (previousState == FourmiStateMachine.detecte) {
-        myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " + previousState)
+        myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " + previousState + "[" + stateCompteur + "]")
       }
     }
   }
@@ -242,7 +242,7 @@ class Fourmi(val anode: ANode) {
         cherche(lc)
         if (aDetecteLaNourriture(20)) {
           state = FourmiStateMachine.retourne
-          lisseLeRetour
+          lisseLeRetour()
           cptShortcut = 0
           indexlog = logxys.length - 1
           myPrintDln("aDetecteLaNourriture")
@@ -260,7 +260,7 @@ class Fourmi(val anode: ANode) {
     if (previousState != state) {
       myPrintDln(previousState.toString + "[" + stateCompteur + "] --> " + state)
       if (previousState == FourmiStateMachine.detecte) {
-        myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " + previousState)
+        myAssert2(state, FourmiStateMachine.retourne)
       }
       stateCompteur = 0
     } else {
@@ -272,7 +272,7 @@ class Fourmi(val anode: ANode) {
     //myPrintDln(toString, previousState + " -> " + state, stateCompteur)
   }
 
-  def aDetecteLaNourriture(limitDetection: Double) = (anode.dist(jnode) < limitDetection)
+  def aDetecteLaNourriture(limitDetection: Double): Boolean = (anode.dist(jnode) < limitDetection)
 
   def insert[T](list: List[T], i: Int, values: T*): List[T] = {
     val (front, back) = list.splitAt(i)
@@ -345,7 +345,7 @@ class Fourmi(val anode: ANode) {
 }
 
 case class FourmiStateMachine private(state: String) {
-  override def toString = state
+  override def toString: String = state
 }
 
 object FourmiStateMachine {
