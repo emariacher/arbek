@@ -4,7 +4,7 @@ import java.awt.{Color, Graphics2D}
 
 import graphlayout.Tableaux.tbx
 
-class JNode(tribu: Tribu) extends ANode(tribu) {
+class JNode(tribu: Tribu) extends ANode(tribu) { // noeud de jaffe de la tribu
   var c = tbx.findCarre(x, y)
 
   override def toString: String = "[(%.0f,%.0f) ".format(x, y) + tribu + "]"

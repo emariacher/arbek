@@ -38,19 +38,21 @@ class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val orig
     if (graphic) {
       zp.lbl.text = "Seed: " + seed + ", TimeStamp: " + ts + " " + state
     }
-    state match {
-      case StateMachine.rassemble =>
-        state = graph.rassemble
-      case StateMachine.ouestlajaffe =>
-        state = graph.ouestlajaffe
-      case StateMachine.travaille =>
-        state = graph.travaille
-      case StateMachine.croisiere =>
-        state = graph.travaille
-      case StateMachine.onVaArreter =>
-        state = graph.travaille
-      case StateMachine.reset => state = graph.reset
-      case _ =>
+    if (command != "step") {
+      state match {
+        case StateMachine.rassemble =>
+          state = graph.rassemble
+        case StateMachine.ouestlajaffe =>
+          state = graph.ouestlajaffe
+        case StateMachine.travaille =>
+          state = graph.travaille
+        case StateMachine.croisiere =>
+          state = graph.travaille
+        case StateMachine.onVaArreter =>
+          state = graph.travaille
+        case StateMachine.reset => state = graph.reset
+        case _ =>
+      }
     }
     ltimestamps(state) = ltimestamps.getOrElse(state, 0) + 1
     ts += 1

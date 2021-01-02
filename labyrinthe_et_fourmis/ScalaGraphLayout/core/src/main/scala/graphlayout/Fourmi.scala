@@ -57,6 +57,7 @@ class Fourmi(val anode: ANode) {
   var limiteDetectionNourriture = 600
   var increment = 10
   var plusAssezDEnergie = 1500
+  var flabel = ""
 
   def carre: Carre = tbx.findCarre(anode.x, anode.y)
 
@@ -224,9 +225,18 @@ class Fourmi(val anode: ANode) {
       // si jamais tu repasses a la fourmiliere, remets les compteurs a zero
       state = AuxAlentoursDeLaFourmiliere
     }
+    flabel = "" + stateCompteur
     if (previousState != state) {
       if (previousState == FourmiStateMachine.detecte) {
-        myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " + previousState + "[" + stateCompteur + "]")
+        if (state != FourmiStateMachine.retourne) {
+          myPrintDln(anode.toString + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
+          flabel = "No good! previousState: " +
+            previousState + "[" + stateCompteur + "] " + anode + jnode + " " + anode.dist(jnode)
+          myErrPrintDln(flabel)
+          ZePanel.za ! "step"
+        }
+        /*myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " +
+          previousState + "[" + stateCompteur + "] " + anode + jnode + " " + anode.dist(jnode))*/
       }
     }
   }
@@ -245,7 +255,7 @@ class Fourmi(val anode: ANode) {
           lisseLeRetour()
           cptShortcut = 0
           indexlog = logxys.length - 1
-          myPrintDln("aDetecteLaNourriture")
+          myPrintDln("aDetecteLaNourriture " + jnode)
         } else {
           redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
         }
@@ -258,9 +268,9 @@ class Fourmi(val anode: ANode) {
     }
     lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
     if (previousState != state) {
-      myPrintDln(previousState.toString + "[" + stateCompteur + "] --> " + state)
+      myPrintDln(anode.toString + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
       if (previousState == FourmiStateMachine.detecte) {
-        myAssert2(state, FourmiStateMachine.retourne)
+        //myAssert2(state, FourmiStateMachine.retourne)
       }
       stateCompteur = 0
     } else {
@@ -322,7 +332,8 @@ class Fourmi(val anode: ANode) {
     } else {
       g.setColor(Color.black)
     }
-    g.drawString("" + stateCompteur, anode.x.toInt, anode.y.toInt)
+    //g.drawString("" + stateCompteur, anode.x.toInt, anode.y.toInt)
+    g.drawString(flabel, anode.x.toInt, anode.y.toInt)
     g.drawOval(anode.x.toInt, anode.y.toInt, fourmiL, fourmiH)
     if (carre != null) {
       if (!carre.egal(lastlogcarre)) {

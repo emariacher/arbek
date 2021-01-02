@@ -41,13 +41,13 @@ class UI(graph: GraphAbstract) extends SimpleSwingApplication {
       paintTicks = true
       value = 10
     }
-    val buttonStep = new Button {
+    val buttonStep: Button = new Button {
       text = buttonStepLbl
     }
-    val buttonStop = new Button {
+    val buttonStop: Button = new Button {
       text = buttonStopLbl
     }
-    val label = new Label {
+    val label: Label = new Label {
       text = labelLbl
     }
 

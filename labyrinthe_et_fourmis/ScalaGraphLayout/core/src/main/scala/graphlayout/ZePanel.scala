@@ -29,6 +29,7 @@ class ZeActor extends Actor {
     case "step" =>
       LL.l.myErrPrintDln("step")
       ZePanel.zp.repaint()
+      context.setReceiveTimeout(10 seconds)
       tbx.doZeJob("step", true)
       ZePanel.zp.step = true
     case mouse: (String, Int, Int)@unchecked =>
