@@ -54,7 +54,7 @@ class Fourmi(val anode: ANode) {
   var filtrePattern = 0
   var sautsTropGrandsLissageAlgo = 2
   var raccourci: Double = influenceDesPheromones
-  var limiteDetectionNourriture = 600
+  var limiteDetectionNourriture = 500
   var increment = 10
   var plusAssezDEnergie = 1500
   var flabel = ""
@@ -111,6 +111,13 @@ class Fourmi(val anode: ANode) {
     }
   }
 
+  def avanceverslaJaffe(lc: List[Carre]): Unit = {
+    val oldnode = new Node(anode.x, anode.y)
+    val oldcarre = tbx.findCarre(oldnode.x, oldnode.y)
+    avanceDroit()
+    direction = oldnode.getNodeDirection(anode)
+    logcarres = (logcarres :+ carre).distinct
+  }
 
   def estALaFourmiliere: Boolean = anode.pasLoin(fourmiliere.centre) < CEstLaFourmiliere
 
@@ -216,7 +223,10 @@ class Fourmi(val anode: ANode) {
   }
 
   def cherche(lc: List[Carre]): Unit = {
-    avance(lc)
+    state match {
+      case FourmiStateMachine.detecte => avanceverslaJaffe(lc)
+      case _ => avance(lc)
+    }
     redirige(tbx.zp.largeur, tbx.zp.hauteur, 10, tbx.rnd)
     if (aDetecteLaNourriture(limiteDetectionNourriture)) {
       state = FourmiStateMachine.detecte
