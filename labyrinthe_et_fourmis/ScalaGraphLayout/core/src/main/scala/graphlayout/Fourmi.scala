@@ -237,8 +237,8 @@ class Fourmi(val anode: ANode) {
     }
     flabel = "" + stateCompteur
     if (previousState != state) {
-      if (previousState == FourmiStateMachine.detecte) {
-        if (state != FourmiStateMachine.retourne) {
+      if (previousState == FourmiStateMachine.surLaTrace) {
+        if (state != FourmiStateMachine.detecte) {
           myPrintDln(anode.toString + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
           flabel = "No good! previousState: " +
             previousState + "[" + stateCompteur + "] " + anode + jnode + " " + anode.dist(jnode)
@@ -279,9 +279,9 @@ class Fourmi(val anode: ANode) {
     lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
     if (previousState != state) {
       myPrintDln(anode.toString + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
-      if (previousState == FourmiStateMachine.detecte) {
-        //myAssert2(state, FourmiStateMachine.retourne)
-      }
+      /*if (previousState == FourmiStateMachine.detecte) {
+        myAssert2(state, FourmiStateMachine.retourne)
+      }*/
       stateCompteur = 0
     } else {
       stateCompteur += 1
