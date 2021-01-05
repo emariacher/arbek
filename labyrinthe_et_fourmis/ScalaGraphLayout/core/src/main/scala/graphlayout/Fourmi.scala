@@ -58,6 +58,9 @@ class Fourmi(val anode: ANode) {
   var increment = 10
   var plusAssezDEnergie = 1500
   var flabel = ""
+  var limiteReniflage = 50
+  var listeDesCarresReniflables: List[Carre] = List[Carre]()
+  var listeDesCarresPasDejaParcourus: List[Carre] = List[Carre]()
 
   def carre: Carre = tbx.findCarre(anode.x, anode.y)
 
@@ -70,10 +73,6 @@ class Fourmi(val anode: ANode) {
       avanceAPeuPresCommeAvant()
       logcarres = List[Carre]()
     } else {
-      var limiteReniflage = 50
-      var listeDesCarresReniflables = List[Carre]()
-      var listeDesCarresPasDejaParcourus = List[Carre]()
-
       listeDesCarresReniflables = lc.filter(c =>
         anode.pasLoin(c.XY) < limiteReniflage & c.hasPheromone(tribu) > ParametresPourFourmi.depotEvaporeFinal)
 
@@ -165,7 +164,7 @@ class Fourmi(val anode: ANode) {
     logcarres = List(fourmiliere.c)
     fourmiliere.retour(state)
     anode.selected = false
-    myPrintDln("AuxAlentoursDeLaFourmiliere")
+    myPrintDln("AuxAlentoursDeLaFourmiliere " + fourmiliere.c)
     FourmiStateMachine.cherche
   }
 
@@ -241,8 +240,12 @@ class Fourmi(val anode: ANode) {
         if (state != FourmiStateMachine.detecte) {
           myPrintDln(anode.toString + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
           flabel = "No good! previousState: " +
-            previousState + "[" + stateCompteur + "] " + anode + jnode + " " + anode.dist(jnode)
+            previousState + "[" + stateCompteur + "] " + carre + anode + jnode + " " + anode.dist(jnode)
           myErrPrintDln(flabel)
+          myErrPrintIt(listeDesCarresReniflables)
+          myErrPrintIt(listeDesCarresPasDejaParcourus)
+          myErrPrintIt(lc)
+          myErrPrintIt(logxys.length, logxys)
           ZePanel.za ! "step"
         }
         /*myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " +
@@ -278,7 +281,7 @@ class Fourmi(val anode: ANode) {
     }
     lcompteurState(state) = lcompteurState.getOrElse(state, 0) + 1
     if (previousState != state) {
-      myPrintDln(anode.toString + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
+      myPrintDln(anode.toString + " " + carre + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
       /*if (previousState == FourmiStateMachine.detecte) {
         myAssert2(state, FourmiStateMachine.retourne)
       }*/
