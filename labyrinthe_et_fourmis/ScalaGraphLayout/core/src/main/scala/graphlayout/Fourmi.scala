@@ -164,7 +164,6 @@ class Fourmi(val anode: ANode) {
     logcarres = List(fourmiliere.c)
     fourmiliere.retour(state)
     anode.selected = false
-    myPrintDln("AuxAlentoursDeLaFourmiliere " + fourmiliere.c)
     FourmiStateMachine.auBercail
   }
 
