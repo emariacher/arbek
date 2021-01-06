@@ -165,7 +165,7 @@ class Fourmi(val anode: ANode) {
     fourmiliere.retour(state)
     anode.selected = false
     myPrintDln("AuxAlentoursDeLaFourmiliere " + fourmiliere.c)
-    FourmiStateMachine.cherche
+    FourmiStateMachine.auBercail
   }
 
   def lisseLeRetour(): Unit = {
@@ -244,9 +244,22 @@ class Fourmi(val anode: ANode) {
           myErrPrintDln(flabel)
           myErrPrintIt(listeDesCarresReniflables)
           myErrPrintIt(listeDesCarresPasDejaParcourus)
-          myErrPrintIt(lc)
-          myErrPrintIt(logxys.length, logxys)
+          myErrPrintIt(lc.length, lc)
+          myErrPrintIt(indexlog, logxys.length, logxys)
           ZePanel.za ! "step"
+        }
+        if (previousState == FourmiStateMachine.retourne) {
+          if (state != FourmiStateMachine.auBercail) {
+            myPrintDln(anode.toString + " " + previousState.toString + "[" + stateCompteur + "] --> " + state)
+            flabel = "No good! previousState: " +
+              previousState + "[" + stateCompteur + "] " + carre + anode + jnode + " " + anode.dist(jnode)
+            myErrPrintDln(flabel)
+            myErrPrintIt(listeDesCarresReniflables)
+            myErrPrintIt(listeDesCarresPasDejaParcourus)
+            myErrPrintIt(lc.length, lc)
+            myErrPrintIt(indexlog, logxys.length, logxys)
+            ZePanel.za ! "step"
+          }
         }
         /*myAssert3(state, FourmiStateMachine.retourne, "No good! previousState: " +
           previousState + "[" + stateCompteur + "] " + anode + jnode + " " + anode.dist(jnode))*/
@@ -259,6 +272,7 @@ class Fourmi(val anode: ANode) {
     state match {
       case FourmiStateMachine.mort =>
       case FourmiStateMachine.cherche => cherche(lc)
+      case FourmiStateMachine.auBercail => cherche(lc)
       case FourmiStateMachine.surLaTrace => cherche(lc)
       case FourmiStateMachine.tourneEnRond => cherche(lc)
       case FourmiStateMachine.detecte =>
@@ -381,6 +395,7 @@ object FourmiStateMachine {
   val lisse = FourmiStateMachine("lisse")
   val ratioTourneEnRondSurLaTrace = FourmiStateMachine("ratioTourneEnRondSurLaTrace")
   val mort = FourmiStateMachine("mort")
+  val auBercail = FourmiStateMachine("auBercail")
   val undefined = FourmiStateMachine("undefined")
 }
 
