@@ -49,7 +49,7 @@ public class CitationLatine {
         String base64encodedString = new String();
         try {
 
-            System.out.println("plain:    " + text);
+            System.out.println("plain:    <<<<<<<<<<<<< " + text +" >>>>>>>>>>>>>>");
 
             String seizetext = padRightMod16(text);
             System.out.println("seizetext[" + seizetext + "] " + seizetext.length());
