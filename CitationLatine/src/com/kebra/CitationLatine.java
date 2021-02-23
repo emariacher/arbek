@@ -1,5 +1,9 @@
 package com.kebra;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import javax.crypto.KeyGenerator;
@@ -21,12 +25,23 @@ public class CitationLatine {
 
     public static void main(String[] args) {
         System.out.println("Citation Latine");
+
         if (args.length == 0) {
             String enc = doZeJob(plaintext, encryptionKey);
             doZeJob(enc, encryptionKey);
         } else {
-            String enc = doZeJob(args[0], args[1]);
-            doZeJob(enc, args[1]);
+            File file_input = new File(args[0]);
+            if (file_input.isFile()) {
+                try {
+                    String enc = doZeJob(new String(Files.readAllBytes(Paths.get(args[0]))), args[1]);
+                    doZeJob(enc, args[1]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                String enc = doZeJob(args[0], args[1]);
+                doZeJob(enc, args[1]);
+            }
         }
     }
 
