@@ -52,21 +52,21 @@ public class CitationLatine {
             System.out.println("plain:    <<<<<<<<<<<<< " + text +" >>>>>>>>>>>>>>");
 
             String seizetext = padRightMod16(text);
-            System.out.println("seizetext[" + seizetext + "] " + seizetext.length());
+            //System.out.println("seizetext[" + seizetext + "] " + seizetext.length());
             String seizeclef = clef.substring(0, 16);
 
             byte[] cipher = encrypt(seizetext, seizeclef);
 
             // Encode using basic encoder
             base64encodedString = Base64.getEncoder().encodeToString(cipher);
-            System.out.println(base64encodedString);
+            //System.out.println(base64encodedString);
 
             // Decode
             byte[] decipher = Base64.getDecoder().decode(base64encodedString);
 
             String decrypted = decrypt(decipher, seizeclef);
 
-            System.out.println("decrypt:  " + decrypted);
+            //System.out.println("decrypt:  " + decrypted);
             if (text.indexOf(" ") < 0) {
                 System.out.println("decrypt2: " + decrypt(Base64.getDecoder().decode(text), seizeclef));
             }
