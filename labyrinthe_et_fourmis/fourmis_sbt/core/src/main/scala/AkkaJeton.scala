@@ -6,10 +6,6 @@ package statlaby
 
 import akka.actor._
 import akka.routing.RoundRobinPool
-
-import scala.concurrent.duration.Duration
-import scala.concurrent.duration._
-import kebra.MyLog._
 import labyrinthe._
 import labyrinthe.Tableaux._
 
