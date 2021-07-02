@@ -17,10 +17,10 @@ object Tableaux {
 }
 
 class Tableaux(val zp: ZePanel, val maxRC: RowCol, val size: Dimension, val origin: Dimension) {
-  val maxRow = maxRC.r
-  val maxCol = maxRC.c
+  val maxRow: Int = maxRC.r
+  val maxCol: Int = maxRC.c
   //val seeds = List(0, -1258712602, -2003116831, -2000188942, -2003116831, -1172155944) // valeurs interessantes pour un 10X10
-  val seeds = (0 until 11).toList :+ (-1171074276)
+  val seeds: Seq[Int] = (0 until 11).toList :+ (-1171074276)
   // valeurs interessantes pour un 20X20
   val maxWorkers = 5
   val mperfs = scala.collection.mutable.Map.empty[Int, List[Double]]

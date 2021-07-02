@@ -7,10 +7,10 @@ class RowCol(val r: Int, val c: Int) {
     override def equals(x: Any): Boolean = hashCode.equals(x.asInstanceOf[RowCol].hashCode)
     override def hashCode: Int = toString.hashCode
     def moinsUn = new RowCol(r - 1, c - 1)
-    def haut = new RowCol(r - 1, c).valid
-    def bas = new RowCol(r + 1, c).valid
-    def gauche = new RowCol(r, c - 1).valid
-    def droite = new RowCol(r, c + 1).valid
+    def haut: RowCol = new RowCol(r - 1, c).valid
+    def bas: RowCol = new RowCol(r + 1, c).valid
+    def gauche: RowCol = new RowCol(r, c - 1).valid
+    def droite: RowCol = new RowCol(r, c + 1).valid
     /*def isNorth(rc: RowCol) = rc.equals(haut)
     def isSouth(rc: RowCol) = rc.equals(bas)
     def isWest(rc: RowCol) = rc.equals(gauche)
@@ -26,7 +26,7 @@ class RowCol(val r: Int, val c: Int) {
             return FrontiereV.est
         }
     }*/
-    def valid = {
+    def valid: RowCol = {
         if ((r < 0) || (c < 0) || (r > (tbx.maxRow+1)) || (c > (tbx.maxCol+1))) {
             new RowCol(888,888)
         } else {

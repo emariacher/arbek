@@ -10,7 +10,7 @@ import scala.swing.Label
 import scala.collection.mutable.Queue
 
 abstract class Jeton(val couleur: Couleur, val rayon: Int, val fourmiliere: Fourmiliere) {
-  val label = new Label {
+  val label: Label = new Label {
     text = couleur.toString
     foreground = couleur.color
   }

@@ -7,7 +7,7 @@ import scala.swing.Label
  * Created by ericm_000 on 13.03.2016.
  */
 class Fourmiliere(val nid: RowCol, val couleur: Couleur, val raceFourmi: RaceFourmi) {
-  val label = new Label {
+  val label: Label = new Label {
     text = couleur.toString
     foreground = couleur.color
   }
