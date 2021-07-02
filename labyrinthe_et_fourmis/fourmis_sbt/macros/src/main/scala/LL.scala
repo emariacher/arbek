@@ -18,29 +18,29 @@ object LL {
 }
 
 class LL(val traces: Boolean) {
-  def myPrint(s: String) = {
+  def myPrint(s: String): Unit = {
     if (traces) {
       L.myPrint(s)
     }
   }
 
-  def myPrintln(a: Any) = myPrint(a.toString + "\n")
+  def myPrintln(a: Any): Unit = myPrint(a.toString + "\n")
 
-  def myPrintD(a: Any) = myPrint(tag(3) + " " + a)
+  def myPrintD(a: Any): Unit = myPrint(tag(3) + " " + a)
 
-  def myPrintDln(a: Any) = myPrintD(a.toString + "\n")
+  def myPrintDln(a: Any): Unit = myPrintD(a.toString + "\n")
 
-  def myErrPrint(a: Any) = {
+  def myErrPrint(a: Any): Unit = {
     if (traces) {
       L.myErrPrint(a)
     }
   }
 
-  def myErrPrintln(a: Any) = myErrPrint(a.toString + "\n")
+  def myErrPrintln(a: Any): Unit = myErrPrint(a.toString + "\n")
 
-  def myErrPrintD(a: Any) = myErrPrint(tag(3) + " " + a)
+  def myErrPrintD(a: Any): Unit = myErrPrint(tag(3) + " " + a)
 
-  def myErrPrintDln(a: Any) = myErrPrintD(a.toString + "\n")
+  def myErrPrintDln(a: Any): Unit = myErrPrintD(a.toString + "\n")
 
   def tag(i_level: Int): String = {
     val s_time = new SimpleDateFormat("dd_HH:mm_ss,SSS").format(Calendar.getInstance.getTime) + " "

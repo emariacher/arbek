@@ -13,34 +13,34 @@ class DateDSL(val cal: Calendar) {
 
     private var last = 0;
 
-    def plus(num: Int) = { last = num; this }
-    def minus(num: Int) = { last = -num; this }
+    def plus(num: Int): DateDSL = { last = num; this }
+    def minus(num: Int): DateDSL = { last = -num; this }
 
-    def +(num: Int) = plus(num)
-    def -(num: Int) = minus(num)
+    def +(num: Int): DateDSL = plus(num)
+    def -(num: Int): DateDSL = minus(num)
 
     def months = { cal.add(Calendar.MONTH, last); this }
     def months(and: Conjunction): DateDSL = months
     def month = months
     def month(and: Conjunction): DateDSL = months
 
-    def years = { cal.add(Calendar.YEAR, last); this }
+    def years: DateDSL = { cal.add(Calendar.YEAR, last); this }
     def years(and: Conjunction): DateDSL = years
-    def year = years
+    def year: DateDSL = years
     def year(and: Conjunction): DateDSL = years
 
-    def days = { cal.add(Calendar.DAY_OF_MONTH, last); this }
+    def days: DateDSL = { cal.add(Calendar.DAY_OF_MONTH, last); this }
     def days(and: Conjunction): DateDSL = days
-    def day = days
+    def day: DateDSL = days
     def day(and: Conjunction): DateDSL = days
 
-    def is(sthen: Calendar) = {
+    def is(sthen: Calendar): DateDSL = {
         cal.setTimeInMillis(sthen.getTimeInMillis)
         cal.clear(Calendar.HOUR)
         this
     }
 
-    def is(sthen: String) = {
+    def is(sthen: String): DateDSL = {
         val cthen = ParseDate(sthen, "MM/dd/yyyy")
         cal.setTimeInMillis(cthen.getTimeInMillis)
         cal.clear(Calendar.HOUR)
@@ -64,13 +64,13 @@ object DateDSL {
     val and = new Conjunction
 
     def Today = new DateDSL(Calendar.getInstance)
-    def Tomorrow = Today + 1 day
-    def Yesterday = Today - 1 day
+    def Tomorrow: DateDSL = Today + 1 day
+    def Yesterday: DateDSL = Today - 1 day
 
-    def today = Today
-    def tomorrow = Tomorrow
-    def yesterday = Yesterday
+    def today: DateDSL = Today
+    def tomorrow: DateDSL = Tomorrow
+    def yesterday: DateDSL = Yesterday
 
-    def Now = Today
-    def now = Today
+    def Now: DateDSL = Today
+    def now: DateDSL = Today
 }
