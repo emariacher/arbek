@@ -4,14 +4,14 @@ import scala.util.Random
 import java.awt.Dimension
 import java.io.File
 import java.util.Calendar
-import kebra.MyLog._
+//import kebra.MyLog._
 
 object Tableaux {
   var tbx: Tableaux = _
 
   def newTbx(zp: ZePanel, maxRow: Int, maxCol: Int, size: Dimension, origin: Dimension): Unit = {
     tbx = new Tableaux(zp, maxRow, maxCol, size, origin)
-    myPrintIt(FrontiereV.values, CantonTypeV.values)
+    //myPrintIt(FrontiereV.values, CantonTypeV.values)
   }
 }
 

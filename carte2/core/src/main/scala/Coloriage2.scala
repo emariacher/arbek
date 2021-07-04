@@ -2,7 +2,7 @@ package carte
 
 import java.awt.Color
 import scala.collection.immutable.ListSet
-import kebra._
+//import kebra._
 import carte.Tableaux._
 
 class Coloriage2 extends Coloriage {
@@ -13,7 +13,7 @@ class Coloriage2 extends Coloriage {
     var state: StateMachine = StateMachine.colorie
     if (histoire.isEmpty) {
       histoire = histoire :+ lastBlackregion
-      System.out.println(tbx.count.toString + " ***" + MyLog.tag(1) + "***" + lastBlackregion + " " + lastBlackregion.toStringC)
+      //System.out.println(tbx.count.toString + " ***" + MyLog.tag(1) + "***" + lastBlackregion + " " + lastBlackregion.toStringC)
     }
     require(histoire.nonEmpty, lastBlackregion.toString + " " + lastBlackregion.toStringC)
     val r = histoire.last

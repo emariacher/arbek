@@ -2,7 +2,7 @@ package carte
 
 import java.awt.Color
 import scala.collection.immutable.ListSet
-import kebra._
+//import kebra._
 import carte.Tableaux._
 
 class Coloriage {
@@ -23,7 +23,7 @@ class Coloriage {
   def reverse: StateMachine = {
     var state: StateMachine = StateMachine.colorie
     val r = histoire.last
-    System.out.println(" ***" + MyLog.func(1) + "*** region: " + r.toStringC)
+    //System.out.println(" ***" + MyLog.func(1) + "*** region: " + r.toStringC)
 
     val couleursEncoreLibres = Couleurs.l -- r.couleursDejaEssayees
     r.couleur = (if (couleursEncoreLibres.isEmpty) {
@@ -35,7 +35,7 @@ class Coloriage {
       r.couleursDejaEssayees = r.couleursDejaEssayees + couleursEncoreLibres.head
       state = StateMachine.colorie
       ZePanel.za ! "normal"
-      MyLog.myPrintIt(state)
+      //MyLog.myPrintIt(state)
       couleursEncoreLibres.head
     })
     state

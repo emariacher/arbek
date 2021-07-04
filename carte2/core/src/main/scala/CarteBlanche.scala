@@ -1,6 +1,6 @@
 package carte
 
-import kebra.MyLog
+//import kebra.MyLog
 import scala.math._
 
 class CarteBlanche {
@@ -40,7 +40,7 @@ class CarteBlanche {
 
   def getRegions: StateMachine = {
     lcarres.lc.foreach(_.getRegions)
-    MyLog.myPrintIt(lregions.lr.length)
+    //MyLog.myPrintIt(lregions.lr.length)
     StateMachine.colorie
   }
 
