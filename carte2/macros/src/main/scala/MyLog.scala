@@ -4,10 +4,9 @@ import java.io._
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date}
 
-import scala.language.experimental.macros
-import scala.reflect.macros.{Context, whitebox}
+//import scala.language.experimental.macros
+//import scala.reflect.macros.{Context, whitebox}
 import scala.concurrent.duration.Duration
-import scala.concurrent.duration._
 import java.text.ParsePosition
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
@@ -173,15 +172,15 @@ object MyLog {
   def myHErrPrintln(a: Any): Unit = myHErrPrint(a.toString + "\n")
 
 
-  def printx(c: whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
+  /*def printx(c: whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
     val msg = linecode.tree.toString
     reify(println(c.Expr[String](Literal(Constant(msg))).splice + " ---> " + linecode.splice))
-  }
+  }*/
 
-  def printIt(linecode: Any): Unit = macro printx
+ //def printIt(linecode: Any): Unit = macro printx
 
-  def mprintx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
+  /*def mprintx(c: scala.reflect.macros.whitebox.Context)(linecode: c.Expr[Any]): c.Expr[Unit] = {
     import c.universe._
 
     //val namez = implicitly[TypeTag[c.type]].tpe.termSymbol.name.toString
@@ -206,10 +205,10 @@ object MyLog {
     }
     val s2cond = linecode.tree.productIterator.toList.last.toString.replaceAll("scala.*\\]", "").replaceAll(namez + "\\.this\\.", "").replaceAll("List", "")
     //reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice + " ---> " + c.Expr[String](Literal(Constant(namez))).splice))
-    reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
-  }
+    //reify(myPrintDln(c.Expr[String](Literal(Constant(f1rst))).splice + "@" + c.Expr[String](Literal(Constant(namez))).splice + " " + c.Expr[String](Literal(Constant(s2cond))).splice + " ---> " + linecode.splice))
+  }*/
 
-  def myPrintIt(linecode: Any): Any = macro mprintx
+  //def myPrintIt(linecode: Any): Any = macro mprintx
 
 
   //***********https://github.com/lihaoyi/sourcecode******
@@ -304,11 +303,11 @@ object MyLog {
     !Util.isSynthetic(c)(_)
   )
 
-  implicit def generate: Enclosing = macro enclosingImpl
+  //implicit def generate: Enclosing = macro enclosingImpl
 
   //*****************************************************************************************
 
-  def assert2(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
+  /*def assert2(c: whitebox.Context)(act: c.Expr[Any], exp: c.Expr[Any]): c.Expr[Unit] = {
 
     import c.universe._
 
@@ -336,25 +335,25 @@ object MyLog {
         }
       }
     })
-  }
+  }*/
 
-  def myAssert2(act: Any, exp: Any): Unit = macro assert2
+  //def myAssert2(act: Any, exp: Any): Unit = macro assert2
 
   // get current line in source code
-  def L_ : Int = macro lineImpl
+  //def L_ : Int = macro lineImpl
 
-  def lineImpl(c: whitebox.Context): c.Expr[Int] = {
+  /*def lineImpl(c: whitebox.Context): c.Expr[Int] = {
 
     import c.universe._
 
     val line = Literal(Constant(c.enclosingPosition.line))
     c.Expr[Int](line)
-  }
+  }*/
 
   // get current file from source code (relative path)
-  def F_ : String = macro fileImpl
+  //def F_ : String = macro fileImpl
 
-  def fileImpl(c: whitebox.Context): c.Expr[String] = {
+  /*def fileImpl(c: whitebox.Context): c.Expr[String] = {
 
     import c.universe._
 
@@ -362,37 +361,37 @@ object MyLog {
     val base = new File(".").toURI
     val path = Literal(Constant(c.enclosingPosition.source.file.file.getName))
     c.Expr[String](path)
-  }
+  }*/
 
   // get current class/object (a bit sketchy)
-  def C_ : String = macro classImpl
+  //def C_ : String = macro classImpl
 
-  def classImpl(c: whitebox.Context): c.Expr[String] = {
+  /*def classImpl(c: whitebox.Context): c.Expr[String] = {
 
     import c.universe._
 
     //val class_ = Literal(Constant(c.enclosingClass.toString.split(" ")(1)))
     val class_ = Literal(Constant("Deprecated"))
     c.Expr[String](class_)
-  }
+  }*/
 
-  def myPrintDln(msg: Any)(implicit logFunc: LogFunction): Unit = macro logImpl
+  //def myPrintDln(msg: Any)(implicit logFunc: LogFunction): Unit = macro logImpl
 
-  def logImpl(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunction]): c.Expr[Unit] = {
+  /*def logImpl(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunction]): c.Expr[Unit] = {
 
     import c.universe._
 
     reify(logFunc.splice.log(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
-  }
+  }*/
 
-  def myErrPrintDln(msg: Any)(implicit logFunc: LogFunctionE): Unit = macro logImplE
+  //def myErrPrintDln(msg: Any)(implicit logFunc: LogFunctionE): Unit = macro logImplE
 
-  def logImplE(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunctionE]): c.Expr[Unit] = {
+  /*def logImplE(c: whitebox.Context)(msg: c.Expr[Any])(logFunc: c.Expr[LogFunctionE]): c.Expr[Unit] = {
 
     import c.universe._
 
     reify(logFunc.splice.logE(msg.splice, srcFile = fileImpl(c).splice, srcLine = lineImpl(c).splice, srcClass = classImpl(c).splice))
-  }
+  }*/
 
   def waiting(d: Duration): Unit = {
     val t0 = System.currentTimeMillis()
@@ -415,7 +414,7 @@ object MyLog {
     })
   }
 
-  def timeStampIt(linecode: Any): Any = macro mtimeStampx
+  //def timeStampIt(linecode: Any): Any = macro mtimeStampx
 
   def printTimeStampsList() = if (timeStampsList.nonEmpty) myPrintln(timeStampsList.filter(_._2 != "---").map(t =>
     (t._1.toString + " ms", t._2.replaceAll(".this", ""))).distinct.mkString("TimeStampsList:\n  ", "\n  ", "\n  "))
