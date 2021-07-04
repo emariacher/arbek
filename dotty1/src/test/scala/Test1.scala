@@ -6,5 +6,5 @@ class Test1:
     assertEquals("I was compiled by Scala 3. :)", msg)
   @Test def t2(): Unit = {
     hello
-    assertEquals("I was compiled by Scala 2. :)", msg)
+    assertEquals("I was compiled by Scala 2. :(", msg)
   }
