@@ -23,7 +23,7 @@ class ZeActor extends Actor {
       tbx.doZeJob("timeout", slider_timeout)
     case slider: (String, Int) =>
       slider_timeout = min(max(1, (slider._2 * slider._2 * slider._2) / 100), 5000)
-      MyLog.myPrintIt(slider._2, slider_timeout)
+      //MyLog.myPrintIt(slider._2, slider_timeout)
       context.setReceiveTimeout(slider_timeout millisecond)
       ZePanel.zp.pause = (slider._2 == 0)
       ZePanel.zp.run = !ZePanel.zp.pause
