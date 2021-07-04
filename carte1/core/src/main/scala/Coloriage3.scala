@@ -1,6 +1,4 @@
 package carte
-import java.awt.Color
-import scala.collection.immutable.ListSet
 import carte.Tableaux._
 
 class Coloriage3 extends Coloriage2 {

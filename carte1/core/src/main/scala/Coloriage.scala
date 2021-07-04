@@ -6,7 +6,7 @@ import kebra._
 import carte.Tableaux._
 
 class Coloriage {
-  var lregions = tbx.cb.lregions.lr.sorted(CompareRegions)
+  var lregions: Seq[Region] = tbx.cb.lregions.lr.sorted(CompareRegions)
   var histoire = List[Region]()
   //			System.out.println(MyLog.tag(1)+" "+lregions)
 

@@ -1,7 +1,6 @@
 package carte
 
-import kebra.{LL, MyLog}
-
+import kebra.MyLog
 import scala.math._
 
 class CarteBlanche {
