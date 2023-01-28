@@ -1,20 +1,13 @@
-package com.arbek;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.util.Arrays;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.spec.IvParameterSpec;
+package com.kebra; // use java 17
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Random;
 
@@ -24,7 +17,7 @@ public class CitationLatine {
     static String encryptionKey = "0123456789abcdef";
 
     public static void main(String[] args) {
-        System.out.println("Citation Latine");
+        System.out.println("Citation Latine java.version: " + System.getProperty("java.version"));
 
         if (args.length == 0) {
             String enc = doZeJob(plaintext, encryptionKey);
@@ -46,27 +39,27 @@ public class CitationLatine {
     }
 
     public static String doZeJob(String text, String clef) {
-        String base64encodedString = new String();
+        String base64encodedString = "";
         try {
 
-            System.out.println("plain:    <<<<<<<<<<<<< " + text +" >>>>>>>>>>>>>>");
+            System.out.println("plain:    <<<<<<<<<<<<< " + text + " >>>>>>>>>>>>>>");
 
             String seizetext = padRightMod16(text);
-            //System.out.println("seizetext[" + seizetext + "] " + seizetext.length());
+            System.out.println("seizetext[" + seizetext + "] " + seizetext.length());
             String seizeclef = clef.substring(0, 16);
 
             byte[] cipher = encrypt(seizetext, seizeclef);
 
             // Encode using basic encoder
             base64encodedString = Base64.getEncoder().encodeToString(cipher);
-            //System.out.println(base64encodedString);
+            System.out.println(base64encodedString);
 
             // Decode
             byte[] decipher = Base64.getDecoder().decode(base64encodedString);
 
             String decrypted = decrypt(decipher, seizeclef);
 
-            //System.out.println("decrypt:  " + decrypted);
+            System.out.println("decrypt:  " + decrypted);
             if (text.indexOf(" ") < 0) {
                 System.out.println("decrypt2: " + decrypt(Base64.getDecoder().decode(text), seizeclef));
             }
@@ -94,15 +87,15 @@ public class CitationLatine {
 
     public static byte[] encrypt(String plainText, String encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
-        SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
-        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return cipher.doFinal(plainText.getBytes("UTF-8"));
+        SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes(StandardCharsets.UTF_8), "AES");
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes(StandardCharsets.UTF_8)));
+        return cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
     }
 
     public static String decrypt(byte[] cipherText, String encryptionKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding", "SunJCE");
-        SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
-        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return new String(cipher.doFinal(cipherText), "UTF-8");
+        SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes(StandardCharsets.UTF_8), "AES");
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes(StandardCharsets.UTF_8)));
+        return new String(cipher.doFinal(cipherText), StandardCharsets.UTF_8);
     }
 }
