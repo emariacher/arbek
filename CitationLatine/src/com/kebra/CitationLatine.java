@@ -1,4 +1,4 @@
-package com.kebra; // use java 17
+package com.arbek; // use java 17
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
