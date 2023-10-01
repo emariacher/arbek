@@ -1,4 +1,4 @@
-package com.arbek; // use java 17
+package com.arbek; // "C:\Program Files\Java\jdk-21\bin\java.exe" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.2.2\lib\idea_rt.jar=50545:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.2.2\bin" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\ericm\Documents\GitHub\arbek\CitationLatine\out\production\CitationLatine com.arbek.CitationLatine
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
